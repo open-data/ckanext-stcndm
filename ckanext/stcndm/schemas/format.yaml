@@ -1,0 +1,28 @@
+scheming_version: 1
+about: format, the secondary one
+about_url:
+dataset_type: format
+form_languages:
+- en
+- fr
+
+
+dataset_fields:
+
+- field_name: title
+  label: Title
+  preset: title
+  form_placeholder: eg. a descriptive title
+
+- field_name: name
+  label: URL
+  preset: dataset_slug
+  form_placeholder: eg. my-dataset
+
+
+
+resource_fields:
+
+- field_name: url
+  label: URL
+  preset: resource_url_upload
