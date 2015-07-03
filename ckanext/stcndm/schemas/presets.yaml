@@ -3,6 +3,22 @@ about: scheming presets for ckanext-stcndm
 about_url: 
 presets:
 
+# We generate IDs here because we use that ID as our name field as well
+# and it needs to exist for "if_empty_same_as(id)" below to work
+- preset_name: canada_dataset_id
+  values:
+    create_validators: empty_if_not_sysadmin if_empty_generate_uuid
+      unicode name_validator package_id_does_not_exist
+    display_snippet: null
+    field_name: id
+    form_snippet: null
+
+- preset_name: canada_dataset_name
+  values:
+    field_name: name
+    form_snippet: null
+    validators: if_empty_same_as(id)
+
 - preset_name: canada_time_period_coverage_start
   values:
     field_name: time_period_coverage_start

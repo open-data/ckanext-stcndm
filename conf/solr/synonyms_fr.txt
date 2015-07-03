@@ -1,0 +1,3 @@
+aiki => aikido
+resto => restaurant
+
