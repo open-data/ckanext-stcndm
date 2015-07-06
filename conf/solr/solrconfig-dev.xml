@@ -1299,6 +1299,7 @@
     </requestHandler>
 
     <!-- for back compat with clients using /update/json and /update/csv -->
+    <!-- This does not seem to be compatible with Solr 5.1
     <requestHandler name="/update/json" class="solr.JsonUpdateRequestHandler">
         <lst name="defaults">
             <str name="stream.contentType">application/json</str>
@@ -1309,7 +1310,7 @@
             <str name="stream.contentType">application/csv</str>
         </lst>
     </requestHandler>
-
+    -->
     <!-- Solr Cell Update Request Handler
 
          http://wiki.apache.org/solr/ExtractingRequestHandler
