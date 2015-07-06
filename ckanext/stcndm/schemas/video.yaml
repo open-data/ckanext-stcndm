@@ -1,10 +1,10 @@
 scheming_version: 1
-about: 'Statistics Canada Dissemination: Views'
+about: 'Statistics Canada Dissemination: Video'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Views
-  fr: Views
-dataset_type: view
+  en: Video
+  fr: Video
+dataset_type: video
 form_languages:
 - en
 - fr

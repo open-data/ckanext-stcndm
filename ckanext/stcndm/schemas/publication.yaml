@@ -1,0 +1,17 @@
+scheming_version: 1
+about: 'Statistics Canada Dissemination: Publications'
+about_url: http://github.com/open-data/ckanext-stcndm
+catalog_type_label:
+  en: Publications
+  fr: Publications
+dataset_type: publication
+form_languages:
+- en
+- fr
+languages_label:
+- eng; CAN
+- fra; CAN
+
+dataset_fields: []
+
+resource_fields: []
