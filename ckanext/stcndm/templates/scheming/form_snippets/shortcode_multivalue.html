@@ -3,9 +3,9 @@
 {%- set values = data.get(field.field_name, []) -%}
 <p>XXX: spiffy JS that autocompletes text and fills in codes for {{ field.field_name }} here</p>
 {{ form.input(
-  field.field_name + '-' ~ loop.index,
-  id='field-' + field.field_name + '-' ~ loop.index,
-  label=h.scheming_language_text(field.label) + ' ' ~ loop.index,
+  field.field_name,
+  id='field-' + field.field_name,
+  label=h.scheming_language_text(field.label),
   placeholder=h.scheming_language_text(field.form_placeholder),
   value=';'.join(values),
   error=errors[field.field_name],
