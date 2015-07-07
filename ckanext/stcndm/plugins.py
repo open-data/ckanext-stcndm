@@ -2,11 +2,13 @@
 import ckan.plugins as p
 import ckanext.stcndm.logic.common as common
 import ckanext.stcndm.logic.cubes as cubes
+from ckanext.stcndm import validators
 
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IConfigurer)
     p.implements(p.IPackageController, inherit=True)
+    p.implements(p.IValidators)
 
     def update_config(self, config):
         """
@@ -25,4 +27,10 @@ class STCNDMPlugin(p.SingletonPlugin):
         return {
             "ndm_get_cube": cubes.get_cube,
             "GetProduct": common.get_product
+        }
+
+    def get_validators(self):
+        return {
+            "shortcode_validate": validators.shortcode_validate,
+            "shortcode_output": validators.shortcode_output,
         }
