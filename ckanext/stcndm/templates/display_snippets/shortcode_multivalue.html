@@ -1,0 +1,7 @@
+{%- set values = data[field.field_name] -%}
+<p>XXX: add a helper lookup that replaces these with the label from {{ field.field_name }} codes table</p>
+<ol>
+{%- for element in values -%}
+  <li>{{ element }}</li>
+{%- endfor -%}
+</ol>
