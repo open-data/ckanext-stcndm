@@ -2,7 +2,7 @@ import json
 
 from ckan.plugins.toolkit import missing, _
 
-def shortcode_validator(key, data, errors, context):
+def shortcode_validate(key, data, errors, context):
     """
     Accept shortcodes in the following forms
     and convert to a json list for storage:
