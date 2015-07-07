@@ -41,7 +41,7 @@ dataset_fields:
   preset: fluent_text
 
 # 4, 5
-- field_name: notes
+- field_name: description
   label:
     en: Description
     fr: Description
@@ -119,6 +119,7 @@ dataset_fields:
     en: Catalog ID
     fr: Catalog ID
   form_placeholder: unique-catalog-id
+  required: true
 
 # 19, 20, 21
 - field_name: format_code
@@ -160,4 +161,9 @@ dataset_fields:
     fr: Frequency
 
 
-resource_fields: []
+resource_fields:
+# XXX a quick hack to allow the creation of one resource to make the
+# package controller happy. a better fix would be to disable the resource
+# edit page by overriding the controller
+- field_name: url
+  required: true
