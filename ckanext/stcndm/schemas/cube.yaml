@@ -106,12 +106,6 @@ dataset_fields:
 # geographic_name?  12, 13
 # geodescriptor?  14
 
-- field_name: geo_level_code
-  label:
-    en: Geo-level
-    fr: Geo-level
-  preset: shortcode_multivalue
-
 # 15, 16, 17
 - field_name: subject_code
   label:
