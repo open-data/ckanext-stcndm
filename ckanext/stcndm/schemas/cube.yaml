@@ -67,11 +67,11 @@ dataset_fields:
     - label:
         en: Archived
         fr: Archived
-      value: 1
+      value: '1'
     - label:
         en: Not archived
         fr: Not archived
-      value: 0
+      value: '0'
   required: true
   form_snippet: select.html
   display_snippet: select.html
@@ -87,7 +87,7 @@ dataset_fields:
     - label:
         en: Cube
         fr: Cube
-      value: 10
+      value: '10'
   required: true
 
 # 9
@@ -159,3 +159,5 @@ dataset_fields:
     en: Frequency
     fr: Frequency
 
+
+resource_fields: []
