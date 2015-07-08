@@ -105,7 +105,6 @@ dataset_fields:
     en: Old Unique Catalogue Numbering
     fr: Ancienne numérotation unique du catalogue
   form_placeholder: unique-catalog-id
-  preset: fluent_text
   required: true
 
 # 19, 20, 21

@@ -3,7 +3,7 @@ about: 'Statistics Canada Dissemination: Taxonomy Subjects'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Subjects
-  fr: Subjects
+  fr: Sujets
 dataset_type: subject
 form_languages:
 - en
@@ -12,6 +12,61 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
-dataset_fields: []
+dataset_fields:
+
+- field_name: id
+  label:
+    en: Internal Unique ID
+    fr: ID interne unique
+
+- field_name: admin_notes
+  form_placeholder:
+    en: Admin Notes
+    fr: Notes
+  label:
+    en: Admin Notes
+    fr: Notes
+  preset: fluent_markdown
+
+- field_name : a_to_z_alias
+  label:
+    en: a to z alias
+    fr: alias a à z
+  preset: fluent_text
+
+- field_name: notes
+  label:
+    en: Description
+    fr: Description
+  form_placeholder:
+    en: The National Pollutant Release Inventory (NPRI) is Canada's public inventory
+      of pollutant releases (to air, water and land), disposals and transfers for
+      recycling. The NPRI includes...
+    fr: L’Inventaire national des rejets de polluants (INRP) est l’inventaire public
+      des rejets de polluants du Canada…
+  help_text:
+    en: A detailed description of the dataset that will allow the user to determine
+      the nature and purpose of the data in the dataset.
+    fr: Une description détaillée de l’ensemble de données qui permettra à l'utilisateur
+      de connaître la nature et le but des données comprises dans l’ensemble de données.
+  preset: fluent_markdown
+
+- field_name: display_code
+  label:
+    en: Display
+    fr: Affichage
+  preset: shortcode_multivalue
+
+- field_name: subject_code
+  label:
+    en: Subject
+    fr: Sujet
+  preset: shortcode_multivalue
+
+- field_name: subjectold_code
+  label:
+    en: Old subject
+    fr: Ancien sujet
+  preset: shortcode_multivalue
 
 resource_fields: []
