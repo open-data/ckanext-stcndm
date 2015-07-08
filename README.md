@@ -33,6 +33,7 @@ for the primary and format types at:
   1. Create empty Solr and PostgreSQL instances as per the normal CKAN installation process.
   2. On GitHub, fork your own copy of https://github.com/open-data/ckanext-stcndm.git
   3. In your project directory, clone the following GitHub projects:
+    *  https://github.com/ckan/ckan.git
     *  https://github.com/ckan/ckanapi.git
     *  https://github.com/open-data/ckanext-scheming.git
     *  https://github.com/open-data/ckanext-fluent.git
@@ -58,7 +59,7 @@ for the primary and format types at:
   
   ```
     
-    cd ckanapi
+    cd ckan
     python setup.py develop
     cd ..
     
