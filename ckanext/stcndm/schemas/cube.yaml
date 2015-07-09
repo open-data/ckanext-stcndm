@@ -118,6 +118,12 @@ dataset_fields:
 - field_name: product_type_code
   preset: ndm_products
 
+# 25
+- field_name: related_product
+  label:
+    en: Related
+    fr: Relié
+
 # 26, 27
 - field_name: thesaurus_term_code
   label:
