@@ -12,6 +12,8 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
-dataset_fields: []
+dataset_fields:
+- field_name: product_type_code
+  preset: ndm_products
 
 resource_fields: []

@@ -116,16 +116,7 @@ dataset_fields:
 
 # 22, 23, 24
 - field_name: product_type_code
-  label:
-    en: Product Type
-    fr: Type de produit
-  preset: shortcode_multivalue
-
-# 25
-- field_name: related_product
-  label:
-    en: Related
-    fr: Relié
+  preset: ndm_products
 
 # 26, 27
 - field_name: thesaurus_term_code
