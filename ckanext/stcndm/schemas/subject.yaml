@@ -69,4 +69,9 @@ dataset_fields:
     fr: Ancien sujet
   preset: shortcode_multivalue
 
-resource_fields: []
+resource_fields:
+# XXX a quick hack to allow the creation of one resource to make the
+# package controller happy. a better fix would be to disable the resource
+# edit page by overriding the controller
+- field_name: url
+  required: true

@@ -85,5 +85,7 @@ for the primary and format types at:
     cd ..
   ``` 
   8. Create the .ini file as per the normal CKAN installation instructions and modify as noted above.
+  
+  9. Create an organization with the URL statcan and the name Statistics Canada
 
     
