@@ -43,7 +43,7 @@ def update_default_view(context, data_dict):
     pkg_dict = _get_action('package_show')(context, {'name_or_id': str(cube_id)})
 
     for extra in pkg_dict['extras']:
-        if extra['key'] == 'defaultviewid_bi_strs':
+        if extra['key'] == 'default_view_id':
             extra['value'] = default_view
 
     result = _get_action('package_update')(context, pkg_dict)

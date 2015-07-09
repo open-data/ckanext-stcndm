@@ -122,7 +122,56 @@ dataset_fields:
   label:
     en: Product Type
     fr: Type de produit
-  preset: shortcode_multivalue
+  preset: select
+  choices:
+    - label:
+        en: Cube
+        fr: Cube
+      value: '10'
+    - label:
+        en: Table
+        fr: Tableau
+      value: '11'
+    - label:
+        en: Indicator
+        fr: Indicateur
+      value: '12'
+    - label:
+        en: Chart
+        fr: Graphique
+      value: '13'
+    - label:
+        en: Map
+        fr: Carte
+      value: '14'
+    - label:
+        en: Analytical Product
+        fr: Produit Analytique
+      value: '20'
+    - label:
+        en: Video
+        fr: Vidéo
+      value: '21'
+    - label:
+        en: Conference
+        fr: Conférence
+      value: '22'
+    - label:
+        en: Service
+        fr: Service
+      value: '23'
+    - label:
+        en: Daily
+        fr: Quotidien
+      value: '24'
+    - label:
+        en: Public use microdata files (PUMFs)
+        fr: Les fichiers de microdonnées à grande diffusion (FMGD)
+      value: '25'
+    - label:
+        en: Publications with repeating titles (Generic)
+        fr: Publications avec des titres répétitifs (générique)
+      value: '26'
 
 # 25
 - field_name: related_product
@@ -175,6 +224,11 @@ dataset_fields:
 #    en: Array Terminated Code
 #    fr: Code de terminaison
 #  preset: shortcode_multivalue
+
+- field_name: correction_id_code
+  label:
+    en: Correction ID Code
+    fr: Code ID de correction
 
 #- field_name: default_view_id
 #  label:
@@ -239,11 +293,21 @@ dataset_fields:
     en: Internal Contact Name
     fr: Nom de personne ressource interne
 
+- field_name: issue_no
+  label:
+    en: Issue Number
+    fr: Numéro d'émission
+
 #- field_name: keywords
 #  label:
 #    en: Keywords
 #    fr: Mots clés
 #  preset: fluent_text
+
+- field_name: last_publish_status_code
+  label:
+    en: Last Publish Status
+    fr: Dernier état de publication
 
 #- field_name: legacy_date
 #  label:

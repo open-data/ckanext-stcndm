@@ -242,6 +242,11 @@ dataset_fields:
     fr: Mots clés
   preset: fluent_text
 
+- field_name: last_publish_status_code
+  label:
+    en: Last Publish Status
+    fr: Dernier état de publication
+
 #- field_name: legacy_date
 #  label:
 #    en: Legacy Date
