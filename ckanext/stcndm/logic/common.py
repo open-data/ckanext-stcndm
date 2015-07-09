@@ -6,7 +6,7 @@ import datetime
 
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
-import ckanext.stcndm.helpers as helpers
+# import ckanext.stcndm.helpers as helpers
 
 _get_or_bust = logic.get_or_bust
 # noinspection PyUnresolvedReferences
@@ -56,8 +56,8 @@ def get_next_product_id(context, data_dict):
                                                                         product_type=product_type,
                                                                         sequence_id=sequence_id)
 
-    query = {'q': 'extras_productidnew_bi_strs:{product_family}*'.format(product_family=product_family),
-             'sort': 'extras_productidnew_bi_strs desc'}
+    query = {'q': 'extras_product_id_new:{product_family}*'.format(product_family=product_family),
+             'sort': 'extras_product_id_new desc'}
 
     response = _get_action('package_search')(context, query)
 
@@ -66,7 +66,7 @@ def get_next_product_id(context, data_dict):
                                                                           sequence_id=sequence_id)
     try:
         for extra in response['results'][0]['extras']:
-            if extra['key'] == 'productidnew_bi_strs':
+            if extra['key'] == 'product_id_new':
                 product_id_response = extra['value']
                 # TODO: implement reusing unused IDs
                 if product_id_response.endswith('99'):
@@ -89,7 +89,7 @@ def get_product(context, data_dict):  # this one is for external use. just use p
 
     :param productId: product id (i.e. 2112002604)
     :type productId: str
-    :param fields: desired output fields. (i.e. "title_en_txts,title_fr_txts,ProductIdnew_bi_strs") Default: *
+    :param fields: desired output fields. (i.e. "title, product_id_new") Default: *
     :type fields: str
 
     :return: requested product fields and values
@@ -106,7 +106,7 @@ def get_product(context, data_dict):  # this one is for external use. just use p
         for field in desired_fields.split(','):
             desired_fields_list.append(field)
 
-    q = {'q': 'extras_productidnew_bi_strs:{product_id}'.format(product_id=product_id)}
+    q = {'q': 'extras_product_id_new:{product_id}'.format(product_id=product_id)}
 
     result = _get_action('package_search')(context, q)
 
@@ -232,9 +232,9 @@ def get_product_type(context, data_dict):
     product_type = _get_or_bust(data_dict, 'productType')
 
     try:
-        output = {'producttypecode_bi_strs': product_type,
-                  'producttype_en_strs': product_types[product_type]['en'],
-                  'producttype_fr_strs': product_types[product_type]['fr']}
+        output = {'product_type_code': product_type,
+                  'en': product_types[product_type]['en'],
+                  'fr': product_types[product_type]['fr']}
     except KeyError:
         if product_type == '*':
             return product_types
@@ -295,9 +295,9 @@ def get_last_publish_status(context, data_dict):
 
     publish_status = _get_or_bust(data_dict, 'lastPublishStatusCode')
     try:
-        output = {'lastpublishstatuscode_bi_strs': publish_status,
-                  'lastpublishstatus_en_strs': publish_statuses[publish_status]['en'],
-                  'lastpublishstatus_fr_strs': publish_statuses[publish_status]['fr']}
+        output = {'last_publish_status_code': publish_status,
+                  'en': publish_statuses[publish_status]['en'],
+                  'fr': publish_statuses[publish_status]['fr']}
     except KeyError:
         raise logic.ValidationError('lastPublishStatusCode: \'{0}\' invalid'.format(publish_status))
 
@@ -376,9 +376,9 @@ def get_format_description(context, data_dict):
 
     format_code = _get_or_bust(data_dict, 'formatCode')
     try:
-        output = {'formatcode_bi_txtm': format_code,
-                  'format_en_txtm': format_codes[format_code]['en'],
-                  'format_fr_txtm': format_codes[format_code]['fr']}
+        output = {'format_code': format_code,
+                  'en': format_codes[format_code]['en'],
+                  'fr': format_codes[format_code]['fr']}
     except KeyError:
         raise logic.ValidationError('formatCode \'{0}\' invalid'.format(format_code))
 
@@ -394,7 +394,7 @@ def get_upcoming_releases(context, data_dict):
     :param startDate: Beginning of date range
     :param endDate: End of date range
 
-    :return: productId, issueno, correctionid, French refperiod, English refperiod, releasedate for each matching record
+    :return: productId, issueno, correctionid, reference_period, release_date for each matching record
     :rtype: list of dicts
     """
     # TODO: date validation? anything else?
@@ -402,7 +402,7 @@ def get_upcoming_releases(context, data_dict):
     start_date = _get_or_bust(data_dict, 'startDate')
     end_date = _get_or_bust(data_dict, 'endDate')
 
-    q = {'q': 'releasedate_bi_strs:[{startDate}:00Z TO {endDate}:00Z] AND lastpublishstatuscode_bi_strs:8'.format(
+    q = {'q': 'release_date:[{startDate}:00Z TO {endDate}:00Z] AND last_publish_status_code:8'.format(
         startDate=start_date,
         endDate=end_date),
         'rows': 500}
@@ -414,16 +414,14 @@ def get_upcoming_releases(context, data_dict):
     if count == 0:
         raise _NotFound
     else:
-        desired_extras = ['productidnew_bi_strs',
-                          'issueno_bi_strs',
-                          'correctionidcode_bi_strs',
-                          'refperiod_en_txtm',
-                          'refperiod_fr_txtm',
-                          'releasedate_bi_strs',
-                          'url_en_strs',
-                          'url_fr_strs',
-                          'producttypecode_bi_strs',
-                          'lastpublishstatuscode_bi_strs']
+        desired_extras = ['product_id_new',
+                          'issue_no',
+                          'correction_id_code',
+                          'reference_period',
+                          'release_date',
+                          'url',
+                          'product_type_code',
+                          'last_publish_status_code']
 
         output = []
 
@@ -443,11 +441,11 @@ def get_derived_product_list(context, data_dict):
     Return a dict with all ProductIDs and French/English titles that are associated with a given SubjectCode and
     ProductType.
 
-    Note that this relies on the subjnewcode_bi_strs field rather than the subject code in the cubeid.
+    Note that this relies on the subject_code field rather than the subject code in the cube_id.
 
     :param parentProductId: cube id
     :type parentProductId: str
-    :param productType: two-digit producttype code
+    :param productType: two-digit product type code
     :type productType: str
 
     :return: registered cubes for the SubjectCode and their French/English titles
@@ -461,10 +459,10 @@ def get_derived_product_list(context, data_dict):
     subject_code = product_id[:2]
     sequence_id = product_id[-4:]
 
-    q = 'productidnew_bi_strs:{subjectcode}??{seqid}* AND producttypecode_bi_strs:{producttype}'.format(
-        subjectcode=subject_code,
-        seqid=sequence_id,
-        producttype=product_type)
+    q = 'product_id_new:{subject_code}??{sequence_id}* AND product_type_code:{product_type}'.format(
+        subject_code=subject_code,
+        sequence_id=sequence_id,
+        product_type=product_type)
     query = {'q': q, 'rows': '1000'}
 
     response = _get_action('package_search')(context, query)
@@ -476,12 +474,10 @@ def get_derived_product_list(context, data_dict):
     for result in response['results']:
         result_dict = {}
         for extra in result['extras']:
-            if extra['key'] == 'productidnew_bi_strs':
-                result_dict['productidnew_bi_strs'] = extra['value']
-            elif extra['key'] == 'title_en_txts':
-                result_dict['title_en_txts'] = extra['value']
-            elif extra['key'] == 'title_fr_txts':
-                result_dict['title_fr_txts'] = extra['value']
+            if extra['key'] == 'product_id_new':
+                result_dict['product_id_new'] = extra['value']
+            elif extra['key'] == 'title':
+                result_dict['title'] = extra['value']
 
         output.append(result_dict)
 
@@ -500,7 +496,7 @@ def get_drop_downs(context, data_dict):
     :return:
     :rtype: dict of lists of dicts
     """
-
+    # todo: zckownerorg_bi_strs is supposed to be no longer necessary.  does that mean get_drop_downs is redundant?
     q = 'zckownerorg_bi_strs:tmshortlist'
 
     query = {'q': q, 'rows': '1000'}
@@ -518,9 +514,9 @@ def get_drop_downs(context, data_dict):
         field_name = result_dict['tmdroplfld_bi_tmtxtm'][7:]  # Stripping off "extras_"
 
         # check field_name to determine how many fields to return for this field
-        if field_name == 'dispandtrack_bi_txtm':
+        if field_name == 'tracking_code':
             split_values = [result_dict['tmdroplopt_bi_tmtxtm']]  # create single element list
-        elif field_name == 'geolevel_en_txtm':
+        elif field_name == 'geo_level_code':
             split_values = result_dict['tmdroplopt_bi_tmtxtm'].split('|')[:2]  # don't send the code
         else:
             split_values = result_dict['tmdroplopt_bi_tmtxtm'].split('|')
@@ -580,40 +576,39 @@ def get_autocomplete(context, data_dict):
     limit = data_dict.get('limit', 100)
     sort_field = None
 
-    if field_name not in ['subjnew_en_txtm', 'dimgroup_en_txtm', 'source_en_txtm', 'specificgeo_en_txtm']:
+    if field_name not in ['subject_code', 'dimension_group_code', 'imdb_source_code', 'geodescriptor']:
         raise _ValidationError('Invalid fieldName')
 
     query_split = query.replace('/', '').split()
     query = ' '.join([word + '*' for word in query_split])
 
-    if field_name == 'subjnew_en_txtm':
+    if field_name == 'subject_code':
         data_dict = {'q': u'tmtaxsubj_autotext:({query})'.format(query=query)}
         output_dict = {'tmtaxsubj_en_tmtxtm': 'subjnew_en_txtm',
                        'tmtaxsubj_fr_tmtxtm': 'subjnew_fr_txtm',
-                       'tmtaxsubjcode_bi_tmtxtm': 'subjnewcode_bi_txtm',
-                       'tmtaxdisp_en_tmtxtm': 'subjnewcode_bi_txtm'}
-        sort_field = 'subjnewcode_bi_txtm'
+                       'tmtaxsubjcode_bi_tmtxtm': 'subject_code',
+                       'tmtaxdisp_en_tmtxtm': 'subject_code'}
+        sort_field = 'subject_code'
 
-    elif field_name == 'dimgroup_en_txtm':
+    elif field_name == 'dimension_group_code':
         data_dict = {'q': u'tmdimen_autotext:({query})'.format(query=query)}
         output_dict = {'tmdimenalias_bi_tmtxtm': 'dimalias_en_txtm',
                        'tmdimentext_en_tmtxtm': 'dimgroup_en_txtm',
                        'tmdimentext_fr_tmtxtm': 'dimgroup_fr_txtm',
-                       'tmdimencode_bi_tmtxtm': 'dimgroupcode_bi_txtm'}
+                       'tmdimencode_bi_tmtxtm': 'dimension_group_code'}
         sort_field = None
 
-    elif field_name == 'source_en_txtm':
-        data_dict = {'q': u'source_autotext:({query})'.format(query=query), 'fq': 'zckownerorg_bi_strs:maimdb'}
-        output_dict = {'title_en_txts': 'source_en_txtm',
-                       'title_fr_txts': 'source_fr_txtm',
-                       'productidnew_bi_strs': 'sourcecode_bi_txtm'}
+    elif field_name == 'imdb_source_code':
+        data_dict = {'q': u'source_autotext:({query})'.format(query=query)}  # , 'fq': 'zckownerorg_bi_strs:maimdb'}
+        output_dict = {'title': 'imdb_source',
+                       'product_id_new': 'imdb_source_code'}
         sort_field = None
 
-    elif field_name == 'specificgeo_en_txtm':
+    elif field_name == 'geodescriptor':
         data_dict = {'q': u'tmsgc_autotext:({query})'.format(query=query)}
         output_dict = {'tmsgcname_en_tmtxtm': 'specificgeo_en_txtm',
                        'tmsgcname_fr_tmtxtm': 'specificgeo_fr_txtm',
-                       'tmsgcspecificcode_bi_tmtxtm': 'specificgeocode_bi_txtm'}
+                       'tmsgcspecificcode_bi_tmtxtm': 'geodescriptor'}
         sort_field = None
 
     data_dict['rows'] = limit  # limit the number of returned rows
@@ -659,14 +654,14 @@ def get_schema(context, data_dict):
     """
 
     org = _get_or_bust(data_dict, 'org')
-    data_set = _get_or_bust(data_dict, 'dataset')
+    dataset = _get_or_bust(data_dict, 'dataset')
 
     response = _get_action('package_search')(context, {
         'q': 'extras_tmregorg_bi_tmtxtm:{org}'.format(org=org),
         'rows': 100
     })
 
-    pkg_dict = _get_action('package_show')(context, {'name_or_id': data_set})
+    pkg_dict = _get_action('package_show')(context, {'name_or_id': dataset})
 
     extras_dict = {}
     for extra in pkg_dict['extras']:
@@ -721,37 +716,33 @@ def tv_register_product(context, data_dict):
     :type parentProductId: str
     :param productType: 2-digit product type code
     :type productType: str
-    :param productTitleEnglish: english title
-    :type productTitleEnglish: str
-    :param productTitleFrench: french title
-    :type productTitleFrench: str
+    :param productTitle: EN/FR title dictionary
+    :type productTitle: dict
 
     :return: newly-registered product id
     :rtype: dict
     """
 
-    cubeid = _get_or_bust(data_dict, 'parentProductId')
-    data_dict['productId'] = cubeid  # TODO: this is for Java-style stuff, and needs to be tidied up.
-    producttype = _get_or_bust(data_dict, 'productType')
+    cube_id = _get_or_bust(data_dict, 'parentProductId')
+    data_dict['productId'] = cube_id  # TODO: this is for Java-style stuff, and needs to be tidied up.
+    product_type = _get_or_bust(data_dict, 'productType')
 
-    if str(producttype) == '10':
+    if str(product_type) == '10':
         raise _ValidationError('Please use the RegisterCube to register a cube')
-    if str(producttype) not in ['11', '12', '13', '14']:
-        raise _ValidationError('Invalid data producttype, only data products may be registered with this service')
+    if str(product_type) not in ['11', '12', '13', '14']:
+        raise _ValidationError('Invalid data productType, only data products may be registered with this service')
 
-    title_en = _get_or_bust(data_dict, 'productTitleEnglish')
-    title_fr = _get_or_bust(data_dict, 'productTitleFrench')
+    title = _get_or_bust(data_dict, 'productTitle')
 
-    producttype_dict = _get_action('ndm_get_producttype')(context, data_dict)
     cube_dict = _get_action('ndm_get_cube')(context, data_dict)
-    fieldlist = _get_action('ndm_get_fieldlist')(context, {'org': 'rgtabv'})
-    productid = _get_action('ndm_get_next_productid')(context, data_dict)
+    field_list = _get_action('ndm_get_field_list')(context, {'org': 'rgtabv'})
+    product_id = _get_action('ndm_get_next_product_id')(context, data_dict)
 
     extras_dict = {}
 
     time = datetime.datetime.today()
 
-    for field in fieldlist['fields']:
+    for field in field_list['fields']:
         if field in cube_dict:
             extras_dict[field] = cube_dict[field]
         elif str(field).endswith('ints'):
@@ -759,18 +750,13 @@ def tv_register_product(context, data_dict):
         else:
             extras_dict[field] = ''
 
-    extras_dict['10uid_bi_strs'] = productid
-    extras_dict['productidnew_bi_strs'] = productid
-
-    for key in producttype_dict:
-        extras_dict[key] = unicode(producttype_dict[key])
-
-    extras_dict['hierarchyid_bi_strs'] = cubeid
-    extras_dict['title_en_txts'] = title_en
-    extras_dict['title_fr_txts'] = title_fr
+    extras_dict['product_id_new'] = product_id
+    extras_dict['product_type'] = product_type
+    extras_dict['parent_product'] = cube_id
+    extras_dict['title'] = title
     extras_dict['zckcapacity_bi_strs'] = 'public'
-    extras_dict['zckdbname_bi_strs'] = 'rgproduct'
-    extras_dict['zckownerorg_bi_strs'] = 'rgtabv'
+#    extras_dict['zckdbname_bi_strs'] = 'rgproduct'
+#    extras_dict['zckownerorg_bi_strs'] = 'rgtabv'
     extras_dict['zckpubdate_bi_strs'] = time.strftime("%Y-%m-%d")
     extras_dict['zckpushtime_bi_strs'] = time.strftime("%Y-%m-%d %H:%M")
     extras_dict['zckstatus_bi_txtm'] = 'ndm_tv_register_product_api'
@@ -780,17 +766,17 @@ def tv_register_product(context, data_dict):
     for key in extras_dict:
         extras.append({'key': key, 'value': extras_dict[key]})
 
-    package_dict = {'name': productid,
+    package_dict = {'name': product_id,
                     'owner_org': 'rgtabv',
                     'extras': extras}
 
     new_product = _get_action('package_create')(context, package_dict)
 
-    if productid.endswith('01') and str(producttype) == '11':
-        _get_action('ndm_update_default_view')(context, {'cubeId': str(cubeid), 'defaultView': str(productid)})
+    if product_id.endswith('01') and str(product_type) == '11':
+        _get_action('ndm_update_default_view')(context, {'cubeId': str(cube_id), 'defaultView': str(product_id)})
 
     output = _get_action('ndm_get_product')(context, {'productId': new_product['name'],
-                                                      'fl': 'productidnew_bi_strs'})
+                                                      'fl': 'product_id_new'})
 
     return output
 
@@ -816,16 +802,16 @@ def delete_product(context, data_dict):
 
     result = _get_action('ndm_get_product')(context, data_dict)
 
-    deleted_id = result['productidnew_bi_strs']
+    deleted_id = result['product_id_new']
 
-    return {'message': 'Product successfully deleted', 'productidnew_bi_strs': deleted_id}
+    return {'message': 'Product successfully deleted', 'product_id_new': deleted_id}
 
 
 # noinspection PyUnusedLocal
-def purge_data_set(context, data_dict):
+def purge_dataset(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Purges a data_set from the database.
+    Purges a dataset from the database.
 
     :param productId: Product ID
     :type productId: str
@@ -839,13 +825,13 @@ def purge_data_set(context, data_dict):
 
     import ckan.model as model
 
-    data_set = model.Package.get(unicode(product_id))
+    dataset = model.Package.get(unicode(product_id))
 
     # rev = model.repo.new_revision()
 
-    model.Package.purge(data_set)
+    model.Package.purge(dataset)
 
-    # data_set.purge()
+    # dataset.purge()
     model.repo.commit_and_remove()
     return {'success': True, 'message': '%s purged' % product_id}
 
@@ -870,12 +856,13 @@ def update_last_publish_status(context, data_dict):  # TODO: This is out of scop
     issue_no = _get_or_bust(data_dict, 'issueNo')
     last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
 
-    last_publish_status_code_dict = _get_action('ndm_get_lastpublishstatus')(context, data_dict)
+#    last_publish_status_code_dict = _get_action('ndm_get_lastpublishstatus')(context, data_dict)
 
     q = {
-        'q': 'extras_productidnew_bi_strs:{productid} AND extras_issueno_bi_strs:{issueno}'.format(productid=product_id,
-                                                                                                   issueno=issue_no),
-        'fq': 'zckownerorg_bi_strs:maformat'}
+        'q': 'extras_product_id_new:{product_id} AND extras_issue_no:{issue_no}'.format(product_id=product_id,
+                                                                                        issue_no=issue_no)
+#        'fq': 'zckownerorg_bi_strs:maformat'
+        }
 
     result = _get_action('package_search')(context, q)
 
@@ -887,12 +874,12 @@ def update_last_publish_status(context, data_dict):  # TODO: This is out of scop
     pkg_dict = result['results'][0]
 
     for extra in pkg_dict['extras']:
-        if extra['key'] == 'lastpublishstatuscode_bi_strs':
+        if extra['key'] == 'last_publish_status_code':
             extra['value'] = str(last_publish_status_code)
-        if extra['key'] == 'lastpublishstatus_en_strs':
-            extra['value'] = last_publish_status_code_dict['producttype_en_strs']
-        if extra['key'] == 'lastpublishstatus_fr_strs':
-            extra['value'] = last_publish_status_code_dict['producttype_fr_strs']
+#        if extra['key'] == 'lastpublishstatus_en_strs':
+#            extra['value'] = last_publish_status_code_dict['producttype_en_strs']
+#        if extra['key'] == 'lastpublishstatus_fr_strs':
+#            extra['value'] = last_publish_status_code_dict['producttype_fr_strs']
 
     result = _get_action('package_update')(context, pkg_dict)
 
@@ -927,7 +914,7 @@ def update_product_geo(context, data_dict):
     if type(dguids) == unicode:
         dguids = [x.strip() for x in dguids.split(';')]
 
-    q = {'q': 'extras_productidnew_bi_strs:{productid}'.format(productid=product_id)}
+    q = {'q': 'extras_product_id_new:{product_id}'.format(product_id=product_id)}
     response = _get_action('package_search')(context, q)
 
     if response['count'] == 0:
@@ -938,42 +925,44 @@ def update_product_geo(context, data_dict):
     pkg_dict = response['results'][0]
 
     # Set the geo level fields for each specific geo code.
-    geo_level = helpers.GeoLevel(context)
-    geo_specific = helpers.GeoSpecific(context)
+#    geo_level = helpers.GeoLevel(context)
+#    geo_specific = helpers.GeoSpecific(context)
     unique_codes = dict()
-    geo_level_en = list()
-    geo_level_fr = list()
-    geo_specific_en = list()
-    geo_specific_fr = list()
+#    geo_level_en = list()
+#    geo_level_fr = list()
+#    geo_specific_en = list()
+#    geo_specific_fr = list()
 
     for specific_code in dguids:
         unique_codes[specific_code[:5]] = True  # store the codes in a dictionary to create a unique set
 
-    for geo_code in sorted(unique_codes.keys()):  # get and append the text for geo levels
-        (en_text, fr_text) = geo_level.get_by_code(geo_code)
-        if en_text:
-            geo_level_en.append(en_text)
-        if fr_text:
-            geo_level_fr.append(fr_text)
+#    for geo_code in sorted(unique_codes.keys()):  # get and append the text for geo levels
+#        (en_text, fr_text) = geo_level.get_by_code(geo_code)
+#        if en_text:
+#            geo_level_en.append(en_text)
+#        if fr_text:
+#            geo_level_fr.append(fr_text)
 
-    for specific_geo_code in dguids:
-        (en_text, fr_text) = geo_specific.get_by_code(specific_geo_code)
-        if en_text:
-            geo_specific_en.append(en_text)
-        if fr_text:
-            geo_specific_fr.append(fr_text)
+#    for specific_geo_code in dguids:
+#        (en_text, fr_text) = geo_specific.get_by_code(specific_geo_code)
+#        if en_text:
+#            geo_specific_en.append(en_text)
+#        if fr_text:
+#            geo_specific_fr.append(fr_text)
 
     for extra in pkg_dict['extras']:  # update the package dictionary
-        if extra['key'] == 'specificgeocode_bi_txtm':
+        if extra['key'] == 'geodescriptor':
             extra['value'] = '; '.join(dguids)
-        elif extra['key'] == 'geolevel_en_txtm':
-            extra['value'] = '; '.join(geo_level_en)
-        elif extra['key'] == 'geolevel_fr_txtm':
-            extra['value'] = '; '.join(geo_level_fr)
-        elif extra['key'] == 'specificgeo_en_txtm':
-            extra['value'] = '; '.join(geo_specific_en)
-        elif extra['key'] == 'specificgeo_fr_txtm':
-            extra['value'] = '; '.join(geo_specific_fr)
+        elif extra['key'] == 'geo_level_code':
+            extra['value'] = '; '.join(unique_codes.keys())
+#        elif extra['key'] == 'geolevel_en_txtm':
+#            extra['value'] = '; '.join(geo_level_en)
+#        elif extra['key'] == 'geolevel_fr_txtm':
+#            extra['value'] = '; '.join(geo_level_fr)
+#        elif extra['key'] == 'specificgeo_en_txtm':
+#            extra['value'] = '; '.join(geo_specific_en)
+#        elif extra['key'] == 'specificgeo_fr_txtm':
+#            extra['value'] = '; '.join(geo_specific_fr)
 
     result = _get_action('package_update')(context, pkg_dict)
     # TODO: check result?
