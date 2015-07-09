@@ -164,7 +164,7 @@ def get_cube_list_by_subject(context, data_dict):
         return output
 
 
-def register_cube(context, data_dict):  # TODO: we need to talk to the cube team about this, not required now.
+def register_cube(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
     Register a cube in the rgcube organization.  Automatically populate subjectcode fields based on
@@ -197,7 +197,7 @@ def register_cube(context, data_dict):  # TODO: we need to talk to the cube team
     product_id = _get_action('ndm_get_next_cubeid')(context, data_dict)
 
     name = '{product_id}'.format(product_id=product_id)
-    org = 'rgcube'
+    org = 'statcan'
     extras = []
 
     time = datetime.datetime.today()
