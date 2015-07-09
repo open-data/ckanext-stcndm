@@ -24,50 +24,46 @@ presets:
           fr: Cube
         value: '10'
       - label:
-          en: View
-          fr: View
+          en: Table
+          fr: Tableau
         value: '11'
       - label:
           en: Indicator
-          fr: Indicator
-        value: 12
+          fr: Indicateur
+        value: '12'
       - label:
           en: Chart
-          fr: Chart
-        value: 13
+          fr: Graphique
+        value: '13'
       - label:
           en: Map
           fr: Carte
-        value: 14
+        value: '14'
       - label:
-          en: Indicator
-          fr: Indicator
-        value: 12
-      - label:
-          en: Analytical
-          fr: Analytical
-        value: 20
-      - label:
-          en: Generic Publication
-          fr: Generic Publication
-        value: 26
+          en: Analytical Product
+          fr: Produit Analytique
+        value: '20'
       - label:
           en: Video
           fr: Vidéo
-        value: 21
+        value: '21'
       - label:
           en: Conference
-          fr: Conterence
-        value: 22
+          fr: Conférence
+        value: '22'
       - label:
           en: Service
           fr: Service
-        value: 23
-      - label:
-          en: PUMF
-          fr: PUMF
-        value: 25
+        value: '23'
       - label:
           en: Daily
-          fr: Daily
-        value: 24
+          fr: Quotidien
+        value: '24'
+      - label:
+          en: Public use microdata files (PUMFs)
+          fr: Les fichiers de microdonnées à grande diffusion (FMGD)
+        value: '25'
+      - label:
+          en: Publications with repeating titles (Generic)
+          fr: Publications avec des titres répétitifs (générique)
+        value: '26'
