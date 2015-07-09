@@ -24,7 +24,8 @@ _NotAuthorized = toolkit.NotAuthorized
 @logic.side_effect_free
 def get_daily_list(context, data_dict):
     # noinspection PyUnresolvedReferences
-    """Return a JSON dict representation of one or more instances of Daily.
+    """
+    Return a JSON dict representation of one or more instances of Daily.
 
     :param startDate: required, date of first Daily to return
     :type startDate str
@@ -60,7 +61,7 @@ def get_daily_list(context, data_dict):
     for day in range(days):
         single_date = (start_date + datetime.timedelta(days=day)).date()
         single_date_str = single_date.strftime('%Y-%m-%d')
-        q = {'q': 'producttypecode_bi_strs:24 AND releasedate_bi_strs:{0}T08\:30'.format(single_date_str)}
+        q = {'q': 'product_type_code:24 AND release_date:{0}T08\:30'.format(single_date_str)}
 
         result = _get_action('package_search')(context, q)
 
@@ -74,7 +75,7 @@ def get_daily_list(context, data_dict):
             extras = result['results'][0]['extras']
             for extra in extras:
                 daily_output[extra['key']] = extra['value']
-                if extra['key'] == 'childlist_bi_strm':
+                if extra['key'] == 'child_list':
                     children = []
                     child_ids = extra['value'].split('; ')
                     for child_id in child_ids:
@@ -90,16 +91,15 @@ def get_daily_list(context, data_dict):
 
 def register_daily(context, data_dict):
     # noinspection PyUnresolvedReferences
-    """Register a Daily in the maprimary organization.
+    """
+    Register a Daily in the maprimary organization.
 
     Automatically populate fields based on provided parameters.
 
     :param productId: 00240001 followed by 3 - 6 digit sequence id (i.e. 00240001654321)
     :type productId str
-    :param productTitleEnglish: English title
-    :type productTitleEnglish str
-    :param productTitleFrench: French title
-    :type productTitleEnglish str
+    :param productTitle: EN/FR title
+    :type productTitle dict
     :param lastPublishStatusCode: 1 or 2 digit number
     :type lastPublishStatusCode str
     :param releaseDate: e.g. 2015-06-30T09:45
@@ -116,21 +116,20 @@ def register_daily(context, data_dict):
     """
 
     my_org_type = 'maprimary'
-    time = datetime.datetime.today()
+#    time = datetime.datetime.today()
 
     product_id = _get_or_bust(data_dict, 'productId')
     if not re.match('^00240001[0-9]{3,6}$', product_id):
         raise _ValidationError(_('Invalid product id for Daily: {0}'.format(product_id)))
 
     #  check whether the product ID we were given is already in use
-    q = {'q': 'productidnew_bi_strs:{0}'.format(product_id)}
+    q = {'q': 'product_id_new:{0}'.format(product_id)}
     result = _get_action('package_search')(context, q)
     count = result['count']
     if count:
         raise _ValidationError(_("product Id '{0}' already in use".format(product_id)))
 
-    title_en = _get_or_bust(data_dict, 'productTitleEnglish')
-    title_fr = _get_or_bust(data_dict, 'productTitleFrench')
+    title = _get_or_bust(data_dict, 'productTitle')
 
     release_date_str = _get_or_bust(data_dict, 'releaseDate')
     try:
@@ -138,14 +137,16 @@ def register_daily(context, data_dict):
     except ValueError:
         raise _ValidationError(
             _("Incorrect format for releaseDate '{0}', should be YYYY-MM-DD".format(release_date_str)))
-    publish_status_dict = _get_action('ndm_get_lastpublishstatus')(context, data_dict)
+#    publish_status_dict = _get_action('ndm_get_last_publish_status')(context, data_dict)
 
     unique_id = _get_or_bust(data_dict, 'uniqueId')
     if not re.match('^daily[0-9]{3,4}$', unique_id):
         raise _ValidationError(_("Invalid unique ID for Daily: '{0}'".format(unique_id)))
 
-    data_dict['productType'] = '24'  # Daily always has productCode 24
-    producttype_dict = _get_action('ndm_get_producttype')(context, data_dict)
+    product_type_code = '24'
+    data_dict['productType'] = product_type_code  # Daily always has productCode 24
+#    product_type_dict = _get_action('ndm_get_product_type')(context, data_dict)
+    last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
 
     child_list = _get_or_bust(data_dict, 'childList')
     if not child_list:
@@ -165,25 +166,24 @@ def register_daily(context, data_dict):
             extras_dict[field] = ''
     """
 
-    extras_dict['10uid_bi_strs'] = product_id
-    extras_dict['productidnew_bi_strs'] = product_id
-
-    for key in producttype_dict:
-        extras_dict[key] = unicode(producttype_dict[key])
-    for key in publish_status_dict:
-        extras_dict[key] = unicode(publish_status_dict[key])
-
-    extras_dict['hierarchyid_bi_strs'] = product_id
-    extras_dict['title_en_txts'] = title_en
-    extras_dict['title_fr_txts'] = title_fr
-    extras_dict['zckcapacity_bi_strs'] = 'public'
-    extras_dict['zckownerorg_bi_strs'] = my_org_type
-    extras_dict['zckpubdate_bi_strs'] = time.strftime("%Y-%m-%d")
-    extras_dict['zckpushtime_bi_strs'] = time.strftime("%Y-%m-%d %H:%M")
-    extras_dict['zckstatus_bi_txtm'] = 'ndm_register_daily_api'
-    extras_dict['releasedate_bi_strs'] = release_date.strftime("%Y-%m-%dT08:30")
-    extras_dict['pkuniqueidcode_bi_strs'] = unique_id
-    extras_dict['childlist_bi_strm'] = '; '.join(child_list)
+#    extras_dict['10uid_bi_strs'] = product_id
+    extras_dict['product_id_new'] = product_id
+#    for key in product_type_dict:
+#        extras_dict[key] = unicode(product_type_dict[key])
+    extras_dict['product_type_code'] = product_type_code
+#    for key in publish_status_dict:
+#        extras_dict[key] = unicode(publish_status_dict[key])
+    extras_dict['last_publish_status_code'] = last_publish_status_code
+    extras_dict['parent_product'] = product_id
+    extras_dict['title'] = title
+#    extras_dict['zckcapacity_bi_strs'] = 'public'
+#    extras_dict['zckownerorg_bi_strs'] = my_org_type
+#    extras_dict['zckpubdate_bi_strs'] = time.strftime("%Y-%m-%d")
+#    extras_dict['zckpushtime_bi_strs'] = time.strftime("%Y-%m-%d %H:%M")
+#    extras_dict['zckstatus_bi_txtm'] = 'ndm_register_daily_api'
+    extras_dict['release_date'] = release_date.strftime("%Y-%m-%dT08:30")
+#    extras_dict['pkuniqueidcode_bi_strs'] = unique_id
+    extras_dict['child_list'] = '; '.join(child_list)
 
     extras = []
     for key in extras_dict:
@@ -195,7 +195,7 @@ def register_daily(context, data_dict):
                     'title': unique_id}
     new_product = _get_action('package_create')(context, package_dict)
     output = _get_action('ndm_get_product')(context, {'productId': new_product['name'],
-                                                      'fl': 'productidnew_bi_strs'})
+                                                      'fl': 'product_id_new'})
     return output
 
 

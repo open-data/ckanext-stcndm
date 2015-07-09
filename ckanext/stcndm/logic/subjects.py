@@ -18,7 +18,7 @@ _NotAuthorized = toolkit.NotAuthorized
 def get_subject(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    :param: subjectcode: Subject Code (i.e. 13)
+    :param: subjectCode: Subject Code (i.e. 13)
     :type: str
 
     :return: English, French and code values for given subjectCode
@@ -27,7 +27,7 @@ def get_subject(context, data_dict):
 
     subject_code = data_dict['subjectCode']
 
-    q = {'q': 'tmtaxsubjcode_bi_tmtxtm:{subjectcode}'.format(subjectcode=subject_code)}
+    q = {'q': 'tmtaxsubjcode_bi_tmtxtm:{subject_code}'.format(subject_code=subject_code)}
 
     result = _get_action('package_search')(context, q)
 
@@ -73,11 +73,11 @@ def get_top_level_subject_list(context, data_dict):
         for extra in result['extras']:
             if extra['key'] == 'tmtaxsubjcode_bi_tmtxtm' and len(extra['value']) == 2:
                 update = True
-                subject_dict['subjectcode_bi_txtm'] = extra['value']
-            elif extra['key'] == 'tmtaxsubj_en_tmtxtm':
-                subject_dict['subject_en_txtm'] = extra['value']
-            elif extra['key'] == 'tmtaxsubj_fr_tmtxtm':
-                subject_dict['subject_fr_txtm'] = extra['value']
+                subject_dict['subject_code'] = extra['value']
+#            elif extra['key'] == 'tmtaxsubj_en_tmtxtm':
+#                subject_dict['subject_en_txtm'] = extra['value']
+#            elif extra['key'] == 'tmtaxsubj_fr_tmtxtm':
+#                subject_dict['subject_fr_txtm'] = extra['value']
         if update:
             top_level_subject_list.append(subject_dict)
 
