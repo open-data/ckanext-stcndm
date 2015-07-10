@@ -23,86 +23,45 @@ dataset_fields:
     fr: Éditeur
   preset: dataset_organization
 
-# 1 (from Order column in xls file)
 - field_name: admin_notes
-  form_placeholder:
-    en: Admin Notes
-    fr: Notes
-  label:
-    en: Admin Notes
-    fr: Notes
-  preset: fluent_markdown
+  preset: ndm_admin_notes
 
-# 2, 3
 - field_name: title
-  label:
-    en: Title
-    fr: Titre
-  form_placeholder:
-    en: Canada Border Wait Times
-    fr: Temps d’attente à la frontière
-  preset: fluent_text
+  preset: ndm_title
 
-# 4, 5
 - field_name: notes
-  label:
-    en: Description
-    fr: Description
-  form_placeholder:
-    en: The National Pollutant Release Inventory (NPRI) is Canada's public inventory
-      of pollutant releases (to air, water and land), disposals and transfers for
-      recycling. The NPRI includes...
-    fr: L’Inventaire national des rejets de polluants (INRP) est l’inventaire public
-      des rejets de polluants du Canada…
-  help_text:
-    en: A detailed description of the dataset that will allow the user to determine
-      the nature and purpose of the data in the dataset.
-    fr: Une description détaillée de l’ensemble de données qui permettra à l'utilisateur
-      de connaître la nature et le but des données comprises dans l’ensemble de données.
-  preset: fluent_markdown
+  preset: ndm_notes
 
-# 6, 7, 8
 - field_name: content_type_code
   label:
     en: Content Type
     fr: Type de contenu
-  preset: select
-  choices:
-    - label:
-        en: View
-        fr: View
-      value: ''
-  required: true
+  preset: shortcode_multivalue
 
-# 9
 - field_name: tracking_code
   label:
     en: Display and Tracking
     fr: Affichage et pistage
   preset: shortcode_multivalue
 
-# 10, 11
 - field_name: geo_level_code
   label:
     en: Geo-level
     fr: Niveau géo
   preset: shortcode_multivalue
 
-# 12, 13, 14
 - field_name: geodescriptor
   label:
     en: Geo Specific
     fr: Géo spécifique
   preset: shortcode_multivalue
 
-# 15, 16, 17
 - field_name: subject_code
   label:
     en: Subject
     fr: Sujet
   preset: shortcode_multivalue
 
-# 18
 - field_name: name
   label:
     en: Old Unique Catalogue Numbering
@@ -110,29 +69,34 @@ dataset_fields:
   form_placeholder: unique-catalog-id
   required: true
 
-# 19, 20, 21
 - field_name: format_code
   label:
     en: Format
     fr: Format
-  preset: shortcode_multivalue
+  preset: ndm_formats
 
-# 22, 23, 24
 - field_name: product_type_code
-  preset: ndm_products
+  label:
+    en: Product Type
+    fr: Type de produit
+  preset: select
+  choices:
+    - label:
+        en: View
+        fr: View
+      value: '11'
+  required: true
 
-# 25
 - field_name: related_product
   label:
     en: Related
     fr: Relié
 
-# 26, 27
 - field_name: thesaurus_term_code
   label:
     en: STC Thesaurus
     fr: STC dictionnaire de synonymes
-  preset: fluent_text
+  preset: shortcode_multivalue
 
 # 28
 - field_name: feature_weight
@@ -149,35 +113,23 @@ dataset_fields:
 #  display_snippet: date.html
 
 #- field_name: archive_status
-#  preset: select
-#  label:
-#    en: Archive Status
-#    fr: État d'archivage
-#  choices:
-#    - label:
-#        en: Archived
-#        fr: Archivé
-#      value: '1'
-#    - label:
-#        en: Not archived
-#        fr: Pas archivé
-#      value: '0'
-#  required: true
-#  form_snippet: select.html
-#  display_snippet: select.html
-#  validators: scheming_required scheming_choices
+#  preset: ndm_archive_status
 
 #- field_name: array_terminated
 #  label:
 #    en: Array Terminated Code
 #    fr: Code de terminaison
-#  preset: shortcode_multivalue
 
 #- field_name: default_view_id
 #  label:
 #    en: Default View ID
 #    fr: ID de vue par défaut
-#  preset: shortcode_multivalue
+
+- field_name: dimension_group_code
+  label:
+    en: Dimension Group
+    fr: Groupe de dimension
+  preset: shortcode_multivalue
 
 - field_name: dimmember_code
   label:
@@ -229,7 +181,6 @@ dataset_fields:
 #  label:
 #    en: Internal Author
 #    fr: Auteur interne
-#  preset: fluent_text
 
 - field_name: internal_contact
   label:
@@ -246,6 +197,7 @@ dataset_fields:
   label:
     en: Last Publish Status
     fr: Dernier état de publication
+  preset: shortcode_multivalue
 
 #- field_name: legacy_date
 #  label:
@@ -310,11 +262,11 @@ dataset_fields:
     fr: État
   preset: shortcode_multivalue
 
-- field_name: subjectold_code
-  label:
-    en: Old subject
-    fr: Ancien sujet
-  preset: shortcode_multivalue
+#- field_name: subjectold_code
+#  label:
+#    en: Old subject
+#    fr: Ancien sujet
+#  preset: shortcode_multivalue
 
 - field_name: url
   label:
