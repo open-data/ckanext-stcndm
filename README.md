@@ -5,6 +5,7 @@ Requirements:
 * ckanext-scheming
 * ckanext-fluent
 * ckanext-repeating (if you need repeating free-form fields)
+* ckanext-wet-boew and a copy of the WET production files
 
 required settings in developent.ini:
 ```ini
