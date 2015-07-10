@@ -516,6 +516,8 @@ def get_drop_downs(context, data_dict):
         # check field_name to determine how many fields to return for this field
         if field_name == 'tracking_code':
             split_values = [result_dict['tmdroplopt_bi_tmtxtm']]  # create single element list
+        elif field_name == 'display_code':
+            split_values = [result_dict['tmdroplopt_bi_tmtxtm']]  # create single element list
         elif field_name == 'geo_level_code':
             split_values = result_dict['tmdroplopt_bi_tmtxtm'].split('|')[:2]  # don't send the code
         else:
