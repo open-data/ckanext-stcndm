@@ -9,6 +9,7 @@ presets:
     display_snippet: shortcode_multivalue.html
     validators: shortcode_validate
     output_validators: shortcode_output
+    required: true
 
 - preset_name: ndm_products
   values:
@@ -67,3 +68,182 @@ presets:
           en: Publications with repeating titles (Generic)
           fr: Publications avec des titres répétitifs (générique)
         value: '26'
+    required: true
+
+- preset_name: ndm_publish_status
+  values:
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_requires scheming_choices
+    label:
+      en: Publishing Status
+      fr: État de publication
+    choices:
+      - label:
+          en: None
+          fr: Aucune
+        value: '0'
+      - label:
+          en: Draft
+          fr: Ébauche
+        value: '2'
+      - label:
+          en: Working Copy
+          fr: Copie de travail
+        value: '4'
+      - label:
+          en: Authorized
+          fr: Autorisé
+        value: '6'
+      - label:
+          en: Verified
+          fr: Vérifié
+        value: '8'
+      - label:
+          en: Loaded
+          fr: Chargé
+        value: '10'
+      - label:
+          en: Released
+          fr: Diffusé
+        value: '12'
+      - label:
+          en: Frozen
+          fr: Figé
+        value: '99'
+    required: true
+
+- preset_name: ndm_formats
+  values:
+    form_snippet: multiple_select.html
+    display_snippet: multiple_choice.html
+    validators: scheming_required scheming_choices
+    label:
+      en: Format Descriptions
+      fr: Description de formats
+    choices:
+      - label:
+            en: Database
+            fr: Base de données
+        value: '2'
+      - label:
+            en: CD-ROM
+            fr: CD-ROM
+        value: '3'
+      - label:
+            en: Diskette
+            fr: Disquette
+        value: '4'
+      - label:
+            en: Fax/email
+            fr: Télécopieur
+        value: '5'
+      - label:
+            en: PDF
+            fr: PDF
+        value: '8'
+      - label:
+            en: Microfiche
+            fr: Microfiche
+        value: '10'
+      - label:
+            en: Paper
+            fr: Imprimé
+        value: '12'
+      - label:
+            en: Symposium/Workshop
+            fr: Symposium/Atelier
+        value: '13'
+      - label:
+            en: Tape/Cassette
+            fr: Bande magnétique/Cassette
+        value: '14'
+      - label:
+            en: DVD
+            fr: DVD
+        value: '15'
+      - label:
+            en: HTML
+            fr: HTML
+        value: '17'
+      - label:
+            en: Video
+            fr: Vidéo
+        value: '18'
+      - label:
+            en: ETF
+            fr: ETF
+        value: '19'
+    required: true
+
+- preset_name: ndm_archive_status
+  values:
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required schreming_choices
+    label:
+      en: Archive Status
+      fr: État d'archivage
+    choices:
+      - label:
+          en: Archived
+          fr: Archivé
+        value: '1'
+      - label:
+          en: Not archived
+          fr: Pas archivé
+        value: '0'
+    required: true
+
+- preset_name: ndm_admin_notes
+  values:
+    form_placeholder:
+      en: Admin Notes
+      fr: Notes
+    label:
+      en: Admin Notes
+      fr: Notes
+    form_snippet: fluent_markdown.html
+    display_snippet: fluent_markdown.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+    
+- preset_name: ndm_title
+  values:
+    label:
+      en: Title
+      fr: Titre
+    form_placeholder:
+      en: Canada Border Wait Times
+      fr: Temps d’attente à la frontière
+    form_snippet: fluent_text.html
+    display_snippet: fluent_text.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+
+- preset_name: ndm_notes
+  values:
+    label:
+      en: Description
+      fr: Description
+    form_placeholder:
+      en: The National Pollutant Release Inventory (NPRI) is Canada's public inventory
+        of pollutant releases (to air, water and land), disposals and transfers for
+        recycling. The NPRI includes...
+      fr: L’Inventaire national des rejets de polluants (INRP) est l’inventaire public
+        des rejets de polluants du Canada…
+    help_text:
+      en: A detailed description of the dataset that will allow the user to determine
+        the nature and purpose of the data in the dataset.
+      fr: Une description détaillée de l’ensemble de données qui permettra à l'utilisateur
+        de connaître la nature et le but des données comprises dans l’ensemble de données.
+    form_snippet: fluent_markdown.html
+    display_snippet: fluent_markdown.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+
+
+
