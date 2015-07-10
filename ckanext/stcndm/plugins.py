@@ -21,7 +21,7 @@ class STCNDMPlugin(p.SingletonPlugin):
         Add configuration we need during startup
         """
         p.toolkit.add_template_directory(config, "templates")
-        #p.toolkit.add_public_directory(config, "static")
+        p.toolkit.add_public_directory(config, 'public')
 
     def before_index(self, data_dict):
         """
