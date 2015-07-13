@@ -1,5 +1,7 @@
 __author__ = 'matt'
 
+import ckanapi
+
 # import ckan
 # import ckan.plugins as p
 # import ckan.exceptions
@@ -237,3 +239,15 @@ class GeoSpecific:
             en_text = fr_text = None
 
         return en_text, fr_text
+
+def codeset_choices(codeset_type):
+    """
+    Return a dictionary of {codeset_value: title} for the codeset_type
+    passed
+    """
+    lc = ckanapi.LocalCKAN()
+    r = lc.action.package_search(
+        q='type=codeset',
+        fq='codeset_type=' + codeset_type,
+        rows=1000)
+    return dict((r['codeset_value'], r['title']) for r in r['results'])

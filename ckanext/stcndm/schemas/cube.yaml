@@ -33,13 +33,15 @@ dataset_fields:
   label:
     en: Content Type
     fr: Type de contenu
-  preset: shortcode_multivalue
+  preset: codeset_select
+  codeset_type: content_type
 
 - field_name: tracking_code
   label:
     en: Display and Tracking
     fr: Affichage et pistage
-  preset: shortcode_multivalue
+  preset: codeset_select
+  codeset_type: tracking
 
 - field_name: geo_level_code
   label:

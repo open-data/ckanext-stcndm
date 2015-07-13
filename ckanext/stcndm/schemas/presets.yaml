@@ -245,5 +245,7 @@ presets:
     validators: fluent_text
     output_validators: fluent_text_output
 
-
-
+- preset_name: codeset_select
+  values:
+    form_snippet: codeset_select.html
+    display_snippet: select.html
