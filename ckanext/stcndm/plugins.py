@@ -9,12 +9,14 @@ import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
 
 from ckanext.stcndm import validators
+from ckanext.stcndm import helpers
 
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IConfigurer)
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.IValidators)
+    p.implements(p.ITemplateHelpers)
 
     def update_config(self, config):
         """
@@ -68,3 +70,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "codeset_create_name": validators.codeset_create_name,
         }
 
+    def get_helpers(self):
+        return {
+            "codeset_choices": helpers.codeset_choices,
+        }
