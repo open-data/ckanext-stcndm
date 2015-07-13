@@ -65,3 +65,20 @@ def shortcode_output(value):
         return json.loads(value)
     except ValueError:
         return [value]
+
+def codeset_create_name(key, data, errors, context):
+    codeset_type = None
+    codeset_value = None
+    i = 0
+    while True:
+        extra_key = ('extras', i, 'key')
+        if extra_key not in data:
+            break
+        if data[extra_key] == 'codeset_type':
+            codeset_type = data[('extras', i, 'value')]
+        if data[extra_key] == 'codeset_value':
+            codeset_value = data[('extras', i, 'value')]
+        i += 1
+
+    if codeset_type and codeset_value:
+        data[key] = '-'.join(('codeset', codeset_type, codeset_value))

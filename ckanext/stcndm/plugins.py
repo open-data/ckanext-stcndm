@@ -65,5 +65,6 @@ class STCNDMPlugin(p.SingletonPlugin):
         return {
             "shortcode_validate": validators.shortcode_validate,
             "shortcode_output": validators.shortcode_output,
+            "codeset_create_name": validators.codeset_create_name,
         }
 

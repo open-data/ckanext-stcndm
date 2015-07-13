@@ -14,30 +14,67 @@ languages_label:
 
 dataset_fields:
 
-- field_name: id
+- field_name: name
+  create_validators: codeset_create_name
   label:
     en: Internal Unique ID
     fr: ID interne unique
+  form_placeholder:
+    en: This field should be hidden.  Do not enter anything here.
+    fr: Ce champ devrait être caché.  N'entrez rien ici.
 
-- field_name: codeset
+- field_name: codeset_type
   label:
-    en: The name of field or codeset that this entry is associated with (e.g. geo_level_code)
-    fr: Le nom du champ ou 'codeset' auquel cet enregistrement est associé (p.e. geo_level_code)
+    en: Type of Codeset
+    fr: Genre de codeset
+  preset: select
+  choices:
+    - label:
+        en: Synonym
+        fr: Synonyme
+      value: 'thesaurus'
+    - label:
+        en: Content Type
+        fr: Genre de contenu
+      value: 'content_type'
+    - label:
+        en: Tracking
+        fr: Pistage
+      value: 'tracking'
+    - label:
+        en: Display
+        fr: Affichage
+      value: 'display'
+    - label:
+        en: Frequency
+        fr: Fréquence
+      value: 'frequency'
+    - label:
+        en: Status
+        fr: État
+      value: 'status'
+  required: true
+
+#  label:
+#    en: The name of field or codeset that this entry is associated with (e.g. geo_level_code)
+#    fr: Le nom du champ ou 'codeset' auquel cet enregistrement est associé (p.e. geo_level_code)
 
 - field_name: codeset_value
   label:
     en: The code value of the codeset (e.g. A0001)
     fr: La valeur du code du 'codeset' (p.e. A0001)
+  required: true
 
-- field_name : label
+- field_name: title  # codeset label
   label:
     en: Descriptive label
     fr: Étiquette descriptive
   preset: fluent_text
+  required: true
 
-resource_fields:
-# XXX a quick hack to allow the creation of one resource to make the
-# package controller happy. a better fix would be to disable the resource
-# edit page by overriding the controller
-- field_name: url
+- field_name: owner_org
+  label:
+    en: Organisation
+    fr: Organisation
+  preset: dataset_organization
   required: true
