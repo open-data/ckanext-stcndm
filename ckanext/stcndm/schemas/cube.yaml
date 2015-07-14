@@ -8,6 +8,9 @@ dataset_type: cube
 form_languages:
 - en
 - fr
+languages_label:
+- eng; CAN
+- fra; CAN
 
 dataset_fields:
 
@@ -45,8 +48,8 @@ dataset_fields:
 
 - field_name: geo_level_code
   label:
-    en: Geo-level
-    fr: Niveau géo
+    en: Geolevel
+    fr: Geolevel
   preset: codeset_multiple_select
   codeset_type: geolevel
 
@@ -270,7 +273,6 @@ dataset_fields:
     en: URL
     fr: URL
   preset: fluent_text
-  display_snippet: link.html
 
 #- field_name: volume_and_number
 #  label:
