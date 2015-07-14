@@ -190,8 +190,8 @@ presets:
           fr: Archivé
         value: '1'
       - label:
-          en: Not archived
-          fr: Pas archivé
+          en: Current
+          fr: Courant
         value: '0'
     required: true
 
@@ -249,3 +249,8 @@ presets:
   values:
     form_snippet: codeset_select.html
     display_snippet: select.html
+
+- preset_name: codeset_multiple_select
+  values:
+    form_snippet: codeset_multiple_select.html
+    display_snippet: multiple_choice.html

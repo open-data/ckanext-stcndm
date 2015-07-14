@@ -33,21 +33,22 @@ dataset_fields:
   label:
     en: Content Type
     fr: Type de contenu
-  preset: codeset_select
+  preset: codeset_multiple_select
   codeset_type: content_type
 
 - field_name: tracking_code
   label:
     en: Display and Tracking
     fr: Affichage et pistage
-  preset: codeset_select
+  preset: codeset_multiple_select
   codeset_type: tracking
 
 - field_name: geo_level_code
   label:
     en: Geo-level
     fr: Niveau géo
-  preset: shortcode_multivalue
+  preset: codeset_multiple_select
+  codeset_type: geolevel
 
 - field_name: geodescriptor
   label:
@@ -92,7 +93,8 @@ dataset_fields:
   label:
     en: STC Thesaurus
     fr: STC dictionnaire de synonymes
-  preset: shortcode_multivalue
+  preset: codeset_multiple_select
+  codeset_type: thesaurus
 
 #- field_name: feature_weight
 #  label:
@@ -136,7 +138,8 @@ dataset_fields:
   label:
     en: Display
     fr: Affichage
-  preset: shortcode_multivalue
+  preset: codeset_multiple_select
+  codeset_type: display
 
 #- field_name: external_author
 #  label:
@@ -153,7 +156,8 @@ dataset_fields:
   label:
     en: Frequency
     fr: Fréquence
-  preset: shortcode_multivalue
+  preset: codeset_multiple_select
+  codeset_type: frequency
 
 - field_name: history_notes
   label:
@@ -252,7 +256,8 @@ dataset_fields:
   label:
     en: Status
     fr: État
-  preset: shortcode_multivalue
+  preset: codeset_multiple_select
+  codeset_type: status
 
 #- field_name: subjectold_code
 #  label:
@@ -265,6 +270,7 @@ dataset_fields:
     en: URL
     fr: URL
   preset: fluent_text
+  display_snippet: link.html
 
 #- field_name: volume_and_number
 #  label:

@@ -53,6 +53,10 @@ dataset_fields:
         en: Status
         fr: État
       value: 'status'
+    - label:
+        en: Geolevel
+        fr: Geolevel
+      value: 'geolevel'
   required: true
 
 #  label:
