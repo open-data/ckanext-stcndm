@@ -482,7 +482,7 @@
     "codeset_value": "S0510",
     "title": {
       "fr": "Centre de population (CTRPOP)",
-      "en": "Population centre (POPCTR)"
+      "en": "Population Centre (POPCTR)"
     }
   },
   {
@@ -491,7 +491,7 @@
     "codeset_value": "A0005",
     "title": {
       "fr": "Subdivisions de recensement (SDR)",
-      "en": "Census subdivision (CSD)"
+      "en": "Census Subdivision (CSD)"
     }
   },
   {
@@ -500,7 +500,7 @@
     "codeset_value": "A0004",
     "title": {
       "fr": "Circonscriptions électorales fédérales",
-      "en": "Federal electoral districts"
+      "en": "Federal Electoral Districts"
     }
   },
   {
@@ -509,7 +509,7 @@
     "codeset_value": "A0003",
     "title": {
       "fr": "Divisions de recensement (DR)",
-      "en": "Census division (CD)"
+      "en": "Census Division (CD)"
     }
   },
   {
@@ -518,7 +518,7 @@
     "codeset_value": "S0503",
     "title": {
       "fr": "Régions métropolitaines de recensement (RMR)",
-      "en": "Census metropolitan area (CMA)"
+      "en": "Census Metropolitan Area (CMA)"
     }
   },
   {
@@ -527,7 +527,7 @@
     "codeset_value": "A0011",
     "title": {
       "fr": "Régions de tri d’acheminement (RTA)",
-      "en": "Forward sortation areas (FSA)"
+      "en": "Forward Sortation Areas (FSA)"
     }
   },
   {
@@ -536,7 +536,7 @@
     "codeset_value": "S0504",
     "title": {
       "fr": "Agglomérations de recensement (AR)",
-      "en": "Census agglomerations (CA)"
+      "en": "Census Agglomerations (CA)"
     }
   },
   {
@@ -545,7 +545,7 @@
     "codeset_value": "S0512",
     "title": {
       "fr": "Aires de diffusion",
-      "en": "Dissemination areas"
+      "en": "Dissemination Areas"
     }
   },
   {
@@ -554,7 +554,7 @@
     "codeset_value": "S0507",
     "title": {
       "fr": "Secteurs de recensement (SR)",
-      "en": "Census tracts (CT)"
+      "en": "Census Tracts (CT)"
     }
   },
   {
@@ -563,7 +563,7 @@
     "codeset_value": "",
     "title": {
       "fr": "Région rurale",
-      "en": "Rural area"
+      "en": "Rural Area"
     }
   },
   {
@@ -581,7 +581,7 @@
     "codeset_value": "A0006",
     "title": {
       "fr": "Localité désignée (LD)",
-      "en": "Designated place (DPL)"
+      "en": "Designated Place (DPL)"
     }
   },
   {
@@ -599,7 +599,7 @@
     "codeset_value": "A0002",
     "title": {
       "fr": "Province et territoire",
-      "en": "Province and territory"
+      "en": "Province and Territory"
     }
   },
   {
@@ -626,7 +626,7 @@
     "codeset_value": "",
     "title": {
       "fr": "Géographie, Autre",
-      "en": "Other geography"
+      "en": "Other Geography"
     }
   },
   {
@@ -635,7 +635,7 @@
     "codeset_value": "A0007",
     "title": {
       "fr": "Région sociosanitaire",
-      "en": "Health region"
+      "en": "Health Region"
     }
   },
   {
@@ -662,7 +662,7 @@
     "codeset_value": "",
     "title": {
       "fr": "Secteurs de dénombrement",
-      "en": "Enumeration areas"
+      "en": "Enumeration Areas"
     }
   },
   {
@@ -671,7 +671,7 @@
     "codeset_value": "",
     "title": {
       "fr": "Région agricole de recensement (RAR)",
-      "en": "Census agricultural region (CAR)"
+      "en": "Census Agricultural Region (CAR)"
     }
   },
   {
@@ -680,7 +680,7 @@
     "codeset_value": "S0502",
     "title": {
       "fr": "Subdivision de recensement unifiée (SRU)",
-      "en": "Census consolidated subdivision (CCS)"
+      "en": "Census Consolidated Subdivision (CCS)"
     }
   },
   {

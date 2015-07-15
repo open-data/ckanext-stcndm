@@ -180,7 +180,7 @@ presets:
   values:
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required schreming_choices
+    validators: scheming_required scheming_choices
     label:
       en: Archive Status
       fr: État d'archivage
