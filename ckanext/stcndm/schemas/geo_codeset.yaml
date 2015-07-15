@@ -30,10 +30,3 @@ dataset_fields:
     en: Descriptive label
     fr: Étiquette descriptive
   preset: fluent_text
-
-resource_fields:
-# XXX a quick hack to allow the creation of one resource to make the
-# package controller happy. a better fix would be to disable the resource
-# edit page by overriding the controller
-- field_name: url
-  required: true
