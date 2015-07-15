@@ -14,11 +14,6 @@ languages_label:
 
 dataset_fields:
 
-- field_name: id
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
-
 - field_name: admin_notes
   form_placeholder:
     en: Admin Notes
@@ -51,27 +46,38 @@ dataset_fields:
       de connaître la nature et le but des données comprises dans l’ensemble de données.
   preset: fluent_markdown
 
-- field_name: display_code
+- field_name: subject_display_code
+  form_snippet: select.html
+  display_snippet: select.html
+  validators: scheming_required scheming_choices
   label:
-    en: Display
-    fr: Affichage
-  preset: shortcode_multivalue
+    en: Subject Display
+    fr: Affichage du sujet
+  choices:
+    - label:
+        en: Show subject A to Z alias
+        fr: Montrer alias A à Z du sujet
+      value: '1'
+    - label:
+        en: Show subject taxonomy
+        fr: Montrer taxonomie du sujet
+      value: '2'
+    - label:
+        en: Show subject A to Z alias and taxonomy
+        fr: Montrer alias A à Z du sujet et taxonomie
+      value: '3'
+    - label:
+        en: Hide subject
+        fr: Masquer sujet
+      value: '4'
+  required: true
 
 - field_name: subject_code
   label:
     en: Subject
     fr: Sujet
-  preset: shortcode_multivalue
 
 - field_name: subjectold_code
   label:
     en: Old subject
     fr: Ancien sujet
-  preset: shortcode_multivalue
-
-resource_fields:
-# XXX a quick hack to allow the creation of one resource to make the
-# package controller happy. a better fix would be to disable the resource
-# edit page by overriding the controller
-- field_name: url
-  required: true

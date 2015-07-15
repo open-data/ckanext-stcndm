@@ -159,11 +159,6 @@ dataset_fields:
     fr: Notes historiques
   preset: fluent_markdown
 
-- field_name: id
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
-
 - field_name: imdb_source_code
   label:
     en: Source
