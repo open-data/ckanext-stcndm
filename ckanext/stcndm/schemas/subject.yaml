@@ -30,21 +30,7 @@ dataset_fields:
   preset: fluent_text
 
 - field_name: notes
-  label:
-    en: Description
-    fr: Description
-  form_placeholder:
-    en: The National Pollutant Release Inventory (NPRI) is Canada's public inventory
-      of pollutant releases (to air, water and land), disposals and transfers for
-      recycling. The NPRI includes...
-    fr: L’Inventaire national des rejets de polluants (INRP) est l’inventaire public
-      des rejets de polluants du Canada…
-  help_text:
-    en: A detailed description of the dataset that will allow the user to determine
-      the nature and purpose of the data in the dataset.
-    fr: Une description détaillée de l’ensemble de données qui permettra à l'utilisateur
-      de connaître la nature et le but des données comprises dans l’ensemble de données.
-  preset: fluent_markdown
+  preset: ndm_notes
 
 - field_name: subject_display_code
   form_snippet: select.html
@@ -64,7 +50,7 @@ dataset_fields:
       value: '2'
     - label:
         en: Show subject A to Z alias and taxonomy
-        fr: Montrer alias A à Z du sujet et taxonomie
+        fr: Montrer alias A à Z et taxonomie du sujet
       value: '3'
     - label:
         en: Hide subject
@@ -74,10 +60,11 @@ dataset_fields:
 
 - field_name: subject_code
   label:
-    en: Subject
-    fr: Sujet
+    en: Subject Code
+    fr: Code du sujet
 
 - field_name: subjectold_code
   label:
-    en: Old subject
-    fr: Ancien sujet
+    en: Old Subject Code
+    fr: Ancien code du sujet
+  preset: shortcode_multivalue

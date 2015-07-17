@@ -1,3 +1,5 @@
+__author__ = 'marc'
+
 import sys
 import json
 
@@ -35,7 +37,7 @@ for line in lines:
         }
 
     if 'tmtaxsubjoldcode_bi_tmtxtm' in line:
-        line_out['subjectold_code'] = line['tmtaxsubjoldcode_bi_tmtxtm'][0]
+        line_out['subjectold_code'] = map(str.strip, line['tmtaxsubjoldcode_bi_tmtxtm'][0].split(';'))
 
     temp = {}
     if 'tmtaxatozalias_en_tmtxtm' in line:
