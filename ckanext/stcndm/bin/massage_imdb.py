@@ -3,7 +3,7 @@ __author__ = 'marc'
 import sys
 import json
 import yaml
-import commands
+# import commands
 import subprocess
 
 
@@ -13,12 +13,12 @@ def run_command(command):
     return iter(p.stdout.readline, b'')
 
 
-def do_it(old_field_name, data_set, choice_list):
+def code_lookup(old_field_name, data_set, choice_list):
     temp = data_set[old_field_name]
-    if isinstance(temp,str):
-        field_values = [].append(temp)
+    if isinstance(temp, unicode):
+        field_values = map(unicode.strip, temp.split(';'))
     else:
-        field_values = map(unicode.strip, data_set[old_field_name][0].split(';'))
+        field_values = map(unicode.strip, temp[0].split(';'))
     codes = []
     for field_value in field_values:
         code = None
@@ -32,16 +32,16 @@ def do_it(old_field_name, data_set, choice_list):
             codes.append(code)
     return codes
 
+content_type_list = []
 for line in run_command('curl http://127.0.0.1:5000/api/3/action/package_search?q=type:codeset&rows=100'.split()):
     raw_codesets = json.loads(line)['result']['results']
-
-content_type_list = []
-for codeset in raw_codesets:
-    if codeset['codeset_type'] == 'content_type':
-        content_type_list.append({
-            'label': codeset['title'],
-            'value': codeset['codeset_value']
-        })
+    content_type_list = []
+    for codeset in raw_codesets:
+        if codeset['codeset_type'] == 'content_type':
+            content_type_list.append({
+                'label': codeset['title'],
+                'value': codeset['codeset_value']
+            })
 
 f = open('../schemas/presets.yaml')
 presetMap = yaml.safe_load(f)
@@ -49,14 +49,8 @@ f.close()
 for preset in presetMap['presets']:
     if preset['preset_name'] == 'ndm_archive_status':
         archive_status_list = preset['values']['choices']
-
-
-f = open('../schemas/imdb.yaml')
-imdbMap = yaml.safe_load(f)
-f.close()
-for field in imdbMap['dataset_fields']:
-    if field['field_name'] == 'collection_method_code':
-        collection_method_list = field['choices']
+    if preset['preset_name'] == 'ndm_collection_methods':
+        collection_method_list = preset['values']['choices']
 
 lines = json.load(sys.stdin)
 out = []
@@ -64,23 +58,15 @@ for line in lines:
     line_out = {'owner_org': 'statcan'}
 
     if 'archived_bi_strs' in line and archive_status_list:
-        print line
-        print archive_status_list
-        result = do_it('archived_bi_strs', line, archive_status_list)
+        result = code_lookup('archived_bi_strs', line, archive_status_list)
         if result:
             line_out['archive_status_code'] = result[0]
-#        for choice in archive_status_list:
-#            if choice['label']['en'] == line['archived_bi_strs']:
-#                if choice['value']:
-#                    line_out['archive_status_code'] = choice['value']
-#        if 'archive_status_code' not in line_out:
-#            print 'weird archived_bi_strs ' + line['archived_bi_strs'] + '\n'
 
     if 'collenddate_bi_strs' in line:
         line_out['collection_end_date'] = line['collenddate_bi_strs']
 
     if 'collmethod_en_txtm' in line and collection_method_list:
-        result = do_it('collmethod_en_txtm', line, collection_method_list)
+        result = code_lookup('collmethod_en_txtm', line, collection_method_list)
         if result:
             line_out['collection_method_codes'] = result
 
@@ -88,7 +74,7 @@ for line in lines:
         line_out['collection_start_date'] = line['collstartdate_bi_strs']
 
     if 'conttype_en_txtm' in line:
-        result = do_it('conttype_en_txtm', line, content_type_list)
+        result = code_lookup('conttype_en_txtm', line, content_type_list)
         if result:
             line_out['content_type_codes'] = result
 
@@ -135,6 +121,4 @@ for line in lines:
         line_out['a_to_z_alias'] = temp
 """
 
-
 print json.dumps(out)
-
