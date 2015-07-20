@@ -38,14 +38,6 @@ dataset_fields:
         fr: Genre de contenu
       value: 'content_type'
     - label:
-        en: Tracking
-        fr: Pistage
-      value: 'tracking'
-    - label:
-        en: Display
-        fr: Affichage
-      value: 'display'
-    - label:
         en: Frequency
         fr: Fréquence
       value: 'frequency'
@@ -57,6 +49,10 @@ dataset_fields:
         en: Geolevel
         fr: Geolevel
       value: 'geolevel'
+    - label:
+        en: Reference Period
+        fr: Période visée
+      value: 'reference_period'
   required: true
 
 #  label:

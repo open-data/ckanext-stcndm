@@ -40,11 +40,7 @@ dataset_fields:
   codeset_type: content_type
 
 - field_name: tracking_code
-  label:
-    en: Display and Tracking
-    fr: Affichage et pistage
-  preset: codeset_multiple_select
-  codeset_type: tracking
+  preset: ndm_tracking
 
 - field_name: geo_level_code
   label:
@@ -138,11 +134,7 @@ dataset_fields:
   preset: shortcode_multivalue
 
 - field_name: display_code
-  label:
-    en: Display
-    fr: Affichage
-  preset: codeset_multiple_select
-  codeset_type: display
+  preset: ndm_display
 
 - field_name: external_author
   label:

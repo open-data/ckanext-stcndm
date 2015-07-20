@@ -192,8 +192,356 @@ presets:
       - label:
           en: Current
           fr: Courant
-        value: '0'
+        value: '2'
     required: true
+
+- preset_name: ndm_display
+  values:
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_requires scheming_choices
+    label:
+      en: Display
+      fr: Affichage
+    choices:
+      - label:
+          en: Show product info page
+          fr: Voir la page d'information du produit
+        value: '1'
+      - label:
+          en: Hide product info page
+          fr: Cacher la page d'information du produit
+        value: '2'
+      - label:
+          en: Hide navigation link
+          fr: Masquer le lien de navigation
+        value: '3'
+
+- preset_name: ndm_imdb_status
+  values:
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_requires scheming_choices
+    label:
+      en: Status
+      fr: État
+    preset: select
+    choices:
+      - label:
+          en: Active
+          fr: Actif
+        value: '1'
+      - label:
+          en: Inactive
+          fr: Inactif
+        value: '2'
+
+- preset_name: ndm_survey_participation
+  values:
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_requires scheming_choices
+    label:
+      en: Survey Participation
+      fr: Participation au sondage
+    preset: select
+    choices:
+      - label:
+          en: Mandatory Survey
+          fr: Enquête obligatoire
+        value: '1'
+      - label:
+          en: Voluntary Survey
+          fr: Enquête obligatoire
+        value: '2'
+      - label:
+          en: Not Applicable
+          fr: Ne s'applique pas
+        value: '3'
+      - label:
+          en: Not Specified
+          fr: Non spécifié
+        value: '4'
+
+- preset_name: ndm_survey_owner
+  values:
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_requires scheming_choices
+    label:
+      en: Survey Owner
+      fr: Propriétaire du sondage
+    preset: select
+    choices:
+      - label:
+          en: Administrative Data Division (ADD)
+          fr: Division des données administratives (DDA)
+        value: '01'
+      - label:
+          en: Agriculture (AGRI)
+          fr: Agriculture (AGRI)
+        value: '02'
+      - label:
+          en: Business Register (BRD)
+          fr: Registre des entreprises (DRE)
+        value: '03'
+      - label:
+          en: Canadian Centre for Justice Statistics (CCJS)
+          fr: Centre canadien de la statistique juridique (CCSJ)
+        value: '04'
+      - label:
+          en: Census Management Office (CMO)
+          fr: Bureau de gestion du recensement (BGR)
+        value: '05'
+      - label:
+          en: Census Operations (COD)
+          fr: Opérations du recensement (DOR)
+        value: '06'
+      - label:
+          en: Centre for Special Business Projects (CSBP)
+          fr: Centre des projets spéciaux sur les entreprises (CPSE)
+        value: '07'
+      - label:
+          en: Consumer Prices (CPD)
+          fr: Prix à la consommation (DPC)
+        value: '08'
+      - label:
+          en: Demography (DEM)
+          fr: Démographie (DEM)
+        value: '09'
+      - label:
+          en: Economic Analysis (EAD)
+          fr: Analyse économique (DAE)
+        value: '10'
+      - label:
+          en: Enterprise Statistics (ESD)
+          fr: Statistique sur les entreprises (DSE)
+        value: '11'
+      - label:
+          en: Environment, Energy and Transportation Statistics (EETSD)
+          fr: Statistique de l'environnement, de l'énergie et des transports (DSEET)
+        value: '12'
+      - label:
+          en: Health Statistics (HSD)
+          fr: Statistique de la santé (DSS)
+        value: '13'
+      - label:
+          en: Income Statistics (ISD)
+          fr: Statistique du revenu (DSR)
+        value: '14'
+      - label:
+          en: Industrial Organization and Finance (IOFD)
+          fr: Organisation et finances de l'industrie (DOFI)
+        value: '15'
+      - label:
+          en: Industry Accounts (IAD)
+          fr: Comptes des industries (DDCI)
+        value: '16'
+      - label:
+          en: International Accounts and Trade (IATD)
+          fr: Commerce et comptes internationaux (DCCI)
+        value: '17'
+      - label:
+          en: Investment, Science and Technology (ISTD)
+          fr: Investissement, sciences et technologie (DIST)
+        value: '18'
+      - label:
+          en: Labour Statistics (LSD)
+          fr: Statistique du travail (DST)
+        value: '19'
+      - label:
+          en: Manufacturing and Wholesale Trade (MWTD)
+          fr: Fabrication et du commerce de gros (DFCG)
+        value: '20'
+      - label:
+          en: National Economic Accounts Division (NEAD)
+          fr: Comptes économiques nationaux (DCEN)
+        value: '21'
+      - label:
+          en: Producer Prices (PPD)
+          fr: Prix à la production (DPP)
+        value: '22'
+      - label:
+          en: Public Sector Statistics (PSSD)
+          fr: Statistique du secteur public (DSSP)
+        value: '23'
+      - label:
+          en: Retail and Service Industries (RSID)
+          fr: Commerce de détail et des industries de service (DCDIS)
+        value: '24'
+      - label:
+          en: Social Survey Methods (SSMD)
+          fr: Méthodes d'enquêtes sociales (DMES)
+        value: '25'
+      - label:
+          en: Social and Aboriginal Statistics (SASD)
+          fr: Statistique sociale et autochtone (DSSEA)
+        value: '26'
+      - label:
+          en: Special Surveys (SSD)
+          fr: Enquêtes spéciales (DES)
+        value: '27'
+      - label:
+          en: Tourism and the Centre for Education Statistics (TCESD)
+          fr: Tourisme et le Centre de la statistique de l'éducation (DTCSE)
+        value: '28'
+
+- preset_name: ndm_tracking
+  values:
+    form_snippet: multiple_select.html
+    display_snippet: multiple_choice.html
+    validators: scheming_required scheming_choices
+    label:
+      en: Tracking
+      fr: Pistage
+    choices:
+      - label:
+            en: Approved
+            fr: Approuvé
+        value: '01'
+      - label:
+            en: Revised
+            fr: Modifié
+        value: '02'
+      - label:
+            en: Show in Beta
+            fr: Voir en version bêta
+        value: '03'
+      - label:
+            en: Completed
+            fr: Complété
+        value: '04'
+      - label:
+            en: Verified
+            fr: Vérifié
+        value: '05'
+      - label:
+            en: Reviewed
+            fr: Évalué
+        value: '06'
+      - label:
+            en: Tagged
+            fr: Étiqueté
+        value: '07'
+      - label:
+            en: Flagged
+            fr: Signalé
+        value: '08'
+      - label:
+            en: Waiting - IT
+            fr: En attente - TI
+        value: '09'
+      - label:
+            en: Waiting - Business
+            fr: En attente - Entreprise
+        value: '10'
+      - label:
+            en: Waiting - SME
+            fr: En attente - SME
+        value: '11'
+      - label:
+            en: TAX
+            fr: TAX
+        value: '12'
+      - label:
+            en: TAX - Resolved
+            fr: TAX - Résolu
+        value: '13'
+      - label:
+            en: Problem
+            fr: Problème
+        value: '14'
+      - label:
+            en: Problem - resolved
+            fr: Problème - résolu
+        value: '15'
+      - label:
+            en: ALO
+            fr: ALO
+        value: '16'
+      - label:
+            en: ALO - Resolved
+            fr: ALO - Résolu
+        value: '17'
+      - label:
+            en: QA
+            fr: QA
+        value: '18'
+
+- preset_name: ndm_collection_methods
+  values:
+    form_snippet: multiple_select.html
+    display_snippet: multiple_choice.html
+    validators: scheming_required scheming_choices
+    label:
+      en: Collection Method
+      fr: Méthode de collection
+    choices:
+      - label:
+            en: Computer Assisted Interview
+            fr: Interview assistée par ordinateur
+        value: '01'
+      - label:
+            en: Computer-assisted personal interview (CAPI)
+            fr: Interview sur place assistée par ordinateur (IPAO)
+        value: '06'
+      - label:
+            en: Computer-assisted telephone interview (CATI)
+            fr: Interview téléphonique assistée par ordinateur
+        value: '08'
+      - label:
+            en: Electronic data interchange
+            fr: Échange de données informatisées
+        value: '11'
+      - label:
+            en: Electronic questionnaire
+            fr: Questionnaire électronique
+        value: '12'
+      - label:
+            en: Face-to-face interview (not computer assisted)
+            fr: Interview personnelle (sans ordinateur)
+        value: '14'
+      - label:
+            en: Interview (Non computer) - Completed by respondent
+            fr: Interview (sans ordinateur) - par le répondant
+        value: '15'
+      - label:
+            en: Interview (non computer)
+            fr: Interview (sans ordinateur)
+        value: '16'
+      - label:
+            en: Not Specified - Electronic questionnaire
+            fr: Non spécifié - Questionnaire électronique
+        value: '18'
+      - label:
+            en: Personal (non computer) - mail out mail back
+            fr: Personnelle (sans ordinateur)
+        value: '19'
+      - label:
+            en: Self completion - Electronic questionnaire
+            fr: Remplir soi-même - Questionnaire électronique
+        value: '20'
+      - label:
+            en: Self completion - drop-off/mail-back (hard copy)
+            fr: Remplir soi-même - Livraison et cueillette
+        value: '21'
+      - label:
+            en: Self completion - drop-off/pick-up (hard copy)
+            fr: Remplir soi-même - Livraison et cueillette
+        value: '22'
+      - label:
+            en: Self completion - mail-out/mail-back (hard copy)
+            fr: Remplir soi-même - Envoi par la poste
+        value: '23'
+      - label:
+            en: Self completion - mail-out/pick-up (hard copy)
+            fr: Remplir soi-même-Envoi par la poste et cueillette
+        value: '24'
+      - label:
+            en: Telephone Interview (non computer)
+            fr: Interview téléphonique (sans ordinateur)
+        value: '25'
+
 
 - preset_name: ndm_admin_notes
   values:
@@ -249,8 +597,11 @@ presets:
   values:
     form_snippet: codeset_select.html
     display_snippet: select.html
+    validators: scheming_required scheming_choices
 
 - preset_name: codeset_multiple_select
   values:
     form_snippet: codeset_multiple_select.html
     display_snippet: multiple_choice.html
+    validators: scheming_multiple_choice
+    output_validators: scheming_multiple_choice_output

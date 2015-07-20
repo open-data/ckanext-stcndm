@@ -2,8 +2,10 @@
 # convert to json lines
 # add the required dataset type
 
-cat codesets.js | \
-    jq .[] -c | \
-    jq '.type="codeset"' -c | \
+curl http://localhost:8983/solr/ndm/query?q=organization:tmshortlist\&rows=200 | \
+  jq '.response.docs' | \
+  python massage_codesets.py | \
+  jq .[] -c | \
     ckanapi load datasets $@
+#  less
 
