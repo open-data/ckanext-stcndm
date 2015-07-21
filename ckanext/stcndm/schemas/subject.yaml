@@ -14,6 +14,22 @@ languages_label:
 
 dataset_fields:
 
+- field_name: name
+  # follow our custom name generation with default package name validators
+  validators: subject_create_name
+    not_empty unicode name_validator package_name_validator
+  label:
+    en: Internal Unique ID
+    fr: ID interne unique
+  form_snippet: null
+
+- field_name: title  # codeset label
+  label:
+    en: Descriptive label
+    fr: Étiquette descriptive
+  preset: fluent_text
+  required: true
+
 - field_name: admin_notes
   form_placeholder:
     en: Admin Notes
@@ -33,38 +49,23 @@ dataset_fields:
   preset: ndm_notes
 
 - field_name: subject_display_code
-  form_snippet: select.html
-  display_snippet: select.html
-  validators: scheming_required scheming_choices
-  label:
-    en: Subject Display
-    fr: Affichage du sujet
-  choices:
-    - label:
-        en: Show subject A to Z alias
-        fr: Montrer alias A à Z du sujet
-      value: '1'
-    - label:
-        en: Show subject taxonomy
-        fr: Montrer taxonomie du sujet
-      value: '2'
-    - label:
-        en: Show subject A to Z alias and taxonomy
-        fr: Montrer alias A à Z et taxonomie du sujet
-      value: '3'
-    - label:
-        en: Hide subject
-        fr: Masquer sujet
-      value: '4'
-  required: true
+  preset: ndm_subject_display
 
 - field_name: subject_code
   label:
     en: Subject Code
     fr: Code du sujet
+  required: true
 
-- field_name: subjectold_code
+- field_name: subjectold_codes
   label:
     en: Old Subject Code
     fr: Ancien code du sujet
   preset: shortcode_multivalue
+
+- field_name: owner_org
+  label:
+    en: Organisation
+    fr: Organisation
+  preset: dataset_organization
+  required: true

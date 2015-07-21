@@ -240,6 +240,7 @@ class GeoSpecific:
 
         return en_text, fr_text
 
+
 def codeset_choices(codeset_type):
     """
     Return a dictionary of {codeset_value: title} for the codeset_type

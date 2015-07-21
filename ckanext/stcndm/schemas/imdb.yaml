@@ -4,7 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: IMDB Source
   fr: Source IMDB
-dataset_type: subject
+dataset_type: imdb
 form_languages:
 - en
 - fr
@@ -13,6 +13,21 @@ languages_label:
 - fra; CAN
 
 dataset_fields:
+
+- field_name: name
+  # follow our custom name generation validator with default package name validators
+  validators: imdb_create_name
+    not_empty unicode name_validator package_name_validator
+  label:
+    en: Internal Unique ID
+    fr: ID interne unique
+  form_snippet: null
+
+- field_name: product_id_new
+  label:
+    en: Product ID New
+    fr: ID produit nouveau
+  required: true
 
 - field_name: archive_date
   label:
@@ -71,7 +86,7 @@ dataset_fields:
     fr: FRC
   preset: shortcode_multivalue
 
-- field_name: frequency_code
+- field_name: frequency_codes
   label:
     en: Frequency
     fr: Fréquence
@@ -94,32 +109,27 @@ dataset_fields:
     fr: Mots clés
   preset: fluent_text
 
-- field_name: metadata_created_timestamp
-  label:
-    en: Metadata Creation Timestamp
-    fr: Horodatage de création de méta-données
-  preset: date
-  form_snippet: date.html
-  display_snippet: date.html
+#- field_name: metadata_created_timestamp
+#  label:
+#    en: Metadata Creation Timestamp
+#    fr: Horodatage de création de méta-données
+#  preset: date
+#  form_snippet: date.html
+#  display_snippet: date.html
 
-- field_name: metadata_modified_timestamp
-  label:
-    en: Metadata Modification Timestamp
-    fr: Horodatage de modification de méta-données
-  preset: date
-  form_snippet: date.html
-  display_snippet: date.html
+#- field_name: metadata_modified_timestamp
+#  label:
+#    en: Metadata Modification Timestamp
+#    fr: Horodatage de modification de méta-données
+#  preset: date
+#  form_snippet: date.html
+#  display_snippet: date.html
 
 - field_name: navigation_subject_code
   label:
     en: Navigation Subject Code
     fr: Code de sujet pour navigation
   preset: shortcode_multivalue
-
-- field_name: product_id_new
-  label:
-    en: Product ID New
-    fr: ID produit nouveau
 
 - field_name: question_url
   label:
@@ -131,8 +141,7 @@ dataset_fields:
   label:
     en: Reference Period
     fr: Période visée
-  preset: codeset_multiple_select
-  codeset_type: reference_period
+  preset: fluent_text
 
 - field_name: release_date
   label:
@@ -144,9 +153,6 @@ dataset_fields:
 
 - field_name: format_codes
   preset: ndm_formats
-  label:
-    en: Resource Format
-    fr: Format de la ressource
 
 - field_name: resource_url
   label:
@@ -183,3 +189,10 @@ dataset_fields:
     en: URL
     fr: URL
   preset: fluent_text
+
+- field_name: owner_org
+  label:
+    en: Organisation
+    fr: Organisation
+  preset: dataset_organization
+  required: true

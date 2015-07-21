@@ -4,17 +4,19 @@ import sys
 import json
 
 lookup = {
-    'extras_archived_bi_strs': 'archived',
     'extras_conttype_en_txtm': 'content_type',
-    'extras_dispandtrack_bi_txtm': 'tracking',
-    'extras_display_en_txtm': 'display',
-    'extras_format_en_txtm': 'format',
     'extras_freq_en_txtm': 'frequency',
-    'extras_geolevel_en_txtm': 'geolevel',
-    'extras_producttype_en_strs': 'product_type',
     'extras_statusf_en_strs': 'status',
-    'extras_tmregorg_bi_tmtxtm': 'bogon',
-    'extras_tmtaxdisp_en_tmtxtm': 'subject_display'
+    # geolevel is still a codeset but is treated separately
+    # 'extras_geolevel_en_txtm': 'geolevel',
+    # the following fields have become presets
+    # 'extras_archived_bi_strs': 'archived',
+    # 'extras_dispandtrack_bi_txtm': 'tracking',
+    # 'extras_display_en_txtm': 'display',
+    # 'extras_format_en_txtm': 'format',
+    # 'extras_producttype_en_strs': 'product_type',
+    # 'extras_tmregorg_bi_tmtxtm': 'bogon',
+    # 'extras_tmtaxdisp_en_tmtxtm': 'subject_display'
 }
 lines = json.load(sys.stdin)
 out = []
@@ -28,7 +30,7 @@ for line in lines:
                                            'extras_display_en_txtm',
                                            'extras_geolevel_en_txtm',
                                            'extras_format_en_txtm'):
-        continue
+        continue  # these were in tmshorlist but will not be translated to codesets they will be presets
 
     line_out = {'owner_org': 'statcan', 'type': 'codeset'}
 
@@ -48,7 +50,7 @@ for line in lines:
             continue
         else:
             line_out['codeset_type'] = lookup[line['tmdroplfld_bi_tmtxtm'][0]]
-            line_out['codeset_value'] = code_value
+            line_out['codeset_value'] = ('00'+code_value)[-2:]
             line_out['title'] = {
                 'en': english_value,
                 'fr': french_value

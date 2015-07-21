@@ -15,13 +15,13 @@ languages_label:
 dataset_fields:
 
 - field_name: name
-  create_validators: codeset_create_name
+  # follow our custom name generation validator with default package name validators
+  validators: codeset_create_name
+    not_empty unicode name_validator package_name_validator
   label:
     en: Internal Unique ID
     fr: ID interne unique
-  form_placeholder:
-    en: This field should be hidden.  Do not enter anything here.
-    fr: Ce champ devrait être caché.  N'entrez rien ici.
+  form_snippet: null
 
 - field_name: codeset_type
   label:
@@ -49,10 +49,11 @@ dataset_fields:
         en: Geolevel
         fr: Geolevel
       value: 'geolevel'
-    - label:
-        en: Reference Period
-        fr: Période visée
-      value: 'reference_period'
+    # too many reference periods, must be autocomplete
+    #- label:
+    #    en: Reference Period
+    #    fr: Période visée
+    #  value: 'reference_period'
   required: true
 
 #  label:
