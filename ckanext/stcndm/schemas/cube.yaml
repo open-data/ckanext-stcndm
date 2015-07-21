@@ -147,7 +147,7 @@ dataset_fields:
     fr: FRC
   preset: shortcode_multivalue
 
-- field_name: frequency_code
+- field_name: frequency_codes
   label:
     en: Frequency
     fr: Fréquence
@@ -224,10 +224,12 @@ dataset_fields:
 #    en: Publication Year
 #    fr: Année de publication
 
-- field_name: reference_period
+- field_name: reference_period_code
   label:
     en: Reference Period
     fr: Période de référence
+  preset: codeset_select
+  codeset_type: reference_period
 
 - field_name: release_date
   label:

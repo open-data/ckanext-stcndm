@@ -6,7 +6,7 @@ import json
 lines = json.load(sys.stdin)
 out = []
 for line in lines:
-    line_out = {}
+    line_out = {'owner_org': 'statcan', 'type': 'subject'}
 
     if 'tmtaxdisp_en_tmtxtm' in line:
         if line['tmtaxdisp_en_tmtxtm'][0] == 'a_to_z':
@@ -37,7 +37,7 @@ for line in lines:
         }
 
     if 'tmtaxsubjoldcode_bi_tmtxtm' in line:
-        line_out['subjectold_code'] = map(str.strip, line['tmtaxsubjoldcode_bi_tmtxtm'][0].split(';'))
+        line_out['subjectold_code'] = map(unicode.strip, line['tmtaxsubjoldcode_bi_tmtxtm'][0].split(';'))
 
     temp = {}
     if 'tmtaxatozalias_en_tmtxtm' in line:
@@ -47,7 +47,5 @@ for line in lines:
     if temp:
         line_out['a_to_z_alias'] = temp
 
-    line_out['owner_org'] = 'statcan'
-
     out.append(line_out)
-print json.dumps(out)
+print json.dumps(out, indent=2)

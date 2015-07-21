@@ -147,7 +147,7 @@ dataset_fields:
     fr: FRC
   preset: shortcode_multivalue
 
-- field_name: frequency_code
+- field_name: frequency_codes
   label:
     en: Frequency
     fr: Fréquence

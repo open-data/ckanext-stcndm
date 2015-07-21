@@ -11,11 +11,11 @@
         style="display: block"
         id="field-{{ field.field_name }}"
         name="{{ field.field_name }}" >
-        {%- for c in codeset_choices -%}
+        {%- for c, v in codeset_choices.iteritems() -%}
             <option id="field-{{ field.field_name }}-{{ c }}"
                 value="{{ c }}"
-                {{"selected " if c.value in data[field.field_name] }} />
-                {{ h.scheming_language_text(codeset_choices[c]) }}
+                {{"selected " if c in data[field.field_name] }} />
+                {{ h.scheming_language_text(v) }}
             </option>
         {%- endfor -%}
     </select>
