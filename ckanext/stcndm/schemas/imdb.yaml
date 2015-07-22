@@ -5,6 +5,7 @@ catalog_type_label:
   en: IMDB Source
   fr: Source IMDB
 dataset_type: imdb
+owner_org: statcan
 form_languages:
 - en
 - fr
@@ -34,8 +35,6 @@ dataset_fields:
     en: Archive Date
     fr: Date d'archivage
   preset: date
-  form_snippet: date.html
-  display_snippet: date.html
 
 - field_name: archive_status_code
   preset: ndm_archive_status
@@ -45,8 +44,6 @@ dataset_fields:
     en: Collection End Date
     fr: Date de fin de collection
   preset: date
-  form_snippet: date.html
-  display_snippet: date.html
 
 - field_name: collection_method_codes
   preset: ndm_collection_methods
@@ -56,8 +53,6 @@ dataset_fields:
     en: Collection Start Date
     fr: Date de début de collection
   preset: date
-  form_snippet: date.html
-  display_snippet: date.html
 
 - field_name: content_type_codes
   label:
@@ -107,23 +102,7 @@ dataset_fields:
   label:
     en: Keywords
     fr: Mots clés
-  preset: fluent_text
-
-#- field_name: metadata_created_timestamp
-#  label:
-#    en: Metadata Creation Timestamp
-#    fr: Horodatage de création de méta-données
-#  preset: date
-#  form_snippet: date.html
-#  display_snippet: date.html
-
-#- field_name: metadata_modified_timestamp
-#  label:
-#    en: Metadata Modification Timestamp
-#    fr: Horodatage de modification de méta-données
-#  preset: date
-#  form_snippet: date.html
-#  display_snippet: date.html
+  preset: fluent_tags
 
 - field_name: navigation_subject_code
   label:
@@ -148,8 +127,6 @@ dataset_fields:
     en: Release Date (YYYY-MM-DD)
     fr: Date de diffusion (YYYY-MM-DD)
   preset: date
-  form_snippet: date.html
-  display_snippet: date.html
 
 - field_name: format_codes
   preset: ndm_formats
@@ -190,9 +167,9 @@ dataset_fields:
     fr: URL
   preset: fluent_text
 
-- field_name: owner_org
-  label:
-    en: Organisation
-    fr: Organisation
-  preset: dataset_organization
-  required: true
+#- field_name: owner_org
+#  label:
+#    en: Organisation
+#    fr: Organisation
+#  preset: dataset_organization
+#  required: true
