@@ -105,8 +105,6 @@ dataset_fields:
 #    en: Archive Date
 #    fr: Date d'archivage
 #  preset: date
-#  form_snippet: date.html
-#  display_snippet: date.html
 
 #- field_name: archive_status
 #  preset: ndm_archive_status
@@ -190,8 +188,6 @@ dataset_fields:
 #    en: Legacy Date
 #    fr: Date du système antérieur
 #  preset: date
-#  form_snippet: date.html
-#  display_snippet: date.html
 
 - field_name: parent_product
   label:
@@ -234,8 +230,6 @@ dataset_fields:
     en: Release Date (YYYY-MM-DD)
     fr: Date de diffusion (YYYY-MM-DD)
   preset: date
-  form_snippet: date.html
-  display_snippet: date.html
 
 - field_name: replaced_product
   label:

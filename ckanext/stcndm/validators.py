@@ -96,19 +96,43 @@ def _data_lookup(key, data):
 
 
 def codeset_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
     codeset_type = _data_lookup(('codeset_type',), data)
     codeset_value = _data_lookup(('codeset_value',), data)
     if codeset_type and codeset_value:
         data[key] = u'codeset-{0}-{1}'.format(codeset_type, codeset_value)
-    # data[key] = u'-'.join((u'codeset', codeset_type, codeset_value))
+    else:
+        errors[key].append(_('couldn\'t find codeset_type or codeset_value'))
 
 
 def subject_create_name(key, data, errors, context):
-    data[key] = u'subject-{0}'.format(_data_lookup(('subject_code',), data))
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    subject_code = _data_lookup(('subject_code',), data)
+    if subject_code:
+        data[key] = u'subject-{0}'.format(subject_code)
+    else:
+        errors[key].append(_('couldn\'t find subject_code'))
 
 
 def imdb_create_name(key, data, errors, context):
-    data[key] = u'imdb-{0}'.format(_data_lookup(('product_id_new',), data))
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'imdb-{0}'.format(product_id_new)
+    else:
+        errors[key].append(_('couldn\'t find product_id_new'))
 
 
 @scheming_validator
@@ -152,8 +176,8 @@ def codeset_multiple_choice(field, schema):
         for element in value:
             if element in codeset_choices:
                 selected.add(element)
-                continue
-            errors[key].append(_('unexpected choice "%s"') % element)
+            else:
+                errors[key].append(_('unexpected choice "%s"') % element)
 
         if not errors[key]:
             result = json.dumps(list(selected))
