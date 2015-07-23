@@ -2,7 +2,8 @@ import json
 
 from ckan.plugins.toolkit import missing, _
 from ckanext.stcndm import helpers as h
-
+import re
+import ckan.lib.navl.dictization_functions as df
 
 def scheming_validator(fn):
     """
@@ -184,3 +185,11 @@ def codeset_multiple_choice(field, schema):
             data[key] = result
 
     return validator
+
+
+def ndm_tag_name_validator(value, context):
+
+    tag_name_match = re.compile('[\w \-.\'()]*$', re.UNICODE)
+    if not tag_name_match.match(value):
+        raise df.Invalid(_('Tag "%s" must be alphanumeric characters or symbols: -_.\'()') % value)
+    return value

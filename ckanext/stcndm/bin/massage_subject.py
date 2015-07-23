@@ -6,7 +6,7 @@ import json
 lines = json.load(sys.stdin)
 out = []
 for line in lines:
-    line_out = {'owner_org': 'statcan', 'type': 'subject'}
+    line_out = {'owner_org': 'statcan', 'private': False, 'type': 'subject'}
 
     if 'tmtaxdisp_en_tmtxtm' in line:
         if line['tmtaxdisp_en_tmtxtm'][0] == 'a_to_z':
