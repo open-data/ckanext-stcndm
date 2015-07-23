@@ -5,6 +5,7 @@ catalog_type_label:
   en: Code
   fr: Code
 dataset_type: codeset
+dataset_owner_org: statcan
 form_languages:
 - en
 - fr

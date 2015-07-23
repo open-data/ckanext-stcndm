@@ -5,7 +5,7 @@ catalog_type_label:
   en: IMDB Source
   fr: Source IMDB
 dataset_type: imdb
-owner_org: statcan
+dataset_owner_org: statcan
 form_languages:
 - en
 - fr
@@ -64,7 +64,7 @@ dataset_fields:
 - field_name: notes
   preset: ndm_notes
 
-- field_name: level_subject_code
+- field_name: level_subject_codes
   label:
     en: Level Subject Code
     fr: Code sujet niveau
@@ -75,11 +75,10 @@ dataset_fields:
     en: Feature Weight
     fr: Poids
 
-- field_name: frc_code
+- field_name: frc
   label:
     en: FRC
     fr: FRC
-  preset: shortcode_multivalue
 
 - field_name: frequency_codes
   label:
@@ -103,8 +102,9 @@ dataset_fields:
     en: Keywords
     fr: Mots clés
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
 
-- field_name: navigation_subject_code
+- field_name: navigation_subject_codes
   label:
     en: Navigation Subject Code
     fr: Code de sujet pour navigation
@@ -135,7 +135,6 @@ dataset_fields:
   label:
     en: Resource URL
     fr: URL de la ressource
-  preset: fluent_text
 
 - field_name: imdb_status_code
   preset: ndm_imdb_status
@@ -167,9 +166,9 @@ dataset_fields:
     fr: URL
   preset: fluent_text
 
-#- field_name: owner_org
-#  label:
-#    en: Organisation
-#    fr: Organisation
-#  preset: dataset_organization
-#  required: true
+- field_name: owner_org
+  label:
+    en: Organisation
+    fr: Organisation
+  preset: dataset_organization
+  required: true

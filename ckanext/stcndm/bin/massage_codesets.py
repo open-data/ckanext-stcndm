@@ -32,7 +32,7 @@ for line in lines:
                                            'extras_format_en_txtm'):
         continue  # these were in tmshorlist but will not be translated to codesets they will be presets
 
-    line_out = {'owner_org': 'statcan', 'type': 'codeset', 'private': False}
+    line_out = {'owner_org': 'statcan', 'private': False, 'type': 'codeset'}
 
     if line['tmdroplfld_bi_tmtxtm'][0] == 'extras_geolevel_en_txtm':
         english_value, french_value = map(unicode.strip, (line['tmdroplopt_bi_tmtxtm'][0]).split('|'))
@@ -50,7 +50,7 @@ for line in lines:
             continue
         else:
             line_out['codeset_type'] = lookup[line['tmdroplfld_bi_tmtxtm'][0]]
-            line_out['codeset_value'] = ('00'+code_value)[-2:]
+            line_out['codeset_value'] = ('00{0}'.format(code_value))[-2:]
             line_out['title'] = {
                 'en': english_value,
                 'fr': french_value

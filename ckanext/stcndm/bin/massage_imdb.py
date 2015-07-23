@@ -4,6 +4,7 @@ import sys
 import json
 import yaml
 import ckanapi
+import datetime
 
 
 def listify(value):
@@ -22,11 +23,11 @@ def code_lookup(old_field_name, data_set, choice_list):
     for field_value in field_values:
         code = None
         for choice in choice_list:
-            if choice['label']['en'] == field_value:
+            if choice['label']['en'].lower() == field_value.lower():
                 if choice['value']:
                     code = choice['value']
         if not code:
-            print 'weird {0} .{1}.{2}'.format(old_field_name, data_set[old_field_name], field_value)
+            sys.stderr.write('imdb-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
         else:
             codes.append(code)
     return codes
@@ -61,11 +62,23 @@ for preset in presetMap['presets']:
         imdb_status_list = preset['values']['choices']
         if not imdb_status_list:
             raise ValueError('could not find imdb status preset')
+    if preset['preset_name'] == 'ndm_survey_participation':
+        survey_participation_list = preset['values']['choices']
+        if not survey_participation_list:
+            raise ValueError('could not find survey participation preset')
+    if preset['preset_name'] == 'ndm_survey_owner':
+        survey_owner_list = preset['values']['choices']
+        if not survey_owner_list:
+            raise ValueError('could not find survey owner preset')
+    if preset['preset_name'] == 'ndm_formats':
+        format_list = preset['values']['choices']
+        if not format_list:
+            raise ValueError('could not find format preset')
 
 lines = json.load(sys.stdin)
 out = []
 for line in lines:
-    line_out = {'owner_org': 'statcan', 'private': False}
+    line_out = {'owner_org': 'statcan', 'private': False, 'type': 'imdb'}
 
     if 'archived_bi_strs' in line:
         result = code_lookup('archived_bi_strs', line, archive_status_list)
@@ -98,7 +111,8 @@ for line in lines:
         line_out['feature_weight'] = line['featureweight_bi_ints']
 
     if 'extras_frccode_bi_strs' in line:
-        line_out['frc'] = line['extras_frccode_bi_strs'][0]
+        if line['extras_frccode_bi_strs']:
+            line_out['frc'] = line['extras_frccode_bi_strs']
 
     if 'freqcode_bi_txtm' in line:
         line_out['frequency_codes'] = [u'00{0}'.format(i)[-2:] for i in listify(line['freqcode_bi_txtm'])]
@@ -118,10 +132,13 @@ for line in lines:
         line_out['keywords'] = temp
 
     if 'levelsubjcode_bi_txtm' in line:
-        line_out['level_subject_code'] = line['levelsubjcode_bi_txtm']
+        result = listify(line['levelsubjcode_bi_txtm'])
+        if result:
+            line_out['level_subject_codes'] = result
 
     if 'productidnew_bi_strs' in line:
         line_out['product_id_new'] = line['productidnew_bi_strs']
+        line_out['name'] = 'imdb-{0}'.format(line['productidnew_bi_strs'])
 
     temp = {}
     if 'questlink_en_strs' in line:
@@ -133,63 +150,76 @@ for line in lines:
 
     temp = {}
     if 'refperiod_en_txtm' in line:
-        temp['en'] = line['refperiod_en_txtm']
+        temp['en'] = line['refperiod_en_txtm'][0]
     if 'refperiod_fr_txtm' in line:
-        temp['fr'] = line['refperiod_fr_txtm']
+        temp['fr'] = line['refperiod_fr_txtm'][0]
     if temp:
         line_out['reference_period'] = temp
 
     if 'releasedate_bi_strs' in line:
-        line_out['release_date'] = line['releasedate_bi_strs']
+        _temp = line['releasedate_bi_strs']
+        try:
+            datetime.datetime.strptime(_temp, '%Y-%m-%dT%H:%M')
+        except ValueError:
+            sys.stderr.write('imdb-{0}Invalid release date {1}\n'.format(line['productidnew_bi_strs'], _temp))
+            _temp = u'0001-01-01T08:30'
+        line_out['release_date'] = _temp
 
     if 'statusf_en_strs' in line:
         result = code_lookup('statusf_en_strs', line, imdb_status_list)
         if result:
             line_out['imdb_status_code'] = result[0]
 
-
-
-    print json.dumps(line_out)
-
-#print json.dumps(out)
-
-"""
-    if 'tmtaxdisp_en_tmtxtm' in line:
-        if line['tmtaxdisp_en_tmtxtm'][0] == 'a_to_z':
-            line_out['subject_display_code'] = '1'
-        elif line['tmtaxdisp_en_tmtxtm'][0] == 'taxonomy':
-            line_out['subject_display_code'] = '2'
-        elif line['tmtaxdisp_en_tmtxtm'][0] == 'both':
-            line_out['subject_display_code'] = '3'
-        elif line['tmtaxdisp_en_tmtxtm'][0] == 'hide':
-            line_out['subject_display_code'] = '4'
+    if 'subjnewcode_bi_txtm' in line:
+        line_out['subject_codes'] = listify(line['subjnewcode_bi_txtm'])
 
     temp = {}
-    if 'tmtaxsubj_en_tmtxtm' in line:
-        temp['en'] = line['tmtaxsubj_en_tmtxtm'][0]
-    if 'tmtaxsubj_fr_tmtxtm' in line:
-        temp['fr'] = line['tmtaxsubj_fr_tmtxtm'][0]
+    if 'surveylink_en_strs' in line:
+        temp['en'] = line['surveylink_en_strs']
+    if 'surveylink_fr_strs' in line:
+        temp['fr'] = line['surveylink_fr_strs']
+    if temp:
+        line_out['survey_url'] = temp
+
+    if 'surveyparticipation_en_strs' in line:
+        result = code_lookup('surveyparticipation_en_strs', line, survey_participation_list)
+        if result:
+            line_out['survey_participation_code'] = result[0]
+
+    if 'survowner_en_strs' in line:
+        result = code_lookup('survowner_en_strs', line, survey_owner_list)
+        if result:
+            line_out['survey_owner_code'] = result[0]
+
+    temp = {}
+    if 'title_en_txts' in line:
+        temp['en'] = line['title_en_txts']
+    if 'title_fr_txts' in line:
+        temp['fr'] = line['title_fr_txts']
     if temp:
         line_out['title'] = temp
 
-    if 'tmtaxsubjcode_bi_tmtxtm' in line:
-        line_out['subject_code'] = line['tmtaxsubjcode_bi_tmtxtm'][0]
-        line_out['name'] = 'subject-{0}'.format(('000000'+line['tmtaxsubjcode_bi_tmtxtm'][0])[-6:])
-
-    if 'tmtaxadminnotes_bi_tmtxts' in line:
-        line_out['notes'] = {
-            'en': line['tmtaxadminnotes_bi_tmtxts'][0],
-            'fr': line['tmtaxadminnotes_bi_tmtxts'][0]
-        }
-
-    if 'tmtaxsubjoldcode_bi_tmtxtm' in line:
-        line_out['subjectold_code'] = map(str.strip, line['tmtaxsubjoldcode_bi_tmtxtm'][0].split(';'))
-
     temp = {}
-    if 'tmtaxatozalias_en_tmtxtm' in line:
-        temp['en'] = line['tmtaxatozalias_en_tmtxtm'][0]
-    if 'tmtaxatozalias_fr_tmtxtm' in line:
-        temp['fr'] = line['tmtaxatozalias_fr_tmtxtm'][0]
+    if 'url_en_strs' in line:
+        temp['en'] = line['url_en_strs']
+    if 'url_fr_strs' in line:
+        temp['fr'] = line['url_fr_strs']
     if temp:
-        line_out['a_to_z_alias'] = temp
-"""
+        line_out['url'] = temp
+
+    if 'navsubjcodesemi' in line:
+        line_out['navigation_subject_codes'] = listify(line['navsubjcodesemi'])
+
+    if 'res_format' in line:
+        result = code_lookup('res_format', line, format_list)
+        if isinstance(result, list):
+            line_out['format_codes'] = result
+        else:
+            raise ValueError('result .{0}. is not a list')
+
+    if 'res_url' in line:
+        line_out['resource_url'] = line['res_url'][0]
+
+    print json.dumps(line_out)
+#    lc = ckanapi.LocalCKAN()
+#    lc.action.

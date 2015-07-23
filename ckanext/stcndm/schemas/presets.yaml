@@ -117,6 +117,7 @@ presets:
     form_snippet: multiple_select.html
     display_snippet: multiple_choice.html
     validators: scheming_required scheming_multiple_choice
+    output_validators: shortcode_output
     label:
       en: Resource Formats
       fr: Formats de ressources
@@ -417,6 +418,7 @@ presets:
     form_snippet: multiple_select.html
     display_snippet: multiple_choice.html
     validators: scheming_required scheming_multiple_choice
+    output_validators: shortcode_output
     label:
       en: Tracking
       fr: Pistage
@@ -499,6 +501,7 @@ presets:
     form_snippet: multiple_select.html
     display_snippet: multiple_choice.html
     validators: scheming_required scheming_multiple_choice
+    output_validators: shortcode_output
     label:
       en: Collection Method
       fr: Méthode de collection
@@ -536,8 +539,8 @@ presets:
             fr: Interview (sans ordinateur)
         value: '16'
       - label:
-            en: Not Specified - Electronic questionnaire
-            fr: Non spécifié - Questionnaire électronique
+            en: Not Specified
+            fr: Non spécifié
         value: '18'
       - label:
             en: Personal (non computer) - mail out mail back
