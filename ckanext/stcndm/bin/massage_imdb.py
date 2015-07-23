@@ -33,7 +33,7 @@ def code_lookup(old_field_name, data_set, choice_list):
     return codes
 
 content_type_list = []
-lc = ckanapi.RemoteCKAN('http://127.0.0.1:5000')
+lc = ckanapi.LocalCKAN()
 results = lc.action.package_search(
     q='type:codeset',
     rows=1000)
@@ -221,5 +221,3 @@ for line in lines:
         line_out['resource_url'] = line['res_url'][0]
 
     print json.dumps(line_out)
-#    lc = ckanapi.LocalCKAN()
-#    lc.action.

@@ -1,0 +1,53 @@
+scheming_version: 1
+about: 'Statistics Canada Dissemination: Geo Descriptors'
+about_url: http://github.com/open-data/ckanext-stcndm
+catalog_type_label:
+  en: Geo Descriptors
+  fr: Geo descriptors
+dataset_type: geodescriptor
+form_languages:
+- en
+- fr
+languages_label:
+- eng; CAN
+- fra; CAN
+
+dataset_fields:
+
+- field_name: name
+  # follow our custom name generation validator with default package name validators
+  validators: imdb_create_name
+    not_empty unicode name_validator package_name_validator
+  label:
+    en: Internal Unique ID
+    fr: ID interne unique
+  form_snippet: null
+
+- field_name: product_id_new # 10uid_bi_strs
+  label:
+    en: Product ID New
+    fr: ID produit nouveau
+  required: true
+
+- field_name: title # tmsgcname_en_tmtxtm tmsgcname_fr_tmtxtm
+  label:
+    en: Geo Descriptor Name
+    fr: Nom du géo descriptor
+  preset: fluent_text
+
+- field_name: geodescriptor_codes # tmsgccode_bi_tmtxtm
+  label:
+    en: Geo Descriptor Codes
+    fr: Codes du géo descriptor
+  required: true
+
+- field_name: geodescriptor_specific_codes # tmsgcspecificcode_bi_tmtxtm
+  label:
+    en: Geo Descriptor Specific Codes
+    fr: Codes spécifiques du géo descriptor
+  required: true
+
+- field_name: old_title # title
+  label:
+    en: Old Title
+    fr: Ancien titre
