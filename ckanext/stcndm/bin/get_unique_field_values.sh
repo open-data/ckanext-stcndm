@@ -6,7 +6,7 @@ die () {
 
 [ "$#" -eq 2 ] || die "2 arguments required, $# provided. arg1: organisation, arg2: field name"
 
-curl http://localhost:8983/solr/ndm/query?q=organization:$1\&rows=70000\&fl=$2 | \
+curl http://ndmckanq1.stcpaz.statcan.gc.ca:8282/solr/ndm_core_dev/query?q=organization:$1\&rows=70000\&fl=$2 | \
    jq '.response.docs' | \
    jq "[.[].$2]" | \
    jq 'unique'

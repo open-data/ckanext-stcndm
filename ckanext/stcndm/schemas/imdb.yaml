@@ -97,6 +97,12 @@ dataset_fields:
     en: IMDB Survey Item
     fr: Élement de sondage IMDB
 
+- field_name: isp_url
+  label:
+    en: ISP URL
+    fr: URL d'ISP
+  preset: fluent_text
+
 - field_name: keywords
   label:
     en: Keywords
@@ -120,7 +126,8 @@ dataset_fields:
   label:
     en: Reference Period
     fr: Période visée
-  preset: fluent_text
+  preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: release_date
   label:
@@ -138,6 +145,12 @@ dataset_fields:
 
 - field_name: imdb_status_code
   preset: ndm_imdb_status
+
+- field_name: thesaurus
+  label:
+    en: STC Thesaurus
+    fr: Dictionnaire de synonymes STC
+  preset: fluent_text
 
 - field_name: subject_codes
   label:

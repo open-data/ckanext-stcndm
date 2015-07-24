@@ -6,7 +6,9 @@ import json
 lines = json.load(sys.stdin)
 out = []
 for line in lines:
-    line_out = {'owner_org': 'statcan', 'private': False, 'type': 'subject'}
+    line_out = {u'owner_org': u'statcan',
+                u'private': False,
+                u'type': u'subject'}
 
     if 'tmtaxdisp_en_tmtxtm' in line:
         if line['tmtaxdisp_en_tmtxtm'][0] == 'a_to_z':
@@ -20,9 +22,9 @@ for line in lines:
 
     temp = {}
     if 'tmtaxsubj_en_tmtxtm' in line:
-        temp['en'] = line['tmtaxsubj_en_tmtxtm'][0]
+        temp[u'en'] = line['tmtaxsubj_en_tmtxtm'][0]
     if 'tmtaxsubj_fr_tmtxtm' in line:
-        temp['fr'] = line['tmtaxsubj_fr_tmtxtm'][0]
+        temp[u'fr'] = line['tmtaxsubj_fr_tmtxtm'][0]
     if temp:
         line_out['title'] = temp
 
@@ -32,8 +34,8 @@ for line in lines:
 
     if 'tmtaxadminnotes_bi_tmtxts' in line:
         line_out['notes'] = {
-            'en': line['tmtaxadminnotes_bi_tmtxts'][0],
-            'fr': line['tmtaxadminnotes_bi_tmtxts'][0]
+            u'en': line['tmtaxadminnotes_bi_tmtxts'],
+            u'fr': line['tmtaxadminnotes_bi_tmtxts']
         }
 
     if 'tmtaxsubjoldcode_bi_tmtxtm' in line:
@@ -41,9 +43,9 @@ for line in lines:
 
     temp = {}
     if 'tmtaxatozalias_en_tmtxtm' in line:
-        temp['en'] = line['tmtaxatozalias_en_tmtxtm'][0]
+        temp[u'en'] = line['tmtaxatozalias_en_tmtxtm'][0]
     if 'tmtaxatozalias_fr_tmtxtm' in line:
-        temp['fr'] = line['tmtaxatozalias_fr_tmtxtm'][0]
+        temp[u'fr'] = line['tmtaxatozalias_fr_tmtxtm'][0]
     if temp:
         line_out['a_to_z_alias'] = temp
 

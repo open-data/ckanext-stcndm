@@ -1,10 +1,10 @@
 scheming_version: 1
-about: 'Statistics Canada Dissemination: Geodescriptors'
+about: 'Statistics Canada Dissemination: Dimension Groups'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Geodescriptors
-  fr: Geodescriptors
-dataset_type: geodescriptor
+  en: Dimension Groups
+  fr: Groupes de dimensions
+dataset_type: dimendion_groups
 form_languages:
 - en
 - fr
@@ -16,7 +16,7 @@ dataset_fields:
 
 - field_name: name
   # follow our custom name generation validator with default package name validators
-  validators: geodescriptor_create_name
+  validators: dimension_group_create_name
     not_empty unicode name_validator package_name_validator
   label:
     en: Internal Unique ID
@@ -29,20 +29,20 @@ dataset_fields:
     fr: Ancien ID du produit
   required: true
 
-- field_name: geodescriptor_names # tmsgcname_en_tmtxtm tmsgcname_fr_tmtxtm
+- field_name: dimension_group_labels # tmdimentext_en_tmtxtm tmdimentext_fr_tmtxtm
   label:
-    en: Geo Descriptor Name
-    fr: Nom du géo descriptor
+    en: Dimension Group Labels
+    fr: Étiquettes des groupes de dimensions
   preset: fluent_tags
 
-- field_name: geolevel_codes # tmsgccode_bi_tmtxtm
+- field_name: dimension_group_codes # tmdimencode_bi_tmtxtm
   label:
-    en: Geo Descriptor Codes
-    fr: Codes du géo descriptor
+    en: Dimension Group Codes
+    fr: Codes du groupe de dimensions
   preset: shortcode_multivalue
   required: true
 
-- field_name: geodescriptor_specific_codes # tmsgcspecificcode_bi_tmtxtm
+- field_name: dimension_group_alias # tmdimenalias_bi_tmtxtm
   label:
     en: Geodescriptor Specific Codes
     fr: Codes spécifiques du geodescriptor

@@ -103,7 +103,7 @@ def codeset_create_name(key, data, errors, context):
         return
 
     codeset_type = _data_lookup(('codeset_type',), data)
-    codeset_value = _data_lookup(('codeset_value',), data)
+    codeset_value = _data_lookup(('codeset_value',), data).lower()
     if codeset_type and codeset_value:
         data[key] = u'codeset-{0}-{1}'.format(codeset_type, codeset_value)
     else:
@@ -118,7 +118,7 @@ def subject_create_name(key, data, errors, context):
 
     subject_code = _data_lookup(('subject_code',), data)
     if subject_code:
-        data[key] = u'subject-{0}'.format(subject_code)
+        data[key] = u'subject-{0}'.format((u'000000'+subject_code)[-6:])
     else:
         errors[key].append(_('couldn\'t find subject_code'))
 
@@ -134,6 +134,19 @@ def imdb_create_name(key, data, errors, context):
         data[key] = u'imdb-{0}'.format(product_id_new)
     else:
         errors[key].append(_('couldn\'t find product_id_new'))
+
+
+def geodescriptor_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_old = _data_lookup(('product_id_old',), data)
+    if product_id_old:
+        data[key] = u'geodescriptor-{0}'.format(product_id_old[3:])
+    else:
+        errors[key].append(_('couldn\'t find product_id_old'))
 
 
 @scheming_validator
@@ -189,7 +202,7 @@ def codeset_multiple_choice(field, schema):
 
 def ndm_tag_name_validator(value, context):
 
-    tag_name_match = re.compile('[\w \-.\'()]*$', re.UNICODE)
+    tag_name_match = re.compile('[\w \-.,:\'/()]*$', re.UNICODE)
     if not tag_name_match.match(value):
-        raise df.Invalid(_('Tag "%s" must be alphanumeric characters or symbols: -_.\'()') % value)
+        raise df.Invalid(_('Tag "%s" must be alphanumeric characters or symbols: - _ . , : \' / ( )') % value)
     return value
