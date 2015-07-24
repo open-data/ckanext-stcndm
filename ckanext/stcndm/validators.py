@@ -136,6 +136,19 @@ def imdb_create_name(key, data, errors, context):
         errors[key].append(_('couldn\'t find product_id_new'))
 
 
+def geodescriptor_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_old = _data_lookup(('product_id_old',), data)
+    if product_id_old:
+        data[key] = u'geodescriptor-{0}'.format(product_id_old[3:])
+    else:
+        errors[key].append(_('couldn\'t find product_id_old'))
+
+
 @scheming_validator
 def codeset_multiple_choice(field, schema):
     """
