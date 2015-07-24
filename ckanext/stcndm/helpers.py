@@ -1,16 +1,16 @@
 __author__ = 'matt'
 
 import ckanapi
+import ckan.logic as logic
+import ckan.model as model
+import ckan.plugins.toolkit as toolkit
+from ckan.common import c
 
 # import ckan
 # import ckan.plugins as p
 # import ckan.exceptions
 # from ckan.common import (_, ungettext, g, request, session, json, OrderedDict)
-import ckan.logic as logic
-import ckan.model as model
-import ckan.plugins.toolkit as toolkit
 
-from ckan.common import c
 
 # noinspection PyUnresolvedReferences
 _get_action = toolkit.get_action
@@ -246,6 +246,7 @@ def codeset_choices(codeset_type):
     Return a dictionary of {codeset_value: title} for the codeset_type
     passed
     """
+#    rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000/')
     lc = ckanapi.LocalCKAN()
     results = lc.action.package_search(
         q='type:codeset',

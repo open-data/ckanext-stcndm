@@ -1,6 +1,7 @@
 {% import 'macros/form.html' as form %}
 
 {%- call form.input_block(
+    "field-{{ field.field_name }}",
     label=h.scheming_language_text(field.label),
     classes=['control-medium'],
     error=errors[field.field_name],
@@ -8,12 +9,12 @@
 {%- set codeset_choices=h.codeset_choices(field.codeset_type) -%}
     <select multiple size="{{ codeset_choices|length }}"
         style="display: block"
-        id="field-{{ field.codeset_type }}"
-        name="{{ field.codeset_type }}" >
+        id="field-{{ field.field_name }}"
+        name="{{ field.field_name }}" >
         {%- for c, v in codeset_choices.iteritems() -%}
             <option id="field-{{ field.field_name }}-{{ c }}"
                 value="{{ c }}"
-                {{"selected " if c in data[field.field_name] }} >
+                {{"selected " if c in data[field.field_name] }} />
                 {{ h.scheming_language_text(v) }}
             </option>
         {%- endfor -%}

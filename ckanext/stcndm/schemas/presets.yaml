@@ -174,7 +174,7 @@ presets:
             en: ETF
             fr: ETF
         value: '19'
-    required: true
+    required: false
 
 - preset_name: ndm_archive_status
   values:
@@ -632,5 +632,5 @@ presets:
   values:
     form_snippet: codeset_multiple_select.html
     display_snippet: codeset_multiple_choice.html
-    validators: scheming_required codeset_multiple_choice
+    validators: codeset_multiple_choice
     output_validators: scheming_multiple_choice_output
