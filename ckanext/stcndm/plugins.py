@@ -71,6 +71,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "codeset_multiple_choice": validators.codeset_multiple_choice,
             "subject_create_name": validators.subject_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
+            "dimension_member_create_name": validators.dimension_member_create_name,
             "imdb_create_name": validators.imdb_create_name,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
         }

@@ -31,10 +31,6 @@ dataset_fields:
   preset: select
   choices:
     - label:
-        en: Synonym
-        fr: Synonyme
-      value: 'thesaurus'
-    - label:
         en: Content Type
         fr: Genre de contenu
       value: 'content_type'
@@ -50,11 +46,6 @@ dataset_fields:
         en: Geolevel
         fr: Geolevel
       value: 'geolevel'
-    # too many reference periods, must be autocomplete
-    #- label:
-    #    en: Reference Period
-    #    fr: Période visée
-    #  value: 'reference_period'
   required: true
 
 #  label:

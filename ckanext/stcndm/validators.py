@@ -136,17 +136,43 @@ def imdb_create_name(key, data, errors, context):
         errors[key].append(_('couldn\'t find product_id_new'))
 
 
+def cube_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'cube-{0}'.format(product_id_new)
+    else:
+        errors[key].append(_('couldn\'t find product_id_new'))
+
+
 def geodescriptor_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
         return
 
-    product_id_old = _data_lookup(('product_id_old',), data)
-    if product_id_old:
-        data[key] = u'geodescriptor-{0}'.format(product_id_old[3:])
+    geodescriptor_specific_code = _data_lookup(('geodescriptor_specific_code',), data)
+    if geodescriptor_specific_code:
+        data[key] = u'geodescriptor-{0}'.format(geodescriptor_specific_code.lower())
     else:
-        errors[key].append(_('couldn\'t find product_id_old'))
+        errors[key].append(_('couldn\'t find geodescriptor_specific_code'))
+
+
+def dimension_member_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    dimension_member_code = _data_lookup(('dimension_member_code',), data)
+    if dimension_member_code:
+        data[key] = u'dimension_member-{0}'.format(dimension_member_code)
+    else:
+        errors[key].append(_('couldn\'t find dimension_member_code'))
 
 
 @scheming_validator

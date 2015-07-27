@@ -29,10 +29,10 @@ dataset_fields:
 - field_name: title
   preset: ndm_title
 
-- field_name: notes
-  preset: ndm_notes
+- field_name: description
+  preset: ndm_description
 
-- field_name: content_type_code
+- field_name: content_type_codes
   label:
     en: Content Type
     fr: Type de contenu
@@ -49,13 +49,13 @@ dataset_fields:
   preset: codeset_multiple_select
   codeset_type: geolevel
 
-- field_name: geodescriptor
+- field_name: geodescriptors
   label:
-    en: Geo Specific
-    fr: Géo spécifique
+    en: Geodescriptors
+    fr: Géodescriptors
   preset: shortcode_multivalue
 
-- field_name: subject_code
+- field_name: subject_codes
   label:
     en: Subject
     fr: Sujet
@@ -83,16 +83,17 @@ dataset_fields:
       value: '10'
   required: true
 
-- field_name: related_product
+- field_name: related_products
   label:
-    en: Related
-    fr: Relié
+    en: Related Products
+    fr: Produits reliés
+  preset: fluent_tags
 
 - field_name: thesaurus_term_code
   label:
     en: STC Thesaurus
     fr: STC dictionnaire de synonymes
-  preset: codeset_multiple_select
+  preset: fluent_tags
   codeset_type: thesaurus
 
 #- field_name: feature_weight
@@ -125,7 +126,7 @@ dataset_fields:
     fr: Groupe de dimension
   preset: shortcode_multivalue
 
-- field_name: dimmember_code
+- field_name: dimension_member_codes
   label:
     en: Dimension Member
     fr: Membre de dimension
@@ -139,7 +140,7 @@ dataset_fields:
 #    en: External Author
 #    fr: Auteur externe
 
-- field_name: frc_code
+- field_name: frc
   label:
     en: FRC
     fr: FRC
@@ -169,16 +170,17 @@ dataset_fields:
 #    en: Internal Author
 #    fr: Auteur interne
 
-- field_name: internal_contact
+- field_name: internal_contacts
   label:
     en: Internal Contact Name
     fr: Nom de personne ressource interne
+  preset: shortcode_multivalue
 
 - field_name: keywords
   label:
     en: Keywords
     fr: Mots clés
-  preset: fluent_text
+  preset: fluent_tags
 
 - field_name: last_publish_status_code
   preset: ndm_publish_status
@@ -189,10 +191,11 @@ dataset_fields:
 #    fr: Date du système antérieur
 #  preset: date
 
-- field_name: parent_product
+- field_name: parent_products
   label:
     en: Hierarchy
     fr: Hiérarchie
+  preset: shortcode_multivalue
 
 #- field_name: price
 #  label:
@@ -220,12 +223,11 @@ dataset_fields:
 #    en: Publication Year
 #    fr: Année de publication
 
-- field_name: reference_period_code
+- field_name: reference_periods
   label:
     en: Reference Period
     fr: Période de référence
-  preset: codeset_select
-  codeset_type: reference_period
+  preset: fluent_tags
 
 - field_name: release_date
   label:
@@ -233,12 +235,13 @@ dataset_fields:
     fr: Date de diffusion (YYYY-MM-DD)
   preset: date
 
-- field_name: replaced_product
+- field_name: replaced_products
   label:
-    en: Replaced Product
-    fr: Produit remplacé
+    en: Replaced Products
+    fr: Produits remplacés
+  preset: shortcode_multivalue
 
-- field_name: status_code
+- field_name: status_codes
   label:
     en: Status
     fr: État

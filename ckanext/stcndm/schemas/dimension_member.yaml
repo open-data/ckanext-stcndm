@@ -1,10 +1,10 @@
 scheming_version: 1
-about: 'Statistics Canada Dissemination: Geodescriptors'
+about: 'Statistics Canada Dissemination: Dimension Member'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Geodescriptors
-  fr: Geodescriptors
-dataset_type: geodescriptor
+  en: Dimension Member
+  fr: Membre de dimension
+dataset_type: dimension_member
 form_languages:
 - en
 - fr
@@ -16,7 +16,7 @@ dataset_fields:
 
 - field_name: name
   # follow our custom name generation validator with default package name validators
-  validators: geodescriptor_create_name
+  validators: dimension_member_create_name
     not_empty unicode name_validator package_name_validator
   label:
     en: Internal Unique ID
@@ -29,23 +29,23 @@ dataset_fields:
     fr: Ancien ID du produit
   required: true
 
-- field_name: title # tmsgcname_en_tmtxtm tmsgcname_fr_tmtxtm
+- field_name: title # tmdimentext_en_tmtxtm tmdimentext_fr_tmtxtm
   label:
     en: Title
     fr: Titre
   preset: fluent_text
 
-- field_name: geolevel_code # tmsgccode_bi_tmtxtm
+- field_name: dimension_member_code # tmdimencode_bi_tmtxtm
   label:
-    en: Geo Descriptor Code
-    fr: Code du géodescriptor
+    en: Dimension Member Code
+    fr: Code du membre de dimension
   required: true
 
-- field_name: geodescriptor_specific_code # tmsgcspecificcode_bi_tmtxtm
+- field_name: dimension_member_alias # tmdimenalias_bi_tmtxtm
   label:
-    en: Geodescriptor Specific Code
-    fr: Code spécifique du geodescriptor
-  required: true
+    en: Dimension Member Alias
+    fr: Alias du membre de dimension
+  preset: fluent_text
 
 - field_name: old_title # title
   label:
