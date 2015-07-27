@@ -42,14 +42,14 @@ dataset_fields:
 - field_name: tracking_code
   preset: ndm_tracking
 
-- field_name: geo_level_code
+- field_name: geolevel_codes
   label:
     en: Geolevel
     fr: Geolevel
   preset: codeset_multiple_select
   codeset_type: geolevel
 
-- field_name: geodescriptors
+- field_name: geodescriptor_codes
   label:
     en: Geodescriptors
     fr: Géodescriptors
@@ -159,7 +159,7 @@ dataset_fields:
     fr: Notes historiques
   preset: fluent_markdown
 
-- field_name: imdb_source_code
+- field_name: imdb_source_codes
   label:
     en: Source
     fr: Source

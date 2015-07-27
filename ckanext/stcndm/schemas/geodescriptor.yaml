@@ -41,7 +41,7 @@ dataset_fields:
     fr: Code du géodescriptor
   required: true
 
-- field_name: geodescriptor_specific_code # tmsgcspecificcode_bi_tmtxtm
+- field_name: geodescriptor_code # tmsgcspecificcode_bi_tmtxtm
   label:
     en: Geodescriptor Specific Code
     fr: Code spécifique du geodescriptor

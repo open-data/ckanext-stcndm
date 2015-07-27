@@ -38,7 +38,7 @@ for i in range(0, 10):
             line_out['title'] = temp
 
         if 'tmsgcspecificcode_bi_tmtxtm' in line and line['tmsgcspecificcode_bi_tmtxtm']:
-            line_out['geodescriptor_specific_code'] = line['tmsgcspecificcode_bi_tmtxtm']
+            line_out['geodescriptor_code'] = line['tmsgcspecificcode_bi_tmtxtm']
             line_out['name'] = u'geodescriptor-{0}'.format(line['tmsgcspecificcode_bi_tmtxtm'].lower())
 
         if 'tmsgccode_bi_tmtxtm' in line and line['tmsgccode_bi_tmtxtm']:

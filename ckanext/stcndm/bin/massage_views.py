@@ -26,7 +26,7 @@ def code_lookup(old_field_name, data_set, choice_list):
                 if choice['value']:
                     code = choice['value']
         if not code:
-            sys.stderr.write('cube-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
+            sys.stderr.write('view-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
         else:
             codes.append(code)
     return codes
@@ -72,17 +72,23 @@ for result in results['results']:
         'value': result['subject_code']
     })
 
-geodescriptor_list = []
-results = rc.action.package_search(
-    q='type:geodescriptor',
-    rows=1000)
-for result in results['results']:
-    if 'geodescriptor_code' in result:
-        continue
-    geodescriptor_list.append({
-        'label': result['title'],
-        'value': result['geodescriptor_code']
-    })
+# geodescriptor_list = []
+# blocks = 1
+# block = 0
+# while block < blocks:
+#     results = rc.action.package_search(
+#         q='type:geodescriptor',
+#         rows=1000,
+#         start=block*1000)
+#     blocks = results['count'] / 1000
+#     for result in results['results']:
+#         if 'geodescriptor_code' not in result:
+#             continue
+#         geodescriptor_list.append({
+#             'label': result['title'],
+#             'value': result['geodescriptor_code']
+#         })
+#     block += 1
 
 dimension_member_list = []
 results = rc.action.package_search(
@@ -150,7 +156,7 @@ for preset in presetMap['presets']:
 for i in range(0, 10):
     rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
     query_results = rc.action.package_search(
-        q='organization:rgcube',
+        q='organization:rgtabv',
         rows=1000,
         start=i*1000)
     for line in query_results['results']:
@@ -159,8 +165,8 @@ for i in range(0, 10):
 
         line_out = {u'owner_org': u'statcan',
                     u'private': False,
-                    u'type': u'cube',
-                    u'product_type_code': u'10'}
+                    u'type': u'view',
+                    u'product_type_code': u'11'}
 
         temp = {}
         if 'adminnotes_bi_txts' in line and line['adminnotes_bi_txts']:
@@ -200,10 +206,10 @@ for i in range(0, 10):
             if result:
                 line_out['geolevel_codes'] = result
 
-        if 'specificgeo_en_txtm' in line:
-            result = code_lookup('specificgeo_en_txtm', line, geodescriptor_list)
+        if 'specificgeocode_bi_txtm' in line:
+            result = listify(line['specificgeocode_bi_txtm'])
             if result:
-                line_out['geodescriptors'] = result
+                line_out['geodescriptor_codes'] = result
 
         if 'subjnew_en_txtm' in line:
             result = code_lookup('subjnew_en_txtm', line, subject_list)
@@ -226,17 +232,6 @@ for i in range(0, 10):
                 temp[u'fr'] = result
         if temp:
             line_out['thesaurus'] = temp
-
-        if 'archivedate_bi_txts' in line and line['archivedate_bi_txts']:
-            line_out['archive_date'] = line['archivedate_bi_txts']
-
-        if 'archived_bi_strs' in line:
-            result =  code_lookup('archived_bi_strs', line, archive_status_list)
-            if result:
-                line_out['achive_status'] = result[0]
-
-        if 'defaultviewid_bi_strs' and line['defaultviewid_bi_strs']:
-            line_out['default_view_id'] = line['defaultviewid_bi_strs']
 
         if 'dimmembers_en_txtm':
             result = code_lookup('dimmembers_en_txtm', line, dimension_member_list)
@@ -297,18 +292,6 @@ for i in range(0, 10):
 
         if 'productidold_bi_strs' in line and line['productidold_bi_strs']:
             line_out['product_id_old'] = line['productidold_bi_strs']
-
-        temp = {}
-        if 'refperiod_en_txtm' in line:
-            result = listify(line['refperiod_en_txtm'])
-            if result:
-                temp[u'en'] = result
-        if 'refperiod_fr_txtm' in line:
-            result = listify(line['refperiod_fr_txtm'])
-            if result:
-                temp[u'fr'] = result
-        if temp:
-            line_out['reference_periods'] = temp
 
         if 'releasedate_bi_strs' in line and line['releasedate_bi_strs']:
             line_out['release_date'] = line['releasedate_bi_strs']

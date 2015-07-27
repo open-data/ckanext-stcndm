@@ -48,10 +48,6 @@ dataset_fields:
       value: 'geolevel'
   required: true
 
-#  label:
-#    en: The name of field or codeset that this entry is associated with (e.g. geo_level_code)
-#    fr: Le nom du champ ou 'codeset' auquel cet enregistrement est associé (p.e. geo_level_code)
-
 - field_name: codeset_value
   label:
     en: The code value of the codeset (e.g. A0001)
