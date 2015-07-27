@@ -29,8 +29,8 @@ dataset_fields:
 - field_name: title
   preset: ndm_title
 
-- field_name: notes
-  preset: ndm_notes
+- field_name: description
+  preset: ndm_description
 
 - field_name: content_type_code
   label:

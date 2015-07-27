@@ -28,40 +28,24 @@ for i in range(0, 10):
 
         if '10uid_bi_strs' in line and line['10uid_bi_strs']:
             line_out['product_id_old'] = line['10uid_bi_strs']
-            line_out['name'] = u'geodescriptor-{0}'.format(line['10uid_bi_strs'][3:])
 
         temp = {}
-        if 'tmsgcname_en_tmtxtm' in line:
-            result = listify(line['tmsgcname_en_tmtxtm'])
-            if result:
-                temp[u'en'] = []
-                for i in result:
-                    while len(i) > 100:
-                        temp[u'en'].append(i[:100])
-                        i = i[100:]
-        if 'tmsgcname_fr_tmtxtm' in line:
-            result = listify(line['tmsgcname_fr_tmtxtm'])
-            if result:
-                temp[u'fr'] = []
-                for i in result:
-                    while len(i) > 100:
-                        temp[u'fr'].append(i[:100])
-                        i = i[100:]
+        if 'tmsgcname_en_tmtxtm' in line and line['tmsgcname_en_tmtxtm']:
+            temp[u'en'] = line['tmsgcname_en_tmtxtm']
+        if 'tmsgcname_fr_tmtxtm' in line and line['tmsgcname_fr_tmtxtm']:
+            temp[u'fr'] = line['tmsgcname_fr_tmtxtm']
         if temp:
-            line_out['geodescriptor_names'] = temp
+            line_out['title'] = temp
 
-        if 'tmsgcspecificcode_bi_tmtxtm' in line:
-            result = listify(line['tmsgcspecificcode_bi_tmtxtm'])
-            if result:
-                line_out['geodescriptor_specific_codes'] = result
+        if 'tmsgcspecificcode_bi_tmtxtm' in line and line['tmsgcspecificcode_bi_tmtxtm']:
+            line_out['geodescriptor_specific_code'] = line['tmsgcspecificcode_bi_tmtxtm']
+            line_out['name'] = u'geodescriptor-{0}'.format(line['tmsgcspecificcode_bi_tmtxtm'].lower())
 
-        if 'tmsgccode_bi_tmtxtm' in line:
-            result = listify(line['tmsgccode_bi_tmtxtm'])
-            if result:
-                line_out['geolevel_codes'] = result
+        if 'tmsgccode_bi_tmtxtm' in line and line['tmsgccode_bi_tmtxtm']:
+            line_out['geolevel_code'] = line['tmsgccode_bi_tmtxtm']
 
         if 'title' in line and line['title']:
-            line_out['title'] = {
+            line_out['old_title'] = {
                 u'en': line['title'],
                 u'fr': line['title']}
 

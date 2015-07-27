@@ -61,8 +61,8 @@ dataset_fields:
   preset: codeset_multiple_select
   codeset_type: content_type
 
-- field_name: notes
-  preset: ndm_notes
+- field_name: description
+  preset: ndm_description
 
 - field_name: level_subject_codes
   label:

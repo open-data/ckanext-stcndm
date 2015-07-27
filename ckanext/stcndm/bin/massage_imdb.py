@@ -5,10 +5,6 @@ import json
 import yaml
 import datetime
 import ckanapi
-# import ckan.logic as logic
-# import ckan.model as model
-# import ckan.plugins.toolkit as toolkit
-# from ckan.common import c
 
 
 def listify(value):

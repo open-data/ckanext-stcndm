@@ -67,7 +67,6 @@ presets:
           en: Publications with repeating titles (Generic)
           fr: Publications avec des titres répétitifs (générique)
         value: '26'
-    required: true
 
 - preset_name: ndm_publish_status
   values:
@@ -110,7 +109,6 @@ presets:
           en: Frozen
           fr: Figé
         value: '99'
-    required: true
 
 - preset_name: ndm_formats
   values:
@@ -174,7 +172,6 @@ presets:
             en: ETF
             fr: ETF
         value: '19'
-    required: false
 
 - preset_name: ndm_archive_status
   values:
@@ -193,7 +190,6 @@ presets:
           en: Current
           fr: Courant
         value: '2'
-    required: true
 
 - preset_name: ndm_display
   values:
@@ -261,7 +257,6 @@ presets:
           en: Hide subject
           fr: Masquer sujet
         value: '4'
-    required: true
 
 - preset_name: ndm_survey_participation
   values:
@@ -600,7 +595,7 @@ presets:
     validators: fluent_text
     output_validators: fluent_text_output
 
-- preset_name: ndm_notes
+- preset_name: ndm_description
   values:
     label:
       en: Description
