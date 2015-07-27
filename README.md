@@ -54,7 +54,7 @@ for the primary and format types at:
     *  https://github.com/open-data/ckanext-fluent.git
     *  https://github.com/open-data/ckanext-repeating
     *  https://github.com/open-data/ckanext-wet-boew.git
-    *  https://github.com/<your fork>/ckanext-stcndm.git
+    *  https://github.com/<your fork&gt;/ckanext-stcndm.git
   4. Create and activate a virtual environment for your project:
   ```
    virtualenv --no-site-packages stcndm
