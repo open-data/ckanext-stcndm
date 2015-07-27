@@ -42,7 +42,7 @@ dataset_fields:
 - field_name: tracking_code
   preset: ndm_tracking
 
-#- field_name: geo_level_code
+#- field_name: geolevel_codes
 #  label:
 #    en: Geolevel
 #    fr: Geolevel

@@ -155,11 +155,11 @@ def geodescriptor_create_name(key, data, errors, context):
     if errors[key]:
         return
 
-    geodescriptor_specific_code = _data_lookup(('geodescriptor_specific_code',), data)
-    if geodescriptor_specific_code:
-        data[key] = u'geodescriptor-{0}'.format(geodescriptor_specific_code.lower())
+    geodescriptor_code = _data_lookup(('geodescriptor_code',), data)
+    if geodescriptor_code:
+        data[key] = u'geodescriptor-{0}'.format(geodescriptor_code.lower())
     else:
-        errors[key].append(_('couldn\'t find geodescriptor_specific_code'))
+        errors[key].append(_('couldn\'t find geodescriptor_code'))
 
 
 def dimension_member_create_name(key, data, errors, context):
