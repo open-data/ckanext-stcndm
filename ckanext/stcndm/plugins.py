@@ -89,9 +89,7 @@ class STCNDMPlugin(p.SingletonPlugin):
         """
         fields_to_fluent = (
             u'title',
-            u'notes',
-            u'name',
-            u'resources'
+            u'notes'
         )
 
         for field in fields_to_fluent:
