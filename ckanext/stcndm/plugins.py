@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import ckan.plugins as p
-import ckan.lib.helpers as ckan_helpers
 import ckanext.stcndm.logic.common as common
 import ckanext.stcndm.logic.cubes as cubes
 import ckanext.stcndm.logic.daily as daily
@@ -10,6 +9,7 @@ import ckanext.stcndm.logic.views as views
 
 from ckanext.stcndm import validators
 from ckanext.stcndm import helpers
+from ckanext.scheming.helpers import scheming_language_text
 
 
 class STCNDMPlugin(p.SingletonPlugin):
@@ -87,7 +87,6 @@ class STCNDMPlugin(p.SingletonPlugin):
         Ensure that (if available) the correct language strings
         are used for core CKAN fields.
         """
-        default_language = u'en'
         fields_to_fluent = (
             u'title',
             u'notes',
@@ -95,20 +94,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             u'resources'
         )
 
-        current_language = ckan_helpers.lang()
-
         for field in fields_to_fluent:
             if field in pkg_dict and isinstance(pkg_dict[field], dict):
-                field_value = pkg_dict[field]
-                if not field_value:
-                    pkg_dict[field] = None
-                elif current_language in field_value:
-                    pkg_dict[field] = field_value[current_language]
-                elif default_language in field:
-                    pkg_dict[field] = field_value[default_language]
-                else:
-                    # Use *any* language that's available.
-                    # Do we really want to do this?
-                    pkg_dict[field] = next(field_value.itervalues())
+                pkg_dict[field] = scheming_language_text(pkg_dict[field])
 
         return pkg_dict
