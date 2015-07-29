@@ -1,5 +1,6 @@
 __author__ = 'Statistics Canada'
 
+import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
 
@@ -71,17 +72,18 @@ def get_top_level_subject_list(context, data_dict):
     :return: list of all first level subjects and their values
     :rtype: list of dicts
     """
-    response = _get_action('package_search')(context, {
-        'q': 'dataset_type:codeset AND extras_codeset_type:content_type',
-        'rows': 1000,
+    lc = ckanapi.LocalCKAN(context=context)
+    response = lc.action.package_search(
+        q='dataset_type:codeset AND extras_codeset_type:content_type',
+        rows=1000,
         # These are the only fields we need, but they aren't currently
         # actually passed into Solr. If we skip package_search we can
         # get a much faster query.
-        'fl': ','.join((
+        fl=','.join((
             'title',
             'extras_codeset_value'
         ))
-    })
+    )
     return [{
         'title': r['title'],
         'subject_code': r['codeset_value']
