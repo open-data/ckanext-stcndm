@@ -27,18 +27,32 @@ def get_subject(context, data_dict):
 
     subject_code = data_dict['subjectCode']
 
-    q = {'q': 'tmtaxsubjcode_bi_tmtxtm:{subject_code}'.format(subject_code=subject_code)}
+    q = {
+        'q': 'tmtaxsubjcode_bi_tmtxtm:{subject_code}'.format(
+            subject_code=subject_code
+        )
+    }
 
     result = _get_action('package_search')(context, q)
 
     count = result['count']
 
     if count == 0:
-        raise _NotFound('No subject found with subject code {0}'.format(subject_code))
+        raise _NotFound(
+            'No subject found with subject code {0}'.format(subject_code)
+        )
     if count > 1:
-        raise _ValidationError('Duplicate SubjectCodes have been entered in CKAN {0}'.format(subject_code))
+        raise _ValidationError(
+            'Duplicate SubjectCodes have been entered in CKAN {0}'.format(
+                subject_code
+            )
+        )
     else:
-        desired_extras = ['tmtaxsubj_en_tmtxtm', 'tmtaxsubj_fr_tmtxtm', 'tmtaxsubjcode_bi_tmtxtm']
+        desired_extras = [
+            'tmtaxsubj_en_tmtxtm',
+            'tmtaxsubj_fr_tmtxtm',
+            'tmtaxsubjcode_bi_tmtxtm'
+        ]
 
         output = {}
 
@@ -51,34 +65,24 @@ def get_subject(context, data_dict):
 
 @logic.side_effect_free
 def get_top_level_subject_list(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
-    Return a list of all top level subject codes and French/English titles.
-
-    Please note that this implementation will be speedier shortly.
+    Return a list of all top level subject codes and titles.
 
     :return: list of all first level subjects and their values
     :rtype: list of dicts
     """
-    q = {'q': 'zckownerorg_bi_strs:tmtaxonomy',
-         'rows': '1000'}  # TODO: This will need to be sped up, but Solr doesn't allow wildcard-only queries
-
-    response = _get_action('package_search')(context, q)
-
-    top_level_subject_list = []
-
-    for result in response['results']:
-        subject_dict = {}
-        update = False
-        for extra in result['extras']:
-            if extra['key'] == 'tmtaxsubjcode_bi_tmtxtm' and len(extra['value']) == 2:
-                update = True
-                subject_dict['subject_code'] = extra['value']
-#            elif extra['key'] == 'tmtaxsubj_en_tmtxtm':
-#                subject_dict['subject_en_txtm'] = extra['value']
-#            elif extra['key'] == 'tmtaxsubj_fr_tmtxtm':
-#                subject_dict['subject_fr_txtm'] = extra['value']
-        if update:
-            top_level_subject_list.append(subject_dict)
-
-    return top_level_subject_list
+    response = _get_action('package_search')(context, {
+        'q': 'dataset_type:codeset AND extras_codeset_type:content_type',
+        'rows': 1000,
+        # These are the only fields we need, but they aren't currently
+        # actually passed into Solr. If we skip package_search we can
+        # get a much faster query.
+        'fl': ','.join((
+            'title',
+            'extras_codeset_value'
+        ))
+    })
+    return [{
+        'title': r['title'],
+        'subject_code': r['codeset_value']
+    } for r in response['results']]
