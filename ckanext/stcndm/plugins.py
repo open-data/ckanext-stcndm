@@ -50,7 +50,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetProductIssueArticles": daily.get_product_issue_articles,
             "GetProductIssues": daily.get_product_issues,
             "GetProductType": common.get_product_type,
-            "GetSchema": common.get_schema,
             "GetSubject": subjects.get_subject,
             "GetSubjectList": subjects.get_top_level_subject_list,
             "GetSurveys": daily.get_surveys,
