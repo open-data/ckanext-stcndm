@@ -1,27 +1,20 @@
-# coding=utf-8
-__author__ = 'Statistics Canada'
-
+#!/usr/bin/env python
+# encoding: utf-8
 import json
 import datetime
 
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
-# import ckanext.stcndm.helpers as helpers
 
 _get_or_bust = logic.get_or_bust
-# noinspection PyUnresolvedReferences
 _get_action = toolkit.get_action
-# noinspection PyUnresolvedReferences
 _ValidationError = toolkit.ValidationError
-# noinspection PyUnresolvedReferences
 _NotFound = toolkit.ObjectNotFound
-# noinspection PyUnresolvedReferences
 _NotAuthorized = toolkit.NotAuthorized
 
 
 @logic.side_effect_free
 def get_next_product_id(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Returns the next available ProductId (without registering it).
 
@@ -37,33 +30,47 @@ def get_next_product_id(context, data_dict):
     """
 
     product_id = _get_or_bust(data_dict, 'parentProductId')
+
+    # TODO: we need to standardize these. This is a result of swapping
+    # everything to java-style params
     data_dict['productId'] = product_id
-    # TODO: we need to standardize these. This is a result of swapping everything to java-style params
 
     if not len(str(product_id)) == 8:
         raise _ValidationError('invalid ParentProductId length')
 
     product_type = _get_or_bust(data_dict, 'productType')
 
-    _get_action('ndm_get_cube')(context, data_dict)  # testing for existance of cubeid
+    # testing for existance of cubeid
+    _get_action('ndm_get_cube')(context, data_dict)
 
     subject_code = str(product_id)[:2]
-    # TODO Do we want to rely on the subject_code in the cube dict? probably not...
-    # TODO this is actually going to be a problem because cubes do not have good data in subj
+    # TODO Do we want to rely on the subject_code in the cube dict?
+    #      probably not...
+    # TODO this is actually going to be a problem because cubes do
+    #      not have good data in subj
     sequence_id = str(product_id)[4:8]
 
-    product_family = '{subject_code}{product_type}{sequence_id}'.format(subject_code=subject_code,
-                                                                        product_type=product_type,
-                                                                        sequence_id=sequence_id)
+    product_family = '{subject_code}{product_type}{sequence_id}'.format(
+        subject_code=subject_code,
+        product_type=product_type,
+        sequence_id=sequence_id
+    )
 
-    query = {'q': 'extras_product_id_new:{product_family}*'.format(product_family=product_family),
-             'sort': 'extras_product_id_new desc'}
+    query = {
+        'q': 'extras_product_id_new:{product_family}*'.format(
+            product_family=product_family
+        ),
+        'sort': 'extras_product_id_new desc'
+    }
 
     response = _get_action('package_search')(context, query)
 
-    product_id_new = "{subject_code}{product_type}{sequence_id}01".format(subject_code=subject_code,
-                                                                          product_type=product_type,
-                                                                          sequence_id=sequence_id)
+    product_id_new = "{subject_code}{product_type}{sequence_id}01".format(
+        subject_code=subject_code,
+        product_type=product_type,
+        sequence_id=sequence_id
+    )
+
     try:
         for extra in response['results'][0]['extras']:
             if extra['key'] == 'product_id_new':
@@ -71,25 +78,34 @@ def get_next_product_id(context, data_dict):
                 # TODO: implement reusing unused IDs
                 if product_id_response.endswith('99'):
                     raise _ValidationError(
-                        'All Product IDs have been used. Reusing IDs is in development.')
+                        'All Product IDs have been used. '
+                        'Reusing IDs is in development.'
+                    )
                 else:
                     try:
                         product_id_new = str(int(product_id_response) + 1)
                     except ValueError:
-                        raise _ValidationError('Invalid product_id {0}'.format(product_id_response))
+                        raise _ValidationError(
+                            'Invalid product_id {0}'.format(
+                                product_id_response
+                            )
+                        )
     except KeyError:
         pass
 
     return product_id_new
 
 
-def get_product(context, data_dict):  # this one is for external use. just use package_show internally
-    # noinspection PyUnresolvedReferences
-    """Return a JSON dict representation of a product, given a ProductId, if it exists.
+# this one is for external use. just use package_show internally
+def get_product(context, data_dict):
+    """
+    Return a JSON dict representation of a product, given a ProductId,
+    if it exists.
 
     :param productId: product id (i.e. 2112002604)
     :type productId: str
-    :param fields: desired output fields. (i.e. "title, product_id_new") Default: *
+    :param fields: desired output fields. (i.e. "title, product_id_new")
+                   Default: *
     :type fields: str
 
     :return: requested product fields and values
@@ -106,23 +122,24 @@ def get_product(context, data_dict):  # this one is for external use. just use p
         for field in desired_fields.split(','):
             desired_fields_list.append(field)
 
-    q = {'q': 'extras_product_id_new:{product_id}'.format(product_id=product_id)}
+    q = {
+        'q': 'extras_product_id_new:{product_id}'.format(
+            product_id=product_id
+        )
+    }
 
     result = _get_action('package_search')(context, q)
 
     count = result['count']
-    if count == 0:
+    if not count:
         raise _NotFound('product not found')
-    #   removed to allow for finding more than one product with same productid_new
-    #    elif count > 1:
-    #        raise toolkit.Invalid('More than one product with given productId found')
-    #    else:
+
     output = []
     for a_result in result['results']:
         an_output = {}
         extras = a_result['extras']
         for extra in extras:
-            if not (desired_fields_list and extra['key'] not in desired_fields_list):
+            if extra['key'] in desired_fields_list:
                 an_output[extra['key']] = extra['value']
         output.append(an_output)
     return output
@@ -132,20 +149,23 @@ def get_product(context, data_dict):  # this one is for external use. just use p
 def get_field_list(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Return a list of all fields for a given org (based on the contents of the maschema organization).
+    Return a list of all fields for a given org (based on the contents of
+    the maschema organization).
 
     Used for determining which fields should be used when creating new records.
 
     :param org: Organization name (i.e. maprimary)
     :type org: string
 
-    :return: list of all fields in a given organization based on the maschema organization.
+    :return: list of all fields in a given organization based on the maschema
+             organization.
     :rtype:  list of strings
 
     :raises
     """
 
-    # TODO: Services which use this should possibly rely on get_fielddict instead, since it
+    # TODO: Services which use this should possibly rely on
+    #       get_fielddict instead, since it
 
     org = _get_or_bust(data_dict, 'org')
 
@@ -170,7 +190,8 @@ def get_product_type(context, data_dict):
     # noinspection PyUnresolvedReferences
     """Return the French and English titles for the given product_type_code.
 
-    :param productType: Product Type Code (i.e. '10') or '*' to receive a list of all product_types
+    :param productType: Product Type Code (i.e. '10') or '*' to receive a
+                        list of all product_types
     :type productType str
 
     :return: English, French and code values for given product_type
@@ -179,7 +200,9 @@ def get_product_type(context, data_dict):
     :raises ValidationError
     """
 
-    product_types = {  # TODO: these should be in the dropdown menu org in ckan until we set up schemas properly
+    # TODO: these should be in the dropdown menu org in ckan until we
+    #       set up schemas properly
+    product_types = {
         '10': {
             'en': u'Cube',
             'fr': u'Cube'
@@ -238,7 +261,10 @@ def get_product_type(context, data_dict):
     except KeyError:
         if product_type == '*':
             return product_types
-        raise logic.ValidationError('productType: \'{0}\' not valid'.format(product_type))
+
+        raise logic.ValidationError(
+            'productType: \'{0}\' not valid'.format(product_type)
+        )
 
     return output
 
@@ -299,7 +325,9 @@ def get_last_publish_status(context, data_dict):
                   'en': publish_statuses[publish_status]['en'],
                   'fr': publish_statuses[publish_status]['fr']}
     except KeyError:
-        raise logic.ValidationError('lastPublishStatusCode: \'{0}\' invalid'.format(publish_status))
+        raise logic.ValidationError(
+            'lastPublishStatusCode: \'{0}\' invalid'.format(publish_status)
+        )
 
     return output
 
@@ -380,7 +408,9 @@ def get_format_description(context, data_dict):
                   'en': format_codes[format_code]['en'],
                   'fr': format_codes[format_code]['fr']}
     except KeyError:
-        raise logic.ValidationError('formatCode \'{0}\' invalid'.format(format_code))
+        raise logic.ValidationError(
+            'formatCode \'{0}\' invalid'.format(format_code)
+        )
 
     return output
 
@@ -389,12 +419,14 @@ def get_format_description(context, data_dict):
 def get_upcoming_releases(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Return all records with a lastpublishstatuscode of Verified (8) and a release date between the two parameters.
+    Return all records with a lastpublishstatuscode of Verified (8) and a
+    release date between the two parameters.
 
     :param startDate: Beginning of date range
     :param endDate: End of date range
 
-    :return: productId, issueno, correctionid, reference_period, release_date for each matching record
+    :return: productId, issueno, correctionid, reference_period,
+             release_date for each matching record.
     :rtype: list of dicts
     """
     # TODO: date validation? anything else?
@@ -402,10 +434,16 @@ def get_upcoming_releases(context, data_dict):
     start_date = _get_or_bust(data_dict, 'startDate')
     end_date = _get_or_bust(data_dict, 'endDate')
 
-    q = {'q': 'release_date:[{startDate}:00Z TO {endDate}:00Z] AND last_publish_status_code:8'.format(
-        startDate=start_date,
-        endDate=end_date),
-        'rows': 500}
+    q = {
+        'q': (
+            'release_date:[{startDate}:00Z TO {endDate}:00Z] '
+            'AND last_publish_status_code:8'
+        ).format(
+            startDate=start_date,
+            endDate=end_date
+        ),
+        'rows': 500
+    }
 
     result = _get_action('package_search')(context, q)
 
@@ -438,17 +476,19 @@ def get_upcoming_releases(context, data_dict):
 def get_derived_product_list(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Return a dict with all ProductIDs and French/English titles that are associated with a given SubjectCode and
-    ProductType.
+    Return a dict with all ProductIDs and French/English titles that are
+    associated with a given SubjectCode and ProductType.
 
-    Note that this relies on the subject_code field rather than the subject code in the cube_id.
+    Note that this relies on the subject_code field rather than the
+    subject code in the cube_id.
 
     :param parentProductId: cube id
     :type parentProductId: str
     :param productType: two-digit product type code
     :type productType: str
 
-    :return: registered cubes for the SubjectCode and their French/English titles
+    :return: registered cubes for the SubjectCode and their French/English
+             titles.
     :rtype: list of dicts
     """
 
@@ -459,11 +499,17 @@ def get_derived_product_list(context, data_dict):
     subject_code = product_id[:2]
     sequence_id = product_id[-4:]
 
-    q = 'product_id_new:{subject_code}??{sequence_id}* AND product_type_code:{product_type}'.format(
-        subject_code=subject_code,
-        sequence_id=sequence_id,
-        product_type=product_type)
-    query = {'q': q, 'rows': '1000'}
+    query = {
+        'q': (
+            'product_id_new:{subject_code}??{sequence_id}* '
+            'AND product_type_code:{product_type}'
+        ).format(
+            subject_code=subject_code,
+            sequence_id=sequence_id,
+            product_type=product_type
+        ),
+        'rows': '1000'
+    }
 
     response = _get_action('package_search')(context, query)
 
@@ -488,7 +534,8 @@ def get_derived_product_list(context, data_dict):
 def get_drop_downs(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Return a dict containing all dropdown options for all fields in a given org.
+    Return a dict containing all dropdown options for all fields
+    in a given org.
 
     :param owner_org: organization name
     :type owner_org: str
@@ -496,7 +543,8 @@ def get_drop_downs(context, data_dict):
     :return:
     :rtype: dict of lists of dicts
     """
-    # todo: zckownerorg_bi_strs is supposed to be no longer necessary.  does that mean get_drop_downs is redundant?
+    # TODO: zckownerorg_bi_strs is supposed to be no longer necessary.
+    #       does that mean get_drop_downs is redundant?
     q = 'zckownerorg_bi_strs:tmshortlist'
 
     query = {'q': q, 'rows': '1000'}
@@ -511,15 +559,19 @@ def get_drop_downs(context, data_dict):
         for extra in result['extras']:
             result_dict[extra['key']] = extra['value']
 
-        field_name = result_dict['tmdroplfld_bi_tmtxtm'][7:]  # Stripping off "extras_"
-
-        # check field_name to determine how many fields to return for this field
+        # Stripping off "extras_"
+        field_name = result_dict['tmdroplfld_bi_tmtxtm'][7:]
+        # check field_name to determine how many fields to
+        # return for this field
         if field_name == 'tracking_code':
-            split_values = [result_dict['tmdroplopt_bi_tmtxtm']]  # create single element list
+            # create single element list
+            split_values = [result_dict['tmdroplopt_bi_tmtxtm']]
         elif field_name == 'display_code':
-            split_values = [result_dict['tmdroplopt_bi_tmtxtm']]  # create single element list
+            # create single element list
+            split_values = [result_dict['tmdroplopt_bi_tmtxtm']]
         elif field_name == 'geo_level_code':
-            split_values = result_dict['tmdroplopt_bi_tmtxtm'].split('|')[:2]  # don't send the code
+            # don't send the code
+            split_values = result_dict['tmdroplopt_bi_tmtxtm'].split('|')[:2]
         else:
             split_values = result_dict['tmdroplopt_bi_tmtxtm'].split('|')
 
@@ -562,7 +614,8 @@ def get_autocomplete(context, data_dict):
     Datasets with names or titles that contain the query string will be
     returned.
 
-    This action implements business logic to handle which fields should be returned for which actions.
+    This action implements business logic to handle which fields should be
+    returned for which actions.
 
     :param q: query string
     :type q: str
@@ -578,7 +631,14 @@ def get_autocomplete(context, data_dict):
     limit = data_dict.get('limit', 100)
     sort_field = None
 
-    if field_name not in ['subject_code', 'dimension_group_code', 'imdb_source_code', 'geodescriptor']:
+    valid_fieldnames = (
+        'subject_code',
+        'dimension_group_code',
+        'imdb_source_code',
+        'geodescriptor'
+    )
+
+    if field_name not in valid_fieldnames:
         raise _ValidationError('Invalid fieldName')
 
     query_split = query.replace('/', '').split()
@@ -601,7 +661,7 @@ def get_autocomplete(context, data_dict):
         sort_field = None
 
     elif field_name == 'imdb_source_code':
-        data_dict = {'q': u'source_autotext:({query})'.format(query=query)}  # , 'fq': 'zckownerorg_bi_strs:maimdb'}
+        data_dict = {'q': u'source_autotext:({query})'.format(query=query)}
         output_dict = {'title': 'imdb_source',
                        'product_id_new': 'imdb_source_code'}
         sort_field = None
@@ -628,10 +688,13 @@ def get_autocomplete(context, data_dict):
 
                 result_list.append(extra['value'])
 
+        # TODO: I think these are backwards (key should be value)
+        #       but it's an issue with the autocomplete js module
+
         output_list.append({'value': ' | '.join(result_list),
-                            'key': json.dumps(result_dict),  # TODO: I think these are backwards (key should be value)
+                            'key': json.dumps(result_dict),
                             'ord': result_dict.get(sort_field,
-                                                   None)})  # but it's an issue with the autocomplete js module
+                                                   None)})
 
     # sort returned list based on field name (if sort field specified)
     if sort_field:
@@ -644,7 +707,8 @@ def tv_register_product(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
     Register a new product based on a given cubeid and desired producttypecode.
-    Populate the new product's fields based on the cube record and producttype mapping.
+    Populate the new product's fields based on the cube record and producttype
+    mapping.
 
     :param parentProductId: 8-digit cube id
     :type parentProductId: str
@@ -658,13 +722,19 @@ def tv_register_product(context, data_dict):
     """
 
     cube_id = _get_or_bust(data_dict, 'parentProductId')
-    data_dict['productId'] = cube_id  # TODO: this is for Java-style stuff, and needs to be tidied up.
+    # TODO: this is for Java-style stuff, and needs to be tidied up.
+    data_dict['productId'] = cube_id
     product_type = _get_or_bust(data_dict, 'productType')
 
     if str(product_type) == '10':
-        raise _ValidationError('Please use the RegisterCube to register a cube')
+        raise _ValidationError(
+            'Please use the RegisterCube to register a cube'
+        )
     if str(product_type) not in ['11', '12', '13', '14']:
-        raise _ValidationError('Invalid data productType, only data products may be registered with this service')
+        raise _ValidationError(
+            'Invalid data productType, only data products may be registered '
+            'with this service'
+        )
 
     title = _get_or_bust(data_dict, 'productTitle')
 
@@ -707,10 +777,15 @@ def tv_register_product(context, data_dict):
     new_product = _get_action('package_create')(context, package_dict)
 
     if product_id.endswith('01') and str(product_type) == '11':
-        _get_action('ndm_update_default_view')(context, {'cubeId': str(cube_id), 'defaultView': str(product_id)})
+        _get_action('ndm_update_default_view')(context, {
+            'cubeId': str(cube_id),
+            'defaultView': str(product_id)
+        })
 
-    output = _get_action('ndm_get_product')(context, {'productId': new_product['name'],
-                                                      'fl': 'product_id_new'})
+    output = _get_action('ndm_get_product')(context, {
+        'productId': new_product['name'],
+        'fl': 'product_id_new'
+    })
 
     return output
 
@@ -718,11 +793,12 @@ def tv_register_product(context, data_dict):
 def delete_product(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Set the status of a record to 'Deleted' and remove all metadata associated with that record. This
-    will make the productid available for reuse.
+    Set the status of a record to 'Deleted' and remove all metadata associated
+    with that record. This will make the productid available for reuse.
 
-    This web service is presently being mocked (i.e. it will return a success if a valid productid is passed in,
-    but the exact implementation is still being discussed.)
+    This web service is presently being mocked (i.e. it will return a success
+    if a valid productid is passed in, but the exact implementation is still
+    being discussed.)
 
     :param productId: product id of record to be deleted
     :type productId: str
@@ -738,7 +814,10 @@ def delete_product(context, data_dict):
 
     deleted_id = result['product_id_new']
 
-    return {'message': 'Product successfully deleted', 'product_id_new': deleted_id}
+    return {
+        'message': 'Product successfully deleted',
+        'product_id_new': deleted_id
+    }
 
 
 # noinspection PyUnusedLocal
@@ -770,8 +849,8 @@ def purge_dataset(context, data_dict):
     return {'success': True, 'message': '%s purged' % product_id}
 
 
-def update_last_publish_status(context, data_dict):  # TODO: This is out of scope for FY2014.
-    # noinspection PyUnresolvedReferences
+# TODO: This is out of scope for FY2014.
+def update_last_publish_status(context, data_dict):
     """
     Update the publishing status code
 
@@ -790,41 +869,44 @@ def update_last_publish_status(context, data_dict):  # TODO: This is out of scop
     issue_no = _get_or_bust(data_dict, 'issueNo')
     last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
 
-#    last_publish_status_code_dict = _get_action('ndm_get_lastpublishstatus')(context, data_dict)
-
     q = {
-        'q': 'extras_product_id_new:{product_id} AND extras_issue_no:{issue_no}'.format(product_id=product_id,
-                                                                                        issue_no=issue_no)
-#        'fq': 'zckownerorg_bi_strs:maformat'
-        }
+        'q': (
+            'extras_product_id_new:{product_id} AND '
+            'extras_issue_no:{issue_no}'
+        ).format(
+            product_id=product_id,
+            issue_no=issue_no
+        )
+    }
 
     result = _get_action('package_search')(context, q)
 
     if result['count'] == 0:
         raise _ValidationError('Record not found.')
     elif result['count'] > 1:
-        raise _ValidationError('More than one record identified with these values. Please contact CKAN IT')
+        raise _ValidationError(
+            'More than one record identified with these values. '
+            'Please contact CKAN IT'
+        )
 
     pkg_dict = result['results'][0]
 
     for extra in pkg_dict['extras']:
         if extra['key'] == 'last_publish_status_code':
             extra['value'] = str(last_publish_status_code)
-#        if extra['key'] == 'lastpublishstatus_en_strs':
-#            extra['value'] = last_publish_status_code_dict['producttype_en_strs']
-#        if extra['key'] == 'lastpublishstatus_fr_strs':
-#            extra['value'] = last_publish_status_code_dict['producttype_fr_strs']
 
     result = _get_action('package_update')(context, pkg_dict)
 
-    # TODO: what do we actually want to return here? This is the full package with the k: v formatted extras.
+    # TODO: what do we actually want to return here? This is the full
+    #       package with the k: v formatted extras.
     return result
 
 
 def update_product_geo(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Update the specificgeocode_bi_txtm value and sets the geo level (geolevel_*) accordingly.
+    Update the specificgeocode_bi_txtm value and sets the geo level
+    (geolevel_*) accordingly.
 
     :param productId: product id
     :type productId: str
@@ -848,13 +930,20 @@ def update_product_geo(context, data_dict):
     if type(dguids) == unicode:
         dguids = [x.strip() for x in dguids.split(';')]
 
-    q = {'q': 'extras_product_id_new:{product_id}'.format(product_id=product_id)}
+    q = {
+        'q': 'extras_product_id_new:{product_id}'.format(
+            product_id=product_id
+        )
+    }
     response = _get_action('package_search')(context, q)
 
     if response['count'] == 0:
         raise _ValidationError('Record not found.')
     elif response['count'] > 1:
-        raise _ValidationError('More than one record identified with these values. Please contact CKAN IT')
+        raise _ValidationError(
+            'More than one record identified with these values. '
+            'Please contact CKAN IT'
+        )
 
     pkg_dict = response['results'][0]
 
@@ -868,9 +957,11 @@ def update_product_geo(context, data_dict):
 #    geo_specific_fr = list()
 
     for specific_code in dguids:
-        unique_codes[specific_code[:5]] = True  # store the codes in a dictionary to create a unique set
+        # store the codes in a dictionary to create a unique set
+        unique_codes[specific_code[:5]] = True
 
-#    for geo_code in sorted(unique_codes.keys()):  # get and append the text for geo levels
+# get and append the text for geo levels
+#    for geo_code in sorted(unique_codes.keys()):
 #        (en_text, fr_text) = geo_level.get_by_code(geo_code)
 #        if en_text:
 #            geo_level_en.append(en_text)
@@ -898,8 +989,10 @@ def update_product_geo(context, data_dict):
 #        elif extra['key'] == 'specificgeo_fr_txtm':
 #            extra['value'] = '; '.join(geo_specific_fr)
 
-    result = _get_action('package_update')(context, pkg_dict)
+    # result = _get_action('package_update')(context, pkg_dict)
     # TODO: check result?
-    output = _get_action('package_show')(context, {'name_or_id': pkg_dict['name']})
+    output = _get_action('package_show')(context, {
+        'name_or_id': pkg_dict['name']
+    })
 
     return output
