@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import json
-import yaml
 import datetime
-from pkgutil import get_data
 
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
+import ckanext.scheming.helpers as scheming_helpers
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -208,25 +207,15 @@ def get_product_type(context, data_dict):
     }
 
     product_type = _get_or_bust(data_dict, 'productType')
-    presets = yaml.safe_load(
-        get_data(
-            'ckanext.stcndm',
-            'schemas/presets.yaml'
-        )
-    )
 
-    for preset in presets['presets']:
-        if preset['preset_name'] == 'ndm_products':
-            product_types = preset['values']['choices']
-            break
-    else:
-        raise _NotFound('no product types could be found')
+    presets = scheming_helpers.scheming_get_preset('ndm_products')
+    product_types = presets['choices']
 
     if product_type == '*':
         return [massage(pt) for pt in product_types]
     else:
         for pt in product_types:
-            if str(pt['value']) == str(product_type):
+            if unicode(pt['value']) == unicode(product_type):
                 return massage(pt)
         else:
             raise logic.ValidationError(
