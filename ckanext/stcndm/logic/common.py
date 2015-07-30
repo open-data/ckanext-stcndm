@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import json
+import yaml
 import datetime
+from pkgutil import get_data
 
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
@@ -199,74 +201,37 @@ def get_product_type(context, data_dict):
 
     :raises ValidationError
     """
-
-    # TODO: these should be in the dropdown menu org in ckan until we
-    #       set up schemas properly
-    product_types = {
-        '10': {
-            'en': u'Cube',
-            'fr': u'Cube'
-        },
-        '11': {
-            'en': u'Table',
-            'fr': u'Tableau'
-        },
-        '12': {
-            'en': u'Indicator',
-            'fr': u'Indicateur'
-        },
-        '13': {
-            'en': u'Chart',
-            'fr': u'Graphique'
-        },
-        '14': {
-            'en': u'Map',
-            'fr': u'Carte'
-        },
-        '20': {
-            'en': u'Analytical Product',
-            'fr': u'Produit Analytique'
-        },
-        '21': {
-            'en': u'Video',
-            'fr': u'Vidéo'
-        },
-        '22': {
-            'en': u'Conference',
-            'fr': u'Conférence'
-        },
-        '23': {
-            'en': u'Service',
-            'fr': u'Service'
-        },
-        '24': {
-            'en': u'Daily',
-            'fr': u'Quotidien'
-        },
-        '25': {
-            'en': u'Public use microdata files (PUMFs)',
-            'fr': u'Les fichiers de microdonnées à grande diffusion (FMGD)'
-        },
-        '26': {
-            'en': u'Publications with repeating titles (Generic)',
-            'fr': u'Publications avec des titres répétitifs (générique)'
-        },
+    massage = lambda in_: {
+        'product_type_code': in_['value'],
+        'en': in_['label'].get('en'),
+        'fr': in_['label'].get('fr')
     }
+
     product_type = _get_or_bust(data_dict, 'productType')
-
-    try:
-        output = {'product_type_code': product_type,
-                  'en': product_types[product_type]['en'],
-                  'fr': product_types[product_type]['fr']}
-    except KeyError:
-        if product_type == '*':
-            return product_types
-
-        raise logic.ValidationError(
-            'productType: \'{0}\' not valid'.format(product_type)
+    presets = yaml.safe_load(
+        get_data(
+            'ckanext.stcndm',
+            'schemas/presets.yaml'
         )
+    )
 
-    return output
+    for preset in presets['presets']:
+        if preset['preset_name'] == 'ndm_products':
+            product_types = preset['values']['choices']
+            break
+    else:
+        raise _NotFound('no product types could be found')
+
+    if product_type == '*':
+        return [massage(pt) for pt in product_types]
+    else:
+        for pt in product_types:
+            if str(pt['value']) == str(product_type):
+                return massage(pt)
+        else:
+            raise logic.ValidationError(
+                'productType: \'{0}\' not valid'.format(product_type)
+            )
 
 
 # noinspection PyUnusedLocal
