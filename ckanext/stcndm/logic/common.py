@@ -223,10 +223,8 @@ def get_product_type(context, data_dict):
             )
 
 
-# noinspection PyUnusedLocal
 @logic.side_effect_free
 def get_last_publish_status(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """Return the French and English values for the given lastpublishstatuscode.
 
     :param lastPublishStatusCode: Publishing Status Code (i.e. '10')
@@ -237,53 +235,27 @@ def get_last_publish_status(context, data_dict):
 
     :raises ValidationError
     """
-
-    publish_statuses = {
-        '0': {
-            'en': u'None',
-            'fr': u'Aucune'
-        },
-        '2': {
-            'en': u'Draft',
-            'fr': u'Ébauche'
-        },
-        '4': {
-            'en': u'Working Copy',
-            'fr': u'Copie de travail'
-        },
-        '6': {
-            'en': u'Authorized',
-            'fr': u'Autorisé'
-        },
-        '8': {
-            'en': u'Verified',
-            'fr': u'Vérifié'
-        },
-        '10': {
-            'en': u'Loaded',
-            'fr': u'Chargé'
-        },
-        '12': {
-            'en': u'Released',
-            'fr': u'Diffusé'
-        },
-        '99': {
-            'en': u'Frozen',
-            'fr': u'Figé'
-        }
+    massage = lambda in_: {
+        'last_publish_status_code': in_['value'],
+        'en': in_['label'].get('en'),
+        'fr': in_['label'].get('fr')
     }
 
-    publish_status = _get_or_bust(data_dict, 'lastPublishStatusCode')
-    try:
-        output = {'last_publish_status_code': publish_status,
-                  'en': publish_statuses[publish_status]['en'],
-                  'fr': publish_statuses[publish_status]['fr']}
-    except KeyError:
+    publish_status = _get_or_bust(
+        data_dict,
+        'lastPublishStatusCode'
+    ).zfill(2)
+
+    presets = scheming_helpers.scheming_get_preset('ndm_publish_status')
+    publish_statuses = presets['choices']
+
+    for ps in publish_statuses:
+        if unicode(ps['value']) == unicode(publish_status):
+            return massage(ps)
+    else:
         raise logic.ValidationError(
             'lastPublishStatusCode: \'{0}\' invalid'.format(publish_status)
         )
-
-    return output
 
 
 # noinspection PyUnusedLocal
