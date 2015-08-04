@@ -225,7 +225,8 @@ def get_product_type(context, data_dict):
 
 @logic.side_effect_free
 def get_last_publish_status(context, data_dict):
-    """Return the French and English values for the given lastpublishstatuscode.
+    """
+    Return the French and English values for the given lastpublishstatuscode.
 
     :param lastPublishStatusCode: Publishing Status Code (i.e. '10')
     :type lastPublishStatusCode str
@@ -258,87 +259,40 @@ def get_last_publish_status(context, data_dict):
         )
 
 
-# noinspection PyUnusedLocal
 @logic.side_effect_free
 def get_format_description(context, data_dict):
-    # noinspection PyUnresolvedReferences
-    """Return the French and English values for the given formatCode.
+    """
+    Return the French and English values for the given formatCode.
 
-        :param formatCode: Format Code (i.e. '10')
-        :type formatCode str
+    :param formatCode: Format Code (i.e. '10')
+    :type formatCode str
 
-        :return: English, French and code values for given formatCode
-        :rtype: dict
+    :return: English, French and code values for given formatCode
+    :rtype: dict
 
-        :raises ValidationError
-        """
-
-    format_codes = {
-        '2': {
-            'en': u'Database',
-            'fr': u'Base de données'
-        },
-        '3': {
-            'en': u'CD-ROM',
-            'fr': u'CD-ROM'
-        },
-        '4': {
-            'en': u'Diskette',
-            'fr': u'Disquette'
-        },
-        '5': {
-            'en': u'Fax/email',
-            'fr': u'Télécopieur'
-        },
-        '8': {
-            'en': u'PDF',
-            'fr': u'PDF'
-        },
-        '10': {
-            'en': u'Microfiche',
-            'fr': u'Microfiche'
-        },
-        '12': {
-            'en': u'Paper',
-            'fr': u'Imprimé'
-        },
-        '13': {
-            'en': u'Symposium/Workshop',
-            'fr': u'Symposium/Atelier'
-        },
-        '14': {
-            'en': u'Tape/Cassette',
-            'fr': u'Bande magnétique/Cassette'
-        },
-        '15': {
-            'en': u'DVD',
-            'fr': u'DVD'
-        },
-        '17': {
-            'en': u'HTML',
-            'fr': u'HTML'
-        },
-        '18': {
-            'en': u'Video',
-            'fr': u'Vidéo'
-        },
-        '19': {
-            'en': u'ETF',
-            'fr': u'ETF'
-        },
+    :raises ValidationError
+    """
+    massage = lambda in_: {
+        'format_code': in_['value'],
+        'en': in_['label'].get('en'),
+        'fr': in_['label'].get('fr')
     }
 
-    format_code = _get_or_bust(data_dict, 'formatCode')
-    try:
-        output = {'format_code': format_code,
-                  'en': format_codes[format_code]['en'],
-                  'fr': format_codes[format_code]['fr']}
-    except KeyError:
+    format_code = _get_or_bust(
+        data_dict,
+        'formatCode'
+    ).zfill(2)
+
+    preset = scheming_helpers.scheming_get_preset(u'ndm_formats')
+    format_codes = preset['choices']
+
+    for fc in format_codes:
+        if fc['value'] == format_code:
+            return massage(fc)
+    else:
         raise logic.ValidationError(
             'formatCode \'{0}\' invalid'.format(format_code)
         )
-
-    return output
 
 
 @logic.side_effect_free
