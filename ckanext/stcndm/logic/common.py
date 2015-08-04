@@ -146,42 +146,61 @@ def get_product(context, data_dict):
 
 
 @logic.side_effect_free
-def get_field_list(context, data_dict):
-    # noinspection PyUnresolvedReferences
+def get_dataset_schema(context, data_dict):
     """
-    Return a list of all fields for a given org (based on the contents of
-    the maschema organization).
+    Returns full schema definition for the dataset `name`.
 
-    Used for determining which fields should be used when creating new records.
-
-    :param org: Organization name (i.e. maprimary)
-    :type org: string
-
-    :return: list of all fields in a given organization based on the maschema
-             organization.
-    :rtype:  list of strings
-
-    :raises
+    :param name: The name of the schema to return.
+    :param expanded: Expand schema presets. Defaults to `True`.
+    :returns:  A complete dataset schema or 404 if not found.
+    :rtype: dict
     """
+    schema_name = _get_or_bust(data_dict, 'name')
 
-    # TODO: Services which use this should possibly rely on
-    #       get_fielddict instead, since it
+    expanded = data_dict.get('expanded', True)
+    if isinstance(expanded, basestring):
+        expanded = True if expanded == 'true' else False
 
-    org = _get_or_bust(data_dict, 'org')
+    result = scheming_helpers.scheming_get_dataset_schema(
+        schema_name,
+        expanded=expanded
+    )
 
-    field_list_dict = _get_action('package_search')(context, {
-        'q': 'extras_tmregorg_bi_tmtxtm:{org}'.format(org=org),
-        'rows': 100
-    })
+    if result is None:
+        raise _NotFound('no schema by the name {name}'.format(
+            name=schema_name
+        ))
 
-    field_list = []
+    return result
 
-    for field in field_list_dict['results']:
-        field_list.append(field['name'])
 
-    output = {'fields': field_list}
+@logic.side_effect_free
+def get_group_schema(context, data_dict):
+    """
+    Returns full schema definition for the group `name`.
 
-    return output
+    :param name: The name of the schema to return.
+    :param expanded: Expand schema presets. Defaults to `True`.
+    :returns:  A complete dataset schema or 404 if not found.
+    :rtype: dict
+    """
+    schema_name = _get_or_bust(data_dict, 'name')
+
+    expanded = data_dict.get('expanded', True)
+    if isinstance(expanded, basestring):
+        expanded = True if expanded == 'true' else False
+
+    result = scheming_helpers.scheming_get_group_schema(
+        schema_name,
+        expanded=expanded
+    )
+
+    if result is None:
+        raise _NotFound('no schema by the name {name}'.format(
+            name=schema_name
+        ))
+
+    return result
 
 
 # noinspection PyUnusedLocal
