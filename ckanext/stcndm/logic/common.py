@@ -2,6 +2,7 @@
 # encoding: utf-8
 import datetime
 
+import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
 import ckanext.scheming.helpers as scheming_helpers
@@ -29,6 +30,7 @@ def get_next_product_id(context, data_dict):
     :raises ValidationError, ObjectNotFound
     """
 
+    lc = ckanapi.LocalCKAN(context=context)
     product_id = _get_or_bust(data_dict, 'parentProductId')
 
     # TODO: we need to standardize these. This is a result of swapping
@@ -41,7 +43,7 @@ def get_next_product_id(context, data_dict):
     product_type = _get_or_bust(data_dict, 'productType')
 
     # testing for existance of cubeid
-    _get_action('ndm_get_cube')(context, data_dict)
+    lc.actions.ndm_get_cube(**data_dict)
 
     subject_code = str(product_id)[:2]
     # TODO Do we want to rely on the subject_code in the cube dict?
@@ -96,53 +98,38 @@ def get_next_product_id(context, data_dict):
     return product_id_new
 
 
-# this one is for external use. just use package_show internally
+@logic.side_effect_free
 def get_product(context, data_dict):
     """
-    Return a JSON dict representation of a product, given a ProductId,
-    if it exists.
+    Returns a product given its `productId`, if it exists.
 
     :param productId: product id (i.e. 2112002604)
     :type productId: str
-    :param fields: desired output fields. (i.e. "title, product_id_new")
-                   Default: *
-    :type fields: str
 
-    :return: requested product fields and values
-    :rtype: list of dict
+    :return: product or 404 if not found.
+    :rtype: dict
 
     :raises ObjectNotFound, ValidationError
     """
-
     product_id = _get_or_bust(data_dict, 'productId')
 
-    desired_fields_list = []
-    if 'fields' in data_dict:
-        desired_fields = data_dict['fields']
-        for field in desired_fields.split(','):
-            desired_fields_list.append(field)
-
-    q = {
-        'q': 'extras_product_id_new:{product_id}'.format(
+    lc = ckanapi.LocalCKAN(context=context)
+    result = lc.action.package_search(
+        q='extras_product_id_new:{product_id}'.format(
             product_id=product_id
-        )
-    }
+        ),
+        rows=1
+    )
 
-    result = _get_action('package_search')(context, q)
+    if not result['count']:
+        raise _NotFound('product {product_id} not found'.format(
+            product_id=product_id
+        ))
 
-    count = result['count']
-    if not count:
-        raise _NotFound('product not found')
-
-    output = []
-    for a_result in result['results']:
-        an_output = {}
-        extras = a_result['extras']
-        for extra in extras:
-            if extra['key'] in desired_fields_list:
-                an_output[extra['key']] = extra['value']
-        output.append(an_output)
-    return output
+    # If we're getting more than one result for a given product_id
+    # something has gone terribly wrong with the database.
+    assert(not result['count'] > 1)
+    return result['results'][0]
 
 
 @logic.side_effect_free
