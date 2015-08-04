@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import json
 import datetime
 
 import ckan.logic as logic
@@ -410,104 +409,6 @@ def get_derived_product_list(context, data_dict):
     return output
 
 
-@logic.side_effect_free
-def get_autocomplete(context, data_dict):
-    # noinspection PyUnresolvedReferences
-    """
-    Return a list of datasets (packages) that match a string.
-
-    Datasets with names or titles that contain the query string will be
-    returned.
-
-    This action implements business logic to handle which fields should be
-    returned for which actions.
-
-    :param q: query string
-    :type q: str
-    :param fieldName: name of field for autocomplete
-    :type fieldName: str
-
-    :return: English, French, code and type values for given query
-    :rtype: List of dicts
-    """
-
-    query = _get_or_bust(data_dict, 'q')
-    field_name = _get_or_bust(data_dict, 'fieldName')
-    limit = data_dict.get('limit', 100)
-    sort_field = None
-
-    valid_fieldnames = (
-        'subject_code',
-        'dimension_group_code',
-        'imdb_source_code',
-        'geodescriptor'
-    )
-
-    if field_name not in valid_fieldnames:
-        raise _ValidationError('Invalid fieldName')
-
-    query_split = query.replace('/', '').split()
-    query = ' '.join([word + '*' for word in query_split])
-
-    if field_name == 'subject_code':
-        data_dict = {'q': u'tmtaxsubj_autotext:({query})'.format(query=query)}
-        output_dict = {'tmtaxsubj_en_tmtxtm': 'subjnew_en_txtm',
-                       'tmtaxsubj_fr_tmtxtm': 'subjnew_fr_txtm',
-                       'tmtaxsubjcode_bi_tmtxtm': 'subject_code',
-                       'tmtaxdisp_en_tmtxtm': 'subject_code'}
-        sort_field = 'subject_code'
-
-    elif field_name == 'dimension_group_code':
-        data_dict = {'q': u'tmdimen_autotext:({query})'.format(query=query)}
-        output_dict = {'tmdimenalias_bi_tmtxtm': 'dimalias_en_txtm',
-                       'tmdimentext_en_tmtxtm': 'dimgroup_en_txtm',
-                       'tmdimentext_fr_tmtxtm': 'dimgroup_fr_txtm',
-                       'tmdimencode_bi_tmtxtm': 'dimension_group_code'}
-        sort_field = None
-
-    elif field_name == 'imdb_source_code':
-        data_dict = {'q': u'source_autotext:({query})'.format(query=query)}
-        output_dict = {'title': 'imdb_source',
-                       'product_id_new': 'imdb_source_code'}
-        sort_field = None
-
-    elif field_name == 'geodescriptor':
-        data_dict = {'q': u'tmsgc_autotext:({query})'.format(query=query)}
-        output_dict = {'tmsgcname_en_tmtxtm': 'specificgeo_en_txtm',
-                       'tmsgcname_fr_tmtxtm': 'specificgeo_fr_txtm',
-                       'tmsgcspecificcode_bi_tmtxtm': 'geodescriptor'}
-        sort_field = None
-
-    data_dict['rows'] = limit  # limit the number of returned rows
-    response = _get_action('package_search')(context, data_dict)
-
-    output_list = []
-
-    for result in response['results']:
-        result_dict = {}
-        result_list = []
-
-        for extra in result['extras']:
-            if extra['key'] in output_dict:
-                result_dict[output_dict[extra['key']]] = extra['value']
-
-                result_list.append(extra['value'])
-
-        # TODO: I think these are backwards (key should be value)
-        #       but it's an issue with the autocomplete js module
-
-        output_list.append({'value': ' | '.join(result_list),
-                            'key': json.dumps(result_dict),
-                            'ord': result_dict.get(sort_field,
-                                                   None)})
-
-    # sort returned list based on field name (if sort field specified)
-    if sort_field:
-        output_list = sorted(output_list, key=lambda k: k['ord'])
-
-    return output_list[:limit]
-
-
 def tv_register_product(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
@@ -637,7 +538,6 @@ def purge_dataset(context, data_dict):
     :return: success or failure
     :rtype: dict
     """
-
     # TODO: Implement user permission validation before deploying this.
     product_id = _get_or_bust(data_dict, 'productId')
 
