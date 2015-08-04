@@ -40,23 +40,6 @@ def dict2dict_list(dictionary):
     return dl
 
 
-def get_dropdowns():
-    """
-    Return a dict having fields with dropdown menus for keys and lists of dicts
-    of possible values for the dropdowns as values.
-
-
-    :return: dict of list of dicts
-    """
-    context = {'model': model, 'session': model.Session, 'user': c.user}
-
-    data_dict = {}
-
-    result = logic.get_action('ndm_get_dropdowns')(context, data_dict)
-
-    return result
-
-
 def get_schema(org, dataset):
     """
     Return a dict having fields in a given org for keys and the values stored for that field in the tmschama
