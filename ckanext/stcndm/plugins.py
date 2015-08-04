@@ -12,6 +12,7 @@ from ckanext.stcndm import helpers
 from ckanext.scheming.helpers import scheming_language_text
 
 
+
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IConfigurer)
@@ -42,7 +43,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetDailyList": daily.get_daily_list,
             "GetDefaultViews": daily.get_default_views,
             "GetDerivedProductList": common.get_derived_product_list,
-            "GetFieldList": common.get_field_list,
             "GetFormatDescription": common.get_format_description,
             "GetLastPublishStatus": common.get_last_publish_status,
             "GetNextProductId": common.get_next_product_id,
@@ -62,6 +62,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "UpdateDefaultView": views.update_default_view,
             "UpdateProductGeo": common.update_product_geo,
             "UpdatePublishingStatus": common.update_last_publish_status,
+            "GetDatasetSchema": common.get_dataset_schema,
+            "GetGroupSchema": common.get_group_schema
         }
 
     def get_validators(self):
