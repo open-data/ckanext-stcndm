@@ -203,7 +203,7 @@ for i in range(0, 10):
         if 'specificgeo_en_txtm' in line:
             result = code_lookup('specificgeo_en_txtm', line, geodescriptor_list)
             if result:
-                line_out['geodescriptors'] = result
+                line_out['geodescriptor_codes'] = result
 
         if 'subjnew_en_txtm' in line:
             result = code_lookup('subjnew_en_txtm', line, subject_list)
@@ -233,7 +233,7 @@ for i in range(0, 10):
         if 'archived_bi_strs' in line:
             result =  code_lookup('archived_bi_strs', line, archive_status_list)
             if result:
-                line_out['achive_status'] = result[0]
+                line_out['archive_status_code'] = result[0]
 
         if 'defaultviewid_bi_strs' and line['defaultviewid_bi_strs']:
             line_out['default_view_id'] = line['defaultviewid_bi_strs']
@@ -259,7 +259,7 @@ for i in range(0, 10):
         if 'hierarchyid_bi_strm' in line:
             result = listify(line['hierarchyid_bi_strm'])
             if result:
-                line_out['parent_products'] = result
+                line_out['parent_product'] = result
 
         temp = {}
         if 'histnotes_en_txts' in line and line['histnotes_en_txts']:

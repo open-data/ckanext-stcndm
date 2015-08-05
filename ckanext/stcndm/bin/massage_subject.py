@@ -39,7 +39,7 @@ for line in lines:
         }
 
     if 'tmtaxsubjoldcode_bi_tmtxtm' in line:
-        line_out['subjectold_code'] = map(unicode.strip, line['tmtaxsubjoldcode_bi_tmtxtm'][0].split(';'))
+        line_out['subjectold_codes'] = map(unicode.strip, line['tmtaxsubjoldcode_bi_tmtxtm'][0].split(';'))
 
     temp = {}
     if 'tmtaxatozalias_en_tmtxtm' in line:
