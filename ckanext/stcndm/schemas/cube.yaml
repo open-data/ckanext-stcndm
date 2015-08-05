@@ -68,7 +68,7 @@ dataset_fields:
   form_placeholder: unique-catalog-id
   required: true
 
-#- field_name: format_code
+#- field_name: format_codes
 #  preset: ndm_formats
 
 - field_name: product_type_code
@@ -87,14 +87,13 @@ dataset_fields:
   label:
     en: Related Products
     fr: Produits reliés
-  preset: fluent_tags
+  preset: shortcode_multivalue
 
-- field_name: thesaurus_term_code
+- field_name: thesaurus
   label:
     en: STC Thesaurus
     fr: STC dictionnaire de synonymes
   preset: fluent_tags
-  codeset_type: thesaurus
 
 #- field_name: feature_weight
 #  label:
@@ -107,7 +106,7 @@ dataset_fields:
     fr: Date d'archivage
   preset: date
 
-- field_name: archive_status
+- field_name: archive_status_code
   preset: ndm_archive_status
 
 #- field_name: array_terminated
@@ -120,7 +119,7 @@ dataset_fields:
     en: Default View ID
     fr: ID de vue par défaut
 
-- field_name: dimension_group_code
+- field_name: dimension_group_codes
   label:
     en: Dimension Group
     fr: Groupe de dimension
@@ -135,7 +134,7 @@ dataset_fields:
 - field_name: display_code
   preset: ndm_display
 
-#- field_name: external_author
+#- field_name: external_authors
 #  label:
 #    en: External Author
 #    fr: Auteur externe
@@ -191,11 +190,10 @@ dataset_fields:
 #    fr: Date du système antérieur
 #  preset: date
 
-- field_name: parent_products
+- field_name: parent_product
   label:
     en: Hierarchy
     fr: Hiérarchie
-  preset: shortcode_multivalue
 
 #- field_name: price
 #  label:
