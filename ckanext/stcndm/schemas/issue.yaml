@@ -32,7 +32,7 @@ dataset_fields:
 - field_name: description
   preset: ndm_description
 
-- field_name: content_type_code
+- field_name: content_type_codes
   label:
     en: Content Type
     fr: Type de contenu
@@ -55,7 +55,7 @@ dataset_fields:
 #    fr: Géo spécifique
 #  preset: shortcode_multivalue
 
-#- field_name: subject_code
+#- field_name: subject_codes
 #  label:
 #    en: Subject
 #    fr: Sujet
@@ -68,16 +68,17 @@ dataset_fields:
   form_placeholder: unique-catalog-id
   required: true
 
-- field_name: format_code
+- field_name: format_codes
   preset: ndm_formats
 
 - field_name: product_type_code
   preset: ndm_products
 
-- field_name: related_product
+- field_name: related_products
   label:
     en: Related
     fr: Relié
+  preset: shortcode_multivalue
 
 #- field_name: thesaurus_term_code
 #  label:
@@ -131,7 +132,7 @@ dataset_fields:
 - field_name: display_code
   preset: ndm_display
 
-- field_name: external_author
+- field_name: external_authors
   label:
     en: External Author
     fr: Auteur externe
@@ -161,12 +162,12 @@ dataset_fields:
 #    fr: Source
 #  preset: shortcode_multivalue
 
-- field_name: internal_author
+- field_name: internal_authors
   label:
     en: Internal Author
     fr: Auteur interne
 
-- field_name: internal_contact
+- field_name: internal_contacts
   label:
     en: Internal Contact Name
     fr: Nom de personne ressource interne
@@ -222,10 +223,11 @@ dataset_fields:
     en: Publication Year
     fr: Année de publication
 
-- field_name: reference_period
+- field_name: reference_periods
   label:
     en: Reference Period
     fr: Période de référence
+  preset: fluent_tags
 
 - field_name: release_date
   label:
@@ -233,10 +235,11 @@ dataset_fields:
     fr: Date de diffusion (YYYY-MM-DD)
   preset: date
 
-#- field_name: replaced_product
+#- field_name: replaced_products
 #  label:
 #    en: Replaced Product
 #    fr: Produit remplacé
+#  preset: shortcode_multivalue
 
 - field_name: status_codes
   preset: ndm_status
