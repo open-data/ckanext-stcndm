@@ -254,7 +254,7 @@ for i in range(0, 10):
         if 'hierarchyid_bi_strm' in line:
             result = listify(line['hierarchyid_bi_strm'])
             if result:
-                line_out['parent_products'] = result
+                line_out['parent_product'] = result
 
         temp = {}
         if 'histnotes_en_txts' in line and line['histnotes_en_txts']:

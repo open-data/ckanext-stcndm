@@ -198,7 +198,7 @@ for line in query_results['results']:
                     temp[u'fr'].append(i[:100])
                     i = i[100:]
     if temp:
-        line_out['reference_period'] = temp
+        line_out['reference_periods'] = temp
 
     if 'releasedate_bi_strs' in line:
         _temp = line['releasedate_bi_strs']
