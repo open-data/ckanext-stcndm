@@ -227,12 +227,8 @@ dataset_fields:
     en: Replaced Product
     fr: Produit remplacé
 
-- field_name: status_code
-  label:
-    en: Status
-    fr: État
-  preset: codeset_multiple_select
-  codeset_type: status
+- field_name: status_codes
+  preset: ndm_status
 
 - field_name: subjectold_code
   label:

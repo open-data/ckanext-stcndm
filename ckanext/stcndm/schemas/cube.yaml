@@ -242,11 +242,7 @@ dataset_fields:
   preset: shortcode_multivalue
 
 - field_name: status_codes
-  label:
-    en: Status
-    fr: État
-  preset: codeset_multiple_select
-  codeset_type: status
+  preset: ndm_status
 
 #- field_name: subjectold_code
 #  label:
