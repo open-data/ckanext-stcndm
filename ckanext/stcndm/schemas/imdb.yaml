@@ -122,12 +122,11 @@ dataset_fields:
     fr: URL de question
   preset: fluent_text
 
-- field_name: reference_period
+- field_name: reference_periods
   label:
     en: Reference Period
     fr: Période visée
   preset: fluent_tags
-  tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: release_date
   label:
@@ -150,7 +149,7 @@ dataset_fields:
   label:
     en: STC Thesaurus
     fr: Dictionnaire de synonymes STC
-  preset: fluent_text
+  preset: fluent_tags
 
 - field_name: subject_codes
   label:
