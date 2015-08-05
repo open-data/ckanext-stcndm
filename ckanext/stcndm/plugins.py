@@ -1,15 +1,16 @@
-
+#!/usr/bin/env python
+# encoding: utf-8
 import ckan.plugins as p
-import ckanext.stcndm.logic.codesets as codesets
 import ckanext.stcndm.logic.common as common
 import ckanext.stcndm.logic.cubes as cubes
 import ckanext.stcndm.logic.daily as daily
-import ckanext.stcndm.logic.publications as pubs
 import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
 
 from ckanext.stcndm import validators
 from ckanext.stcndm import helpers
+from ckanext.scheming.helpers import scheming_language_text
+
 
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
@@ -17,6 +18,7 @@ class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.IValidators)
     p.implements(p.ITemplateHelpers)
+    p.implements(p.IPackageController)
 
     def update_config(self, config):
         """
@@ -81,3 +83,19 @@ class STCNDMPlugin(p.SingletonPlugin):
         return {
             "codeset_choices": helpers.codeset_choices,
         }
+
+    def before_view(self, pkg_dict):
+        """
+        Ensure that (if available) the correct language strings
+        are used for core CKAN fields.
+        """
+        fields_to_fluent = (
+            u'title',
+            u'notes'
+        )
+
+        for field in fields_to_fluent:
+            if field in pkg_dict and isinstance(pkg_dict[field], dict):
+                pkg_dict[field] = scheming_language_text(pkg_dict[field])
+
+        return pkg_dict
