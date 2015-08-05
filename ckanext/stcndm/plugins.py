@@ -13,6 +13,7 @@ from ckanext.scheming.helpers import scheming_language_text
 
 
 
+
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IConfigurer)
