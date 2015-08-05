@@ -68,6 +68,65 @@ presets:
           fr: Publications avec des titres répétitifs (générique)
         value: '26'
 
+- preset_name: ndm_status
+  values:
+    form_snippet: multiple_select.html
+    display_snippet: multiple_choice.html
+    validators: scheming_required scheming_multiple_choice
+    output_validators: shortcode_output
+    label:
+      en: Status
+      fr: État
+    choices:
+      - label:
+          fr: Accessible
+          en: Full Access
+        value: '0'
+      - label:
+          fr: En cours
+          en: In progress
+        value: '1'
+      - label:
+          fr: Annulé
+          en: Cancelled
+        value: '2'
+      - label:
+          fr: Terminé
+          en: Completed
+        value: '3'
+      - label:
+          fr: Pré-diffusion
+          en: Pre-release
+        value: '11'
+      - label:
+          fr: Produit en cours/Disponible
+          en: Ongoing/Available
+        value: '31'
+      - label:
+          fr: À venir
+          en: Forthcoming
+        value: '32'
+      - label:
+         fr: Discontinué/Plus disponible
+         en: Discontinued/Not available
+        value: '33'
+      - label:
+          fr: Remplacé par une autre langue
+          en: Replaced by other language
+        value: '34'
+      - label:
+          fr: Annulé
+          en: Cancelled
+        value: '35'
+      - label:
+          fr: Ne pas télécharger au CEL
+          en: Do not load to OLC
+        value: '36'
+      - label:
+          fr: Dernier numéro completé
+          en: Last completed issue
+        value: '90'
+
 - preset_name: ndm_publish_status
   values:
     form_snippet: select.html
