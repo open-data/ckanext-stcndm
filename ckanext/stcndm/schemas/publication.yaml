@@ -14,6 +14,418 @@ languages_label:
 
 dataset_fields:
 
+- field_name: publication_formats
+  label:
+    en: Publication Formats
+    fr: Formats de publication
+  values:
+    display_snippet: publication_format.html
+    form_snippet: publication_format.html
+    validators: "scheming_required"
+  formats:
+    - format_code: 02
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+      label:
+        en: Database
+        fr: Base de données
+    - format_code: 03
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+      label:
+        en: CD-ROM
+        fr: CD-ROM
+    - format_code: 04
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+      label:
+        en: Diskette
+        fr: Diquette
+    - format_code: 05
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+    - format_code: 08
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+      label:
+        en: PDF
+        fr: PDF
+    - format_code: 10
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+    - format_code: 12
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+    - format_code: 13
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+    - format_code: 14
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+    - format_code: 15
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+    - format_code: 17
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+    - format_code: 18
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+    - format_code: 19
+      format_fields:
+        - field_name: archive_status_code
+          preset: ndm_archive_status
+        - field_name: archive_date
+          label:
+            en: Archive Date
+            fr: Date d'archivage
+          preset: date
+        - field_name: release_date
+          label:
+            en: Release Date
+            fr: Date de diffusion
+          preset: date
+        - field_name: display_code
+          preset: ndm_display
+        - field_name: issn_number
+          label:
+            en: ISSN Number
+            fr: Nombre ISSN
+          preset: fluent_text
+        - field_name: last_publish_status_code
+          preset: ndm_last_publish_status
+        - field_name: status_codes
+          preset: ndm_status
+        - field_name: url
+          label:
+            en: URL
+            fr: URL
+          preset: fluent_text
+
 - field_name: owner_org
   help_text:
     en: The organization directly responsible for the dataset and for metadata maintenance.
@@ -65,9 +477,6 @@ dataset_fields:
   form_placeholder: unique-catalog-id
   required: true
 
-- field_name: format_codes
-  preset: ndm_formats
-
 - field_name: product_type_code
   preset: ndm_products
 
@@ -87,6 +496,11 @@ dataset_fields:
   label:
     en: Feature Weight
     fr: Poids
+
+- field_name: digital_object_identifier
+  label:
+    en: Digital Object Identifier
+    fr: Identificateur d'objet numérique
 
 #- field_name: array_terminated
 #  label:
@@ -154,7 +568,7 @@ dataset_fields:
   label:
     en: Keywords
     fr: Mots clés
-  preset: fluent_text
+  preset: fluent_tags
 
 #- field_name: legacy_date
 #  label:
@@ -215,358 +629,3 @@ dataset_fields:
 #  label:
 #    en: Volume and Number
 #    fr: Volume et nombre
-
-- field_name: publication_formats
-  label:
-    en: "Publication Formats"
-    fr: "Formats de publication"
-  values:
-    display_snippet: multiple_choice.html
-    form_snippet: multiple_select.html
-    output_validators: shortcode_output
-    validators: "scheming_required scheming_multiple_choice"
-  formats:
-    - format_code: "02"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-      label:
-        en: Database
-        fr: "Base de données"
-    - format_code: "03"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-      label:
-        en: CD-ROM
-        fr: CD-ROM
-    - format_code: "04"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-      label:
-        en: Diskette
-        fr: Diquette
-    - format_code: "05"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-    - format_code: 08
-      format_fields:
-        -
-          field_name: archive_status_code
-          preset: ndm_archive_status
-        -
-          field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        -
-          field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        -
-          field_name: display_code
-          preset: ndm_display
-        -
-          field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        -
-          field_name: status_codes
-          preset: ndm_status
-        -
-          field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-      label:
-        en: PDF
-        fr: PDF
-    - format_code: "10"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-    - format_code: "12"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-    - format_code: "13"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-    - format_code: "14"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-    - format_code: "15"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-    - format_code: "17"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-    - format_code: "18"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
-    - format_code: "19"
-      format_fields:
-        - field_name: archive_status_code
-          preset: ndm_archive_status
-        - field_name: archive_date
-          label:
-            en: "Archive Date"
-            fr: "Date d'archivage"
-          preset: date
-        - field_name: release_date
-          label:
-            en: "Release Date (YYYY-MM-DD)"
-            fr: "Date de diffusion (YYYY-MM-DD)"
-          preset: date
-        - field_name: display_code
-          preset: ndm_display
-        - field_name: last_publish_status_code
-          preset: ndm_last_publish_status
-        - field_name: status_codes
-          preset: ndm_status
-        - field_name: url
-          label:
-            en: URL
-            fr: URL
-          preset: fluent_text
