@@ -149,6 +149,19 @@ def cube_create_name(key, data, errors, context):
         errors[key].append(_('couldn\'t find product_id_new'))
 
 
+def publication_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'publication-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('couldn\'t find product_id_new'))
+
+
 def geodescriptor_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
