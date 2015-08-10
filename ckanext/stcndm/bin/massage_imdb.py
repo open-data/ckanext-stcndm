@@ -115,7 +115,7 @@ for line in query_results['results']:
     if 'description_fr_txts' in line and line['description_fr_txts']:
         temp[u'fr'] = line['description_fr_txts']
     if temp:
-        line_out['description'] = temp
+        line_out['notes'] = temp
 
     if 'featureweight_bi_ints' in line:
         line_out['feature_weight'] = line['featureweight_bi_ints']

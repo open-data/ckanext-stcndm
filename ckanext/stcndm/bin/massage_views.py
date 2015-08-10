@@ -189,7 +189,7 @@ for i in range(0, 10):
         if 'description_fr_txts' in line and line['description_fr_txts']:
             temp[u'fr'] = line['description_fr_txts']
         if temp:
-            line_out['description'] = temp
+            line_out['notes'] = temp
 
         if 'conttypecode_bi_txtm' in line:
             result = listify(line['conttypecode_bi_txtm'])
