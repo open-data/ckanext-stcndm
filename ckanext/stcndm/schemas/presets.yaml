@@ -9,21 +9,25 @@ presets:
     display_snippet: shortcode_multivalue.html
     validators: shortcode_validate
     output_validators: shortcode_output
+    schema_field_structure: list
+    schema_field_type: code
 
 - preset_name: ndm_language
   values:
     label:
       en: Language
       fr: Langue
+    schema_field_structure: none
+    schema_field_type: str
     choices:
     - label:
         en: English
         fr: Anglais
-      value: en
+      value: 'en'
     - label:
         en: French
         fr: Francais
-      value: fr
+      value: 'fr'
     form_snippet: select.html
     display_snippet: select.html
     validators: scheming_required scheming_choices
@@ -36,6 +40,8 @@ presets:
     label:
       en: Product Type
       fr: Type de produit
+    schema_field_structure: none
+    schema_field_type: code
     choices:
       - label:
           en: Cube
@@ -95,6 +101,8 @@ presets:
     label:
       en: Status
       fr: État
+    schema_field_structure: list
+    schema_field_type: code
     choices:
       - label:
           fr: Accessible
@@ -153,6 +161,8 @@ presets:
     label:
       en: Publishing Status
       fr: État de publication
+    schema_field_structure: none
+    schema_field_type: code
     choices:
       - label:
           en: None
@@ -196,6 +206,8 @@ presets:
     label:
       en: Resource Formats
       fr: Formats de ressources
+    schema_field_structure: list
+    schema_field_type: code
     choices:
       - label:
             en: Database
@@ -258,6 +270,8 @@ presets:
     label:
       en: Archive Status
       fr: État d'archivage
+    schema_field_structure: none
+    schema_field_type: code
     choices:
       - label:
           en: Archived
@@ -276,6 +290,8 @@ presets:
     label:
       en: Display
       fr: Affichage
+    schema_field_structure: none 
+    schema_field_type: code
     choices:
       - label:
           en: Show product info page
@@ -298,7 +314,8 @@ presets:
     label:
       en: Status
       fr: État
-    preset: select
+    schema_field_structure: none
+    schema_field_type: code
     choices:
       - label:
           en: Active
@@ -317,6 +334,8 @@ presets:
     label:
       en: Subject Display
       fr: Affichage du sujet
+    schema_field_structure: none
+    schema_field_type: code
     choices:
       - label:
           en: Show subject A to Z alias
@@ -343,7 +362,8 @@ presets:
     label:
       en: Survey Participation
       fr: Participation au sondage
-    preset: select
+    schema_field_structure: none
+    schema_field_type: code
     choices:
       - label:
           en: Mandatory Survey
@@ -370,7 +390,8 @@ presets:
     label:
       en: Survey Owner
       fr: Propriétaire du sondage
-    preset: select
+    schema_field_structure: none
+    schema_field_type: code
     choices:
       - label:
           en: Administrative Data Division (ADD)
@@ -494,6 +515,8 @@ presets:
     label:
       en: Tracking
       fr: Pistage
+    schema_field_structure: list
+    schema_field_type: code
     choices:
       - label:
             en: Approved
@@ -577,6 +600,8 @@ presets:
     label:
       en: Collection Method
       fr: Méthode de collection
+    schema_field_structure: list
+    schema_field_type: code
     choices:
       - label:
             en: Computer Assisted Interview
@@ -643,7 +668,6 @@ presets:
             fr: Interview téléphonique (sans ordinateur)
         value: '25'
 
-
 - preset_name: ndm_admin_notes
   values:
     form_placeholder:
@@ -652,6 +676,8 @@ presets:
     label:
       en: Admin Notes
       fr: Notes
+    schema_field_structure: dict
+    schema_field_type: str
     form_snippet: fluent_markdown.html
     display_snippet: fluent_markdown.html
     error_snippet: fluent_text.html
@@ -663,6 +689,8 @@ presets:
     label:
       en: Title
       fr: Titre
+    schema_field_structure: dict
+    schema_field_type: str
     form_placeholder:
       en: Canada Border Wait Times
       fr: Temps d’attente à la frontière
@@ -677,6 +705,8 @@ presets:
     label:
       en: Description
       fr: Description
+    schema_field_structure: dict
+    schema_field_type: str
     form_placeholder:
       en: The National Pollutant Release Inventory (NPRI) is Canada's public inventory
         of pollutant releases (to air, water and land), disposals and transfers for
@@ -696,12 +726,16 @@ presets:
 
 - preset_name: codeset_select
   values:
+    schema_field_structure: none
+    schema_field_type: code
     form_snippet: codeset_select.html
     display_snippet: select.html
     validators: scheming_required scheming_choices
 
 - preset_name: codeset_multiple_select
   values:
+    schema_field_structure: list
+    schema_field_type: code
     form_snippet: codeset_multiple_select.html
     display_snippet: codeset_multiple_choice.html
     validators: ignore_missing codeset_multiple_choice
