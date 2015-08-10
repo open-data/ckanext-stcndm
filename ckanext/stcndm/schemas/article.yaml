@@ -1,10 +1,10 @@
 scheming_version: 1
-about: 'Statistics Canada Dissemination: Publications'
+about: 'Statistics Canada Dissemination: Articles'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Publications
-  fr: Publications
-dataset_type: publication
+  en: Articles
+  fr: Articles
+dataset_type: article
 form_languages:
 - en
 - fr
@@ -30,28 +30,28 @@ dataset_fields:
   preset: codeset_multiple_select
   codeset_type: content_type
 
-- field_name: geolevel_codes
-  label:
-    en: Geolevel
-    fr: Geolevel
-  preset: codeset_multiple_select
-  codeset_type: geolevel
+#- field_name: geolevel_codes
+#  label:
+#    en: Geolevel
+#    fr: Geolevel
+#  preset: codeset_multiple_select
+#  codeset_type: geolevel
 
-- field_name: geodescriptor_codes
-  label:
-    en: Geo Specific
-    fr: Géo spécifique
-  preset: shortcode_multivalue
+#- field_name: geodescriptor
+#  label:
+#    en: Geo Specific
+#    fr: Géo spécifique
+#  preset: shortcode_multivalue
 
-- field_name: subject_codes
-  label:
-    en: Subject
-    fr: Sujet
-  preset: shortcode_multivalue
+#- field_name: subject_codes
+#  label:
+#    en: Subject
+#    fr: Sujet
+#  preset: shortcode_multivalue
 
 - field_name: name
   # follow our custom name generation with default package name validators
-  validators:  publication_create_name
+  validators: article_create_name
     not_empty unicode name_validator package_name_validator
   label:
     en: Internal Unique ID
@@ -63,8 +63,8 @@ dataset_fields:
 
 - field_name: related_products
   label:
-    en: Related
-    fr: Relié
+    en: Related Products
+    fr: Produits reliés
   preset: shortcode_multivalue
 
 - field_name: thesaurus
@@ -78,11 +78,6 @@ dataset_fields:
     en: Feature Weight
     fr: Poids
 
-- field_name: digital_object_identifier
-  label:
-    en: Digital Object Identifier
-    fr: Identificateur d'objet numérique
-
 #- field_name: array_terminated
 #  label:
 #    en: Array Terminated Code
@@ -92,6 +87,7 @@ dataset_fields:
 #  label:
 #    en: Default View ID
 #    fr: ID de vue par défaut
+#  preset: shortcode_multivalue
 
 #- field_name: dimension_group_code
 #  label:
@@ -129,7 +125,7 @@ dataset_fields:
     fr: Notes historiques
   preset: fluent_markdown
 
-- field_name: imdb_source_codes
+- field_name: imdb_source_code
   label:
     en: Source
     fr: Source
@@ -144,6 +140,11 @@ dataset_fields:
   label:
     en: Internal Contact Name
     fr: Nom de personne ressource interne
+
+- field_name: issue_no
+  label:
+    en: Issue Number
+    fr: Numéro d'émission
 
 - field_name: keywords
   label:
@@ -177,7 +178,7 @@ dataset_fields:
   label:
     en: Product ID New
     fr: ID produit nouveau
-  required: True
+  required: true
 
 - field_name: product_id_old
   label:
@@ -195,27 +196,28 @@ dataset_fields:
     fr: Période de référence
   preset: fluent_tags
 
-- field_name: replaced_products
-  label:
-    en: Replaced Product
-    fr: Produit remplacé
-  preset: shortcode_multivalue
+#- field_name: replaced_products
+#  label:
+#    en: Replaced Product
+#    fr: Produit remplacé
+#  preset: shortcode_multivalue
 
-- field_name: subjectold_codes
+#- field_name: subjectold_code
+#  label:
+#    en: Old subject
+#    fr: Ancien sujet
+#  preset: shortcode_multivalue
+
+- field_name: url
   label:
-    en: Old subject
-    fr: Ancien sujet
-  preset: shortcode_multivalue
+    en: URL
+    fr: URL
+  preset: fluent_text
 
 #- field_name: volume_and_number
 #  label:
 #    en: Volume and Number
 #    fr: Volume et nombre
-
-#- field_name: url
-#  label:
-#    en: URL
-#    fr: URL
 
 - field_name: owner_org
   help_text:
@@ -243,18 +245,18 @@ resource_fields:
     fr: URL
   required: true
 
-- field_name: issn_number
+- field_name: isbn_number
   label:
-    en: ISSN Number
-    fr: Nombre ISSN
+    en: ISBN Number
+    fr: Nombre ISBN
 
-- field_name: archive_status_code
-  preset: ndm_archive_status
+#- field_name: archive_status_code
+#  preset: ndm_archive_status
 
-- field_name: archive_date
-  label:
-    en: Archive Date
-    fr: Date d'archivage
+#- field_name: archive_date
+#  label:
+#    en: Archive Date
+#    fr: Date d'archivage
 
 - field_name: release_date
   label:
@@ -272,3 +274,9 @@ resource_fields:
 
 - field_name: status_codes
   preset: ndm_status
+
+- field_name: correction_id_codes
+  label:
+    en: Correction ID Code
+    fr: Code ID de correction
+  preset: shortcode_multivalue

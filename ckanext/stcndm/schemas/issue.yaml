@@ -14,20 +14,13 @@ languages_label:
 
 dataset_fields:
 
-- field_name: name
-  # follow our custom name generation with default package name validators
-  validators: not_empty unicode name_validator package_name_validator # publication_create_name
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
-
 - field_name: admin_notes
   preset: ndm_admin_notes
 
 - field_name: title
   preset: ndm_title
 
-- field_name: description
+- field_name: notes
   preset: ndm_description
 
 - field_name: content_type_codes
@@ -56,6 +49,15 @@ dataset_fields:
 #    fr: Sujet
 #  preset: shortcode_multivalue
 
+- field_name: name
+  # follow our custom name generation with default package name validators
+  validators: issue_create_name
+    not_empty unicode name_validator package_name_validator
+  label:
+    en: Internal Unique ID
+    fr: ID interne unique
+  form_snippet: null
+
 - field_name: product_type_code
   preset: ndm_products
 
@@ -81,11 +83,6 @@ dataset_fields:
 #  label:
 #    en: Array Terminated Code
 #    fr: Code de terminaison
-
-- field_name: correction_id_code
-  label:
-    en: Correction ID Code
-    fr: Code ID de correction
 
 #- field_name: default_view_id
 #  label:
@@ -154,7 +151,7 @@ dataset_fields:
 #  label:
 #    en: Keywords
 #    fr: Mots clés
-#  preset: fluent_text
+#  preset: fluent_tags
 
 #- field_name: legacy_date
 #  label:
@@ -182,6 +179,7 @@ dataset_fields:
   label:
     en: Product ID New
     fr: ID produit nouveau
+  required: true
 
 - field_name: product_id_old
   label:
@@ -233,9 +231,25 @@ dataset_fields:
 
 resource_fields:
 
-- field_name: format_codes
+- field_name: format_code
   preset: ndm_formats
+  form_snippet: select.html
   required: true
+
+- field_name: language
+  preset: ndm_language
+  required: true
+
+- field_name: url
+  label:
+    en: URL
+    fr: URL
+  required: true
+
+- field_name: isbn_number
+  label:
+    en: ISBN Number
+    fr: Nombre ISBN
 
 #- field_name: archive_status_code
 #  preset: ndm_archive_status
@@ -253,13 +267,7 @@ resource_fields:
 - field_name: display_code
   preset: ndm_display
 
-- field_name: isbn_number
-  label:
-    en: ISBN Number
-    fr: Nombre ISBN
-  preset: fluent_text
-
-- field_name: tracking_code
+- field_name: tracking_codes
   preset: ndm_tracking
 
 - field_name: last_publish_status_code
@@ -268,14 +276,8 @@ resource_fields:
 - field_name: status_codes
   preset: ndm_status
 
-- field_name: url
+- field_name: correction_id_codes
   label:
-    en: bogus URL while issue in scheming gets fixed
-    fr: bogus URL while issue in scheming gets fixed
-  form_placeholder: enter anything / taper n'importe quoi
-
-- field_name: resource_url
-  label:
-    en: URL
-    fr: URL
-  preset: fluent_text
+    en: Correction ID Code
+    fr: Code ID de correction
+  preset: shortcode_multivalue

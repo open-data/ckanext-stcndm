@@ -45,7 +45,7 @@ dataset_fields:
     fr: alias a à z
   preset: fluent_text
 
-- field_name: description
+- field_name: notes
   preset: ndm_description
 
 - field_name: subject_display_code
