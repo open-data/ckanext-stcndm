@@ -4,17 +4,12 @@ __author__ = 'Statistics Canada'
 
 import datetime
 import ckan.logic as logic
-import ckan.logic.validators as validators
 import ckan.plugins.toolkit as toolkit
 
 _get_or_bust = logic.get_or_bust
-# noinspection PyUnresolvedReferences
 _get_action = toolkit.get_action
-# noinspection PyUnresolvedReferences
 _ValidationError = toolkit.ValidationError
-# noinspection PyUnresolvedReferences
 _NotFound = toolkit.ObjectNotFound
-# noinspection PyUnresolvedReferences
 _NotAuthorized = toolkit.NotAuthorized
 
 
@@ -37,9 +32,13 @@ def get_next_cube_id(context, data_dict):
     if not len(str(subject_code)) == 2:
         raise _ValidationError('invalid subject_code')
 
-    query = {'q': 'extras_productidnew_bi_strs:{subject_code}* AND extras_producttype_en_strs:Cube'.format(
-        subject_code=subject_code),
-        'sort': 'extras_productidnew_bi_strs desc'}
+    query = {
+        'q': (
+            'extras_productidnew_bi_strs:{subject_code}* AND'
+            'extras_producttype_en_strs:Cube'
+        ).format(subject_code=subject_code),
+        'sort': 'extras_productidnew_bi_strs desc'
+    }
 
     response = _get_action('package_search')(context, query)
 
@@ -51,7 +50,9 @@ def get_next_cube_id(context, data_dict):
                 if product_id_response.endswith('9999'):
                     # TODO: implement reusing unused IDs
                     raise _ValidationError(
-                        'All Cube IDs for this subject have been registered. Reusing IDs is in development.')
+                        'All Cube IDs for this subject have been registered.'
+                        'Reusing IDs is in development.'
+                    )
                 else:
                     try:
                         product_id_new = str(int(product_id_response) + 1)
@@ -62,14 +63,14 @@ def get_next_cube_id(context, data_dict):
 
 
 @logic.side_effect_free
-def get_cube(context, data_dict):  # this one is for external use. just use list_package internally
-    # noinspection PyUnresolvedReferences
+def get_cube(context, data_dict):
     """
     Return a dict representation of a cube, given a cube_id, if it exists.
 
     :param productId: cube id (i.e. 1310001)
     :type productId: str
-    :param fields: desired output fields. (i.e. "title_en_txts,title_fr_txts,ProductIdnew_bi_strs") Default: *
+    :param fields: desired output fields. (i.e.
+        "title_en_txts,title_fr_txts,ProductIdnew_bi_strs") Default: *
     :type fields: str
 
     :return: requested cube fields and values
@@ -88,7 +89,12 @@ def get_cube(context, data_dict):  # this one is for external use. just use list
     except KeyError:
         pass
 
-    q = {'q': 'extras_productidnew_bi_strs:{cube_id} AND extras_producttype_en_strs:Cube'.format(cube_id=cube_id)}
+    q = {
+        'q': (
+            'extras_productidnew_bi_strs:{cube_id} AND '
+            'extras_producttype_en_strs:Cube'
+        ).format(cube_id=cube_id)
+    }
 
     result = _get_action('package_search')(context, q)
 
@@ -116,14 +122,17 @@ def get_cube(context, data_dict):  # this one is for external use. just use list
 def get_cube_list_by_subject(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Return a dict with all Cube Ids and French/English titles based on a provided SubjectCode.
+    Return a dict with all Cube Ids and French/English titles based on a
+    provided SubjectCode.
 
-    Note that this relies on the subjnewcode_bi_strs field rather than the subject code in the cubeid.
+    Note that this relies on the subjnewcode_bi_strs field rather than the
+    subject code in the cubeid.
 
     :param subjectCode: two-digit subject code (i.e. 13)
     :type str
 
-    :return: registered cubes for the SubjectCode and their French/English titles
+    :return: registered cubes for the SubjectCode and their
+             French/English titles
     :rtype: list of dicts
 
     :raises ValidationError, ObjectNotFound
@@ -134,15 +143,23 @@ def get_cube_list_by_subject(context, data_dict):
         raise _ValidationError('invalid subjectcode')
 
     q = {
-        'q': '(extras_subjnewcode_bi_txtm:{subjectcode} OR extras_subjnewcode_bi_txtm:{subjectcode}*) AND extras_producttype_en_strs:Cube'.format(
-            subjectcode=subject_code),
-        'rows': 1000}
+        'q': (
+            '(extras_subjnewcode_bi_txtm:{subjectcode} OR '
+            'extras_subjnewcode_bi_txtm:{subjectcode}*) AND '
+            'extras_producttype_en_strs:Cube'
+        ).format(subjectcode=subject_code),
+        'rows': 1000
+    }
 
     result = _get_action('package_search')(context, q)
 
     count = result['count']
     if count == 0:
-        raise _NotFound('Found no cubes with subject code {subject_code}'.format(subject_code=subject_code))
+        raise _NotFound(
+            'Found no cubes with subject code {subject_code}'.format(
+                subject_code=subject_code
+            )
+        )
     else:
         record_list = []
         for record in result['results']:
@@ -154,8 +171,8 @@ def get_cube_list_by_subject(context, data_dict):
                     record_dict['productidnew_bi_strs'] = extra['value']
 
                 if extra['key'].startswith('title'):
-                    record_dict[extra['key']] = extra['value']  # we only want the titles according to TV
-
+                    # we only want the titles according to TV
+                    record_dict[extra['key']] = extra['value']
             record_list.append(record_dict)
 
         output = {'results': record_list,
@@ -167,8 +184,8 @@ def get_cube_list_by_subject(context, data_dict):
 def register_cube(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Register a cube in the rgcube organization.  Automatically populate subjectcode fields based on
-    provided parameters.
+    Register a cube in the rgcube organization.  Automatically populate
+    subjectcode fields based on provided parameters.
 
     :param subjectCode: two-digit subject_code code (i.e. 13)
     :type subjectCode: str
@@ -192,8 +209,12 @@ def register_cube(context, data_dict):
 
     product_type = '10'  # Cube product_type is always 10
 
-    subject_dict = _get_action('ndm_get_subject')(context, {'subjectCode': subject_code})
-    product_type_dict = _get_action('ndm_get_producttype')(context, {'productType': product_type})
+    subject_dict = _get_action('ndm_get_subject')(context, {
+        'subjectCode': subject_code
+    })
+    product_type_dict = _get_action('ndm_get_producttype')(context, {
+        'productType': product_type
+    })
     product_id = _get_action('ndm_get_next_cubeid')(context, data_dict)
 
     name = '{product_id}'.format(product_id=product_id)
@@ -204,7 +225,8 @@ def register_cube(context, data_dict):
 
     field_list = _get_action('ndm_get_fieldlist')(context, {"org": org})
 
-    for field in field_list['fields']:  # TODO: Refactor assignment of key-value pairs to a dict
+    # TODO: Refactor assignment of key-value pairs to a dict
+    for field in field_list['fields']:
         if field == '10uid_bi_strs':
             value = product_id
         elif field == 'productidnew_bi_strs':
@@ -260,6 +282,8 @@ def register_cube(context, data_dict):
 
     new_cube = _get_action('package_create')(context, package_dict)
 
-    output = _get_action('ndm_get_cube')(context, {'productId': new_cube['name']})
+    output = _get_action('ndm_get_cube')(context, {
+        'productId': new_cube['name']
+    })
 
     return output
