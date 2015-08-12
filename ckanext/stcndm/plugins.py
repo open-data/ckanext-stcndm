@@ -39,6 +39,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "DeleteProduct": common.delete_product,
             "GetBookableReleases": daily.get_bookable_releases,
             "GetCubeList": cubes.get_cube_list_by_subject,
+            "GetCube": cubes.get_cube,
             "GetDailyList": daily.get_daily_list,
             "GetDefaultViews": daily.get_default_views,
             "GetDerivedProductList": common.get_derived_product_list,

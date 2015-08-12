@@ -8,7 +8,7 @@ import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
 from ckan.plugins.toolkit import (
-    NotFound,
+    ObjectNotFound,
     ValidationError
 )
 
@@ -70,55 +70,31 @@ def get_cube(context, data_dict):
     """
     Return a dict representation of a cube, given a cube_id, if it exists.
 
-    :param productId: cube id (i.e. 1310001)
-    :type productId: str
-    :param fields: desired output fields. (i.e.
-        "title_en_txts,title_fr_txts,ProductIdnew_bi_strs") Default: *
+    :param cube_id: ID of the cube to retrieve. (i.e. 1310001)
+    :type cube_id: str
     :type fields: str
 
-    :return: requested cube fields and values
+    :return: requested cube
     :rtype: dict
 
-    :raises ValidationError, ObjectNotFound
+    :raises ValidationError, ObjectObjectNotFound
     """
+    cube_id = _get_or_bust(data_dict, 'cube_id')
+    lc = ckanapi.LocalCKAN(context=context)
+    result = lc.action.package_search(
+        q=(
+            'dataset_type:cube AND '
+            'extras_product_id_new:{cube_id}'
+        ).format(cube_id=cube_id),
+        rows=1
+    )
 
-    cube_id = _get_or_bust(data_dict, 'productId')
-
-    desired_fields_list = []
-    try:
-        desired_fields = data_dict['fields']
-        for field in desired_fields.split(','):
-            desired_fields_list.append(field)
-    except KeyError:
-        pass
-
-    q = {
-        'q': (
-            'extras_productidnew_bi_strs:{cube_id} AND '
-            'extras_producttype_en_strs:Cube'
-        ).format(cube_id=cube_id)
-    }
-
-    result = _get_action('package_search')(context, q)
-
-    count = result['count']
-
-    if count == 0:
-        raise NotFound('Cube not found')
-    elif count > 1:
+    if not result['count']:
+        raise ObjectNotFound('Cube not found')
+    elif result['count'] > 1:
         raise ValidationError('More than one cube with given cubeid found')
     else:
-        output = {}
-
-        extras = result['results'][0]['extras']
-        for extra in extras:
-
-            if desired_fields_list:
-                if extra['key'] in desired_fields_list:
-                    output[extra['key']] = extra['value']
-            else:
-                output[extra['key']] = extra['value']
-        return output
+        return result['results'][-1]
 
 
 @logic.side_effect_free
@@ -134,7 +110,7 @@ def get_cube_list_by_subject(context, data_dict):
              French/English titles
     :rtype: list of dicts
 
-    :raises ValidationError, ObjectNotFound
+    :raises ValidationError, ObjectObjectNotFound
     """
     subject_code = _get_or_bust(data_dict, 'subjectCode')
 
@@ -153,7 +129,7 @@ def get_cube_list_by_subject(context, data_dict):
 
     count = result['count']
     if not count:
-        raise NotFound(
+        raise ObjectNotFound(
             'Found no cubes with subject code {subject_code}'.format(
                 subject_code=subject_code
             )
