@@ -242,9 +242,8 @@ def codeset_choices(codeset_type):
 
 def lookup_label(field_name, field_value, lookup_type):
     """
-    Given the name of a field (including the _code) suffix,
-    the value of the field, and the type of lookup to perform,
-    resolve the code and return the label.
+    Given the name of a field, the value of the field, and the type of lookup
+    to perform, resolve the code and return the label.
 
     :param field_name: The name of the field being resolved (ex: format_code).
     :param field_name: The value of the field being resolved. (ex: '33')
@@ -252,8 +251,6 @@ def lookup_label(field_name, field_value, lookup_type):
     """
     lc = ckanapi.LocalCKAN()
 
-    assert(field_name.endswith(('_code', '_codes')))
-    trimmed_field_name = field_name[:field_name.rindex('_code')]
     default = {u'en': field_value, u'found': False}
 
     if lookup_type == 'preset':

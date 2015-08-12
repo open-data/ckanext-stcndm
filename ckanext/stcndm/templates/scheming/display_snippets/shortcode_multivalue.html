@@ -3,13 +3,13 @@
 {% if values|length > 1 %}
 <ol>
 {%- for element in values -%}
-  {%- set lab = h.lookup_label(field.field_name, element, field.lookup) -%}
+  {%- set lab = h.lookup_label(field.lookup_key, element, field.lookup) -%}
   <li>{{ lab.get(lang, lab['en']) }}</li>
 {%- endfor -%}
 </ol>
 {% elif values %}
 {%- set lab = h.lookup_label(
-  field.field_name,
+  field.lookup_key,
   values[-1],
   field.lookup
 ) -%}
