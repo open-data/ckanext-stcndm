@@ -1,6 +1,6 @@
 [
   {
-    "name": "codeset-geolevel-a0000",
+    "name": "geolevel-a0000",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -12,7 +12,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-a0001",
+    "name": "geolevel-a0001",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -24,7 +24,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-a0002",
+    "name": "geolevel-a0002",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -36,7 +36,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-a0003",
+    "name": "geolevel-a0003",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -48,7 +48,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-a0004",
+    "name": "geolevel-a0004",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -60,7 +60,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-a0005",
+    "name": "geolevel-a0005",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -72,7 +72,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-a0006",
+    "name": "geolevel-a0006",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -84,7 +84,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-a0007",
+    "name": "geolevel-a0007",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -96,7 +96,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-a0011",
+    "name": "geolevel-a0011",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -108,7 +108,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-a0015",
+    "name": "geolevel-a0015",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -120,7 +120,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-s0500",
+    "name": "geolevel-s0500",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -132,7 +132,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-s0501",
+    "name": "geolevel-s0501",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -144,7 +144,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-s0502",
+    "name": "geolevel-s0502",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -156,7 +156,7 @@
     }
   },
     {
-    "name": "codeset-geolevel-s0503",
+    "name": "geolevel-s0503",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -168,7 +168,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-s0504",
+    "name": "geolevel-s0504",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -180,7 +180,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-s0507",
+    "name": "geolevel-s0507",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -192,7 +192,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-s0510",
+    "name": "geolevel-s0510",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -204,7 +204,7 @@
     }
   },
   {
-    "name": "codeset-geolevel-s0512",
+    "name": "geolevel-s0512",
     "private": false,
     "type": "codeset",
     "codeset_type": "geolevel",
@@ -216,7 +216,7 @@
     }
   },
   {
-    "name": "codeset-frequency-8",
+    "name": "frequency-8",
     "private": false,
     "type": "codeset",
     "codeset_type": "frequency",

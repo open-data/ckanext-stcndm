@@ -39,8 +39,8 @@ dataset_fields:
 
 - field_name: geolevel_code # tmsgccode_bi_tmtxtm
   label:
-    en: Geo Descriptor Code
-    fr: Code du géodescriptor
+    en: Geolevel Code
+    fr: Code geolevel
   required: true
 
 - field_name: geodescriptor_code # tmsgcspecificcode_bi_tmtxtm

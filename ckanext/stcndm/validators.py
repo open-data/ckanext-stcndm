@@ -105,7 +105,7 @@ def codeset_create_name(key, data, errors, context):
     codeset_type = _data_lookup(('codeset_type',), data)
     codeset_value = _data_lookup(('codeset_value',), data).lower()
     if codeset_type and codeset_value:
-        data[key] = u'codeset-{0}-{1}'.format(codeset_type, codeset_value)
+        data[key] = u'{0}-{1}'.format(codeset_type, codeset_value.lower())
     else:
         errors[key].append(_('couldn\'t find codeset_type or codeset_value'))
 
@@ -118,7 +118,7 @@ def subject_create_name(key, data, errors, context):
 
     subject_code = _data_lookup(('subject_code',), data)
     if subject_code:
-        data[key] = u'subject-{0}'.format((u'000000'+subject_code)[-6:])
+        data[key] = u'subject-{0}'.format(subject_code.lower())
     else:
         errors[key].append(_('couldn\'t find subject_code'))
 
@@ -131,7 +131,7 @@ def imdb_create_name(key, data, errors, context):
 
     product_id_new = _data_lookup(('product_id_new',), data)
     if product_id_new:
-        data[key] = u'imdb-{0}'.format(product_id_new)
+        data[key] = u'imdb-{0}'.format(product_id_new.lower())
     else:
         errors[key].append(_('couldn\'t find product_id_new'))
 
@@ -144,7 +144,20 @@ def cube_create_name(key, data, errors, context):
 
     product_id_new = _data_lookup(('product_id_new',), data)
     if product_id_new:
-        data[key] = u'cube-{0}'.format(product_id_new)
+        data[key] = u'cube-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('couldn\'t find product_id_new'))
+
+
+def view_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'view-{0}'.format(product_id_new.lower())
     else:
         errors[key].append(_('couldn\'t find product_id_new'))
 
@@ -188,6 +201,20 @@ def article_create_name(key, data, errors, context):
         errors[key].append(_('couldn\'t find product_id_new'))
 
 
+def ndm_str2boolean(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    if isinstance(data[key], bool):
+        return
+    if data[key] is missing or data[key].lower() not in ['true', 'yes', 'y', '1']:
+        data[key] = False
+    else:
+        data[key] = True
+
+
 def geodescriptor_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
@@ -209,7 +236,7 @@ def dimension_member_create_name(key, data, errors, context):
 
     dimension_member_code = _data_lookup(('dimension_member_code',), data)
     if dimension_member_code:
-        data[key] = u'dimension_member-{0}'.format(dimension_member_code)
+        data[key] = u'dimension_member-{0}'.format(dimension_member_code.lower())
     else:
         errors[key].append(_('couldn\'t find dimension_member_code'))
 
