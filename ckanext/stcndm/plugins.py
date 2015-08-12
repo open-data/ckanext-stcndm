@@ -69,19 +69,19 @@ class STCNDMPlugin(p.SingletonPlugin):
         return {
             "shortcode_validate": validators.shortcode_validate,
             "shortcode_output": validators.shortcode_output,
-            "codeset_create_name": validators.codeset_create_name,
             "codeset_multiple_choice": validators.codeset_multiple_choice,
+            "codeset_create_name": validators.codeset_create_name,
             "subject_create_name": validators.subject_create_name,
+            "geodescriptor_create_name": validators.geodescriptor_create_name,
+            "imdb_create_name": validators.imdb_create_name,
+            "dimension_member_create_name": validators.dimension_member_create_name,
+            "cube_create_name": validators.cube_create_name,
+            "view_create_name": validators.view_create_name,
             "publication_create_name": validators.publication_create_name,
             "issue_create_name": validators.issue_create_name,
             "article_create_name": validators.article_create_name,
-            "geodescriptor_create_name": validators.geodescriptor_create_name,
-            "dimension_member_create_name": (
-                validators.dimension_member_create_name
-            ),
-            "cube_create_name": validators.cube_create_name,
-            "imdb_create_name": validators.imdb_create_name,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
+            "ndm_str2boolean": validators.ndm_str2boolean,
         }
 
     def get_helpers(self):
