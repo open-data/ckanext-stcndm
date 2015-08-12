@@ -260,8 +260,13 @@ while i < n:
             if result:
                 line_out['frequency_codes'] = result
 
-        if 'hierarchyid_bi_strm' in line:
+        if 'hierarchyid_bi_strm' in line and line['hierarchyid_bi_strm']:
             result = listify(line['hierarchyid_bi_strm'])
+            if result:
+                line_out['parent_product'] = result
+
+        if 'hierarchyid_bi_strs' in line and line['hierarchyid_bi_strs']:
+            result = listify(line['hierarchyid_bi_strs'])
             if result:
                 line_out['parent_product'] = result
 
