@@ -12,8 +12,6 @@ from ckanext.stcndm import helpers
 from ckanext.scheming.helpers import scheming_language_text
 
 
-
-
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IConfigurer)
@@ -89,6 +87,7 @@ class STCNDMPlugin(p.SingletonPlugin):
     def get_helpers(self):
         return {
             "codeset_choices": helpers.codeset_choices,
+            "lookup_label": helpers.lookup_label
         }
 
     def before_view(self, pkg_dict):
