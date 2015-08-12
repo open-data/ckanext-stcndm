@@ -3,14 +3,17 @@
 __author__ = 'Statistics Canada'
 
 import datetime
+
+import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
+from ckan.plugins.toolkit import (
+    NotFound,
+    ValidationError
+)
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
-_ValidationError = toolkit.ValidationError
-_NotFound = toolkit.ObjectNotFound
-_NotAuthorized = toolkit.NotAuthorized
 
 
 @logic.side_effect_free
@@ -30,7 +33,7 @@ def get_next_cube_id(context, data_dict):
 
     subject_code = _get_or_bust(data_dict, 'subjectCode')
     if not len(str(subject_code)) == 2:
-        raise _ValidationError('invalid subject_code')
+        raise ValidationError('invalid subject_code')
 
     query = {
         'q': (
@@ -49,7 +52,7 @@ def get_next_cube_id(context, data_dict):
                 product_id_response = extra['value']
                 if product_id_response.endswith('9999'):
                     # TODO: implement reusing unused IDs
-                    raise _ValidationError(
+                    raise ValidationError(
                         'All Cube IDs for this subject have been registered.'
                         'Reusing IDs is in development.'
                     )
@@ -101,9 +104,9 @@ def get_cube(context, data_dict):
     count = result['count']
 
     if count == 0:
-        raise _NotFound('Cube not found')
+        raise NotFound('Cube not found')
     elif count > 1:
-        raise _ValidationError('More than one cube with given cubeid found')
+        raise ValidationError('More than one cube with given cubeid found')
     else:
         output = {}
 
@@ -120,13 +123,9 @@ def get_cube(context, data_dict):
 
 @logic.side_effect_free
 def get_cube_list_by_subject(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Return a dict with all Cube Ids and French/English titles based on a
     provided SubjectCode.
-
-    Note that this relies on the subjnewcode_bi_strs field rather than the
-    subject code in the cubeid.
 
     :param subjectCode: two-digit subject code (i.e. 13)
     :type str
@@ -140,45 +139,30 @@ def get_cube_list_by_subject(context, data_dict):
     subject_code = _get_or_bust(data_dict, 'subjectCode')
 
     if len(subject_code) != 2:
-        raise _ValidationError('invalid subjectcode')
+        raise ValidationError('invalid subjectcode')
 
-    q = {
-        'q': (
-            '(extras_subjnewcode_bi_txtm:{subjectcode} OR '
-            'extras_subjnewcode_bi_txtm:{subjectcode}*) AND '
-            'extras_producttype_en_strs:Cube'
-        ).format(subjectcode=subject_code),
-        'rows': 1000
-    }
-
-    result = _get_action('package_search')(context, q)
+    lc = ckanapi.LocalCKAN(context=context)
+    result = lc.action.package_search(
+        q=(
+            'dataset_type:cube AND '
+            '(extras_subject_codes:{code} OR '
+            'extras_subject_codes:{code}*)'
+        ).format(code=subject_code),
+        rows=1000
+    )
 
     count = result['count']
-    if count == 0:
-        raise _NotFound(
+    if not count:
+        raise NotFound(
             'Found no cubes with subject code {subject_code}'.format(
                 subject_code=subject_code
             )
         )
     else:
-        record_list = []
-        for record in result['results']:
-
-            record_dict = {}
-
-            for extra in record['extras']:
-                if extra['key'].startswith('productidnew_bi_strs'):
-                    record_dict['productidnew_bi_strs'] = extra['value']
-
-                if extra['key'].startswith('title'):
-                    # we only want the titles according to TV
-                    record_dict[extra['key']] = extra['value']
-            record_list.append(record_dict)
-
-        output = {'results': record_list,
-                  'count': count}
-
-        return output
+        return [{
+            u'title': r['title'],
+            u'cube_id': r['product_id_new']
+        } for r in result['results']]
 
 
 def register_cube(context, data_dict):
@@ -205,7 +189,7 @@ def register_cube(context, data_dict):
     title_fr = _get_or_bust(data_dict, 'productTitleFrench')
 
     if not len(subject_code) == 2:
-        raise _ValidationError('subjectCode not valid')
+        raise ValidationError('subjectCode not valid')
 
     product_type = '10'  # Cube product_type is always 10
 
