@@ -57,9 +57,8 @@ while i < n:
             continue
         else:
             codeset_type = lookup[line['tmdroplfld_bi_tmtxtm']]
-            line_out['name'] = u'codeset-{0}-{1}'.format(codeset_type, code_value)
+            line_out['name'] = u'{0}-{1}'.format(codeset_type, code_value)
             line_out['codeset_type'] = lookup[old_content_type]
-#            line_out['codeset_value'] = ('00{0}'.format(code_value))[-2:]
             line_out['codeset_value'] = code_value
             line_out['title'] = {
                 u'en': english_value,
