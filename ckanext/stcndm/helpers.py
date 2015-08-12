@@ -6,6 +6,8 @@ import ckan.model as model
 import ckan.plugins.toolkit as toolkit
 from ckan.common import c
 
+from ckanext.scheming.helpers import scheming_get_preset
+
 # import ckan
 # import ckan.plugins as p
 # import ckan.exceptions
@@ -236,3 +238,52 @@ def codeset_choices(codeset_type):
         fq='codeset_type:' + codeset_type,
         rows=1000)
     return dict((r['codeset_value'], r['title']) for r in results['results'])
+
+
+def lookup_label(field_name, field_value, lookup_type):
+    """
+    Given the name of a field (including the _code) suffix,
+    the value of the field, and the type of lookup to perform,
+    resolve the code and return the label.
+
+    :param field_name: The name of the field being resolved (ex: format_code).
+    :param field_name: The value of the field being resolved. (ex: '33')
+    :param lookup_type: The type of field being resolved (ex: codeset)
+    """
+    lc = ckanapi.LocalCKAN()
+
+    assert(field_name.endswith(('_code', '_codes')))
+    trimmed_field_name = field_name[:field_name.rindex('_code')]
+    default = {u'en': field_value, u'found': False}
+
+    if lookup_type == 'preset':
+        preset = scheming_get_preset('ndm_{f}'.format(f=trimmed_field_name))
+        if not preset:
+            return default
+
+        choices = preset['choices']
+        for choice in choices:
+            if choice['value'] == field_value:
+                return choice['label']
+
+        return default
+    elif lookup_type == 'codeset':
+        results = lc.action.package_search(
+            q='dataset_type:codeset AND extras_codeset_type:{f}'.format(
+                f=trimmed_field_name
+            )
+        )
+
+        if not results[u'count']:
+            return default
+        return results[u'results'][-1][u'title']
+    else:
+        results = lc.action.package_search(
+            q='dataset_type:{type_}'.format(
+                type_=lookup_type
+            ),
+            rows=1
+        )
+        if not results[u'count']:
+            return default
+        return results[u'results'][-1][u'title']

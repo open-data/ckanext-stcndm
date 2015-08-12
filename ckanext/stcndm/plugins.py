@@ -12,8 +12,6 @@ from ckanext.stcndm import helpers
 from ckanext.scheming.helpers import scheming_language_text
 
 
-
-
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IConfigurer)
@@ -78,7 +76,9 @@ class STCNDMPlugin(p.SingletonPlugin):
             "issue_create_name": validators.issue_create_name,
             "article_create_name": validators.article_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
-            "dimension_member_create_name": validators.dimension_member_create_name,
+            "dimension_member_create_name": (
+                validators.dimension_member_create_name
+            ),
             "cube_create_name": validators.cube_create_name,
             "imdb_create_name": validators.imdb_create_name,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
@@ -87,6 +87,7 @@ class STCNDMPlugin(p.SingletonPlugin):
     def get_helpers(self):
         return {
             "codeset_choices": helpers.codeset_choices,
+            "lookup_label": helpers.lookup_label
         }
 
     def before_view(self, pkg_dict):
