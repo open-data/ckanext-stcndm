@@ -8,19 +8,10 @@ from ckan.common import c
 
 from ckanext.scheming.helpers import scheming_get_preset
 
-# import ckan
-# import ckan.plugins as p
-# import ckan.exceptions
-# from ckan.common import (_, ungettext, g, request, session, json, OrderedDict)
 
-
-# noinspection PyUnresolvedReferences
 _get_action = toolkit.get_action
-# noinspection PyUnresolvedReferences
 _ValidationError = toolkit.ValidationError
-# noinspection PyUnresolvedReferences
 _NotFound = toolkit.ObjectNotFound
-# noinspection PyUnresolvedReferences
 _NotAuthorized = toolkit.NotAuthorized
 
 
@@ -44,8 +35,8 @@ def dict2dict_list(dictionary):
 
 def get_schema(org, dataset):
     """
-    Return a dict having fields in a given org for keys and the values stored for that field in the tmschama
-    organization as a dict.
+    Return a dict having fields in a given org for keys and the values stored
+    for that field in the tmschama organization as a dict.
 
     :return: dict of dicts
     """
@@ -61,13 +52,11 @@ def get_schema(org, dataset):
 
 def generate_revision_list(data_set):
     """
-
     :param data_set:
-
     :return:
     """
-
-    context = {'model': model, 'session': model.Session, 'user': c.user}
+    # FIXME: Placeholder? What is this method for.
+    # context = {'model': model, 'session': model.Session, 'user': c.user}
 
 
 # TODO: rename this
@@ -88,14 +77,16 @@ def show_fields_changed_between_revisions(pkg_name, pkg_revisions):
     revision_order = []
     for revision in pkg_revisions:
 
-        # The revision id needs to be passed through the context rather than data_dict (base CKAN quirk)
+        # The revision id needs to be passed through the context rather than
+        # data_dict (base CKAN quirk)
         context['revision_id'] = revision['id']
 
         revision_pkg = _get_action('package_show')(context, {'id': pkg_name})
 
         revision_extras_dict = {}
 
-        # TODO: This will change when we move to scheming, but presently only extras are important
+        # TODO: This will change when we move to scheming, but presently only
+        # extras are important
 
         for extra in revision_pkg['extras']:
             revision_extras_dict[extra['key']] = extra['value']
@@ -128,13 +119,17 @@ def show_fields_changed_between_revisions(pkg_name, pkg_revisions):
                 if old_dict[k] != new_dict[k]:
                     modified_fields_dict[pair[0]].append(k)
             except KeyError:
-                modified_fields_dict[pair[0]].append(k)  # also include added and deleted fields
+                # also include added and deleted fields
+                modified_fields_dict[pair[0]].append(k)
 
         modified_fields_dict[pair[0]].sort()
 
         next_record[pair[0]] = pair[1]
 
-    return {'modified_fields': modified_fields_dict, 'next_record': next_record}
+    return {
+        'modified_fields': modified_fields_dict,
+        'next_record': next_record
+    }
 
 
 class GeoLevel:
@@ -159,7 +154,8 @@ class GeoLevel:
                 result_dict[extra['key']] = extra['value']
 
             split_values = result_dict['tmdroplopt_bi_tmtxtm'].split('|')
-            if len(split_values) == 3:                                      # ignore if no code is present (len < 3)
+            # ignore if no code is present (len < 3)
+            if len(split_values) == 3:
                 split_values = [value.strip() for value in split_values]
                 (en_text, fr_text, code) = split_values
                 self.geo_table[code] = (en_text, fr_text)
@@ -173,7 +169,8 @@ class GeoLevel:
 
 class GeoSpecific:
     """
-    The geo specific table (tmsgccode) is over 6k records so it shouldn't be loaded entirely like tmshortlist.
+    The geo specific table (tmsgccode) is over 6k records so it shouldn't be
+    loaded entirely like tmshortlist.
     Code descriptions will be searched when required.
 
     """
@@ -187,7 +184,10 @@ class GeoSpecific:
 
         :return: tuple of english and french descriptions
         """
-        q = 'zckownerorg_bi_strs:tmsgccode AND tmsgcspecificcode_bi_tmtxtm:{code}'.format(code=code)
+        q = (
+            'zckownerorg_bi_strs:tmsgccode AND '
+            'tmsgcspecificcode_bi_tmtxtm:{code}'
+        ).format(code=code)
 
         data_dict = {'q': q, 'rows': '1'}
 
@@ -196,9 +196,9 @@ class GeoSpecific:
         if response['count'] == 0:
             raise _ValidationError('Specific Geo code not found.')
 
-        # This is very messy but the tmsgccode entries might have multiple codes as in the
-        # "all provinces" entry.  If this is the case, iterate through them and eliminate
-        # entries that start with "all."
+        # This is very messy but the tmsgccode entries might have multiple
+        # codes as in the "all provinces" entry.  If this is the case, iterate
+        # through them and eliminate entries that start with "all."
         if response['count'] > 1:
             result = None
             for res in response['results']:
@@ -254,7 +254,7 @@ def lookup_label(field_name, field_value, lookup_type):
     default = {u'en': field_value, u'found': False}
 
     if lookup_type == 'preset':
-        preset = scheming_get_preset('ndm_{f}'.format(f=trimmed_field_name))
+        preset = scheming_get_preset('ndm_{f}'.format(f=field_name))
         if not preset:
             return default
 
@@ -267,7 +267,7 @@ def lookup_label(field_name, field_value, lookup_type):
     elif lookup_type == 'codeset':
         results = lc.action.package_search(
             q='dataset_type:codeset AND extras_codeset_type:{f}'.format(
-                f=trimmed_field_name
+                f=field_name
             )
         )
 
