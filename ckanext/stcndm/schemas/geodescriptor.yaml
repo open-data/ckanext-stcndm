@@ -12,6 +12,8 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
+lookup_key: geodescriptor_code
+
 dataset_fields:
 
 - field_name: name
