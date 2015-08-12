@@ -13,6 +13,8 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
+lookup_key: codeset_value
+
 dataset_fields:
 
 - field_name: name
