@@ -6,7 +6,7 @@ from ckan.logic import get_or_bust, side_effect_free
 from ckan.plugins.toolkit import ValidationError, ObjectNotFound
 
 
-@side_effect_free  # Allow GET access
+@side_effect_free
 def get_subject(context, data_dict):
     """
     :param: subjectCode: Subject Code (i.e. 13)
