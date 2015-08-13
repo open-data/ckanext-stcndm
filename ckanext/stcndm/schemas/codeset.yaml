@@ -25,6 +25,9 @@ dataset_fields:
     en: Internal Unique ID
     fr: ID interne unique
   form_snippet: null
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
 
 - field_name: codeset_type
   label:
@@ -41,20 +44,22 @@ dataset_fields:
         fr: Fréquence
       value: 'frequency'
     - label:
-        en: Status
-        fr: État
-      value: 'status'
-    - label:
         en: Geolevel
         fr: Geolevel
       value: 'geolevel'
   required: true
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: codeset_value
   label:
     en: The code value of the codeset (e.g. A0001)
     fr: La valeur du code du 'codeset' (p.e. A0001)
   required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: title  # codeset label
   label:
@@ -62,6 +67,9 @@ dataset_fields:
     fr: Étiquette descriptive
   preset: fluent_text
   required: true
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: false
 
 - field_name: owner_org
   label:
@@ -69,3 +77,6 @@ dataset_fields:
     fr: Organisation
   preset: dataset_organization
   required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
