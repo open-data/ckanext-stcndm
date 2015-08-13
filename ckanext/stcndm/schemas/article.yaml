@@ -12,6 +12,8 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
+lookup_key: product_id_new
+
 dataset_fields:
 
 - field_name: admin_notes
@@ -42,12 +44,14 @@ dataset_fields:
 #    en: Geo Specific
 #    fr: Géo spécifique
 #  preset: shortcode_multivalue
+#  lookup: geodescriptor
 
 #- field_name: subject_codes
 #  label:
 #    en: Subject
 #    fr: Sujet
 #  preset: shortcode_multivalue
+#  lookup: subject
 
 - field_name: name
   # follow our custom name generation with default package name validators
@@ -61,7 +65,7 @@ dataset_fields:
 - field_name: product_type_code
   preset: ndm_products
 
-- field_name: related_products
+- field_name: related_product_codes
   label:
     en: Related Products
     fr: Produits reliés
@@ -94,13 +98,14 @@ dataset_fields:
 #    en: Dimension Group
 #    fr: Groupe de dimension
 #  preset: shortcode_multivalue
+#  lookup: dimension_group
 
-#- field_name: dimmember_code
+#- field_name: dimension_member_code
 #  label:
 #    en: Dimension Member
 #    fr: Membre de dimension
 #  preset: shortcode_multivalue
-
+#  lookup: dimension_member
 - field_name: external_authors
   label:
     en: External Author
@@ -110,7 +115,6 @@ dataset_fields:
   label:
     en: FRC
     fr: FRC
-  preset: shortcode_multivalue
 
 - field_name: frequency_codes
   label:
@@ -130,6 +134,7 @@ dataset_fields:
     en: Source
     fr: Source
   preset: shortcode_multivalue
+  lookup: imdb
 
 - field_name: internal_authors
   label:
@@ -196,7 +201,7 @@ dataset_fields:
     fr: Période de référence
   preset: fluent_tags
 
-#- field_name: replaced_products
+#- field_name: replaced_product_codes
 #  label:
 #    en: Replaced Product
 #    fr: Produit remplacé
@@ -280,3 +285,4 @@ resource_fields:
     en: Correction ID Code
     fr: Code ID de correction
   preset: shortcode_multivalue
+  lookup: correction

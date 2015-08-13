@@ -17,6 +17,10 @@ presets:
     label:
       en: Language
       fr: Langue
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
     schema_field_structure: none
     schema_field_type: str
     choices:
@@ -28,18 +32,16 @@ presets:
         en: French
         fr: Francais
       value: 'fr'
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
 
 - preset_name: ndm_products
   values:
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
     label:
       en: Product Type
       fr: Type de produit
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
     schema_field_structure: none
     schema_field_type: code
     choices:
@@ -94,13 +96,14 @@ presets:
 
 - preset_name: ndm_status
   values:
+    label:
+      en: Status
+      fr: État
     form_snippet: multiple_select.html
     display_snippet: multiple_choice.html
     validators: scheming_required scheming_multiple_choice
     output_validators: shortcode_output
-    label:
-      en: Status
-      fr: État
+    lookup: preset
     schema_field_structure: list
     schema_field_type: code
     choices:
@@ -155,12 +158,13 @@ presets:
 
 - preset_name: ndm_publish_status
   values:
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
     label:
       en: Publishing Status
       fr: État de publication
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
     schema_field_structure: none
     schema_field_type: code
     choices:
@@ -199,13 +203,14 @@ presets:
 
 - preset_name: ndm_formats
   values:
+    label:
+      en: Resource Formats
+      fr: Formats de ressources
     form_snippet: multiple_select.html
     display_snippet: multiple_choice.html
     validators: scheming_required scheming_multiple_choice
     output_validators: shortcode_output
-    label:
-      en: Resource Formats
-      fr: Formats de ressources
+    lookup: preset
     schema_field_structure: list
     schema_field_type: code
     choices:
@@ -264,12 +269,13 @@ presets:
 
 - preset_name: ndm_archive_status
   values:
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
     label:
       en: Archive Status
       fr: État d'archivage
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
     schema_field_structure: none
     schema_field_type: code
     choices:
@@ -284,13 +290,14 @@ presets:
 
 - preset_name: ndm_display
   values:
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
     label:
       en: Display
       fr: Affichage
-    schema_field_structure: none 
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_structure: none
     schema_field_type: code
     choices:
       - label:
@@ -308,12 +315,13 @@ presets:
 
 - preset_name: ndm_imdb_status
   values:
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
     label:
       en: Status
       fr: État
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
     schema_field_structure: none
     schema_field_type: code
     choices:
@@ -328,12 +336,13 @@ presets:
 
 - preset_name: ndm_subject_display
   values:
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
     label:
       en: Subject Display
       fr: Affichage du sujet
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
     schema_field_structure: none
     schema_field_type: code
     choices:
@@ -356,12 +365,13 @@ presets:
 
 - preset_name: ndm_survey_participation
   values:
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
     label:
       en: Survey Participation
       fr: Participation au sondage
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
     schema_field_structure: none
     schema_field_type: code
     choices:
@@ -384,12 +394,13 @@ presets:
 
 - preset_name: ndm_survey_owner
   values:
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
     label:
       en: Survey Owner
       fr: Propriétaire du sondage
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
     schema_field_structure: none
     schema_field_type: code
     choices:
@@ -508,13 +519,14 @@ presets:
 
 - preset_name: ndm_tracking
   values:
+    label:
+      en: Tracking
+      fr: Pistage
     form_snippet: multiple_select.html
     display_snippet: multiple_choice.html
     validators: scheming_required scheming_multiple_choice
     output_validators: shortcode_output
-    label:
-      en: Tracking
-      fr: Pistage
+    lookup: preset
     schema_field_structure: list
     schema_field_type: code
     choices:
@@ -593,13 +605,14 @@ presets:
 
 - preset_name: ndm_collection_methods
   values:
+    label:
+      en: Collection Method
+      fr: Méthode de collection
     form_snippet: multiple_select.html
     display_snippet: multiple_choice.html
     validators: scheming_required scheming_multiple_choice
     output_validators: shortcode_output
-    label:
-      en: Collection Method
-      fr: Méthode de collection
+    lookup: preset
     schema_field_structure: list
     schema_field_type: code
     choices:
@@ -670,10 +683,10 @@ presets:
 
 - preset_name: ndm_admin_notes
   values:
-    form_placeholder:
+    label:
       en: Admin Notes
       fr: Notes
-    label:
+    form_placeholder:
       en: Admin Notes
       fr: Notes
     schema_field_structure: dict
@@ -731,6 +744,7 @@ presets:
     form_snippet: codeset_select.html
     display_snippet: select.html
     validators: scheming_required scheming_choices
+    lookup: codeset
 
 - preset_name: codeset_multiple_select
   values:
@@ -740,3 +754,4 @@ presets:
     display_snippet: codeset_multiple_choice.html
     validators: ignore_missing codeset_multiple_choice
     output_validators: scheming_multiple_choice_output
+    lookup: codeset

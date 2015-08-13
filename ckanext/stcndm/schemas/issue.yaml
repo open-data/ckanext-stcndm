@@ -12,6 +12,8 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
+lookup_key: product_id_new
+
 dataset_fields:
 
 - field_name: admin_notes
@@ -61,7 +63,7 @@ dataset_fields:
 - field_name: product_type_code
   preset: ndm_products
 
-- field_name: related_products
+- field_name: related_product_codes
   label:
     en: Related
     fr: Relié
@@ -111,7 +113,6 @@ dataset_fields:
 #  label:
 #    en: FRC
 #    fr: FRC
-#  preset: shortcode_multivalue
 
 - field_name: frequency_codes
   label:
@@ -197,7 +198,7 @@ dataset_fields:
     fr: Période de référence
   preset: fluent_tags
 
-#- field_name: replaced_products
+#- field_name: replaced_product_codes
 #  label:
 #    en: Replaced Product
 #    fr: Produit remplacé

@@ -13,6 +13,8 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
+lookup_key: product_id_new
+
 dataset_fields:
 
 - field_name: name
@@ -156,6 +158,7 @@ dataset_fields:
     en: Subject
     fr: Sujet
   preset: shortcode_multivalue
+  lookup: subject
 
 - field_name: survey_url
   label:

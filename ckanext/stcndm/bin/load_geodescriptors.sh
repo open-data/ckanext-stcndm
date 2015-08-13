@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 python massage_geodescriptors.py | \
-#  jq '.' # | \
+  jq . -c  | \
   ckanapi load datasets $@

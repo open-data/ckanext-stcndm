@@ -12,8 +12,6 @@ from ckanext.stcndm import helpers
 from ckanext.scheming.helpers import scheming_language_text
 
 
-
-
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IConfigurer)
@@ -41,6 +39,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "DeleteProduct": common.delete_product,
             "GetBookableReleases": daily.get_bookable_releases,
             "GetCubeList": cubes.get_cube_list_by_subject,
+            "GetCube": cubes.get_cube,
             "GetDailyList": daily.get_daily_list,
             "GetDefaultViews": daily.get_default_views,
             "GetDerivedProductList": common.get_derived_product_list,
@@ -71,22 +70,25 @@ class STCNDMPlugin(p.SingletonPlugin):
         return {
             "shortcode_validate": validators.shortcode_validate,
             "shortcode_output": validators.shortcode_output,
-            "codeset_create_name": validators.codeset_create_name,
             "codeset_multiple_choice": validators.codeset_multiple_choice,
+            "codeset_create_name": validators.codeset_create_name,
             "subject_create_name": validators.subject_create_name,
+            "geodescriptor_create_name": validators.geodescriptor_create_name,
+            "imdb_create_name": validators.imdb_create_name,
+            "dimension_member_create_name": validators.dimension_member_create_name,
+            "cube_create_name": validators.cube_create_name,
+            "view_create_name": validators.view_create_name,
             "publication_create_name": validators.publication_create_name,
             "issue_create_name": validators.issue_create_name,
             "article_create_name": validators.article_create_name,
-            "geodescriptor_create_name": validators.geodescriptor_create_name,
-            "dimension_member_create_name": validators.dimension_member_create_name,
-            "cube_create_name": validators.cube_create_name,
-            "imdb_create_name": validators.imdb_create_name,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
+            "ndm_str2boolean": validators.ndm_str2boolean,
         }
 
     def get_helpers(self):
         return {
             "codeset_choices": helpers.codeset_choices,
+            "lookup_label": helpers.lookup_label
         }
 
     def before_view(self, pkg_dict):

@@ -12,6 +12,8 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
+lookup_key: subject_code
+
 dataset_fields:
 
 - field_name: name
@@ -63,9 +65,25 @@ dataset_fields:
     fr: Ancien code du sujet
   preset: shortcode_multivalue
 
+#- field_name: owner_org
+#  label:
+#    en: Organisation
+#    fr: Organisation
+#  preset: dataset_organization
+#  required: true
+
 - field_name: owner_org
   label:
-    en: Organisation
+    en: Organization
     fr: Organisation
-  preset: dataset_organization
-  required: true
+  value: statcan
+  form_snippet: default_value.html
+
+- field_name: private
+  label:
+    en: Private
+    fr: Privé
+  value: false
+  form_snippet: boolean.html
+  validators: ndm_str2boolean
+

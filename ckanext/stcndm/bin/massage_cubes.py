@@ -147,12 +147,16 @@ for preset in presetMap['presets']:
         if not publish_list:
             raise ValueError('could not find display preset')
 
-for i in range(0, 10):
-    rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
+rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
+i = 0
+n = 1
+while i < n:
     query_results = rc.action.package_search(
         q='organization:rgcube',
         rows=1000,
         start=i*1000)
+    i += 1
+    n = query_results['count'] / 1000
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']
@@ -256,8 +260,13 @@ for i in range(0, 10):
             if result:
                 line_out['frequency_codes'] = result
 
-        if 'hierarchyid_bi_strm' in line:
+        if 'hierarchyid_bi_strm' in line and line['hierarchyid_bi_strm']:
             result = listify(line['hierarchyid_bi_strm'])
+            if result:
+                line_out['parent_product'] = result
+
+        if 'hierarchyid_bi_strs' in line and line['hierarchyid_bi_strs']:
+            result = listify(line['hierarchyid_bi_strs'])
             if result:
                 line_out['parent_product'] = result
 
