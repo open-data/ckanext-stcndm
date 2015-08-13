@@ -148,7 +148,7 @@ for preset in presetMap['presets']:
             raise ValueError('could not find display preset')
 
 for i in range(0, 40):
-    rc = ckanapi.RemoteCKAN('http://107.170.204.240:5000/')
+    rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
     query_results = rc.action.package_search(
         q='extras_pkuniqueidcode_bi_strs:issue* AND (organization:maprimary OR organization:maformat)',
         rows=1000,
@@ -296,6 +296,9 @@ for i in range(0, 40):
         if temp:
             line_out['isbn_number'] = temp
 
+        if 'issueno_bi_strs' in line and line['issueno_bi_strs']:
+            line_out['issue_no'] = line['issueno_bi_strs']
+
         # temp = {}
         # if 'keywordsuncon_en_txtm' in line:
         #     result = listify(line['keywordsuncon_en_txtm'])
@@ -315,7 +318,6 @@ for i in range(0, 40):
 
         if 'productidnew_bi_strs' in line and line['productidnew_bi_strs']:
             line_out['product_id_new'] = line['productidnew_bi_strs']
-            line_out['name'] = 'issue-{0}'.format(line['productidnew_bi_strs'].lower())
 
         if 'productidold_bi_strs' in line and line['productidold_bi_strs']:
             line_out['product_id_old'] = line['productidold_bi_strs']
@@ -360,5 +362,8 @@ for i in range(0, 40):
             temp[u'fr'] = line['url_fr_strs']
         if temp:
             line_out['url'] = temp
+
+        line_out['name'] = 'issue-{0}-{1}'.format(line['productidnew_bi_strs'].lower(), line['issueno_bi_strs'])
+
 
         print json.dumps(line_out)
