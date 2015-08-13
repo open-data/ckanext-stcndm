@@ -1,9 +1,5 @@
-# --coding: utf-8 --
-
-__author__ = 'Statistics Canada'
-
-import datetime
-
+#!/usr/bin/env python
+# encoding: utf-8
 import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
@@ -14,6 +10,9 @@ from ckan.plugins.toolkit import (
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
+
+# All cubes are of product type 10.
+CUBE_PRODUCT_TYPE = '10'
 
 
 @logic.side_effect_free
@@ -30,39 +29,34 @@ def get_next_cube_id(context, data_dict):
 
     :raises ValidationError
     """
-
     subject_code = _get_or_bust(data_dict, 'subjectCode')
     if not len(str(subject_code)) == 2:
         raise ValidationError('invalid subject_code')
 
-    query = {
-        'q': (
-            'extras_productidnew_bi_strs:{subject_code}* AND'
-            'extras_producttype_en_strs:Cube'
+    lc = ckanapi.LocalCKAN(context=context)
+    response = lc.action.package_search(
+        q=(
+            'extras_product_id_new:{subject_code}* AND '
+            'dataset_type:cube'
         ).format(subject_code=subject_code),
-        'sort': 'extras_productidnew_bi_strs desc'
-    }
+        sort='extras_product_id_new desc',
+        rows=1
+    )
 
-    response = _get_action('package_search')(context, query)
-
-    product_id_new = "{subject_code}100001".format(subject_code=subject_code)
     if response['results']:
-        for extra in response['results'][0]['extras']:
-            if extra['key'] == 'productidnew_bi_strs':
-                product_id_response = extra['value']
-                if product_id_response.endswith('9999'):
-                    # TODO: implement reusing unused IDs
-                    raise ValidationError(
-                        'All Cube IDs for this subject have been registered.'
-                        'Reusing IDs is in development.'
-                    )
-                else:
-                    try:
-                        product_id_new = str(int(product_id_response) + 1)
-                    except ValueError:
-                        pass
+        result = response['results'][0]
+        oldest_product_id = result['product_id_new']
+        if oldest_product_id.endswith('9999'):
+            # FIXME: This system is going to encounter numerous
+            #        problems down the road.
+            raise ValidationError(
+                'All Cube IDs for this subject have been registered.'
+                'Reusing IDs is in development.'
+            )
 
-    return product_id_new
+        return str(int(oldest_product_id) + 1)
+
+    return '{subject_code}100001'.format(subject_code=subject_code)
 
 
 @logic.side_effect_free
@@ -142,24 +136,22 @@ def get_cube_list_by_subject(context, data_dict):
 
 
 def register_cube(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
-    Register a cube in the rgcube organization.  Automatically populate
+    Register a new cube.  Automatically populate
     subjectcode fields based on provided parameters.
 
     :param subjectCode: two-digit subject_code code (i.e. 13)
     :type subjectCode: str
     :param productTitleEnglish: english title
-    :type productTitleEnglish: str
+    :type productTitleEnglish: unicode
     :param productTitleFrench: french title
-    :type productTitleFrench: str
+    :type productTitleFrench: unicode
 
     :return: new package
     :rtype: dict
 
     :raises ValidationError
     """
-
     subject_code = _get_or_bust(data_dict, 'subjectCode')
     title_en = _get_or_bust(data_dict, 'productTitleEnglish')
     title_fr = _get_or_bust(data_dict, 'productTitleFrench')
@@ -167,83 +159,38 @@ def register_cube(context, data_dict):
     if not len(subject_code) == 2:
         raise ValidationError('subjectCode not valid')
 
-    product_type = '10'  # Cube product_type is always 10
+    lc = ckanapi.LocalCKAN(context=context)
 
-    subject_dict = _get_action('ndm_get_subject')(context, {
-        'subjectCode': subject_code
-    })
-    product_type_dict = _get_action('ndm_get_producttype')(context, {
-        'productType': product_type
-    })
-    product_id = _get_action('ndm_get_next_cubeid')(context, data_dict)
+    subject_dict = lc.action.GetSubject(
+        subjectCode=subject_code
+    )
+    product_type_dict = lc.action.GetProductType(
+        productType=CUBE_PRODUCT_TYPE
+    )
 
-    name = '{product_id}'.format(product_id=product_id)
-    org = 'statcan'
-    extras = []
+    product_id = lc.action.GetNextCubeId(**data_dict)
 
-    time = datetime.datetime.today()
+    lc.action.package_create(
+        # Old method simply used the product_id, whereas the modern edit
+        # form validator uses cube-{product_id}, so lets go with that.
+        name=u'cube-{0}'.format(product_id),
+        owner_org='statcan',
+        type=u'cube',
+        product_id_new=product_id,
+        product_type_code=product_type_dict['product_type_code'],
+        subject_codes=[
+            # TODO: Schema defines this as a list, should we accept
+            #       multiple subject codes in the API?
+            subject_dict['subject_code']
+        ],
+        title={
+            'en': title_en,
+            'fr': title_fr,
+        },
+        # '02' is "Draft" status, according to the ndm_publish_status
+        # preset.
+        last_publish_status_code='02'
+    )
 
-    field_list = _get_action('ndm_get_fieldlist')(context, {"org": org})
-
-    # TODO: Refactor assignment of key-value pairs to a dict
-    for field in field_list['fields']:
-        if field == '10uid_bi_strs':
-            value = product_id
-        elif field == 'productidnew_bi_strs':
-            value = product_id
-        elif field == 'hierarchyid_bi_strs':
-            value = product_id
-        elif field == 'producttypecode_bi_strs':
-            value = product_type_dict['producttypecode_bi_strs']
-        elif field == 'producttype_en_strs':
-            value = product_type_dict['producttype_en_strs']
-        elif field == 'producttype_fr_strs':
-            value = product_type_dict['producttype_fr_strs']
-        elif field == 'subjnewcode_bi_txtm':
-            value = subject_dict['tmtaxsubjcode_bi_tmtxtm']
-        elif field == 'subjnew_en_txtm':
-            value = subject_dict['tmtaxsubj_en_tmtxtm']
-        elif field == 'subjnew_fr_txtm':
-            value = subject_dict['tmtaxsubj_fr_tmtxtm']
-        elif field == 'lastpublishstatuscode_bi_strs':
-            value = 'draft_code'
-        elif field == 'lastpublishstatus_en_strs':
-            value = 'Draft'
-        elif field == 'lastpublishstatus_fr_strs':
-            value = 'French_for_draft'
-        elif field == 'featureweight_bi_ints':
-            value = 0
-        elif field == 'title_en_txts':
-            value = title_en
-        elif field == 'title_fr_txts':
-            value = title_fr
-        elif field == 'zckcapacity_bi_strs':
-            value = 'public'
-        elif field == 'zckdbname_bi_strs':
-            value = 'rgcube'
-        elif field == 'zckownerorg_bi_strs':
-            value = 'rgcube'
-        elif field == 'zckpubdate_bi_strs':
-            value = time.strftime("%Y-%m-%d")
-        elif field == 'zckpushtime_bi_strs':
-            value = time.strftime("%Y-%m-%d %H:%M")
-        elif field == 'zckstatus_bi_txtm':
-            value = 'ndm_register_cube_api'
-        else:
-            value = ''
-
-        extras.append({'key': field, 'value': value})
-
-    package_dict = {
-        'name': name,
-        'owner_org': 'rgcube',
-        'extras': extras
-    }
-
-    new_cube = _get_action('package_create')(context, package_dict)
-
-    output = _get_action('ndm_get_cube')(context, {
-        'productId': new_cube['name']
-    })
-
-    return output
+    # Return our newly created package.
+    return lc.action.GetCube(cube_id=product_id)
