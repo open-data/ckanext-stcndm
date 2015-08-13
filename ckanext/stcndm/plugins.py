@@ -19,6 +19,7 @@ class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IValidators)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IPackageController)
+    p.implements(p.IRoutes)
 
     def update_config(self, config):
         """
@@ -40,6 +41,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetBookableReleases": daily.get_bookable_releases,
             "GetCubeList": cubes.get_cube_list_by_subject,
             "GetCube": cubes.get_cube,
+            "GetNextCubeId": cubes.get_next_cube_id,
             "GetDailyList": daily.get_daily_list,
             "GetDefaultViews": daily.get_default_views,
             "GetDerivedProductList": common.get_derived_product_list,
@@ -75,7 +77,9 @@ class STCNDMPlugin(p.SingletonPlugin):
             "subject_create_name": validators.subject_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
             "imdb_create_name": validators.imdb_create_name,
-            "dimension_member_create_name": validators.dimension_member_create_name,
+            "dimension_member_create_name": (
+                validators.dimension_member_create_name
+            ),
             "cube_create_name": validators.cube_create_name,
             "view_create_name": validators.view_create_name,
             "publication_create_name": validators.publication_create_name,
@@ -106,3 +110,20 @@ class STCNDMPlugin(p.SingletonPlugin):
                 pkg_dict[field] = scheming_language_text(pkg_dict[field])
 
         return pkg_dict
+
+    def before_map(self, map):
+        map.connect(
+            'clone',
+            '/dataset/clone/{ds_id}',
+            controller=(
+                'ckanext.stcndm.controllers.clone'
+                ':CloneDatasetController'
+            ),
+            action='clone'
+        )
+
+        return map
+
+    def after_map(self, map):
+        # Required since we implement IRoutes.
+        return map
