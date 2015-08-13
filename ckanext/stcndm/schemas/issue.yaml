@@ -19,11 +19,11 @@ dataset_fields:
 - field_name: admin_notes
   preset: ndm_admin_notes
 
-- field_name: title
-  preset: ndm_title
-
-- field_name: notes
-  preset: ndm_description
+#- field_name: title
+#  preset: ndm_title
+#
+#- field_name: notes
+#  preset: ndm_description
 
 - field_name: content_type_codes
   label:
@@ -232,10 +232,10 @@ dataset_fields:
 
 resource_fields:
 
-- field_name: format_code
-  preset: ndm_formats
-  form_snippet: select.html
-  required: true
+#- field_name: format_code
+#  preset: ndm_formats
+#  form_snippet: select.html
+#  required: true
 
 - field_name: language
   preset: ndm_language
