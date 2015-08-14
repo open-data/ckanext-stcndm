@@ -7,7 +7,7 @@ import ckanapi
 lookup = {
     'extras_conttype_en_txtm': u'content_type',
     'extras_freq_en_txtm': u'frequency',
-    'extras_statusf_en_strs': u'status',
+    # 'extras_statusf_en_strs': u'status',
     # geolevel is still a codeset but is treated separately
     # 'extras_geolevel_en_txtm': 'geolevel',
     # the following fields have become presets
@@ -29,7 +29,7 @@ while i < n:
         rows=1000,
         start=i*1000)
     i += 1
-    n = query_results['count'] / 1000
+    n = query_results['count'] / 1000.0
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']
@@ -43,6 +43,7 @@ while i < n:
                                 'extras_display_en_txtm',
                                 'extras_geolevel_en_txtm',
                                 'extras_format_en_txtm',
+                                'extras_statusf_en_strs',
                                 'extras_display_bi_txtm'):
             continue  # skip the tmshorlist that are handled separately
 

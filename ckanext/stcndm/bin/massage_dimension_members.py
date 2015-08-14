@@ -13,11 +13,15 @@ def listify(value):
         return []
 
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
-for i in range(0, 3):
+i = 0
+n = 1
+while i < n:
     query_results = rc.action.package_search(
         q='organization:tmdimmlist',
         rows=1000,
         start=i*1000)
+    i += 1
+    n = query_results['count'] / 1000.0
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']

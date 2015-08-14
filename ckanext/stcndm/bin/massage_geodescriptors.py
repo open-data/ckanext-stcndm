@@ -21,7 +21,7 @@ while i < n:
         rows=1000,
         start=i*1000)
     i += 1
-    n = query_results['count'] / 1000
+    n = query_results['count'] / 1000.0
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']
