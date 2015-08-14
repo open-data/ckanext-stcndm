@@ -113,6 +113,7 @@ dataset_fields:
     en: STC Thesaurus
     fr: STC dictionnaire de synonymes
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
   schema_field_type: fluent
   schema_multivalued: true
   schema_extras: true
@@ -224,6 +225,7 @@ dataset_fields:
     en: Keywords
     fr: Mots clés
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
   schema_field_type: fluent
   schema_multivalued: true
   schema_extras: true
@@ -282,6 +284,7 @@ dataset_fields:
     en: Reference Period
     fr: Période de référence
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
   schema_field_type: fluent
   schema_multivalued: true
   schema_extras: true

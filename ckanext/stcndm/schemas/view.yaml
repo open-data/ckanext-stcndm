@@ -98,6 +98,7 @@ dataset_fields:
     en: STC Thesaurus
     fr: STC dictionnaire de synonymes
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: feature_weight
   label:
