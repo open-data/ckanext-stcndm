@@ -32,6 +32,7 @@ def code_lookup(old_field_name, data_set, choice_list):
             codes.append(code)
     return codes
 
+
 content_type_list = []
 rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000')
 results = rc.action.package_search(
@@ -84,7 +85,7 @@ while i < n:
         rows=1000,
         start=i*1000)
     i += 1
-    n = query_results['count'] / 1000
+    n = query_results['count'] / 1000.0
 
     for line in query_results['results']:
         for e in line['extras']:
