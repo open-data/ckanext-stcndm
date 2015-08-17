@@ -1,5 +1,7 @@
 __author__ = 'matt'
 
+import ast
+
 import ckanapi
 import ckan.logic as logic
 import ckan.model as model
@@ -253,6 +255,9 @@ def lookup_label(field_name, field_value, lookup_type):
 
     default = {u'en': field_value, u'found': False}
 
+    if not field_value:
+        return default
+
     if lookup_type == 'preset':
         preset = scheming_get_preset('ndm_{f}'.format(f=field_name))
         if not preset:
@@ -273,7 +278,15 @@ def lookup_label(field_name, field_value, lookup_type):
 
         if not results[u'count']:
             return default
-        return results[u'results'][-1][u'title']
+
+        result = results[u'results'][-1][u'title']
+        if isinstance(result, basestring):
+            try:
+                result = ast.literal_eval(result)
+            except:
+                pass
+
+        return result
     else:
         results = lc.action.package_search(
             q='dataset_type:{type_}'.format(
@@ -283,4 +296,12 @@ def lookup_label(field_name, field_value, lookup_type):
         )
         if not results[u'count']:
             return default
-        return results[u'results'][-1][u'title']
+
+        result = results[u'results'][-1][u'title']
+        if isinstance(result, basestring):
+            try:
+                result = ast.literal_eval(result)
+            except:
+                pass
+
+        return result
