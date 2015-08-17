@@ -122,6 +122,16 @@ class STCNDMPlugin(p.SingletonPlugin):
             action='clone'
         )
 
+        map.connect(
+            'list',
+            '/api/current/list',
+            controller=(
+                'ckanext.stcndm.controllers.api_ext'
+                ':APIExtController'
+            ),
+            action='list'
+        )
+
         return map
 
     def after_map(self, map):
