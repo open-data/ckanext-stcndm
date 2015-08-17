@@ -27,7 +27,7 @@ def get_next_cube_id(context, data_dict):
     :return: next available cube_id
     :rtype: str
 
-    :raises ValidationError
+    :raises: ValidationError
     """
     subject_code = _get_or_bust(data_dict, 'subjectCode')
     if not len(str(subject_code)) == 2:
@@ -71,7 +71,7 @@ def get_cube(context, data_dict):
     :return: requested cube
     :rtype: dict
 
-    :raises ValidationError, ObjectObjectNotFound
+    :raises: ValidationError, ObjectObjectNotFound
     """
     cube_id = _get_or_bust(data_dict, 'cube_id')
     lc = ckanapi.LocalCKAN(context=context)
@@ -98,13 +98,13 @@ def get_cube_list_by_subject(context, data_dict):
     provided SubjectCode.
 
     :param subjectCode: two-digit subject code (i.e. 13)
-    :type str
+    :type subjectCode: str
 
     :return: registered cubes for the SubjectCode and their
              French/English titles
     :rtype: list of dicts
 
-    :raises ValidationError, ObjectObjectNotFound
+    :raises: ValidationError, ObjectObjectNotFound
     """
     subject_code = _get_or_bust(data_dict, 'subjectCode')
 
@@ -150,7 +150,7 @@ def register_cube(context, data_dict):
     :return: new package
     :rtype: dict
 
-    :raises ValidationError
+    :raises: ValidationError
     """
     subject_code = _get_or_bust(data_dict, 'subjectCode')
     title_en = _get_or_bust(data_dict, 'productTitleEnglish')

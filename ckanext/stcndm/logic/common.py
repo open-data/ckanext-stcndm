@@ -27,7 +27,7 @@ def get_next_product_id(context, data_dict):
     :return: next available ProductId
     :rtype: str
 
-    :raises ValidationError, ObjectNotFound
+    :raises: ValidationError, ObjectNotFound
     """
 
     lc = ckanapi.LocalCKAN(context=context)
@@ -109,7 +109,7 @@ def get_product(context, data_dict):
     :return: product or 404 if not found.
     :rtype: dict
 
-    :raises ObjectNotFound, ValidationError
+    :raises: ObjectNotFound, ValidationError
     """
     product_id = _get_or_bust(data_dict, 'productId')
 
@@ -197,13 +197,11 @@ def get_product_type(context, data_dict):
     """Return the French and English titles for the given product_type_code.
 
     :param productType: Product Type Code (i.e. '10') or '*' to receive a
-                        list of all product_types
-    :type productType str
-
+        list of all product_types
+    :type productType: str
     :return: English, French and code values for given product_type
     :rtype: dict
-
-    :raises ValidationError
+    :raises: ValidationError
     """
     massage = lambda in_: {
         'product_type_code': in_['value'],
@@ -234,12 +232,10 @@ def get_last_publish_status(context, data_dict):
     Return the French and English values for the given lastpublishstatuscode.
 
     :param lastPublishStatusCode: Publishing Status Code (i.e. '10')
-    :type lastPublishStatusCode str
-
+    :type lastPublishStatusCode: str
     :return: English, French and code values for given lastpublishstatuscode
     :rtype: dict
-
-    :raises ValidationError
+    :raises: ValidationError
     """
     massage = lambda in_: {
         'last_publish_status_code': in_['value'],
@@ -270,12 +266,12 @@ def get_format_description(context, data_dict):
     Return the French and English values for the given formatCode.
 
     :param formatCode: Format Code (i.e. '10')
-    :type formatCode str
+    :type formatCode: str
 
     :return: English, French and code values for given formatCode
     :rtype: dict
 
-    :raises ValidationError
+    :raises: ValidationError
     """
     massage = lambda in_: {
         'format_code': in_['value'],
