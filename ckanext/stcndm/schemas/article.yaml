@@ -76,6 +76,7 @@ dataset_fields:
     en: STC Thesaurus
     fr: STC dictionnaire de synonymes
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: feature_weight
   label:
@@ -156,6 +157,7 @@ dataset_fields:
     en: Keywords
     fr: Mots clés
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
 
 #- field_name: legacy_date
 #  label:
@@ -200,6 +202,7 @@ dataset_fields:
     en: Reference Period
     fr: Période de référence
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
 
 #- field_name: replaced_product_codes
 #  label:

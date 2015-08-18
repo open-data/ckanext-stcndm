@@ -6,6 +6,13 @@ import yaml
 import ckanapi
 
 
+def in_and_def(key, a_dict):
+    if key in a_dict and a_dict[key]:
+        return True
+    else:
+        return False
+
+
 def listify(value):
     if isinstance(value, unicode):
         return filter(None, map(unicode.strip, value.split(';')))  # filter removes empty strings
@@ -15,150 +22,163 @@ def listify(value):
         return []
 
 
-def code_lookup(old_field_name, data_set, choice_list):
-    _temp = data_set[old_field_name]
-    field_values = listify(_temp)
+def code_lookup(table_name, value, data_dict):
+    field_values = listify(value.lower())
     codes = []
     for field_value in field_values:
-        code = None
-        for choice in choice_list:
-            if choice['label']['en'].lower().strip() == field_value.lower().strip():
-                if choice['value']:
-                    code = choice['value']
-        if not code:
-            sys.stderr.write('view-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
+        if '|' in field_value:
+            (field_value, bogon) = field_value.split('|', 1)
+            field_value = field_value.strip()
+        if field_value in code_lookup_dict[table_name]:
+            codes.append(code_lookup_dict[table_name][field_value])
         else:
-            codes.append(code)
+            sys.stderr.write(
+                'view-{0}: weird {1} .{2}.\n'.format(data_dict['productidnew_bi_strs'], table_name, field_value)
+            )
     return codes
+
 
 rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000')
 
-content_type_list = []
-geolevel_list = []
-frequency_list = []
-status_list = []
-results = rc.action.package_search(
-    q='type:codeset',
-    rows=1000)
-for codeset in results['results']:
-    if codeset['codeset_type'] == 'content_type':
-        content_type_list.append({
-            'label': codeset['title'],
-            'value': codeset['codeset_value']
-        })
-    if codeset['codeset_type'] == 'geolevel':
-        geolevel_list.append({
-            'label': codeset['title'],
-            'value': codeset['codeset_value']
-        })
-    if codeset['codeset_type'] == 'frequency':
-        frequency_list.append({
-            'label': codeset['title'],
-            'value': codeset['codeset_value']
-        })
-    if codeset['codeset_type'] == 'status':
-        status_list.append({
-            'label': codeset['title'],
-            'value': codeset['codeset_value']
-        })
+code_lookup_dict = {
+    'content_type': {},
+    'geolevel': {},
+    'frequency': {}
+}
 
-subject_list = []
-results = rc.action.package_search(
-    q='type:subject',
-    rows=1000)
-for result in results['results']:
-    subject_list.append({
-        'label': result['title'],
-        'value': result['subject_code']
-    })
+i = 0
+n = 1
+while i < n:
+    query_results = rc.action.package_search(
+        q='type:codeset',
+        rows=1000,
+        start=i*1000)
+    i += 1
+    n = query_results['count'] / 1000.0
+    for codeset in query_results['results']:
+        if in_and_def('title', codeset) and in_and_def('codeset_value', codeset):
+            try:
+                code_lookup_dict[codeset['codeset_type']][codeset['title']['en'].lower().strip()] = \
+                    codeset['codeset_value']
+            except KeyError:
+                pass
 
-# geodescriptor_list = []
-# blocks = 1
-# block = 0
-# while block < blocks:
-#     results = rc.action.package_search(
-#         q='type:geodescriptor',
-#         rows=1000,
-#         start=block*1000)
-#     blocks = results['count'] / 1000
-#     for result in results['results']:
-#         if 'geodescriptor_code' not in result:
-#             continue
-#         geodescriptor_list.append({
-#             'label': result['title'],
-#             'value': result['geodescriptor_code']
-#         })
-#     block += 1
+code_lookup_dict['subject'] = {}
+i = 0
+n = 1
+while i < n:
+    query_results = rc.action.package_search(
+        q='type:subject',
+        rows=1000,
+        start=i*1000)
+    i += 1
+    n = query_results['count'] / 1000.0
+    for result in query_results['results']:
+        if in_and_def('title', result) and in_and_def('subject_code', result):
+            code_lookup_dict['subject'][result['title']['en'].lower().strip()] = result['subject_code']
 
-dimension_member_list = []
-results = rc.action.package_search(
-    q='type:dimension_member',
-    rows=1000)
-for result in results['results']:
-    if 'dimension_member_code' not in result:
-        continue
-    dimension_member_list.append({
-        'label': result['title'],
-        'value': result['dimension_member_code']
-    })
+code_lookup_dict['geodescriptor'] = {}
+i = 0
+n = 1
+while i < n:
+    query_results = rc.action.package_search(
+        q='type:geodescriptor',
+        rows=1000,
+        start=i*1000)
+    i += 1
+    n = query_results['count'] / 1000.0
+    for result in query_results['results']:
+        if in_and_def('title', result) and in_and_def('geodescriptor_code', result):
+            code_lookup_dict['geodescriptor'][result['title']['en'].lower().strip()] = result['geodescriptor_code']
 
-imdb_source_list = []
-results = rc.action.package_search(
-    q='type:imdb',
-    rows=1000)
-for result in results['results']:
-    imdb_source_list.append({
-        'label': result['title'],
-        'value': result['product_id_new']
-    })
+code_lookup_dict['dimension_member'] = {}
+i = 0
+n = 1
+while i < n:
+    query_results = rc.action.package_search(
+        q='type:dimension_member',
+        rows=1000,
+        start=i*1000)
+    i += 1
+    n = query_results['count'] / 1000.0
+    for result in query_results['results']:
+        if in_and_def('title', result) and in_and_def('dimension_member_code', result):
+            code_lookup_dict['dimension_member'][result['title']['en'].lower().strip()] = \
+                result['dimension_member_code']
+
+code_lookup_dict['imdb'] = {}
+i = 0
+n = 1
+while i < n:
+    query_results = rc.action.package_search(
+        q='type:imdb',
+        rows=1000,
+        start=i*1000)
+    i += 1
+    n = query_results['count'] / 1000.0
+    for result in query_results['results']:
+        if in_and_def('title', result) and in_and_def('product_id_new', result):
+            code_lookup_dict['imdb'][result['title']['en'].lower().strip()] = result['product_id_new']
 
 f = open('../schemas/presets.yaml')
 presetMap = yaml.safe_load(f)
 f.close()
 for preset in presetMap['presets']:
     if preset['preset_name'] == 'ndm_archive_status':
-        archive_status_list = preset['values']['choices']
-        if not archive_status_list:
-            raise ValueError('could not find archive status preset')
+        code_lookup_dict['archive_status'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['archive_status'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_collection_methods':
-        collection_method_list = preset['values']['choices']
-        if not collection_method_list:
-            raise ValueError('could not find collection method preset')
+        code_lookup_dict['collection_method'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['collection_method'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_imdb_status':
-        imdb_status_list = preset['values']['choices']
-        if not imdb_status_list:
-            raise ValueError('could not find imdb status preset')
+        code_lookup_dict['imdb_status'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['imdb_status'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_survey_participation':
-        survey_participation_list = preset['values']['choices']
-        if not survey_participation_list:
-            raise ValueError('could not find survey participation preset')
+        code_lookup_dict['survey_participation'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['survey_participation'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_survey_owner':
-        survey_owner_list = preset['values']['choices']
-        if not survey_owner_list:
-            raise ValueError('could not find survey owner preset')
+        code_lookup_dict['survey_owner'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['survey_owner'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_formats':
-        format_list = preset['values']['choices']
-        if not format_list:
-            raise ValueError('could not find format preset')
+        code_lookup_dict['format'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['format'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_tracking':
-        tracking_list = preset['values']['choices']
-        if not tracking_list:
-            raise ValueError('could not find tracking preset')
+        code_lookup_dict['tracking'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['tracking'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_display':
-        display_list = preset['values']['choices']
-        if not display_list:
-            raise ValueError('could not find display preset')
+        code_lookup_dict['display'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['display'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_publish_status':
-        publish_list = preset['values']['choices']
-        if not publish_list:
-            raise ValueError('could not find display preset')
+        code_lookup_dict['publish_status'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['publish_status'][choice['label']['en'].lower().strip()] = choice['value']
+    if preset['preset_name'] == 'ndm_status':
+        code_lookup_dict['status'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['status'][choice['label']['en'].lower().strip()] = choice['value']
+    if preset['preset_name'] == 'ndm_subject_display':
+        code_lookup_dict['subject_display'] = {}
+        for choice in preset['values']['choices']:
+            code_lookup_dict['subject_display'][choice['label']['en'].lower().strip()] = choice['value']
 
-for i in range(0, 10):
-    rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
+rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
+i = 0
+n = 1
+while i < n:
     query_results = rc.action.package_search(
         q='organization:rgtabv',
         rows=1000,
         start=i*1000)
+    i += 1
+    n = query_results['count'] / 1000.0
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']
@@ -169,157 +189,165 @@ for i in range(0, 10):
                     u'product_type_code': u'11'}
 
         temp = {}
-        if 'adminnotes_bi_txts' in line and line['adminnotes_bi_txts']:
+        if in_and_def('adminnotes_bi_txts', line):
             temp[u'en'] = line['adminnotes_bi_txts']
             temp[u'fr'] = line['adminnotes_bi_txts']
         if temp:
             line_out['admin_notes'] = temp
 
         temp = {}
-        if 'title_en_txts' in line and line['title_en_txts']:
+        if in_and_def('title_en_txts', line):
             temp[u'en'] = line['title_en_txts']
-        if 'title_fr_txts' in line and line['title_fr_txts']:
+        if in_and_def('title_fr_txts', line):
             temp[u'fr'] = line['title_fr_txts']
         if temp:
             line_out['title'] = temp
 
         temp = {}
-        if 'description_en_txts' in line and line['description_en_txts']:
+        if in_and_def('description_en_txts', line):
             temp[u'en'] = line['description_en_txts']
-        if 'description_fr_txts' in line and line['description_fr_txts']:
+        if in_and_def('description_fr_txts', line):
             temp[u'fr'] = line['description_fr_txts']
         if temp:
             line_out['notes'] = temp
 
-        if 'conttypecode_bi_txtm' in line:
+        if in_and_def('conttypecode_bi_txtm', line):
             result = listify(line['conttypecode_bi_txtm'])
             if result:
                 line_out['content_type_codes'] = result
 
-        if 'dispandtrack_bi_txtm' in line:
-            result = code_lookup('dispandtrack_bi_txtm', line, tracking_list)
+        if in_and_def('dispandtrack_bi_txtm', line):
+            result = code_lookup('tracking', line['dispandtrack_bi_txtm'], line)
             if result:
                 line_out['tracking_codes'] = result
 
-        if 'geolevel_en_txtm' in line:
-            result = code_lookup('geolevel_en_txtm', line, geolevel_list)
+        if in_and_def('geolevel_en_txtm', line):
+            result = code_lookup('geolevel', line['geolevel_en_txtm'], line)
             if result:
                 line_out['geolevel_codes'] = result
 
-        if 'specificgeocode_bi_txtm' in line:
+        if in_and_def('specificgeocode_bi_txtm', line):
             result = listify(line['specificgeocode_bi_txtm'])
             if result:
                 line_out['geodescriptor_codes'] = result
+        if 'geodescriptor_codes' not in line_out and in_and_def('specificgeo_en_txtm', line):
+            result = code_lookup('geodescriptor', line['specificgeo_en_txtm'], line)
+            if result:
+                line_out['geodescriptor_codes'] = result
 
-        if 'subjnew_en_txtm' in line:
-            result = code_lookup('subjnew_en_txtm', line, subject_list)
+        if in_and_def('subjnewcode_bi_txtm', line):
+            result = listify(line['subjnewcode_bi_txtm'])
+            if result:
+                line_out['subject_codes'] = result
+        if 'subject_codes' not in line_out and in_and_def('subjnew_en_txtm', line):
+            result = code_lookup('subject', line['subjnew_en_txtm'], line)
             if result:
                 line_out['subject_codes'] = result
 
-        if 'related_bi_strm' in line and line['related_bi_strm']:
-            result =  listify(line['related_bi_strm'])
+        if in_and_def('related_bi_strm', line):
+            result = listify(line['related_bi_strm'])
             if result:
                 line_out['related_products'] = result
 
         temp = {}
-        if 'stcthesaurus_en_txtm' in line:
+        if in_and_def('stcthesaurus_en_txtm', line):
             result = listify(line['stcthesaurus_en_txtm'])
             if result:
                 temp[u'en'] = result
-        if 'stcthesaurus_fr_txtm' in line:
+        if in_and_def('stcthesaurus_fr_txtm', line):
             result = listify(line['stcthesaurus_fr_txtm'])
             if result:
                 temp[u'fr'] = result
         if temp:
             line_out['thesaurus'] = temp
 
-        if 'dimmembers_en_txtm':
-            result = code_lookup('dimmembers_en_txtm', line, dimension_member_list)
+        if in_and_def('dimmembers_en_txtm', line):
+            result = code_lookup('dimension_member', line['dimmembers_en_txtm'], line)
             if result:
                 line_out['dimension_member_codes'] = result
 
-        if 'display_en_txtm' in line:
-            result = code_lookup('display_en_txtm', line, display_list)
+        if in_and_def('display_en_txtm', line):
+            result = code_lookup('display', line['display_en_txtm'], line)
             if result:
                 line_out['display_code'] = result
 
-        if 'frccode_bi_strs' in line and line['frccode_bi_strs']:
+        if in_and_def('frccode_bi_strs', line):
             line_out['frc'] = line['frccode_bi_strs']
 
-        if 'freq_en_txtm' in line:
-            result = code_lookup('freq_en_txtm', line, frequency_list)
+        if in_and_def('freq_en_txtm', line):
+            result = code_lookup('frequency', line['freq_en_txtm'], line)
             if result:
                 line_out['frequency_codes'] = result
 
-        if 'hierarchyid_bi_strm' in line and line['hierarchyid_bi_strm']:
+        if in_and_def('hierarchyid_bi_strm', line):
             result = listify(line['hierarchyid_bi_strm'])
             if result:
                 line_out['parent_product'] = result
 
-        if 'hierarchyid_bi_strs' in line and line['hierarchyid_bi_strs']:
+        if in_and_def('hierarchyid_bi_strs', line):
             result = listify(line['hierarchyid_bi_strs'])
             if result:
                 line_out['parent_product'] = result
 
         temp = {}
-        if 'histnotes_en_txts' in line and line['histnotes_en_txts']:
+        if in_and_def('histnotes_en_txts', line):
             temp[u'en'] = line['histnotes_en_txts']
-        if 'histnotes_fr_txts' in line and line['histnotes_fr_txts']:
+        if in_and_def('histnotes_fr_txts', line):
             temp[u'fr'] = line['histnotes_fr_txts']
         if temp:
             line_out['history_notes'] = temp
 
-        if 'interncontactname_bi_txts' and line['interncontactname_bi_txts']:
+        if in_and_def('interncontactname_bi_txts', line):
             result = listify(line['interncontactname_bi_txts'])
             if result:
                 line_out['internal_contacts'] = result
 
         temp = {}
-        if 'keywordsuncon_en_txtm' in line:
+        if in_and_def('keywordsuncon_en_txtm', line):
             result = listify(line['keywordsuncon_en_txtm'])
             if result:
                 temp[u'en'] = result
-        if 'keywordsuncon_fr_txtm':
+        if in_and_def('keywordsuncon_fr_txtm', line):
             result = listify(line['keywordsuncon_fr_txtm'])
             if result:
                 temp[u'fr'] = result
         if temp:
             line_out['keywords'] = temp
 
-        if 'lastpublishstatus_en_strs' in line:
-            result =  code_lookup('lastpublishstatus_en_strs', line, publish_list)
+        if in_and_def('lastpublishstatus_en_strs', line):
+            result = code_lookup('publish_status', line['lastpublishstatus_en_strs'], line)
             if result:
                 line_out['last_publish_status_code'] = result[0]
 
-        if 'productidnew_bi_strs' in line and line['productidnew_bi_strs']:
+        if in_and_def('productidnew_bi_strs', line):
             line_out['product_id_new'] = line['productidnew_bi_strs']
-            line_out['name'] = 'cube-{0}'.format(line['productidnew_bi_strs'])
+            line_out['name'] = 'view-{0}'.format(line['productidnew_bi_strs'].lower())
 
-        if 'productidold_bi_strs' in line and line['productidold_bi_strs']:
+        if in_and_def('productidold_bi_strs', line):
             line_out['product_id_old'] = line['productidold_bi_strs']
 
-        if 'releasedate_bi_strs' in line and line['releasedate_bi_strs']:
+        if in_and_def('releasedate_bi_strs', line):
             line_out['release_date'] = line['releasedate_bi_strs']
 
-        if 'replaces_bi_strm' in line:
+        if in_and_def('replaces_bi_strm', line):
             result = listify(line['replaces_bi_strm'])
             if result:
                 line_out['replaced_products'] = result
 
-        if 'sourcecode_bi_txtm' in line and line['sourcecode_bi_txtm']:
+        if in_and_def('sourcecode_bi_txtm', line):
             result = listify(line['sourcecode_bi_txtm'])
             if result:
                 line_out['imdb_source_codes'] = result
 
-        if 'statusf_en_strs' in line:
-            result = code_lookup('statusf_en_strs', line, status_list)
+        if in_and_def('statusf_en_strs', line):
+            result = code_lookup('status', line['statusf_en_strs'], line)
             if result:
-                line_out['status_codes'] = result
+                line_out['status_codes'] = result[0]
 
         temp = {}
-        if 'url_en_strs' in line and line['url_en_strs']:
+        if in_and_def('url_en_strs', line):
             temp[u'en'] = line['url_en_strs']
-        if 'url_fr_strs' in line and line['url_fr_strs']:
+        if in_and_def('url_fr_strs', line):
             temp[u'fr'] = line['url_fr_strs']
         if temp:
             line_out['url'] = temp

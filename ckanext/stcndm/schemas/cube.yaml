@@ -24,6 +24,19 @@ dataset_fields:
     en: Publisher
     fr: Éditeur
   preset: dataset_organization
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: name
+  label:
+    en: Old Unique Catalogue Numbering
+    fr: Ancienne numérotation unique du catalogue
+  form_placeholder: unique-catalog-id
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
 
 - field_name: admin_notes
   preset: ndm_admin_notes
@@ -57,6 +70,8 @@ dataset_fields:
     fr: Géodescriptors
   preset: shortcode_multivalue
   lookup: geodescriptor
+  schema_field_type: string
+  schema_extras: true
 
 - field_name: subject_codes
   label:
@@ -64,13 +79,8 @@ dataset_fields:
     fr: Sujet
   preset: shortcode_multivalue
   lookup: subject
-
-- field_name: name
-  label:
-    en: Old Unique Catalogue Numbering
-    fr: Ancienne numérotation unique du catalogue
-  form_placeholder: unique-catalog-id
-  required: true
+  schema_field_type: string
+  schema_extras: true
 
 #- field_name: format_codes
 #  preset: ndm_formats
@@ -86,18 +96,27 @@ dataset_fields:
         fr: Cube
       value: '10'
   required: true
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: related_product_codes
   label:
     en: Related Products
     fr: Produits reliés
   preset: shortcode_multivalue
+  schema_field_type: string
+  schema_extras: true
 
 - field_name: thesaurus
   label:
     en: STC Thesaurus
     fr: STC dictionnaire de synonymes
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true
 
 #- field_name: feature_weight
 #  label:
@@ -109,6 +128,9 @@ dataset_fields:
     en: Archive Date
     fr: Date d'archivage
   preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: archive_status_code
   preset: ndm_archive_status
@@ -122,6 +144,9 @@ dataset_fields:
   label:
     en: Default View ID
     fr: ID de vue par défaut
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: dimension_group_codes
   label:
@@ -129,6 +154,8 @@ dataset_fields:
     fr: Groupe de dimension
   preset: shortcode_multivalue
   lookup: dimension_group
+  schema_field_type: string
+  schema_extras: true
 
 - field_name: dimension_member_codes
   label:
@@ -136,6 +163,8 @@ dataset_fields:
     fr: Membre de dimension
   preset: shortcode_multivalue
   lookup: dimension_member
+  schema_field_type: string
+  schema_extras: true
 
 - field_name: display_code
   preset: ndm_display
@@ -149,6 +178,9 @@ dataset_fields:
   label:
     en: FRC
     fr: FRC
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: frequency_codes
   label:
@@ -162,6 +194,9 @@ dataset_fields:
     en: History Notes
     fr: Notes historiques
   preset: fluent_markdown
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: imdb_source_codes
   label:
@@ -169,6 +204,8 @@ dataset_fields:
     fr: Source
   preset: shortcode_multivalue
   lookup: imdb
+  schema_field_type: code
+  schema_extras: true
 
 #- field_name: internal_author
 #  label:
@@ -179,12 +216,19 @@ dataset_fields:
   label:
     en: Internal Contact Name
     fr: Nom de personne ressource interne
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: keywords
   label:
     en: Keywords
     fr: Mots clés
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: last_publish_status_code
   preset: ndm_publish_status
@@ -199,6 +243,9 @@ dataset_fields:
   label:
     en: Hierarchy
     fr: Hiérarchie
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 #- field_name: price
 #  label:
@@ -215,11 +262,17 @@ dataset_fields:
   label:
     en: Product ID New
     fr: ID produit nouveau
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: product_id_old
   label:
     en: Product ID Old
     fr: ID produit ancien
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 #- field_name: publication_year
 #  label:
@@ -231,18 +284,27 @@ dataset_fields:
     en: Reference Period
     fr: Période de référence
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: release_date
   label:
-    en: Release Date (YYYY-MM-DD)
-    fr: Date de diffusion (YYYY-MM-DD)
+    en: Release Date
+    fr: Date de diffusion
   preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: replaced_product_codes
   label:
     en: Replaced Products
     fr: Produits remplacés
   preset: shortcode_multivalue
+  schema_field_type: string
+  schema_extras: true
 
 - field_name: status_codes
   preset: ndm_status
@@ -258,6 +320,9 @@ dataset_fields:
     en: URL
     fr: URL
   preset: fluent_text
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: false
 
 #- field_name: volume_and_number
 #  label:

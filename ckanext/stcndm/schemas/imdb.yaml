@@ -17,6 +17,16 @@ lookup_key: product_id_new
 
 dataset_fields:
 
+- field_name: owner_org
+  label:
+    en: Organisation
+    fr: Organisation
+  preset: dataset_organization
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
 - field_name: name
   # follow our custom name generation validator with default package name validators
   validators: imdb_create_name
@@ -25,18 +35,27 @@ dataset_fields:
     en: Internal Unique ID
     fr: ID interne unique
   form_snippet: null
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
 
 - field_name: product_id_new
   label:
     en: Product ID New
     fr: ID produit nouveau
   required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: archive_date
   label:
     en: Archive Date
     fr: Date d'archivage
   preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: archive_status_code
   preset: ndm_archive_status
@@ -46,6 +65,9 @@ dataset_fields:
     en: Collection End Date
     fr: Date de fin de collection
   preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: collection_method_codes
   preset: ndm_collection_methods
@@ -55,6 +77,9 @@ dataset_fields:
     en: Collection Start Date
     fr: Date de début de collection
   preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: content_type_codes
   label:
@@ -71,16 +96,25 @@ dataset_fields:
     en: Level Subject Code
     fr: Code sujet niveau
   preset: shortcode_multivalue
+  schema_field_type: string
+  schema_multivalue: true
+  schema_extras: true
 
 - field_name: feature_weight
   label:
     en: Feature Weight
     fr: Poids
+  schema_field_type: int
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: frc
   label:
     en: FRC
     fr: FRC
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: frequency_codes
   label:
@@ -93,17 +127,26 @@ dataset_fields:
   label:
     en: IMDB Instance Item
     fr: Élement d'instance IMDB
+  schema_field_type: int
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: imdb_survey_item
   label:
     en: IMDB Survey Item
     fr: Élement de sondage IMDB
+  schema_field_type: int
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: isp_url
   label:
     en: ISP URL
     fr: URL d'ISP
   preset: fluent_text
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: keywords
   label:
@@ -111,30 +154,46 @@ dataset_fields:
     fr: Mots clés
   preset: fluent_tags
   tag_validators: ndm_tag_name_validator tag_length_validator
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: navigation_subject_codes
   label:
     en: Navigation Subject Code
     fr: Code de sujet pour navigation
   preset: shortcode_multivalue
+  schema_field_type: string
+  schema_multivalue: true
+  schema_extras: true
 
 - field_name: question_url
   label:
     en: Question URL
     fr: URL de question
   preset: fluent_text
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: reference_periods
   label:
     en: Reference Period
     fr: Période visée
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: release_date
   label:
-    en: Release Date (YYYY-MM-DD)
-    fr: Date de diffusion (YYYY-MM-DD)
+    en: Release Date
+    fr: Date de diffusion
   preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: format_codes
   preset: ndm_formats
@@ -143,6 +202,9 @@ dataset_fields:
   label:
     en: Resource URL
     fr: URL de la ressource
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: imdb_status_code
   preset: ndm_imdb_status
@@ -152,6 +214,10 @@ dataset_fields:
     en: STC Thesaurus
     fr: Dictionnaire de synonymes STC
   preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: subject_codes
   label:
@@ -159,12 +225,16 @@ dataset_fields:
     fr: Sujet
   preset: shortcode_multivalue
   lookup: subject
+  schema_extras: true
 
 - field_name: survey_url
   label:
     en: Survey URL
     fr: URL du sondage
   preset: fluent_text
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: survey_participation_code
   preset: ndm_survey_participation
@@ -180,10 +250,6 @@ dataset_fields:
     en: URL
     fr: URL
   preset: fluent_text
-
-- field_name: owner_org
-  label:
-    en: Organisation
-    fr: Organisation
-  preset: dataset_organization
-  required: true
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: false

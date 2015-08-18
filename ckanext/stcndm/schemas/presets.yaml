@@ -9,8 +9,8 @@ presets:
     display_snippet: shortcode_multivalue.html
     validators: shortcode_validate
     output_validators: shortcode_output
-    schema_field_structure: list
     schema_field_type: code
+    schema_multivalued: true
 
 - preset_name: ndm_language
   values:
@@ -21,8 +21,9 @@ presets:
     display_snippet: select.html
     validators: scheming_required scheming_choices
     lookup: preset
-    schema_field_structure: none
-    schema_field_type: str
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
     choices:
     - label:
         en: English
@@ -42,8 +43,9 @@ presets:
     display_snippet: select.html
     validators: scheming_required scheming_choices
     lookup: preset
-    schema_field_structure: none
     schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
     choices:
       - label:
           en: Cube
@@ -104,8 +106,9 @@ presets:
     validators: scheming_required scheming_multiple_choice
     output_validators: shortcode_output
     lookup: preset
-    schema_field_structure: list
     schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
     choices:
       - label:
           fr: Accessible
@@ -165,8 +168,9 @@ presets:
     display_snippet: select.html
     validators: scheming_required scheming_choices
     lookup: preset
-    schema_field_structure: none
     schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
     choices:
       - label:
           en: None
@@ -211,8 +215,9 @@ presets:
     validators: scheming_required scheming_multiple_choice
     output_validators: shortcode_output
     lookup: preset
-    schema_field_structure: list
     schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
     choices:
       - label:
             en: Database
@@ -276,8 +281,9 @@ presets:
     display_snippet: select.html
     validators: scheming_required scheming_choices
     lookup: preset
-    schema_field_structure: none
     schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
     choices:
       - label:
           en: Archived
@@ -297,8 +303,9 @@ presets:
     display_snippet: select.html
     validators: scheming_required scheming_choices
     lookup: preset
-    schema_field_structure: none
     schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
     choices:
       - label:
           en: Show product info page
@@ -322,8 +329,9 @@ presets:
     display_snippet: select.html
     validators: scheming_required scheming_choices
     lookup: preset
-    schema_field_structure: none
     schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
     choices:
       - label:
           en: Active
@@ -343,8 +351,9 @@ presets:
     display_snippet: select.html
     validators: scheming_required scheming_choices
     lookup: preset
-    schema_field_structure: none
     schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
     choices:
       - label:
           en: Show subject A to Z alias
@@ -372,8 +381,9 @@ presets:
     display_snippet: select.html
     validators: scheming_required scheming_choices
     lookup: preset
-    schema_field_structure: none
     schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
     choices:
       - label:
           en: Mandatory Survey
@@ -401,8 +411,9 @@ presets:
     display_snippet: select.html
     validators: scheming_required scheming_choices
     lookup: preset
-    schema_field_structure: none
     schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
     choices:
       - label:
           en: Administrative Data Division (ADD)
@@ -527,8 +538,9 @@ presets:
     validators: scheming_required scheming_multiple_choice
     output_validators: shortcode_output
     lookup: preset
-    schema_field_structure: list
     schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
     choices:
       - label:
             en: Approved
@@ -602,6 +614,10 @@ presets:
             en: QA
             fr: QA
         value: '18'
+      - label:
+            en: Waiting - rgtabv
+            fr: En attente - rgtabv
+        value: '19'
 
 - preset_name: ndm_collection_methods
   values:
@@ -613,8 +629,9 @@ presets:
     validators: scheming_required scheming_multiple_choice
     output_validators: shortcode_output
     lookup: preset
-    schema_field_structure: list
     schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
     choices:
       - label:
             en: Computer Assisted Interview
@@ -689,8 +706,9 @@ presets:
     form_placeholder:
       en: Admin Notes
       fr: Notes
-    schema_field_structure: dict
-    schema_field_type: str
+    schema_field_type: fluent
+    schema_multivalue: false
+    schema_extras: true
     form_snippet: fluent_markdown.html
     display_snippet: fluent_markdown.html
     error_snippet: fluent_text.html
@@ -702,8 +720,9 @@ presets:
     label:
       en: Title
       fr: Titre
-    schema_field_structure: dict
-    schema_field_type: str
+    schema_field_type: fluent
+    schema_multivalue: false
+    schema_extras: false
     form_placeholder:
       en: Canada Border Wait Times
       fr: Temps d’attente à la frontière
@@ -718,8 +737,9 @@ presets:
     label:
       en: Description
       fr: Description
-    schema_field_structure: dict
-    schema_field_type: str
+    schema_field_type: fluent
+    schema_multivalue: false
+    schema_extras: false
     form_placeholder:
       en: The National Pollutant Release Inventory (NPRI) is Canada's public inventory
         of pollutant releases (to air, water and land), disposals and transfers for
@@ -739,8 +759,8 @@ presets:
 
 - preset_name: codeset_select
   values:
-    schema_field_structure: none
     schema_field_type: code
+    schema_multivalued: false
     form_snippet: codeset_select.html
     display_snippet: select.html
     validators: scheming_required scheming_choices
@@ -748,8 +768,8 @@ presets:
 
 - preset_name: codeset_multiple_select
   values:
-    schema_field_structure: list
     schema_field_type: code
+    schema_multivalued: true
     form_snippet: codeset_multiple_select.html
     display_snippet: codeset_multiple_choice.html
     validators: ignore_missing codeset_multiple_choice
