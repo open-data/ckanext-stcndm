@@ -105,10 +105,8 @@ def get_product(context, data_dict):
 
     :param productId: product id (i.e. 2112002604)
     :type productId: str
-
     :return: product or 404 if not found.
     :rtype: dict
-
     :raises: ObjectNotFound, ValidationError
     """
     product_id = _get_or_bust(data_dict, 'productId')
@@ -195,6 +193,27 @@ def get_group_schema(context, data_dict):
 def get_product_type(context, data_dict):
     # noinspection PyUnresolvedReferences
     """Return the French and English titles for the given product_type_code.
+
+    Example query:
+
+    .. code:: python
+
+        r = requests.get('/api/3/action/GetProductType?productType=13')
+        print(r.json())
+
+    Example response:
+
+    .. code:: json
+
+        {
+            "success": true,
+            "result": {
+                "fr": "Graphique",
+                "en": "Chart",
+                "product_type_code": "13"
+            }
+        }
+
 
     :param productType: Product Type Code (i.e. '10') or '*' to receive a
         list of all product_types

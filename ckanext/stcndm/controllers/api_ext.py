@@ -60,7 +60,8 @@ class APIExtController(base.BaseController):
                     publish_parts,
                     writer_name='html',
                     settings_overrides={
-                        'field_name_limit': 0
+                        'field_name_limit': 0,
+                        'syntax_highlight': 'short'
                     }
                 ),
                 'trim': trim
