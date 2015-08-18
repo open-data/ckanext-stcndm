@@ -153,6 +153,8 @@ for i in range(0, 10):
         q='organization:maprimary AND extras_pkuniqueidcode_bi_strs:pub*',
         rows=1000,
         start=i*1000)
+
+    count = 0
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']
@@ -337,3 +339,5 @@ for i in range(0, 10):
             line_out['url'] = temp
 
         print json.dumps(line_out)
+        count += 1
+    print count
