@@ -46,7 +46,7 @@ class APIExtController(base.BaseController):
 
         # Iterate over the (private) action cache, because we
         # have no other way of getting this list.
-        action_methods = (
+        action_methods = sorted(
             (k, v) for k, v in logic._actions.iteritems()
             if k.startswith(tuple(string.uppercase))
         )

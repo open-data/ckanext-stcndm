@@ -66,7 +66,6 @@ def get_cube(context, data_dict):
 
     :param cube_id: ID of the cube to retrieve. (i.e. 1310001)
     :type cube_id: str
-    :type fields: str
 
     :return: requested cube
     :rtype: dict
