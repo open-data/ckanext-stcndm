@@ -1,0 +1,18 @@
+.note {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    padding: 4px 12px;
+    margin-bottom: 12px;
+}
+
+.note > .admonition-title {
+    font-weight: bold;
+}
+
+.note > p.first {
+    margin-bottom: 4px;
+}
+
+.note > p.last {
+    margin: 0;
+}
