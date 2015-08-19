@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import datetime
-
 import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
@@ -27,7 +25,7 @@ def get_next_product_id(context, data_dict):
     :return: next available ProductId
     :rtype: str
 
-    :raises ValidationError, ObjectNotFound
+    :raises: ValidationError, ObjectNotFound
     """
 
     lc = ckanapi.LocalCKAN(context=context)
@@ -105,11 +103,9 @@ def get_product(context, data_dict):
 
     :param productId: product id (i.e. 2112002604)
     :type productId: str
-
     :return: product or 404 if not found.
     :rtype: dict
-
-    :raises ObjectNotFound, ValidationError
+    :raises: ObjectNotFound, ValidationError
     """
     product_id = _get_or_bust(data_dict, 'productId')
 
@@ -196,14 +192,33 @@ def get_product_type(context, data_dict):
     # noinspection PyUnresolvedReferences
     """Return the French and English titles for the given product_type_code.
 
-    :param productType: Product Type Code (i.e. '10') or '*' to receive a
-                        list of all product_types
-    :type productType str
+    Example query:
 
+    .. code:: python
+
+        r = requests.get('/api/3/action/GetProductType?productType=13')
+        print(r.json())
+
+    Example response:
+
+    .. code:: json
+
+        {
+            "success": true,
+            "result": {
+                "fr": "Graphique",
+                "en": "Chart",
+                "product_type_code": "13"
+            }
+        }
+
+
+    :param productType: Product Type Code (i.e. '10') or '*' to receive a
+        list of all product_types
+    :type productType: str
     :return: English, French and code values for given product_type
     :rtype: dict
-
-    :raises ValidationError
+    :raises: ValidationError
     """
     massage = lambda in_: {
         'product_type_code': in_['value'],
@@ -234,12 +249,10 @@ def get_last_publish_status(context, data_dict):
     Return the French and English values for the given lastpublishstatuscode.
 
     :param lastPublishStatusCode: Publishing Status Code (i.e. '10')
-    :type lastPublishStatusCode str
-
+    :type lastPublishStatusCode: str
     :return: English, French and code values for given lastpublishstatuscode
     :rtype: dict
-
-    :raises ValidationError
+    :raises: ValidationError
     """
     massage = lambda in_: {
         'last_publish_status_code': in_['value'],
@@ -270,12 +283,12 @@ def get_format_description(context, data_dict):
     Return the French and English values for the given formatCode.
 
     :param formatCode: Format Code (i.e. '10')
-    :type formatCode str
+    :type formatCode: str
 
     :return: English, French and code values for given formatCode
     :rtype: dict
 
-    :raises ValidationError
+    :raises: ValidationError
     """
     massage = lambda in_: {
         'format_code': in_['value'],
@@ -416,11 +429,20 @@ def get_derived_product_list(context, data_dict):
 
 
 def tv_register_product(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
-    Register a new product based on a given cubeid and desired producttypecode.
-    Populate the new product's fields based on the cube record and producttype
-    mapping.
+    Register a new product based on a given `parentProductId` (the 8-digit ID
+    of a cube) and the desired `productTypeCode`. The new product's fields will
+    be populated based on the cube record.
+
+    .. note::
+
+        If the cube is missing English and French titles, the cube will be
+        updated.
+
+    .. note::
+
+        As the schemas for tables, indicators, charts, and maps do not
+        yet exist, this method is not thoroughly tested.
 
     :param parentProductId: 8-digit cube id
     :type parentProductId: str
@@ -428,78 +450,70 @@ def tv_register_product(context, data_dict):
     :type productType: str
     :param productTitle: EN/FR title dictionary
     :type productTitle: dict
-
     :return: newly-registered product id
     :rtype: dict
     """
+    # These are the only product types that can be registered using
+    # this method as these are the only "data products".
+    # TODO: Can we pull this from somewhere? Presets.yaml does not
+    #       necessarily have the exact schema name in ndm_product_type.
+    VALID_DATA_TYPES = {
+        u'11': 'table',
+        u'12': 'indicator',
+        u'13': 'chart',
+        u'14': 'map'
+    }
+    CUBE_PRODUCT_TYPE = u'10'
 
     cube_id = _get_or_bust(data_dict, 'parentProductId')
-    # TODO: this is for Java-style stuff, and needs to be tidied up.
-    data_dict['productId'] = cube_id
-    product_type = _get_or_bust(data_dict, 'productType')
+    title = _get_or_bust(data_dict, 'productTitle')
+    product_type = _get_or_bust(data_dict, 'productType').zfill(2)
 
-    if str(product_type) == '10':
+    if product_type == CUBE_PRODUCT_TYPE:
         raise _ValidationError(
-            'Please use the RegisterCube to register a cube'
+            'Please use RegisterCube to register a cube'
         )
-    if str(product_type) not in ['11', '12', '13', '14']:
+    elif product_type not in VALID_DATA_TYPES:
         raise _ValidationError(
             'Invalid data productType, only data products may be registered '
             'with this service'
         )
 
-    title = _get_or_bust(data_dict, 'productTitle')
+    lc = ckanapi.LocalCKAN(context=context)
+    cube_dict = lc.action.GetCube(cube_id=cube_id)
 
-    cube_dict = _get_action('ndm_get_cube')(context, data_dict)
-    field_list = _get_action('ndm_get_field_list')(context, {'org': 'rgtabv'})
-    product_id = _get_action('ndm_get_next_product_id')(context, data_dict)
+    product_type_schema = lc.action.GetDatasetSchema(
+        name=VALID_DATA_TYPES[product_type]
+    )
 
-    extras_dict = {}
+    # Copy fields that overlap between the cubes and the destination
+    # type.
+    copied_fields = {}
+    for field in product_type_schema['fields']:
+        field_name = field['field_name']
+        if field_name in cube_dict:
+            copied_fields[field_name] = cube_dict[field_name]
 
-    time = datetime.datetime.today()
+    # FIXME: This is not atomic. If this API method is called quickly
+    #        in parallel, this product ID could no longer be free.
+    product_id = lc.action.GetNextProductId(
+        parentProductId=cube_id,
+        productType=product_type
+    )
 
-    for field in field_list['fields']:
-        if field in cube_dict:
-            extras_dict[field] = cube_dict[field]
-        elif str(field).endswith('ints'):
-            extras_dict[field] = 0
-        else:
-            extras_dict[field] = ''
-
-    extras_dict['product_id_new'] = product_id
-    extras_dict['product_type'] = product_type
-    extras_dict['parent_product'] = cube_id
-    extras_dict['title'] = title
-    extras_dict['zckcapacity_bi_strs'] = 'public'
-#    extras_dict['zckdbname_bi_strs'] = 'rgproduct'
-#    extras_dict['zckownerorg_bi_strs'] = 'rgtabv'
-    extras_dict['zckpubdate_bi_strs'] = time.strftime("%Y-%m-%d")
-    extras_dict['zckpushtime_bi_strs'] = time.strftime("%Y-%m-%d %H:%M")
-    extras_dict['zckstatus_bi_txtm'] = 'ndm_tv_register_product_api'
-
-    extras = []
-
-    for key in extras_dict:
-        extras.append({'key': key, 'value': extras_dict[key]})
-
-    package_dict = {'name': product_id,
-                    'owner_org': 'rgtabv',
-                    'extras': extras}
-
-    new_product = _get_action('package_create')(context, package_dict)
-
-    if product_id.endswith('01') and str(product_type) == '11':
-        _get_action('ndm_update_default_view')(context, {
-            'cubeId': str(cube_id),
-            'defaultView': str(product_id)
-        })
-
-    output = _get_action('ndm_get_product')(context, {
-        'productId': new_product['name'],
-        'fl': 'product_id_new'
+    # Overwrite/add some fields that we don't want to inherit
+    # from the cube.
+    copied_fields.update({
+        'name': product_id,
+        'owner_org': 'statcan',
+        'product_id_new': product_id,
+        'parent_product': cube_id,
+        'title': title,
+        'product_type_code': product_type
     })
 
-    return output
+    lc.action.package_create(**copied_fields)
+    return {'product_id_new': product_id}
 
 
 def delete_product(context, data_dict):
@@ -519,7 +533,6 @@ def delete_product(context, data_dict):
     :return: success or failure
     :rtype: dict
     """
-
     product_id = _get_or_bust(data_dict, 'productId')
 
     result = _get_action('ndm_get_product')(context, data_dict)

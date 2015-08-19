@@ -614,6 +614,10 @@ presets:
             en: QA
             fr: QA
         value: '18'
+      - label:
+            en: Waiting - rgtabv
+            fr: En attente - rgtabv
+        value: '19'
 
 - preset_name: ndm_collection_methods
   values:

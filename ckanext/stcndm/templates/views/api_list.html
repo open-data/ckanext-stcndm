@@ -1,0 +1,28 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('API Methods') }}{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="/css/pygments-default.css" />
+<link rel="stylesheet" href="/css/api-docs.css" />
+{% endblock %}
+
+{% block primary %}
+<article class="module">
+  <div class="module-content">
+    {% for action_name, action_func in action_methods %}
+      <h2>{{ action_name }}</h2>
+      <hr />
+      {%- set doc = action_func.__doc__ -%}
+      {% if doc %}
+        {%- set parts = publish_parts(trim(doc)) -%}
+        {{ parts['body']|safe }}
+      {% endif %}
+    {% endfor %}
+  </div>
+</article>
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}

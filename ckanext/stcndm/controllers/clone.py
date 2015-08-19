@@ -33,11 +33,7 @@ class CloneDatasetController(base.BaseController):
         now = datetime.now()
 
         pkg.update({
-            'title': {
-                u'en': '{0} - Clone'.format(pkg['title'].get('en', '')),
-                u'fr': '{0} - Cloner'.format(pkg['title'].get('fr', '')),
-            },
-            'name': '{0} - Clone'.format(pkg['name']),
+            'name': '{0}-clone'.format(pkg['name']),
             'metadata_created': now,
             'metadata_modified': now,
             'notes': {

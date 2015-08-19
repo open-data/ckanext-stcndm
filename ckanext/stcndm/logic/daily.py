@@ -27,15 +27,16 @@ def get_daily_list(context, data_dict):
     """
     Return a JSON dict representation of one or more instances of Daily.
 
+
     :param startDate: required, date of first Daily to return
-    :type startDate str
+    :type startDate: str
     :param endDate: optional, if omitted, only return Daily of startDate
-    :type endDate str
+    :type endDate: str
 
     :return: requested Daily or list of Daily
     :rtype: list of dict
 
-    :raises ValidationError
+    :raises:  ValidationError
     """
 
     output = []
@@ -96,23 +97,24 @@ def register_daily(context, data_dict):
 
     Automatically populate fields based on provided parameters.
 
-    :param productId: 00240001 followed by 3 - 6 digit sequence id (i.e. 00240001654321)
-    :type productId str
+    :param productId: 00240001 followed by 3 - 6 digit
+        sequence id (i.e. 00240001654321)
+    :type productId: str
     :param productTitle: EN/FR title
-    :type productTitle dict
+    :type productTitle: dict
     :param lastPublishStatusCode: 1 or 2 digit number
-    :type lastPublishStatusCode str
+    :type lastPublishStatusCode: str
     :param releaseDate: e.g. 2015-06-30T09:45
-    :type releaseDate str
+    :type releaseDate: str
     :param uniqueId: e.g. daily3456
-    :type uniqueId str
+    :type uniqueId: str
     :param childList: list of IDs of child products
-    :type childList str
+    :type childList: str
 
     :return: new package
     :rtype: dict
 
-    :raises ValidationError
+    :raises: ValidationError
     """
 
     my_org_type = 'maprimary'
@@ -270,7 +272,7 @@ def get_product_issue_articles(context, data_dict):
     :rtype: dict
     """
 
-    product_id = _get_or_bust(data_dict, 'productId')
+    product_id = _get_or_bust(data_dict, 'produc:tId')
     issue_no = _get_or_bust(data_dict, 'issueNo')
 
     output = _stub_msg
@@ -281,11 +283,13 @@ def get_product_issue_articles(context, data_dict):
 @logic.side_effect_free
 def get_bookable_releases(context, data_dict):
     """
-    Returns a list of the products, issues and formats that a user may edit, based on the provided FRC codes
-    :param: frcCodes: A list of FRC Codes
+    Returns a list of the products, issues and formats that a user
+    may edit, based on the provided FRC codes
 
-    :return: A dictionary containing the products, associated issues and formats for articles for the specified
-    product and issue
+    :param frcCodes: A list of FRC Codes
+    :return: A dictionary containing the products, associated issues
+        and formats for articles for the specified
+        product and issue
     :rtype: dict
     """
 
