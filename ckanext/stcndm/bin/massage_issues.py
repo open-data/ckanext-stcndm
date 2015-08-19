@@ -32,7 +32,7 @@ def code_lookup(old_field_name, data_set, choice_list):
             codes.append(code)
     return codes
 
-rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000')
+rc = ckanapi.RemoteCKAN('http://127.0.0.1')
 
 content_type_list = []
 geolevel_list = []
@@ -149,7 +149,7 @@ for preset in presetMap['presets']:
             raise ValueError('could not find display preset')
 
 for i in range(0, 40):
-    rc = ckanapi.RemoteCKAN('http://107.170.204.240:5000/')
+    rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
     query_results = rc.action.package_search(
         q='extras_pkuniqueidcode_bi_strs:issue* AND organization:maprimary',
         rows=1000,
@@ -159,7 +159,7 @@ for i in range(0, 40):
         count += 1
         try:
             for e in line['extras']:
-                line[e['key']] = e['value']
+                line[e['key']] = e['value'].encode('utf8')
 
             line_out = {u'owner_org': u'statcan',
                         u'private': False,

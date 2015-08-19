@@ -1,5 +1,3 @@
-e__author__ = 'marc'
-
 import sys
 import json
 import yaml
@@ -31,7 +29,7 @@ def code_lookup(old_field_name, data_set, choice_list):
             codes.append(code)
     return codes
 
-rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000')
+rc = ckanapi.RemoteCKAN('http://127.0.0.1')
 
 content_type_list = []
 geolevel_list = []
@@ -148,7 +146,7 @@ for preset in presetMap['presets']:
             raise ValueError('could not find display preset')
 
 for i in range(0, 10):
-    rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000/')
+    rc = ckanapi.RemoteCKAN('http://127.0.0.1/')
     query_results = rc.action.package_search(
         q='type:issue',
         rows=1000,
@@ -157,7 +155,7 @@ for i in range(0, 10):
     count = 0
     for line in query_results['results']:
 
-        rc = ckanapi.RemoteCKAN('http://107.170.204.240:5000/')
+        rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
 
         formats = rc.action.package_search(
             q='extras_productidnew_bi_strs:{0}'.format(line['product_id_new']),
@@ -250,8 +248,8 @@ for i in range(0, 10):
             line['resources'] = resources_out
 
             print json.dumps(line)
-            ckanapi_update = ckanapi.RemoteCKAN('http://127.0.0.1:5000',
-                                                apikey='b3a24a31-ed62-4923-980d-c65c975daef3')
+            ckanapi_update = ckanapi.RemoteCKAN('http://127.0.0.1',
+                                                apikey='API_KEY')
 
             try:
                 result = ckanapi_update.action.resource_create(package_id=line['id'],
