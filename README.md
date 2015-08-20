@@ -25,7 +25,7 @@ scheming.dataset_schemas =
     ckanext.stcndm:schemas/pumf.yaml
     ckanext.stcndm:schemas/subject.yaml
     ckanext.stcndm:schemas/view.yaml
-    ckanext.stcndm:schemas/imdb.yaml
+    ckanext.stcndm:schemas/survey.yaml
 
 
 scheming.presets =

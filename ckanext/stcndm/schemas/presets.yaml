@@ -320,7 +320,7 @@ presets:
           fr: Masquer le lien de navigation
         value: '3'
 
-- preset_name: ndm_imdb_status
+- preset_name: ndm_survey_status
   values:
     label:
       en: Status
@@ -770,6 +770,7 @@ presets:
   values:
     schema_field_type: code
     schema_multivalued: true
+    schema_extras: true
     form_snippet: codeset_multiple_select.html
     display_snippet: codeset_multiple_choice.html
     validators: ignore_missing codeset_multiple_choice

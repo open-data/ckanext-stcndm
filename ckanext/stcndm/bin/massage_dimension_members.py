@@ -15,6 +15,7 @@ def listify(value):
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
 i = 0
 n = 1
+code_count = {}
 while i < n:
     query_results = rc.action.package_search(
         q='organization:tmdimmlist',
@@ -30,8 +31,14 @@ while i < n:
                     'private': False,
                     'type': u'dimension_member'}
 
-        if '10uid_bi_strs' in line and line['10uid_bi_strs']:
-            line_out['product_id_old'] = line['10uid_bi_strs']
+        line_out_codeset = {
+            'owner_org': u'statcan',
+            'private': False,
+            'type': u'codeset',
+            'codeset_type': u'dimension_group'}
+
+        # if '10uid_bi_strs' in line and line['10uid_bi_strs']:
+        #    line_out['product_id_old'] = line['10uid_bi_strs']
 
         temp = {}
         if 'tmdimentext_en_tmtxtm' in line and line['tmdimentext_en_tmtxtm']:
@@ -40,19 +47,34 @@ while i < n:
             temp[u'fr'] = line['tmdimentext_fr_tmtxtm']
         if temp:
             line_out['title'] = temp
+            line_out_codeset['title'] = {
+                u'en': temp['en'],
+                u'fr': temp['fr']}
 
         if 'tmdimencode_bi_tmtxtm' in line and line['tmdimencode_bi_tmtxtm']:
-            line_out['dimension_member_code'] = line['tmdimencode_bi_tmtxtm']
-            line_out['name'] = u'dimension_member-{0}'.format(line['tmdimencode_bi_tmtxtm'])
+            if 'tmdimenalias_bi_tmtxtm' in line and line['tmdimenalias_bi_tmtxtm']:
+                if line['tmdimencode_bi_tmtxtm'] in code_count:
+                    code_count[line['tmdimencode_bi_tmtxtm']].append(line['tmdimenalias_bi_tmtxtm'])
+                else:
+                    code_count[line['tmdimencode_bi_tmtxtm']] = [line['tmdimenalias_bi_tmtxtm']]
+            line_out['dimension_group_code'] = line['tmdimencode_bi_tmtxtm']
+            line_out['name'] = u'dimension_member-{0}_{1}'.format(line['tmdimencode_bi_tmtxtm'],
+                                                                  len(code_count[line['tmdimencode_bi_tmtxtm']]))
+            line_out_codeset['codeset_value'] = line['tmdimencode_bi_tmtxtm']
+            line_out_codeset['name'] = u'dimension_group-{0}'.format(line['tmdimencode_bi_tmtxtm'])
 
         if 'tmdimenalias_bi_tmtxtm' in line and line['tmdimenalias_bi_tmtxtm']:
             line_out['dimension_member_alias'] = {
                 u'en': line['tmdimenalias_bi_tmtxtm'],
                 u'fr': line['tmdimenalias_bi_tmtxtm']}
+            line_out['title'][u'en'] += ' / {0}'.format(line['tmdimenalias_bi_tmtxtm'])
+            line_out['title'][u'fr'] += ' / {0}'.format(line['tmdimenalias_bi_tmtxtm'])
 
-        if 'title' in line and line['title']:
-            line_out['old_title'] = {
-                u'en': line['title'],
-                u'fr': line['title']}
+        # if 'title' in line and line['title']:
+        #     line_out['old_title'] = {
+        #         u'en': line['title'],
+        #         u'fr': line['title']}
 
+        if len(code_count[line['tmdimencode_bi_tmtxtm']]) == 1:
+            print json.dumps(line_out_codeset)
         print json.dumps(line_out)

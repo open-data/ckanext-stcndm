@@ -27,7 +27,7 @@ def code_lookup(old_field_name, data_set, choice_list):
                 if choice['value']:
                     code = choice['value']
         if not code:
-            sys.stderr.write('imdb-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
+            sys.stderr.write('survey-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
         else:
             codes.append(code)
     return codes
@@ -59,10 +59,10 @@ for preset in presetMap['presets']:
         collection_method_list = preset['values']['choices']
         if not collection_method_list:
             raise ValueError('could not find collection method preset')
-    if preset['preset_name'] == 'ndm_imdb_status':
-        imdb_status_list = preset['values']['choices']
-        if not imdb_status_list:
-            raise ValueError('could not find imdb status preset')
+    if preset['preset_name'] == 'ndm_survey_status':
+        survey_status_list = preset['values']['choices']
+        if not survey_status_list:
+            raise ValueError('could not find survey status preset')
     if preset['preset_name'] == 'ndm_survey_participation':
         survey_participation_list = preset['values']['choices']
         if not survey_participation_list:
@@ -93,7 +93,7 @@ while i < n:
 
         line_out = {'owner_org': u'statcan',
                     'private': False,
-                    'type': u'imdb'}
+                    'type': u'survey'}
 
         if 'archived_bi_strs' in line:
             result = code_lookup('archived_bi_strs', line, archive_status_list)
@@ -135,10 +135,10 @@ while i < n:
                 line_out['frequency_codes'] = result
 
         if 'imdbinstanceitem_bi_ints' in line:
-            line_out['imdb_instance_item'] = line['imdbinstanceitem_bi_ints']
+            line_out['survey_instance_item'] = line['imdbinstanceitem_bi_ints']
 
         if 'extras_imdbsurveyitem_bi_ints' in line:
-            line_out['imdb_survey_item'] = line['extras_imdbsurveyitem_bi_ints']
+            line_out['survey_item'] = line['extras_imdbsurveyitem_bi_ints']
 
         temp = {}
         if 'isplink_en_strs' in line and line['isplink_en_strs']:
@@ -175,7 +175,7 @@ while i < n:
 
         if 'productidnew_bi_strs' in line and line['productidnew_bi_strs']:
             line_out['product_id_new'] = line['productidnew_bi_strs']
-            line_out['name'] = u'imdb-{0}'.format(line['productidnew_bi_strs'])
+            line_out['name'] = u'survey-{0}'.format(line['productidnew_bi_strs'])
 
         temp = {}
         if 'questlink_en_strs' in line and line['questlink_en_strs']:
@@ -209,10 +209,9 @@ while i < n:
             _temp = line['releasedate_bi_strs']
             try:
                 datetime.datetime.strptime(_temp, '%Y-%m-%dT%H:%M')
+                line_out['release_date'] = _temp
             except ValueError:
-                sys.stderr.write('imdb-{0}: Invalid release date .{1}.\n'.format(line['productidnew_bi_strs'], _temp))
-                _temp = u'0001-01-01T08:30'
-            line_out['release_date'] = _temp
+                sys.stderr.write('survey-{0}: Invalid release date .{1}.\n'.format(line['productidnew_bi_strs'], _temp))
 
         temp = {}
         if 'stcthesaurus_en_txtm' in line:
@@ -227,9 +226,9 @@ while i < n:
             line_out['thesaurus'] = temp
 
         if 'statusf_en_strs' in line:
-            result = code_lookup('statusf_en_strs', line, imdb_status_list)
+            result = code_lookup('statusf_en_strs', line, survey_status_list)
             if result:
-                line_out['imdb_status_code'] = result[0]
+                line_out['survey_status_code'] = result[0]
 
         if 'subjnewcode_bi_txtm' in line:
             result = listify(line['subjnewcode_bi_txtm'])
