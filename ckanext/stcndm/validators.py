@@ -5,6 +5,7 @@ from ckanext.stcndm import helpers as h
 import re
 import ckan.lib.navl.dictization_functions as df
 
+
 def scheming_validator(fn):
     """
     Decorate a validator that needs to have the scheming fields
@@ -107,7 +108,7 @@ def codeset_create_name(key, data, errors, context):
     if codeset_type and codeset_value:
         data[key] = u'{0}-{1}'.format(codeset_type, codeset_value.lower())
     else:
-        errors[key].append(_('couldn\'t find codeset_type or codeset_value'))
+        errors[key].append(_('could not find codeset_type or codeset_value'))
 
 
 def subject_create_name(key, data, errors, context):
@@ -120,10 +121,10 @@ def subject_create_name(key, data, errors, context):
     if subject_code:
         data[key] = u'subject-{0}'.format(subject_code.lower())
     else:
-        errors[key].append(_('couldn\'t find subject_code'))
+        errors[key].append(_('could not find subject_code'))
 
 
-def imdb_create_name(key, data, errors, context):
+def survey_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
@@ -131,9 +132,9 @@ def imdb_create_name(key, data, errors, context):
 
     product_id_new = _data_lookup(('product_id_new',), data)
     if product_id_new:
-        data[key] = u'imdb-{0}'.format(product_id_new.lower())
+        data[key] = u'survey-{0}'.format(product_id_new.lower())
     else:
-        errors[key].append(_('couldn\'t find product_id_new'))
+        errors[key].append(_('could not find product_id_new'))
 
 
 def cube_create_name(key, data, errors, context):
@@ -146,7 +147,7 @@ def cube_create_name(key, data, errors, context):
     if product_id_new:
         data[key] = u'cube-{0}'.format(product_id_new.lower())
     else:
-        errors[key].append(_('couldn\'t find product_id_new'))
+        errors[key].append(_('could not find product_id_new'))
 
 
 def view_create_name(key, data, errors, context):
@@ -159,7 +160,7 @@ def view_create_name(key, data, errors, context):
     if product_id_new:
         data[key] = u'view-{0}'.format(product_id_new.lower())
     else:
-        errors[key].append(_('couldn\'t find product_id_new'))
+        errors[key].append(_('could not find product_id_new'))
 
 
 def publication_create_name(key, data, errors, context):
@@ -172,7 +173,7 @@ def publication_create_name(key, data, errors, context):
     if product_id_new:
         data[key] = u'publication-{0}'.format(product_id_new.lower())
     else:
-        errors[key].append(_('couldn\'t find product_id_new'))
+        errors[key].append(_('could not find product_id_new'))
 
 
 def issue_create_name(key, data, errors, context):
@@ -185,7 +186,7 @@ def issue_create_name(key, data, errors, context):
     if product_id_new:
         data[key] = u'issue-{0}'.format(product_id_new.lower())
     else:
-        errors[key].append(_('couldn\'t find product_id_new'))
+        errors[key].append(_('could not find product_id_new'))
 
 
 def article_create_name(key, data, errors, context):
@@ -198,7 +199,7 @@ def article_create_name(key, data, errors, context):
     if product_id_new:
         data[key] = u'article-{0}'.format(product_id_new.lower())
     else:
-        errors[key].append(_('couldn\'t find product_id_new'))
+        errors[key].append(_('could not find product_id_new'))
 
 
 def ndm_str2boolean(key, data, errors, context):
@@ -225,7 +226,7 @@ def geodescriptor_create_name(key, data, errors, context):
     if geodescriptor_code:
         data[key] = u'geodescriptor-{0}'.format(geodescriptor_code.lower())
     else:
-        errors[key].append(_('couldn\'t find geodescriptor_code'))
+        errors[key].append(_('could not find geodescriptor_code'))
 
 
 def dimension_member_create_name(key, data, errors, context):
@@ -234,11 +235,11 @@ def dimension_member_create_name(key, data, errors, context):
     if errors[key]:
         return
 
-    dimension_member_code = _data_lookup(('dimension_member_code',), data)
-    if dimension_member_code:
-        data[key] = u'dimension_member-{0}'.format(dimension_member_code.lower())
+    dimension_group_code = _data_lookup(('dimension_group_code',), data)
+    if dimension_group_code:
+        data[key] = u'dimension_member-{0}'.format(dimension_group_code.lower())
     else:
-        errors[key].append(_('couldn\'t find dimension_member_code'))
+        errors[key].append(_('could not find dimension_group_code'))
 
 
 @scheming_validator

@@ -54,7 +54,7 @@ dataset_fields:
   preset: codeset_multiple_select
   codeset_type: content_type
 
-- field_name: tracking_code
+- field_name: tracking_codes
   preset: ndm_tracking
 
 - field_name: geolevel_codes
@@ -135,10 +135,8 @@ dataset_fields:
 - field_name: archive_status_code
   preset: ndm_archive_status
 
-#- field_name: array_terminated
-#  label:
-#    en: Array Terminated Code
-#    fr: Code de terminaison
+#- field_name: array_terminated_code
+#  preset: ndm_array_terminated
 
 - field_name: default_view_id
   label:
@@ -148,14 +146,12 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: dimension_group_codes
-  label:
-    en: Dimension Group
-    fr: Groupe de dimension
-  preset: shortcode_multivalue
-  lookup: dimension_group
-  schema_field_type: string
-  schema_extras: true
+#- field_name: dimension_group_codes
+#  label:
+#    en: Dimension Group
+#    fr: Groupe de dimension
+#  preset: codeset_multiple_select
+#  codeset_type: dimension_group
 
 - field_name: dimension_member_codes
   label:
@@ -198,12 +194,12 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: imdb_source_codes
+- field_name: survey_source_codes
   label:
-    en: Source
-    fr: Source
+    en: Survey Source
+    fr: Source de songage
   preset: shortcode_multivalue
-  lookup: imdb
+  lookup: survey
   schema_field_type: code
   schema_extras: true
 

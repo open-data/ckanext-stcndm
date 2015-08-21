@@ -94,12 +94,12 @@ for result in results['results']:
         'value': result['dimension_member_code']
     })
 
-# imdb_source_list = []
+# survey_source_list = []
 # results = rc.action.package_search(
-#     q='type:imdb',
+#     q='type:survey',
 #     rows=1000)
 # for result in results['results']:
-#     imdb_source_list.append({
+#     survey_source_list.append({
 #         'label': result['title'],
 #         'value': result['product_id_new']
 #     })
@@ -116,10 +116,10 @@ for preset in presetMap['presets']:
         collection_method_list = preset['values']['choices']
         if not collection_method_list:
             raise ValueError('could not find collection method preset')
-    if preset['preset_name'] == 'ndm_imdb_status':
-        imdb_status_list = preset['values']['choices']
-        if not imdb_status_list:
-            raise ValueError('could not find imdb status preset')
+    if preset['preset_name'] == 'ndm_survey_status':
+        survey_status_list = preset['values']['choices']
+        if not survey_status_list:
+            raise ValueError('could not find survey status preset')
     if preset['preset_name'] == 'ndm_survey_participation':
         survey_participation_list = preset['values']['choices']
         if not survey_participation_list:
@@ -259,7 +259,7 @@ for i in range(0, 10):
         if 'hierarchyid_bi_strm' in line:
             result = listify(line['hierarchyid_bi_strm'])
             if result:
-                line_out['parent_product'] = result
+                line_out['parent_product'] = result[0]
 
         temp = {}
         if 'histnotes_en_txts' in line and line['histnotes_en_txts']:
@@ -321,7 +321,7 @@ for i in range(0, 10):
         if 'sourcecode_bi_txtm' in line and line['sourcecode_bi_txtm']:
             result = listify(line['sourcecode_bi_txtm'])
             if result:
-                line_out['imdb_source_codes'] = result
+                line_out['survey_source_codes'] = result
 
         if 'statusf_en_strs' in line:
             result = code_lookup('statusf_en_strs', line, status_list)
@@ -335,6 +335,21 @@ for i in range(0, 10):
             temp[u'fr'] = line['url_fr_strs']
         if temp:
             line_out['url'] = temp
+
+        if 'resources' in line:
+            line_out['resources'] = line['resources']
+
+        if 'num_resources' in line:
+            line_out['num_resources'] = line['num_resources']
+
+        if 'license_title' in line:
+            line_out['license_title'] = line['license_title']
+
+        if 'license_url' in line:
+            line_out['license_url'] = line['license_url']
+
+        if 'license_id' in line:
+            line_out['license_id'] = line['license_id']
 
         print json.dumps(line_out)
         count += 1

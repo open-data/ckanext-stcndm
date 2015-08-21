@@ -106,19 +106,19 @@ while i < n:
             code_lookup_dict['dimension_member'][result['title']['en'].lower().strip()] = \
                 result['dimension_member_code']
 
-code_lookup_dict['imdb'] = {}
+code_lookup_dict['survey'] = {}
 i = 0
 n = 1
 while i < n:
     query_results = rc.action.package_search(
-        q='type:imdb',
+        q='type:survey',
         rows=1000,
         start=i*1000)
     i += 1
     n = query_results['count'] / 1000.0
     for result in query_results['results']:
         if in_and_def('title', result) and in_and_def('product_id_new', result):
-            code_lookup_dict['imdb'][result['title']['en'].lower().strip()] = result['product_id_new']
+            code_lookup_dict['survey'][result['title']['en'].lower().strip()] = result['product_id_new']
 
 f = open('../schemas/presets.yaml')
 presetMap = yaml.safe_load(f)
@@ -132,10 +132,10 @@ for preset in presetMap['presets']:
         code_lookup_dict['collection_method'] = {}
         for choice in preset['values']['choices']:
             code_lookup_dict['collection_method'][choice['label']['en'].lower().strip()] = choice['value']
-    if preset['preset_name'] == 'ndm_imdb_status':
-        code_lookup_dict['imdb_status'] = {}
+    if preset['preset_name'] == 'ndm_survey_status':
+        code_lookup_dict['survey_status'] = {}
         for choice in preset['values']['choices']:
-            code_lookup_dict['imdb_status'][choice['label']['en'].lower().strip()] = choice['value']
+            code_lookup_dict['survey_status'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_survey_participation':
         code_lookup_dict['survey_participation'] = {}
         for choice in preset['values']['choices']:
@@ -282,12 +282,12 @@ while i < n:
         if in_and_def('hierarchyid_bi_strm', line):
             result = listify(line['hierarchyid_bi_strm'])
             if result:
-                line_out['parent_product'] = result
+                line_out['parent_product'] = result[0]
 
         if in_and_def('hierarchyid_bi_strs', line):
             result = listify(line['hierarchyid_bi_strs'])
             if result:
-                line_out['parent_product'] = result
+                line_out['parent_product'] = result[0]
 
         temp = {}
         if in_and_def('histnotes_en_txts', line):
@@ -337,7 +337,7 @@ while i < n:
         if in_and_def('sourcecode_bi_txtm', line):
             result = listify(line['sourcecode_bi_txtm'])
             if result:
-                line_out['imdb_source_codes'] = result
+                line_out['survey_source_codes'] = result
 
         if in_and_def('statusf_en_strs', line):
             result = code_lookup('status', line['statusf_en_strs'], line)
@@ -351,5 +351,20 @@ while i < n:
             temp[u'fr'] = line['url_fr_strs']
         if temp:
             line_out['url'] = temp
+
+        if 'resources' in line:
+            line_out['resources'] = line['resources']
+
+        if 'num_resources' in line:
+            line_out['num_resources'] = line['num_resources']
+
+        if 'license_title' in line:
+            line_out['license_title'] = line['license_title']
+
+        if 'license_url' in line:
+            line_out['license_url'] = line['license_url']
+
+        if 'license_id' in line:
+            line_out['license_id'] = line['license_id']
 
         print json.dumps(line_out)

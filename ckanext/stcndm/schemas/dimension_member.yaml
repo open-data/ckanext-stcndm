@@ -38,14 +38,6 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
-- field_name: product_id_old # 10uid_bi_strs
-  label:
-    en: Product ID Old
-    fr: Ancien ID du produit
-  schema_field_type: string
-  schema_multivalued: true
-  schema_extras: true
-
 - field_name: title # tmdimentext_en_tmtxtm tmdimentext_fr_tmtxtm
   label:
     en: Title
@@ -55,7 +47,7 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
-- field_name: dimension_member_code # tmdimencode_bi_tmtxtm
+- field_name: dimension_group_code # tmdimencode_bi_tmtxtm
   label:
     en: Dimension Member Code
     fr: Code du membre de dimension
@@ -68,15 +60,6 @@ dataset_fields:
   label:
     en: Dimension Member Alias
     fr: Alias du membre de dimension
-  preset: fluent_text
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: true
-
-- field_name: old_title # title
-  label:
-    en: Old Title
-    fr: Ancien titre
   preset: fluent_text
   schema_field_type: fluent
   schema_multivalued: false

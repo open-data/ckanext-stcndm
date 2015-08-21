@@ -83,10 +83,8 @@ dataset_fields:
     en: Feature Weight
     fr: Poids
 
-#- field_name: array_terminated
-#  label:
-#    en: Array Terminated Code
-#    fr: Code de terminaison
+#- field_name: array_terminated_code
+#  preset: ndm_array_terminated
 
 #- field_name: default_view_id
 #  label:
@@ -130,12 +128,12 @@ dataset_fields:
     fr: Notes historiques
   preset: fluent_markdown
 
-- field_name: imdb_source_code
+- field_name: survey_source_codes
   label:
     en: Source
     fr: Source
   preset: shortcode_multivalue
-  lookup: imdb
+  lookup: survey
 
 - field_name: internal_authors
   label:

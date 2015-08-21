@@ -1,10 +1,10 @@
 scheming_version: 1
-about: 'Statistics Canada Dissemination: IMDB Sources'
+about: 'Statistics Canada Dissemination: Survey Sources'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: IMDB Source
-  fr: Source IMDB
-dataset_type: imdb
+  en: Survey Source
+  fr: Source de sondage
+dataset_type: survey
 dataset_owner_org: statcan
 form_languages:
 - en
@@ -29,7 +29,7 @@ dataset_fields:
 
 - field_name: name
   # follow our custom name generation validator with default package name validators
-  validators: imdb_create_name
+  validators: survey_create_name
     not_empty unicode name_validator package_name_validator
   label:
     en: Internal Unique ID
@@ -123,18 +123,18 @@ dataset_fields:
   preset: codeset_multiple_select
   codeset_type: frequency
 
-- field_name: imdb_instance_item
+- field_name: survey_instance_item
   label:
-    en: IMDB Instance Item
-    fr: Élement d'instance IMDB
+    en: Survey Instance Item
+    fr: Élement d'instance de sondage
   schema_field_type: int
   schema_multivalued: false
   schema_extras: true
 
-- field_name: imdb_survey_item
+- field_name: survey_item
   label:
-    en: IMDB Survey Item
-    fr: Élement de sondage IMDB
+    en: Survey Item
+    fr: Élement de sondage
   schema_field_type: int
   schema_multivalued: false
   schema_extras: true
@@ -156,15 +156,6 @@ dataset_fields:
   tag_validators: ndm_tag_name_validator tag_length_validator
   schema_field_type: fluent
   schema_multivalued: true
-  schema_extras: true
-
-- field_name: navigation_subject_codes
-  label:
-    en: Navigation Subject Code
-    fr: Code de sujet pour navigation
-  preset: shortcode_multivalue
-  schema_field_type: string
-  schema_multivalue: true
   schema_extras: true
 
 - field_name: question_url
@@ -206,8 +197,8 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: imdb_status_code
-  preset: ndm_imdb_status
+- field_name: survey_status_code
+  preset: ndm_survey_status
 
 - field_name: thesaurus
   label:
