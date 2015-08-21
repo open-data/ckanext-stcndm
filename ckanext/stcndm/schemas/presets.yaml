@@ -294,6 +294,28 @@ presets:
           fr: Courant
         value: '2'
 
+- preset_name: ndm_array_terminated
+  values:
+    label:
+      en: Array Terminated (CANSIM)
+      fr: Tableau terminé (CANSIM)
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: 'No'
+          fr: 'Non'
+        value: '1'
+      - label:
+          en: 'Yes'
+          fr: 'Oui'
+        value: '0'
+
 - preset_name: ndm_display
   values:
     label:

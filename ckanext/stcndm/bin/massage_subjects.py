@@ -1,8 +1,8 @@
 __author__ = 'marc'
 
-import sys
 import json
 import ckanapi
+
 
 def listify(value):
     if isinstance(value, unicode):
@@ -49,12 +49,20 @@ while i < n:
         if temp:
             line_out['title'] = temp
 
+        temp = {}
+        if 'tmtaxdescription_en_tmtxts' in line and line['tmtaxdescription_en_tmtxts']:
+            temp[u'en'] = line['tmtaxdescription_en_tmtxts']
+        if 'tmtaxdescription_fr_tmtxts' in line and line['tmtaxdescription_fr_tmtxts']:
+            temp[u'fr'] = line['tmtaxdescription_fr_tmtxts']
+        if temp:
+            line_out['notes'] = temp
+
         if 'tmtaxsubjcode_bi_tmtxtm' in line:
             line_out['subject_code'] = line['tmtaxsubjcode_bi_tmtxtm']
             line_out['name'] = 'subject-{0}'.format(line['tmtaxsubjcode_bi_tmtxtm'])
 
         if 'tmtaxadminnotes_bi_tmtxts' in line and line['tmtaxadminnotes_bi_tmtxts']:
-            line_out['notes'] = {
+            line_out['admin_notes'] = {
                 u'en': line['tmtaxadminnotes_bi_tmtxts'],
                 u'fr': line['tmtaxadminnotes_bi_tmtxts']
             }
@@ -69,5 +77,14 @@ while i < n:
             temp[u'fr'] = listify(line['tmtaxatozalias_fr_tmtxtm'])
         if temp:
             line_out['a_to_z_alias'] = temp
+
+        if 'license_title' in line:
+            line_out['license_title'] = line['license_title']
+
+        if 'license_url' in line:
+            line_out['license_url'] = line['license_url']
+
+        if 'license_id' in line:
+            line_out['license_id'] = line['license_id']
 
         print json.dumps(line_out)

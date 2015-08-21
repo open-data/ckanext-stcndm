@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-python massage_survey.py | \
+python massage_surveys.py | \
 #  jq '.' | \
   ckanapi load datasets $@

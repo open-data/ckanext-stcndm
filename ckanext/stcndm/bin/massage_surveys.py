@@ -27,7 +27,8 @@ def code_lookup(old_field_name, data_set, choice_list):
                 if choice['value']:
                     code = choice['value']
         if not code:
-            sys.stderr.write('survey-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
+            sys.stderr.write('survey-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name,
+                                                                        _temp, field_value))
         else:
             codes.append(code)
     return codes
@@ -50,6 +51,14 @@ for codeset in raw_codesets:
 f = open('../schemas/presets.yaml')
 presetMap = yaml.safe_load(f)
 f.close()
+
+archive_status_list = []
+collection_method_list = []
+survey_status_list = []
+survey_participation_list = []
+survey_owner_list = []
+format_list = []
+
 for preset in presetMap['presets']:
     if preset['preset_name'] == 'ndm_archive_status':
         archive_status_list = preset['values']['choices']
@@ -125,8 +134,8 @@ while i < n:
         if 'featureweight_bi_ints' in line:
             line_out['feature_weight'] = line['featureweight_bi_ints']
 
-        if 'extras_frccode_bi_strs' in line and line['extras_frccode_bi_strs']:
-            line_out['frc'] = line['extras_frccode_bi_strs']
+        if 'frccode_bi_strs' in line and line['frccode_bi_strs']:
+            line_out['frc'] = line['frccode_bi_strs']
 
         if 'freqcode_bi_txtm' in line:
             # line_out['frequency_codes'] = [u'00{0}'.format(i)[-2:] for i in listify(line['freqcode_bi_txtm'])]
@@ -137,8 +146,8 @@ while i < n:
         if 'imdbinstanceitem_bi_ints' in line:
             line_out['survey_instance_item'] = line['imdbinstanceitem_bi_ints']
 
-        if 'extras_imdbsurveyitem_bi_ints' in line:
-            line_out['survey_item'] = line['extras_imdbsurveyitem_bi_ints']
+        if 'imdbsurveyitem_bi_ints' in line:
+            line_out['survey_item'] = line['imdbsurveyitem_bi_ints']
 
         temp = {}
         if 'isplink_en_strs' in line and line['isplink_en_strs']:
@@ -168,8 +177,8 @@ while i < n:
         if temp:
             line_out['keywords'] = temp
 
-        if 'levelsubjcode_bi_txtm' in line:
-            result = listify(line['levelsubjcode_bi_txtm'])
+        if 'extras_levelsubjcode_bi_txtm' in line:
+            result = listify(line['extras_levelsubjcode_bi_txtm'])
             if result:
                 line_out['level_subject_codes'] = result
 
@@ -206,12 +215,12 @@ while i < n:
             line_out['reference_periods'] = temp
 
         if 'releasedate_bi_strs' in line:
-            _temp = line['releasedate_bi_strs']
+            temp = line['releasedate_bi_strs']
             try:
-                datetime.datetime.strptime(_temp, '%Y-%m-%dT%H:%M')
-                line_out['release_date'] = _temp
+                datetime.datetime.strptime(temp, '%Y-%m-%dT%H:%M')
+                line_out['release_date'] = temp
             except ValueError:
-                sys.stderr.write('survey-{0}: Invalid release date .{1}.\n'.format(line['productidnew_bi_strs'], _temp))
+                sys.stderr.write('survey-{0}: Invalid release date .{1}.\n'.format(line['productidnew_bi_strs'], temp))
 
         temp = {}
         if 'stcthesaurus_en_txtm' in line:
@@ -269,19 +278,19 @@ while i < n:
         if temp:
             line_out['url'] = temp
 
-        if 'navsubjcodesemi' in line:
-            result = listify(line['navsubjcodesemi'])
-            if result:
-                line_out['navigation_subject_codes'] = result
+        if 'resources' in line:
+            line_out['resources'] = line['resources']
 
-        if 'res_format' in line:
-            result = code_lookup('res_format', line, format_list)
-            if isinstance(result, list):
-                line_out['format_codes'] = result
-            else:
-                raise ValueError('result .{0}. is not a list')
+        if 'num_resources' in line:
+            line_out['num_resources'] = line['num_resources']
 
-        if 'res_url' in line and line['res_url'][0]:
-            line_out['resource_url'] = line['res_url'][0]
+        if 'license_title' in line:
+            line_out['license_title'] = line['license_title']
+
+        if 'license_url' in line:
+            line_out['license_url'] = line['license_url']
+
+        if 'license_id' in line:
+            line_out['license_id'] = line['license_id']
 
         print json.dumps(line_out)

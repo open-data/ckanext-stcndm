@@ -53,4 +53,13 @@ while i < n:
                 u'en': line['title'],
                 u'fr': line['title']}
 
+        if 'license_title' in line:
+            line_out['license_title'] = line['license_title']
+
+        if 'license_url' in line:
+            line_out['license_url'] = line['license_url']
+
+        if 'license_id' in line:
+            line_out['license_id'] = line['license_id']
+
         print json.dumps(line_out)

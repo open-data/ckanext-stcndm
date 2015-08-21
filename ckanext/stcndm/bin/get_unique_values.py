@@ -1,7 +1,7 @@
 __author__ = 'marc'
 
 import json
-import bin.ckanapi
+import ckanapi
 from optparse import OptionParser
 
 
@@ -32,7 +32,7 @@ else:
 
 result = []
 
-rc = bin.ckanapi.RemoteCKAN(options.ckan_url)
+rc = ckanapi.RemoteCKAN(options.ckan_url)
 i = 0
 n = 1
 while i < n:
@@ -50,7 +50,7 @@ while i < n:
             for field in ckan_fields:
                 if field in line:
                     temp += line[field].lower().strip() + u' | '
-                else:
+                elif len(ckan_fields) > 1:
                     temp += u'N/A | '
             if temp:
                 result = list(set(result+[temp.strip(' | ')]))

@@ -158,15 +158,6 @@ dataset_fields:
   schema_multivalued: true
   schema_extras: true
 
-- field_name: navigation_subject_codes
-  label:
-    en: Navigation Subject Code
-    fr: Code de sujet pour navigation
-  preset: shortcode_multivalue
-  schema_field_type: string
-  schema_multivalue: true
-  schema_extras: true
-
 - field_name: question_url
   label:
     en: Question URL

@@ -88,10 +88,8 @@ dataset_fields:
     en: Digital Object Identifier
     fr: Identificateur d'objet numérique
 
-#- field_name: array_terminated
-#  label:
-#    en: Array Terminated Code
-#    fr: Code de terminaison
+#- field_name: array_terminated_code
+#  preset: ndm_array_terminated
 
 #- field_name: default_view_id
 #  label:

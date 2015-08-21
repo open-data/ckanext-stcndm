@@ -75,6 +75,15 @@ while i < n:
         #         u'en': line['title'],
         #         u'fr': line['title']}
 
+        if 'license_title' in line:
+            line_out['license_title'] = line['license_title']
+
+        if 'license_url' in line:
+            line_out['license_url'] = line['license_url']
+
+        if 'license_id' in line:
+            line_out['license_id'] = line['license_id']
+
         if len(code_count[line['tmdimencode_bi_tmtxtm']]) == 1:
             print json.dumps(line_out_codeset)
         print json.dumps(line_out)

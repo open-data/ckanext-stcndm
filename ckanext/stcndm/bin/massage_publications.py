@@ -336,4 +336,19 @@ for i in range(0, 10):
         if temp:
             line_out['url'] = temp
 
+        if 'resources' in line:
+            line_out['resources'] = line['resources']
+
+        if 'num_resources' in line:
+            line_out['num_resources'] = line['num_resources']
+
+        if 'license_title' in line:
+            line_out['license_title'] = line['license_title']
+
+        if 'license_url' in line:
+            line_out['license_url'] = line['license_url']
+
+        if 'license_id' in line:
+            line_out['license_id'] = line['license_id']
+
         print json.dumps(line_out)
