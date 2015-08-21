@@ -1,5 +1,3 @@
-__author__ = 'marc'
-
 import sys
 import json
 import yaml
@@ -31,7 +29,7 @@ def code_lookup(old_field_name, data_set, choice_list):
             codes.append(code)
     return codes
 
-rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000')
+rc = ckanapi.RemoteCKAN('http://127.0.0.1')
 
 content_type_list = []
 geolevel_list = []
@@ -148,11 +146,13 @@ for preset in presetMap['presets']:
             raise ValueError('could not find display preset')
 
 for i in range(0, 10):
-    rc = ckanapi.RemoteCKAN('http://107.170.204.240:5000/')
+    rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/')
     query_results = rc.action.package_search(
         q='organization:maprimary AND extras_pkuniqueidcode_bi_strs:pub*',
         rows=1000,
         start=i*1000)
+
+    count = 0
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']
@@ -352,3 +352,5 @@ for i in range(0, 10):
             line_out['license_id'] = line['license_id']
 
         print json.dumps(line_out)
+        count += 1
+    print count
