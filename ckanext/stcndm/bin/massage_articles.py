@@ -27,7 +27,7 @@ def code_lookup(old_field_name, data_set, choice_list):
                     code = choice['value']
         if not code:
             pass
-            sys.stderr.write('issue-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
+            sys.stderr.write('article-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
         else:
             codes.append(code)
     return codes
@@ -151,7 +151,7 @@ for preset in presetMap['presets']:
 for i in range(0, 40):
     rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
     query_results = rc.action.package_search(
-        q='extras_pkuniqueidcode_bi_strs:issue* AND organization:maprimary',
+        q='extras_pkuniqueidcode_bi_strs:article* AND organization:maprimary',
         rows=1000,
         start=i*1000)
     count = 0
@@ -163,7 +163,7 @@ for i in range(0, 40):
 
             line_out = {u'owner_org': u'statcan',
                         u'private': False,
-                        u'type': u'issue',
+                        u'type': u'article',
                         u'product_type_code': u'20'}
 
             temp = {}
@@ -173,13 +173,13 @@ for i in range(0, 40):
             if temp:
                 line_out['admin_notes'] = temp
 
-            # temp = {}
-            # if 'title_en_txts' in line and line['title_en_txts']:
-            #     temp[u'en'] = line['title_en_txts']
-            # if 'title_fr_txts' in line and line['title_fr_txts']:
-            #     temp[u'fr'] = line['title_fr_txts']
-            # if temp:
-            #     line_out['title'] = temp
+            temp = {}
+            if 'title_en_txts' in line and line['title_en_txts']:
+                temp[u'en'] = line['title_en_txts']
+            if 'title_fr_txts' in line and line['title_fr_txts']:
+                temp[u'fr'] = line['title_fr_txts']
+            if temp:
+                line_out['title'] = temp
             #
             # temp = {}
             # if 'description_en_txts' in line and line['description_en_txts']:
@@ -289,7 +289,7 @@ for i in range(0, 40):
                     if result:
                         line_out['internal_contacts'] = result
             except KeyError:
-                sys.stderr.write('issue-{0}: weird interncontactname_bi_strs\n'.format(line['productidnew_bi_strs']))
+                sys.stderr.write('article-{0}: weird interncontactname_bi_strs\n'.format(line['productidnew_bi_strs']))
 
 
             temp = {}
@@ -367,7 +367,7 @@ for i in range(0, 40):
             if temp:
                 line_out['url'] = temp
 
-            line_out['name'] = 'issue-{0}'.format(line['productidnew_bi_strs'].lower())
+            line_out['name'] = 'article-{0}'.format(line['productidnew_bi_strs'].lower())
 
             print json.dumps(line_out)
         except KeyError:

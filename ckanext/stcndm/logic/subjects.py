@@ -54,7 +54,7 @@ def get_top_level_subject_list(context, data_dict):
     """
     lc = ckanapi.LocalCKAN(context=context)
     response = lc.action.package_search(
-        q='dataset_type:codeset AND extras_codeset_type:content_type',
+        q='dataset_type:subject AND extras_subject_code:??',
         rows=1000,
         # These are the only fields we need, but they aren't currently
         # actually passed into Solr. If we skip package_search we can
@@ -66,5 +66,5 @@ def get_top_level_subject_list(context, data_dict):
     )
     return [{
         'title': r['title'],
-        'subject_code': r['codeset_value']
+        'subject_code': r['subject_code']
     } for r in response['results']]

@@ -44,12 +44,14 @@ dataset_fields:
 #    en: Geo Specific
 #    fr: Géo spécifique
 #  preset: shortcode_multivalue
+#  lookup: geodescriptor
 
 #- field_name: subject_codes
 #  label:
 #    en: Subject
 #    fr: Sujet
 #  preset: shortcode_multivalue
+#  lookup: subject
 
 - field_name: name
   # follow our custom name generation with default package name validators
@@ -65,8 +67,8 @@ dataset_fields:
 
 - field_name: related_product_codes
   label:
-    en: Related
-    fr: Relié
+    en: Related Products
+    fr: Produits reliés
   preset: shortcode_multivalue
 
 #- field_name: thesaurus
@@ -97,12 +99,14 @@ dataset_fields:
 #    en: Dimension Group
 #    fr: Groupe de dimension
 #  preset: shortcode_multivalue
+#  lookup: dimension_group
 
-#- field_name: dimmember_code
+#- field_name: dimension_member_code
 #  label:
 #    en: Dimension Member
 #    fr: Membre de dimension
 #  preset: shortcode_multivalue
+#  lookup: dimension_member
 
 - field_name: external_authors
   label:
@@ -233,10 +237,10 @@ dataset_fields:
 
 resource_fields:
 
-#- field_name: format_code
-#  preset: ndm_formats
-#  form_snippet: select.html
-#  required: true
+- field_name: format_code
+  preset: ndm_formats
+  form_snippet: select.html
+  required: true
 
 - field_name: language
   preset: ndm_language
