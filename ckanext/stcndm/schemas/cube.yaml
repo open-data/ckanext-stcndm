@@ -206,7 +206,7 @@ dataset_fields:
   preset: shortcode_multivalue
   lookup: survey
   schema_field_type: code
-  schema_multivalued: false
+  schema_multivalued: true
   schema_extras: true
 
 #- field_name: internal_author
