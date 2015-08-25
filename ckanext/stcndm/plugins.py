@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import json
-import exceptions
 import ckan.plugins as p
 import ckanext.stcndm.logic.common as common
 import ckanext.stcndm.logic.cubes as cubes
@@ -9,11 +8,16 @@ import ckanext.stcndm.logic.daily as daily
 import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
 
+from ckan.plugins.toolkit import _
 from ckanext.stcndm import validators
 from ckanext.stcndm import helpers
-from ckanext.scheming.helpers import scheming_language_text, scheming_get_dataset_schema
+from ckanext.scheming.helpers import (
+    scheming_language_text,
+    scheming_get_dataset_schema
+)
 
-from helpers import dict_list2dict, lookup_label
+from helpers import lookup_label
+
 
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
@@ -23,6 +27,7 @@ class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.ITemplateHelpers)
     p.implements(p.IPackageController)
     p.implements(p.IRoutes)
+    p.implements(p.IFacets)
 
     def update_config(self, config):
         """
@@ -36,10 +41,8 @@ class STCNDMPlugin(p.SingletonPlugin):
         default = {u'en': u'label for ' + value, u'fr': u'label pour ' + value}
         try:
             label = lookup_label(lookup_key, value, lookup)
-        except Exception as e:
+        except Exception:
             label = default
-        # if not label.get('found'):
-        #     label = default
 
         if 'fr' not in label:
             label['fr'] = u'description pour ' + value
@@ -54,7 +57,9 @@ class STCNDMPlugin(p.SingletonPlugin):
         customize data sent to solr
         """
 
-        dataset_schema = scheming_get_dataset_schema(data_dict.get('type', 'unknown'))
+        dataset_schema = scheming_get_dataset_schema(
+            data_dict.get('type', 'unknown')
+        )
 
         # iterate through dataset fields defined in schema
         field_schema = dict()
@@ -68,7 +73,8 @@ class STCNDMPlugin(p.SingletonPlugin):
         for item in validated_data_dict.keys():
             value = validated_data_dict[item]
             fs = field_schema.get(item, None)
-            if not fs:                          # ignore all fields not currently in the schema
+            # ignore all fields not currently in the schema
+            if not fs:
                 continue
 
             field_type = fs.get('schema_field_type', 'string')
@@ -80,10 +86,24 @@ class STCNDMPlugin(p.SingletonPlugin):
 
             if field_type == 'fluent':
                 for key in value.keys():
-                    index_data_dict[str(extras_ + item + '_' + key)] = value[key]
+                    label = '{extras}{item}_{key}'.format(
+                        extras=extras_,
+                        item=item,
+                        key=key
+                    )
+                    index_data_dict[label] = value[key]
 
-            # for code type, the en/fr labels need to be looked up and sent to Solr
+            # for code type, the en/fr labels need to be looked up
+            # and sent to Solr
             elif field_type == 'code':
+                label_en = '{extras}{item}_desc_en'.format(
+                    extras=extras,
+                    item=item
+                )
+                label_fr = '{extras}{item}_desc_fr'.format(
+                    extras=extras,
+                    item=item
+                )
                 if multivalued:
                     desc_en = []
                     desc_fr = []
@@ -93,12 +113,13 @@ class STCNDMPlugin(p.SingletonPlugin):
                         desc_fr.append(desc['fr'])
 
                     index_data_dict[str(extras_ + item)] = ';'.join(value)
-                    index_data_dict[str(extras_ + item + '_desc_en')] = ';'.join(desc_en)
-                    index_data_dict[str(extras_ + item + '_desc_fr')] = ';'.join(desc_fr)
+
+                    index_data_dict[label_en] = ';'.join(desc_en)
+                    index_data_dict[label_fr] = ';'.join(desc_fr)
                 else:
                     desc = self._lookup_label(lookup, value, lookup_type)
-                    index_data_dict[str(extras_ + item + '_desc_en')] = desc['en']
-                    index_data_dict[str(extras_ + item + '_desc_fr')] = desc['fr']
+                    index_data_dict[label_en] = desc['en']
+                    index_data_dict[label_fr] = desc['fr']
             else:  # all other field types
                 if multivalued:
                     index_data_dict[str(extras_ + item)] = ';'.join(value)
@@ -213,3 +234,18 @@ class STCNDMPlugin(p.SingletonPlugin):
     def after_map(self, map):
         # Required since we implement IRoutes.
         return map
+
+    def dataset_facets(self, facets_dict, package_type):
+        return facets_dict
+
+    def organization_facets(self, facets_dict, organization_type,
+                            package_type):
+        # We always want the dataset type selector to appear.
+        # Currently, groups, organizations, licence type, etc... do not
+        # apply to ndm, so lets clear the default fields as well.
+        facets_dict.clear()
+        facets_dict['dataset_type'] = _('Dataset Type')
+        return facets_dict
+
+    def group_facets(self, facets_dict, group_type, package_type):
+        return facets_dict
