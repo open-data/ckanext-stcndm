@@ -122,6 +122,7 @@ dataset_fields:
     fr: Fréquence
   preset: codeset_multiple_select
   codeset_type: frequency
+  schema_extras: true
 
 - field_name: history_notes
   label:

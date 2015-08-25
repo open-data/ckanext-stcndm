@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import json
+import exceptions
 import ckan.plugins as p
 import ckanext.stcndm.logic.common as common
 import ckanext.stcndm.logic.cubes as cubes
@@ -9,8 +11,9 @@ import ckanext.stcndm.logic.views as views
 
 from ckanext.stcndm import validators
 from ckanext.stcndm import helpers
-from ckanext.scheming.helpers import scheming_language_text
+from ckanext.scheming.helpers import scheming_language_text, scheming_get_dataset_schema
 
+from helpers import dict_list2dict, lookup_label
 
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
@@ -28,11 +31,84 @@ class STCNDMPlugin(p.SingletonPlugin):
         p.toolkit.add_template_directory(config, "templates")
         p.toolkit.add_public_directory(config, 'public')
 
+    def _lookup_label(self, lookup_key, value, lookup):
+
+        default = {u'en': u'label for ' + value, u'fr': u'label pour ' + value}
+        try:
+            label = lookup_label(lookup_key, value, lookup)
+        except Exception as e:
+            label = default
+        # if not label.get('found'):
+        #     label = default
+
+        if 'fr' not in label:
+            label['fr'] = u'description pour ' + value
+
+        if 'en' not in label:
+            label['en'] = u'label for ' + value
+
+        return label
+
     def before_index(self, data_dict):
         """
         customize data sent to solr
         """
-        return data_dict
+
+        dataset_schema = scheming_get_dataset_schema(data_dict.get('type', 'unknown'))
+
+        # iterate through dataset fields defined in schema
+        field_schema = dict()
+        for dataset_field in dataset_schema['dataset_fields']:
+            d = dataset_field
+            field_schema[d['field_name']] = d
+
+        # iterate through validated data_dict fields and modify as needed
+        index_data_dict = data_dict
+        validated_data_dict = json.loads(data_dict['validated_data_dict'])
+        for item in validated_data_dict.keys():
+            value = validated_data_dict[item]
+            fs = field_schema.get(item, None)
+            if not fs:                          # ignore all fields not currently in the schema
+                continue
+
+            field_type = fs.get('schema_field_type', 'string')
+            multivalued = fs.get('schema_multivalued', False)
+            extras = fs.get('schema_extras', False)
+            extras_ = 'extras_' if extras else ''
+            lookup = fs.get('lookup', '')
+            lookup_type = fs.get('schema_codeset_type', '')
+
+            if field_type == 'fluent':
+                for key in value.keys():
+                    index_data_dict[str(extras_ + item + '_' + key)] = value[key]
+
+            # for code type, the en/fr labels need to be looked up and sent to Solr
+            elif field_type == 'code':
+                if multivalued:
+                    desc_en = []
+                    desc_fr = []
+                    for v in value:
+                        desc = self._lookup_label(lookup, v, lookup_type)
+                        desc_en.append(desc['en'])
+                        desc_fr.append(desc['fr'])
+
+                    index_data_dict[str(extras_ + item)] = ';'.join(value)
+                    index_data_dict[str(extras_ + item + '_desc_en')] = ';'.join(desc_en)
+                    index_data_dict[str(extras_ + item + '_desc_fr')] = ';'.join(desc_fr)
+                else:
+                    desc = self._lookup_label(lookup, value, lookup_type)
+                    index_data_dict[str(extras_ + item + '_desc_en')] = desc['en']
+                    index_data_dict[str(extras_ + item + '_desc_fr')] = desc['fr']
+            else:  # all other field types
+                if multivalued:
+                    index_data_dict[str(extras_ + item)] = ';'.join(value)
+                else:
+                    index_data_dict[str(extras_ + item)] = value
+
+        import pprint
+        pprint.pprint(index_data_dict)
+
+        return index_data_dict
 
     def get_actions(self):
         # Some Java web clients require the web service to use Pascal Case
@@ -76,7 +152,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "codeset_create_name": validators.codeset_create_name,
             "subject_create_name": validators.subject_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
-            "survey_create_name": validators.survey_create_name,
+            "imdb_create_name": validators.imdb_create_name,
             "dimension_member_create_name": (
                 validators.dimension_member_create_name
             ),

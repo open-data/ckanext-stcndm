@@ -31,6 +31,9 @@ dataset_fields:
     fr: Type de contenu
   preset: codeset_multiple_select
   codeset_type: content_type
+  schema_field_type: code
+  schema_multivalued: true
+  schema_extras: true
 
 #- field_name: geolevel_codes
 #  label:
@@ -121,6 +124,7 @@ dataset_fields:
     fr: Fréquence
   preset: codeset_multiple_select
   codeset_type: frequency
+  schema_extras: true
 
 - field_name: history_notes
   label:
@@ -184,11 +188,18 @@ dataset_fields:
     en: Product ID New
     fr: ID produit nouveau
   required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
 
 - field_name: product_id_old
   label:
     en: Product ID Old
     fr: ID produit ancien
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: publication_year
   label:

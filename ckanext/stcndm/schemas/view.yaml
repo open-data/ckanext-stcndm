@@ -40,8 +40,11 @@ dataset_fields:
     fr: Type de contenu
   preset: codeset_multiple_select
   codeset_type: content_type
+  schema_field_type: code
+  schema_multivalued: true
+  schema_extras: true
 
-- field_name: tracking_codes
+- field_name: tracking_code
   preset: ndm_tracking
 
 - field_name: geolevel_codes
@@ -57,6 +60,9 @@ dataset_fields:
     fr: Géo spécifique
   preset: shortcode_multivalue
   lookup: geodescriptor
+  schema_field_type: code
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: subject_codes
   label:
@@ -64,6 +70,9 @@ dataset_fields:
     fr: Sujet
   preset: shortcode_multivalue
   lookup: subject
+  schema_field_type: code
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: name
   label:
@@ -114,8 +123,10 @@ dataset_fields:
 #- field_name: archive_status
 #  preset: ndm_archive_status
 
-#- field_name: array_terminated_code
-#  preset: ndm_array_terminated
+#- field_name: array_terminated
+#  label:
+#    en: Array Terminated Code
+#    fr: Code de terminaison
 
 #- field_name: default_view_id
 #  label:
@@ -126,8 +137,8 @@ dataset_fields:
   label:
     en: Dimension Group
     fr: Groupe de dimension
-  preset: codeset_multiple_select
-  codeset_type: dimension_group
+  preset: shortcode_multivalue
+  lookup: dimension_group
 
 - field_name: dimension_member_codes
   label:
@@ -155,6 +166,7 @@ dataset_fields:
     fr: Fréquence
   preset: codeset_multiple_select
   codeset_type: frequency
+  schema_extras: true
 
 - field_name: history_notes
   label:
@@ -162,12 +174,15 @@ dataset_fields:
     fr: Notes historiques
   preset: fluent_markdown
 
-- field_name: survey_source_codes
+- field_name: imdb_source_codes
   label:
-    en: Survey Source
-    fr: Source de sondage
+    en: Source
+    fr: Source
   preset: shortcode_multivalue
-  lookup: survey
+  lookup: imdb
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
 
 #- field_name: internal_author
 #  label:
@@ -214,11 +229,17 @@ dataset_fields:
   label:
     en: Product ID New
     fr: ID produit nouveau
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: product_id_old
   label:
     en: Product ID Old
     fr: ID produit ancien
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 #- field_name: publication_year
 #  label:

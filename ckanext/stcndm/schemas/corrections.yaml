@@ -15,3 +15,6 @@ languages_label:
 dataset_fields:
 - field_name: product_type_code
   preset: ndm_products
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
