@@ -14,4 +14,4 @@ languages_label:
 
 dataset_fields:
 - field_name: product_type_code
-  preset: ndm_products
+  preset: ndm_product
