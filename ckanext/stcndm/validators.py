@@ -2,6 +2,7 @@ import json
 
 from ckan.plugins.toolkit import missing, _
 from ckanext.stcndm import helpers as h
+from ckan.lib.helpers import lang as lang
 import re
 import ckan.lib.navl.dictization_functions as df
 

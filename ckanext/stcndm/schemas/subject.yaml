@@ -58,7 +58,7 @@ dataset_fields:
     en: Admin Notes
     fr: Notes
   preset: fluent_markdown
-  schema_field_type: flauent
+  schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
 

@@ -86,8 +86,8 @@ dataset_fields:
   schema_multivalued: true
   schema_extras: true
 
-#- field_name: format_codes
-#  preset: ndm_formats
+#- field_name: format_code
+#  preset: ndm_format
 
 - field_name: product_type_code
   label:

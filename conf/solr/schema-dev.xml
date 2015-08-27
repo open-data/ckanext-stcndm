@@ -256,7 +256,7 @@
         <field name="extras_levelsubjcode_bi_txtm" type="subjlevels" indexed="true" stored="true" multiValued="true"/>
 
         <field name="navsubjcodesemi" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="description" type="textgen" indexed="true" stored="true" multiValued="true"/>
+        <field name="description" type="textgen" indexed="true" stored="true" multiValued="false"/>
         <field name="validated_data_dict" type="string" indexed="false" stored="true"/>
         <field name="_version_" type="string" indexed="true" stored="true"/>
 
@@ -322,7 +322,7 @@
         <field name="extras_navigation_subject_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
         <field name="extras_navigation_subject_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
         <field name="extras_old_title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_old_titlefr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="extras_old_title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="extras_product_type_code" type="semicolontext" indexed="true" stored="true" multiValued="false"/>
         <field name="extras_product_type_code_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="false"/>
         <field name="extras_product_type_code_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="false"/>
@@ -377,7 +377,7 @@
         <dynamicField name="*_bs" type="boolean" indexed="true" stored="true" multiValued="false"/>
         <dynamicField name="*_dts" type="date" indexed="true" stored="true" multiValued="false"/>
 
-        <!-- Scheming related copyfields -->
+        <!-- Scheming related copy fields -->
         <copyField source="*_codes" dest="text"/>
         <copyField source="*_en" dest="entext"/>
         <copyField source="*_fr" dest="frtext"/>
@@ -385,7 +385,7 @@
         <copyField source="extras_subject_codes" dest="extras_subjnewcode_bi_txtm"/>
         <copyField source="title_en"  dest="extras_title_en_txts"/>
         <copyField source="title_fr"  dest="extras_title_fr_txts"/>
-        <!-- End of Scheming related copyfields -->
+        <!-- End of Scheming related copy fields -->
 
 
         <copyField source="extras_subjnewcode_bi_txtm" dest="navsubjcodesemi"/>

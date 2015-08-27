@@ -81,8 +81,8 @@ dataset_fields:
   form_placeholder: unique-catalog-id
   required: true
 
-- field_name: format_codes
-  preset: ndm_formats
+#- field_name: format_code
+#  preset: ndm_format
 
 - field_name: product_type_code
   label:

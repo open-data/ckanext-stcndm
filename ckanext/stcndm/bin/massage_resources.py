@@ -24,7 +24,8 @@ def code_lookup(old_field_name, data_set, choice_list):
                 if choice['value']:
                     code = choice['value']
         if not code:
-            sys.stderr.write(u'resource-{0}: weird {1} .{2}.{3}.\n'.format(line['product_id_new'], old_field_name, _temp, field_value))
+            sys.stderr.write(u'resource-{0}: weird {1} .{2}.{3}.\n'.format(line['product_id_new'], old_field_name,
+                                                                           _temp, field_value))
         else:
             codes.append(code)
     return codes
@@ -35,6 +36,10 @@ content_type_list = []
 geolevel_list = []
 frequency_list = []
 status_list = []
+display_list = []
+tracking_list = []
+publish_list = []
+
 results = rc.action.package_search(
     q='type:codeset',
     rows=1000)
@@ -94,12 +99,12 @@ for result in results['results']:
         'value': result['dimension_member_code']
     })
 
-# imdb_source_list = []
+# survey_source_list = []
 # results = rc.action.package_search(
-#     q='type:imdb',
+#     q='type:survey',
 #     rows=1000)
 # for result in results['results']:
-#     imdb_source_list.append({
+#     survey_source_list.append({
 #         'label': result['title'],
 #         'value': result['product_id_new']
 #     })
@@ -116,10 +121,10 @@ for preset in presetMap['presets']:
         collection_method_list = preset['values']['choices']
         if not collection_method_list:
             raise ValueError('could not find collection method preset')
-    if preset['preset_name'] == 'ndm_imdb_status':
-        imdb_status_list = preset['values']['choices']
-        if not imdb_status_list:
-            raise ValueError('could not find imdb status preset')
+    if preset['preset_name'] == 'ndm_survey_status':
+        survey_status_list = preset['values']['choices']
+        if not survey_status_list:
+            raise ValueError('could not find survey status preset')
     if preset['preset_name'] == 'ndm_survey_participation':
         survey_participation_list = preset['values']['choices']
         if not survey_participation_list:
@@ -128,7 +133,7 @@ for preset in presetMap['presets']:
         survey_owner_list = preset['values']['choices']
         if not survey_owner_list:
             raise ValueError('could not find survey owner preset')
-    if preset['preset_name'] == 'ndm_formats':
+    if preset['preset_name'] == 'ndm_format':
         format_list = preset['values']['choices']
         if not format_list:
             raise ValueError('could not find format preset')
@@ -222,7 +227,7 @@ for i in range(0, 10):
                 resource_dict['tracking_codes'] = '01'
 
             if 'lastpublishstatus_en_strs' in resource:
-                result =  code_lookup('lastpublishstatus_en_strs', resource, publish_list)
+                result = code_lookup('lastpublishstatus_en_strs', resource, publish_list)
                 if result:
                     resource_dict['last_publish_status_code'] = result[0]
                 else:
@@ -253,34 +258,36 @@ for i in range(0, 10):
 
             try:
                 result = ckanapi_update.action.resource_create(package_id=line['id'],
-                                                           name='{0}-{1}-en'.format(line['name'], resource_dict['format_code'][0]),
-                                                           language='en',
-                                                           admin_notes=resource_dict['admin_notes']['en'],
-                                                           isbn_number=resource_dict['isbn_number'],
-                                                           release_date=resource_dict['release_date'],
-                                                           format_code=resource_dict['format_code'],
-                                                           display_code=resource_dict['display_code'],
-                                                           tracking_codes=resource_dict['tracking_codes'],
-                                                           last_publish_status_code=resource_dict['last_publish_status_code'],
-                                                           status_codes=resource_dict['status_codes'],
-                                                           url=resource_dict['url_en'],
-                                                           type='html'
-                                                           )
+                                                               name='{0}-{1}-en'.format(line['name'],
+                                                               resource_dict[u'format_code'][0]),
+                                                               language='en',
+                                                               admin_notes=resource_dict[u'admin_notes']['en'],
+                                                               isbn_number=resource_dict[u'isbn_number'],
+                                                               release_date=resource_dict[u'release_date'],
+                                                               format_code=resource_dict[u'format_code'],
+                                                               display_code=resource_dict[u'display_code'],
+                                                               tracking_codes=resource_dict[u'tracking_codes'],
+                                                               last_publish_status_code=resource_dict[u'last_publish_status_code'],
+                                                               status_codes=resource_dict[u'status_codes'],
+                                                               url=resource_dict[u'url_en'],
+                                                               type='html'
+                                                               )
 
                 result = ckanapi_update.action.resource_create(package_id=line['id'],
-                                                           name='{0}-{1}-fr'.format(line['name'], resource_dict['format_code'][0]),
-                                                           language='fr',
-                                                           admin_notes=resource_dict['admin_notes']['fr'],
-                                                           isbn_number=resource_dict['isbn_number'],
-                                                           release_date=resource_dict['release_date'],
-                                                           format_code=resource_dict['format_code'],
-                                                           display_code=resource_dict['display_code'],
-                                                           tracking_codes=resource_dict['tracking_codes'],
-                                                           last_publish_status_code=resource_dict['last_publish_status_code'],
-                                                           status_codes=resource_dict['status_codes'],
-                                                           url=resource_dict['url_fr'],
-                                                           type='html'
-                                                           )
+                                                               name='{0}-{1}-fr'.format(line['name'],
+                                                               resource_dict[u'format_code'][0]),
+                                                               language='fr',
+                                                               admin_notes=resource_dict[u'admin_notes']['fr'],
+                                                               isbn_number=resource_dict[u'isbn_number'],
+                                                               release_date=resource_dict[u'release_date'],
+                                                               format_code=resource_dict[u'format_code'],
+                                                               display_code=resource_dict[u'display_code'],
+                                                               tracking_codes=resource_dict[u'tracking_codes'],
+                                                               last_publish_status_code=resource_dict[u'last_publish_status_code'],
+                                                               status_codes=resource_dict[u'status_codes'],
+                                                               url=resource_dict[u'url_fr'],
+                                                               type='html'
+                                                               )
             except:
                 pass
 

@@ -246,8 +246,7 @@ dataset_fields:
 resource_fields:
 
 - field_name: format_code
-  preset: ndm_formats
-  form_snippet: select.html
+  preset: ndm_format
   required: true
 
 - field_name: language

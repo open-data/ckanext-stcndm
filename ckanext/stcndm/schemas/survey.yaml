@@ -187,16 +187,16 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: format_codes
-  preset: ndm_formats
+#- field_name: format_code
+#  preset: ndm_format
 
-- field_name: resource_url
-  label:
-    en: Resource URL
-    fr: URL de la ressource
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+#- field_name: resource_url
+#  label:
+#    en: Resource URL
+#    fr: URL de la ressource
+#  schema_field_type: string
+#  schema_multivalued: false
+#  schema_extras: true
 
 - field_name: survey_status_code
   preset: ndm_survey_status

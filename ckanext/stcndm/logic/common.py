@@ -40,7 +40,7 @@ def get_next_product_id(context, data_dict):
 
     product_type = _get_or_bust(data_dict, 'productType')
 
-    # testing for existance of cubeid
+    # testing for existence of cubeid
     lc.actions.ndm_get_cube(**data_dict)
 
     subject_code = str(product_id)[:2]
@@ -301,7 +301,7 @@ def get_format_description(context, data_dict):
         'formatCode'
     ).zfill(2)
 
-    preset = scheming_helpers.scheming_get_preset(u'ndm_formats')
+    preset = scheming_helpers.scheming_get_preset(u'ndm_format')
     format_codes = preset['choices']
 
     for fc in format_codes:
