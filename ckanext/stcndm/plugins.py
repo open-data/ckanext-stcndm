@@ -126,9 +126,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                 else:
                     index_data_dict[str(extras_ + item)] = value
 
-        import pprint
-        pprint.pprint(index_data_dict)
-
         return index_data_dict
 
     def get_actions(self):
