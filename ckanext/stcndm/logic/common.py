@@ -228,7 +228,7 @@ def get_product_type(context, data_dict):
 
     product_type = _get_or_bust(data_dict, 'productType')
 
-    presets = scheming_helpers.scheming_get_preset('ndm_products')
+    presets = scheming_helpers.scheming_get_preset('ndm_product')
     product_types = presets['choices']
 
     if product_type == '*':

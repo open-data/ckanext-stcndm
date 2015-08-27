@@ -63,7 +63,7 @@ dataset_fields:
   form_snippet: null
 
 - field_name: product_type_code
-  preset: ndm_products
+  preset: ndm_product
 
 - field_name: related_product_codes
   label:
@@ -122,6 +122,7 @@ dataset_fields:
     fr: Fréquence
   preset: codeset_multiple_select
   codeset_type: frequency
+  schema_extras: true
 
 - field_name: history_notes
   label:

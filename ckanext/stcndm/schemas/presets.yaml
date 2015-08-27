@@ -34,7 +34,7 @@ presets:
         fr: Francais
       value: 'fr'
 
-- preset_name: ndm_products
+- preset_name: ndm_product
   values:
     label:
       en: Product Type

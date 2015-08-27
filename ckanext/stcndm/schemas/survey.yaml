@@ -122,6 +122,7 @@ dataset_fields:
     fr: Fréquence
   preset: codeset_multiple_select
   codeset_type: frequency
+  schema_extras: true
 
 - field_name: survey_instance_item
   label:
@@ -216,6 +217,8 @@ dataset_fields:
     fr: Sujet
   preset: shortcode_multivalue
   lookup: subject
+  schema_field_type: code
+  schema_multivalued: true
   schema_extras: true
 
 - field_name: survey_url
