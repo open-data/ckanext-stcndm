@@ -256,7 +256,7 @@ dataset_fields:
   label:
     en: Release Date (YYYY-MM-DD)
     fr: Date de diffusion (YYYY-MM-DD)
-  preset: date
+#  preset: date
 
 - field_name: replaced_product_codes
   label:

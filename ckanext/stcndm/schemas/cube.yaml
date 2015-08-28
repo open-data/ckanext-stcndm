@@ -131,7 +131,7 @@ dataset_fields:
   label:
     en: Archive Date
     fr: Date d'archivage
-  preset: date
+#  preset: date
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -295,7 +295,7 @@ dataset_fields:
   label:
     en: Release Date
     fr: Date de diffusion
-  preset: date
+#  preset: date
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true

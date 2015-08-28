@@ -7,6 +7,7 @@ import ckanext.stcndm.logic.cubes as cubes
 import ckanext.stcndm.logic.daily as daily
 import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
+import arrow
 
 from ckan.plugins.toolkit import _
 from ckanext.stcndm import validators
@@ -120,12 +121,13 @@ class STCNDMPlugin(p.SingletonPlugin):
                     desc = self._lookup_label(lookup, value, lookup_type)
                     index_data_dict[label_en] = desc['en']
                     index_data_dict[label_fr] = desc['fr']
+            elif item.endswith('_date'):
+                index_data_dict[str(extras_ + item)] = arrow.get(value).format('YYYY-MM-DDTHH:mm:ss')+'Z'
             else:  # all other field types
                 if multivalued:
                     index_data_dict[str(extras_ + item)] = ';'.join(value)
                 else:
                     index_data_dict[str(extras_ + item)] = value
-
 
         return index_data_dict
 
@@ -152,6 +154,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetSurveys": daily.get_surveys,
             "GetThemes": daily.get_themes,
             "GetUpcomingReleases": common.get_upcoming_releases,
+            "GetIssuesByPubStatus": common.get_issues_by_pub_status,
             "PurgeDataset": common.purge_dataset,
             "RegisterCube": cubes.register_cube,
             "RegisterDaily": daily.register_daily,
