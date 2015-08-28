@@ -62,17 +62,17 @@ def get_next_cube_id(context, data_dict):
 @logic.side_effect_free
 def get_cube(context, data_dict):
     """
-    Return a dict representation of a cube, given a cube_id, if it exists.
+    Return a dict representation of a cube, given a cubeId, if it exists.
 
-    :param cube_id: ID of the cube to retrieve. (i.e. 1310001)
-    :type cube_id: str
+    :param cubeId: ID of the cube to retrieve. (i.e. 1310001)
+    :type cubeId: str
 
     :return: requested cube
     :rtype: dict
 
     :raises: ValidationError, ObjectObjectNotFound
     """
-    cube_id = _get_or_bust(data_dict, 'cube_id')
+    cube_id = _get_or_bust(data_dict, 'cubeId')
     lc = ckanapi.LocalCKAN(context=context)
     result = lc.action.package_search(
         q=(
