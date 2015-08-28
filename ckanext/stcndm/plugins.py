@@ -36,6 +36,30 @@ class STCNDMPlugin(p.SingletonPlugin):
         p.toolkit.add_template_directory(config, "templates")
         p.toolkit.add_public_directory(config, 'public')
 
+        config.update({
+            # TODO: We can probably just make this dynamic? Are there
+            #       schemas that should *not* be imported other than presets?
+            'scheming.dataset_schemas': '\n'.join([
+                'ckanext.stcndm:schemas/codeset.yaml',
+                'ckanext.stcndm:schemas/conf_service.yaml',
+                'ckanext.stcndm:schemas/corrections.yaml',
+                'ckanext.stcndm:schemas/cube.yaml',
+                'ckanext.stcndm:schemas/daily.yaml',
+                'ckanext.stcndm:schemas/indicator.yaml',
+                'ckanext.stcndm:schemas/issue.yaml',
+                'ckanext.stcndm:schemas/publication.yaml',
+                'ckanext.stcndm:schemas/pumf.yaml',
+                'ckanext.stcndm:schemas/subject.yaml',
+                'ckanext.stcndm:schemas/view.yaml',
+                'ckanext.stcndm:schemas/survey.yaml'
+            ]),
+            'scheming.presets': '\n'.join([
+                'ckanext.scheming:presets.json',
+                'ckanext.fluent:presets.json',
+                'ckanext.stcndm:schemas/presets.yaml'
+            ])
+        })
+
     def _lookup_label(self, lookup_key, value, lookup):
 
         default = {u'en': u'label for ' + value, u'fr': u'label pour ' + value}
