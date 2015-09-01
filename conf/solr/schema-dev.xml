@@ -322,7 +322,7 @@
         <field name="extras_navigation_subject_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
         <field name="extras_navigation_subject_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
         <field name="extras_old_title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_old_titlefr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="extras_old_title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="extras_product_type_code" type="semicolontext" indexed="true" stored="true" multiValued="false"/>
         <field name="extras_product_type_code_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="false"/>
         <field name="extras_product_type_code_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="false"/>
