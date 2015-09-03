@@ -42,7 +42,7 @@ def get_next_product_id(context, data_dict):
     product_type = _get_or_bust(data_dict, 'productType')
 
     # testing for existence of cubeid
-    lc.actions.ndm_get_cube(**data_dict)
+    lc.action.GetCube(cubeId=product_id)
 
     subject_code = str(product_id)[:2]
     # TODO Do we want to rely on the subject_code in the cube dict?
@@ -91,7 +91,7 @@ def get_next_product_id(context, data_dict):
                                 product_id_response
                             )
                         )
-    except KeyError:
+    except (KeyError, IndexError):
         pass
 
     return product_id_new
@@ -537,7 +537,7 @@ def tv_register_product(context, data_dict):
     # TODO: Can we pull this from somewhere? Presets.yaml does not
     #       necessarily have the exact schema name in ndm_product_type.
     VALID_DATA_TYPES = {
-        u'11': 'table',
+        u'11': 'view',
         u'12': 'indicator',
         u'13': 'chart',
         u'14': 'map'
@@ -559,7 +559,7 @@ def tv_register_product(context, data_dict):
         )
 
     lc = ckanapi.LocalCKAN(context=context)
-    cube_dict = lc.action.GetCube(cube_id=cube_id)
+    cube_dict = lc.action.GetCube(cubeId=cube_id)
 
     product_type_schema = lc.action.GetDatasetSchema(
         name=VALID_DATA_TYPES[product_type]
@@ -568,7 +568,7 @@ def tv_register_product(context, data_dict):
     # Copy fields that overlap between the cubes and the destination
     # type.
     copied_fields = {}
-    for field in product_type_schema['fields']:
+    for field in product_type_schema['dataset_fields']:
         field_name = field['field_name']
         if field_name in cube_dict:
             copied_fields[field_name] = cube_dict[field_name]
@@ -583,6 +583,7 @@ def tv_register_product(context, data_dict):
     # Overwrite/add some fields that we don't want to inherit
     # from the cube.
     copied_fields.update({
+        'type': VALID_DATA_TYPES[product_type],
         'name': product_id,
         'owner_org': 'statcan',
         'product_id_new': product_id,
