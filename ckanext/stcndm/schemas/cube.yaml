@@ -29,10 +29,10 @@ dataset_fields:
   schema_extras: false
 
 - field_name: name
-  label:
-    en: Old Unique Catalogue Numbering
-    fr: Ancienne numérotation unique du catalogue
-  form_placeholder: unique-catalog-id
+  # follow our custom name generation with default package name validators
+  validators: cube_create_name
+    not_empty unicode name_validator package_name_validator
+  form_snippet: null
   required: true
   schema_field_type: string
   schema_multivalued: false
@@ -86,8 +86,8 @@ dataset_fields:
   schema_multivalued: true
   schema_extras: true
 
-#- field_name: format_codes
-#  preset: ndm_formats
+#- field_name: format_code
+#  preset: ndm_format
 
 - field_name: product_type_code
   label:

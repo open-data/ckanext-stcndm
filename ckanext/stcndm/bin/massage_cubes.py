@@ -144,10 +144,10 @@ for preset in presetMap['presets']:
         code_lookup_dict['survey_owner'] = {}
         for choice in preset['values']['choices']:
             code_lookup_dict['survey_owner'][choice['label']['en'].lower().strip()] = choice['value']
-    if preset['preset_name'] == 'ndm_formats':
-        code_lookup_dict['format'] = {}
-        for choice in preset['values']['choices']:
-            code_lookup_dict['format'][choice['label']['en'].lower().strip()] = choice['value']
+    # if preset['preset_name'] == 'ndm_format':
+    #    code_lookup_dict['format'] = {}
+    #    for choice in preset['values']['choices']:
+    #        code_lookup_dict['format'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_tracking':
         code_lookup_dict['tracking'] = {}
         for choice in preset['values']['choices']:
@@ -290,15 +290,18 @@ while i < n:
             if result:
                 line_out['frequency_codes'] = result
 
-        if in_and_def('hierarchyid_bi_strm', line):
-            result = listify(line['hierarchyid_bi_strm'])
-            if result:
-                line_out['parent_product'] = result[0]
+        # if in_and_def('hierarchyid_bi_strm', line):
+        #     result = listify(line['hierarchyid_bi_strm'])
+        #     if result:
+        #         line_out['parent_product'] = result[0]
+        #
+        # if in_and_def('hierarchyid_bi_strs', line):
+        #     result = listify(line['hierarchyid_bi_strs'])
+        #     if result:
+        #         line_out['parent_product'] = result[0]
 
-        if in_and_def('hierarchyid_bi_strs', line):
-            result = listify(line['hierarchyid_bi_strs'])
-            if result:
-                line_out['parent_product'] = result[0]
+        if in_and_def('10uid_bi_strs', line):
+            line_out['parent_product'] = line['10uid_bi_strs']
 
         temp = {}
         if in_and_def('histnotes_en_txts', line):

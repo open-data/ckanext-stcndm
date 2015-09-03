@@ -144,10 +144,10 @@ for preset in presetMap['presets']:
         code_lookup_dict['survey_owner'] = {}
         for choice in preset['values']['choices']:
             code_lookup_dict['survey_owner'][choice['label']['en'].lower().strip()] = choice['value']
-    if preset['preset_name'] == 'ndm_formats':
-        code_lookup_dict['format'] = {}
-        for choice in preset['values']['choices']:
-            code_lookup_dict['format'][choice['label']['en'].lower().strip()] = choice['value']
+#    if preset['preset_name'] == 'ndm_format':
+#        code_lookup_dict['format'] = {}
+#        for choice in preset['values']['choices']:
+#            code_lookup_dict['format'][choice['label']['en'].lower().strip()] = choice['value']
     if preset['preset_name'] == 'ndm_tracking':
         code_lookup_dict['tracking'] = {}
         for choice in preset['values']['choices']:

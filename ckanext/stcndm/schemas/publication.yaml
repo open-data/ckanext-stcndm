@@ -243,49 +243,48 @@ dataset_fields:
     fr: Éditeur
   preset: dataset_organization
 
-resource_fields:
+#resource_fields:
 
-- field_name: format_code
-  preset: ndm_formats
-  form_snippet: select.html
-  required: true
+#- field_name: format_code
+#  preset: ndm_format
+#  required: true
 
-- field_name: language
-  preset: ndm_language
-  required: true
+#- field_name: language
+#  preset: ndm_language
+#  required: true
 
-- field_name: url
-  label:
-    en: URL
-    fr: URL
-  required: true
+#- field_name: url
+#  label:
+#    en: URL
+#    fr: URL
+#  required: true
 
-- field_name: issn_number
-  label:
-    en: ISSN Number
-    fr: Nombre ISSN
+#- field_name: issn_number
+#  label:
+#    en: ISSN Number
+#    fr: Nombre ISSN
 
-- field_name: archive_status_code
-  preset: ndm_archive_status
+#- field_name: archive_status_code
+#  preset: ndm_archive_status
 
-- field_name: archive_date
-  label:
-    en: Archive Date
-    fr: Date d'archivage
+#- field_name: archive_date
+#  label:
+#    en: Archive Date
+#    fr: Date d'archivage
 
-- field_name: release_date
-  label:
-    en: Release Date
-    fr: Date de diffusion
+#- field_name: release_date
+#  label:
+#    en: Release Date
+#    fr: Date de diffusion
 
-- field_name: display_code
-  preset: ndm_display
+#- field_name: display_code
+#  preset: ndm_display
 
-- field_name: tracking_codes
-  preset: ndm_tracking
+#- field_name: tracking_codes
+#  preset: ndm_tracking
 
-- field_name: last_publish_status_code
-  preset: ndm_publish_status
+#- field_name: last_publish_status_code
+#  preset: ndm_publish_status
 
-- field_name: status_codes
-  preset: ndm_status
+#- field_name: status_codes
+#  preset: ndm_status

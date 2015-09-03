@@ -117,7 +117,7 @@ def register_daily(context, data_dict):
     :raises: ValidationError
     """
 
-    my_org_type = 'maprimary'
+    my_org_type = 'statcan'
 #    time = datetime.datetime.today()
 
     product_id = _get_or_bust(data_dict, 'productId')

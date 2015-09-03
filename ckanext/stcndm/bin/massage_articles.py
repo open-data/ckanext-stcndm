@@ -27,7 +27,8 @@ def code_lookup(old_field_name, data_set, choice_list):
                     code = choice['value']
         if not code:
             pass
-            sys.stderr.write('article-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
+            sys.stderr.write('article-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name,
+                                                                         _temp, field_value))
         else:
             codes.append(code)
     return codes
@@ -97,12 +98,12 @@ for result in results['results']:
         'value': result['dimension_member_code']
     })
 
-# imdb_source_list = []
+# survey_source_list = []
 # results = rc.action.package_search(
-#     q='type:imdb',
+#     q='type:survey',
 #     rows=1000)
 # for result in results['results']:
-#     imdb_source_list.append({
+#     survey_source_list.append({
 #         'label': result['title'],
 #         'value': result['product_id_new']
 #     })
@@ -110,6 +111,10 @@ for result in results['results']:
 f = open('../schemas/presets.yaml')
 presetMap = yaml.safe_load(f)
 f.close()
+archive_status_list = []
+display_list = []
+publish_list = []
+
 for preset in presetMap['presets']:
     if preset['preset_name'] == 'ndm_archive_status':
         archive_status_list = preset['values']['choices']
@@ -119,10 +124,10 @@ for preset in presetMap['presets']:
         collection_method_list = preset['values']['choices']
         if not collection_method_list:
             raise ValueError('could not find collection method preset')
-    if preset['preset_name'] == 'ndm_imdb_status':
-        imdb_status_list = preset['values']['choices']
-        if not imdb_status_list:
-            raise ValueError('could not find imdb status preset')
+    if preset['preset_name'] == 'ndm_survey_status':
+        survey_status_list = preset['values']['choices']
+        if not survey_status_list:
+            raise ValueError('could not find survey status preset')
     if preset['preset_name'] == 'ndm_survey_participation':
         survey_participation_list = preset['values']['choices']
         if not survey_participation_list:
@@ -131,7 +136,7 @@ for preset in presetMap['presets']:
         survey_owner_list = preset['values']['choices']
         if not survey_owner_list:
             raise ValueError('could not find survey owner preset')
-    # if preset['preset_name'] == 'ndm_formats':
+    # if preset['preset_name'] == 'ndm_format':
     #     format_list = preset['values']['choices']
     #     if not format_list:
     #         raise ValueError('could not find format preset')
@@ -215,7 +220,7 @@ for i in range(0, 40):
                     line_out['subject_codes'] = result
 
             if 'related_bi_strm' in line and line['related_bi_strm']:
-                result =  listify(line['related_bi_strm'])
+                result = listify(line['related_bi_strm'])
                 if result:
                     line_out['related_products'] = result
 
@@ -235,7 +240,7 @@ for i in range(0, 40):
                 line_out['archive_date'] = line['archivedate_bi_txts']
 
             if 'archived_bi_strs' in line:
-                result =  code_lookup('archived_bi_strs', line, archive_status_list)
+                result = code_lookup('archived_bi_strs', line, archive_status_list)
                 if result:
                     line_out['archive_status_code'] = result[0]
 
@@ -291,7 +296,6 @@ for i in range(0, 40):
             except KeyError:
                 sys.stderr.write('article-{0}: weird interncontactname_bi_strs\n'.format(line['productidnew_bi_strs']))
 
-
             temp = {}
             if 'isbnnum_en_strs' in line and line['isbnnum_en_strs']:
                 temp[u'en'] = line['isbnnum_en_strs']
@@ -316,7 +320,7 @@ for i in range(0, 40):
             #     line_out['keywords'] = temp
 
             if 'lastpublishstatus_en_strs' in line:
-                result =  code_lookup('lastpublishstatus_en_strs', line, publish_list)
+                result = code_lookup('lastpublishstatus_en_strs', line, publish_list)
                 if result:
                     line_out['last_publish_status_code'] = result[0]
 
@@ -352,7 +356,7 @@ for i in range(0, 40):
             if 'sourcecode_bi_txtm' in line and line['sourcecode_bi_txtm']:
                 result = listify(line['sourcecode_bi_txtm'])
                 if result:
-                    line_out['imdb_source_codes'] = result
+                    line_out['survey_source_codes'] = result
 
             if 'statusf_en_strs' in line:
                 result = code_lookup('statusf_en_strs', line, status_list)

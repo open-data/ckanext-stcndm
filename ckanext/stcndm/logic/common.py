@@ -4,6 +4,7 @@ import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
 import ckanext.scheming.helpers as scheming_helpers
+import arrow
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -40,7 +41,7 @@ def get_next_product_id(context, data_dict):
 
     product_type = _get_or_bust(data_dict, 'productType')
 
-    # testing for existance of cubeid
+    # testing for existence of cubeid
     lc.actions.ndm_get_cube(**data_dict)
 
     subject_code = str(product_id)[:2]
@@ -301,7 +302,7 @@ def get_format_description(context, data_dict):
         'formatCode'
     ).zfill(2)
 
-    preset = scheming_helpers.scheming_get_preset(u'ndm_formats')
+    preset = scheming_helpers.scheming_get_preset(u'ndm_format')
     format_codes = preset['choices']
 
     for fc in format_codes:
@@ -366,6 +367,84 @@ def get_upcoming_releases(context, data_dict):
             for extra in result['extras']:
                 if extra['key'] in desired_extras:
                     result_dict[extra['key']] = extra['value'] or ''
+            output.append(result_dict)
+
+        return {'count': count, 'results': output}
+
+
+@logic.side_effect_free
+def get_issues_by_pub_status(context, data_dict):
+    # noinspection PyUnresolvedReferences
+    """
+    Fields (listed below) for all product issues of type "productType" with a last_publish_status_code equal to that
+    passed in with a release date between the two input parameters
+
+    :param lastPublishStatusCode -
+            possible values are outlined on https://confluence.statcan.ca/display/NDMA/Publishing+workflow
+    :param startReleaseDate: Beginning of date range
+    :param endReleaseDate: End of date range
+    :param productTypeCode - [OPTIONAL ]
+            possible values are outlined on https://confluence.statcan.ca/pages/viewpage.action?pageId=20416770.
+            If no product type is passed in, assume all product types are requested.
+
+    :return:  productTypeCode, productIdNew, issueNumber, correctionId, lastPublishStatusCode, releaseDate,
+              referencePeriod - english and french, URL - english and french
+
+    :rtype: list of dicts
+    """
+    # TODO: date validation? anything else?
+
+    get_last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
+    start_release_date = _get_or_bust(data_dict, 'startReleaseDate')
+    end_release_date = _get_or_bust(data_dict, 'endReleaseDate')
+    if 'productType' in data_dict and data_dict['productType']:
+        product_type_code = data_dict['productTypeCode']
+    else:
+        product_type_code = '["" TO *]'
+
+    q = 'extras_release_date:[{startReleaseDate} TO {endReleaseDate}] AND ' \
+        'extras_last_publish_status_code:{lastPublishStatusCode} AND ' \
+        'extras_product_type_code:{productTypeCode}' \
+        .format(
+            startReleaseDate=arrow.get(start_release_date).format('YYYY-MM-DDTHH:mm:ss')+'Z',
+            endReleaseDate=arrow.get(end_release_date).format('YYYY-MM-DDTHH:mm:ss')+'Z',
+            lastPublishStatusCode=get_last_publish_status_code,
+            productTypeCode=product_type_code
+        )
+
+    lc = ckanapi.LocalCKAN()
+
+    i = 0
+    n = 1
+    while i < n:
+        query_results = lc.action.package_search(
+            q=q,
+            rows=1000,
+            start=i*1000)
+        i += 1
+        n = query_results['count'] / 1000.0
+        count = query_results['count']
+        if count == 0:
+            raise _NotFound
+
+        desired_extras = [
+            'product_type_code',
+            'product_id_new',
+            'issue_no',
+            'correction_id_code',
+            'last_publish_status_code',
+            'release_date',
+            'reference_period',
+            'url'
+        ]
+
+        output = []
+
+        for result in query_results['results']:
+            result_dict = {}
+            for extra in desired_extras:
+                if extra in result:
+                    result_dict[extra] = result[extra] or ''
             output.append(result_dict)
 
         return {'count': count, 'results': output}

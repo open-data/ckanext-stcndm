@@ -248,8 +248,7 @@ dataset_fields:
 resource_fields:
 
 - field_name: format_code
-  preset: ndm_formats
-  form_snippet: select.html
+  preset: ndm_format
   required: true
 
 - field_name: language
@@ -279,6 +278,7 @@ resource_fields:
   label:
     en: Release Date
     fr: Date de diffusion
+  preset: date
 
 - field_name: display_code
   preset: ndm_display

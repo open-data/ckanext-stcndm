@@ -19,22 +19,35 @@ def code_lookup(old_field_name, data_set, choice_list):
     codes = []
     for field_value in field_values:
         code = None
+        if '|' in field_value:
+            (field_value, bogon) = field_value.split('|', 1)
+        if old_field_name == 'archived_bi_strs' and field_value == 'Archive':
+            field_value = 'Archived'
         for choice in choice_list:
             if choice['label']['en'].lower().strip() == field_value.lower().strip():
                 if choice['value']:
                     code = choice['value']
         if not code:
-            sys.stderr.write('publication-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name, _temp, field_value))
+            sys.stderr.write((u'publication-{0}: weird {1} .{2}.{3}.\n'.format(
+                line['productidnew_bi_strs'],
+                old_field_name,
+                _temp,
+                field_value)).encode('utf-8'))
         else:
             codes.append(code)
     return codes
 
-rc = ckanapi.RemoteCKAN('http://127.0.0.1')
+rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000')
 
 content_type_list = []
 geolevel_list = []
 frequency_list = []
 status_list = []
+tracking_list = []
+archive_status_list = []
+display_list = []
+publish_list = []
+
 results = rc.action.package_search(
     q='type:codeset',
     rows=1000)
@@ -54,21 +67,25 @@ for codeset in results['results']:
             'label': codeset['title'],
             'value': codeset['codeset_value']
         })
-    if codeset['codeset_type'] == 'status':
-        status_list.append({
-            'label': codeset['title'],
-            'value': codeset['codeset_value']
-        })
+#    if codeset['codeset_type'] == 'status':
+#        status_list.append({
+#            'label': codeset['title'],
+#            'value': codeset['codeset_value']
+#        })
 
-subject_list = []
-results = rc.action.package_search(
-    q='type:subject',
-    rows=1000)
-for result in results['results']:
-    subject_list.append({
-        'label': result['title'],
-        'value': result['subject_code']
-    })
+subject_dict = {}
+
+i = 0
+n = 1
+while i < n:
+    query_results = rc.action.package_search(
+        q='type:subject',
+        rows=1000,
+        start=i*1000)
+    n = query_results['count'] / 1000.0
+    i += 1
+    for result in query_results['results']:
+        subject_dict[result['subject_code']] = result['title']
 
 # geodescriptor_list = []
 # results = rc.action.package_search(
@@ -128,7 +145,7 @@ for preset in presetMap['presets']:
         survey_owner_list = preset['values']['choices']
         if not survey_owner_list:
             raise ValueError('could not find survey owner preset')
-    # if preset['preset_name'] == 'ndm_formats':
+    # if preset['preset_name'] == 'ndm_format':
     #     format_list = preset['values']['choices']
     #     if not format_list:
     #         raise ValueError('could not find format preset')
@@ -144,15 +161,22 @@ for preset in presetMap['presets']:
         publish_list = preset['values']['choices']
         if not publish_list:
             raise ValueError('could not find display preset')
+    if preset['preset_name'] == 'ndm_status':
+        status_list = preset['values']['choices']
+        if not status_list:
+            raise ValueError('could not find status preset')
 
-for i in range(0, 10):
-    rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/')
+rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj')
+i = 0
+n = 1
+while i < n:
     query_results = rc.action.package_search(
         q='organization:maprimary AND extras_pkuniqueidcode_bi_strs:pub*',
         rows=1000,
         start=i*1000)
+    n = query_results['count'] / 1000.0
+    i += 1
 
-    count = 0
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']
@@ -205,13 +229,17 @@ for i in range(0, 10):
         #     if result:
         #         line_out['geodescriptor_codes'] = result
 
-        if 'subjnew_en_txtm' in line:
-            result = code_lookup('subjnew_en_txtm', line, subject_list)
-            if result:
-                line_out['subject_codes'] = result
+        if 'subjnewcode_bi_txtm' in line and line['subjnewcode_bi_txtm']:
+            result = listify(line['subjnewcode_bi_txtm'])
+            for subject_code in result:
+                if subject_code not in subject_dict:
+                    sys.stderr.write((u'{0}: unknown subject code: .{1}.\n'.format(
+                        line['name'],
+                        subject_code)).encode('utf-8'))
+            line_out['subject_codes'] = result
 
         if 'related_bi_strm' in line and line['related_bi_strm']:
-            result =  listify(line['related_bi_strm'])
+            result = listify(line['related_bi_strm'])
             if result:
                 line_out['related_products'] = result
 
@@ -231,17 +259,24 @@ for i in range(0, 10):
             line_out['archive_date'] = line['archivedate_bi_txts']
 
         if 'archived_bi_strs' in line:
-            result =  code_lookup('archived_bi_strs', line, archive_status_list)
+            result = code_lookup('archived_bi_strs', line, archive_status_list)
             if result:
                 line_out['archive_status_code'] = result[0]
 
         # if 'defaultviewid_bi_strs' and line['defaultviewid_bi_strs']:
         #     line_out['default_view_id'] = line['defaultviewid_bi_strs']
 
+        temp = {}
         if 'dimmembers_en_txtm':
-            result = code_lookup('dimmembers_en_txtm', line, dimension_member_list)
+            result = listify(line['dimmembers_en_txtm'])
             if result:
-                line_out['dimension_member_codes'] = result
+                temp[u'en'] = result
+        if 'dimmembers_fr_txtm':
+            result = listify(line['dimmembers_fr_txtm'])
+            if result:
+                temp[u'fr'] = result
+        if temp:
+            line_out['dimension_members'] = temp
 
         if 'display_en_txtm' in line:
             result = code_lookup('display_en_txtm', line, display_list)
@@ -269,7 +304,7 @@ for i in range(0, 10):
         if temp:
             line_out['history_notes'] = temp
 
-        if 'interncontactname_bi_txts' and line['interncontactname_bi_txts']:
+        if 'interncontactname_bi_txts' in line and line['interncontactname_bi_txts']:
             result = listify(line['interncontactname_bi_txts'])
             if result:
                 line_out['internal_contacts'] = result
@@ -287,13 +322,13 @@ for i in range(0, 10):
             line_out['keywords'] = temp
 
         if 'lastpublishstatus_en_strs' in line:
-            result =  code_lookup('lastpublishstatus_en_strs', line, publish_list)
+            result = code_lookup('lastpublishstatus_en_strs', line, publish_list)
             if result:
                 line_out['last_publish_status_code'] = result[0]
 
         if 'productidnew_bi_strs' in line and line['productidnew_bi_strs']:
             line_out['product_id_new'] = line['productidnew_bi_strs']
-            line_out['name'] = 'publication-{0}'.format(line['productidnew_bi_strs'])
+            line_out['name'] = 'publication-{0}'.format(line['productidnew_bi_strs'].lower())
 
         if 'productidold_bi_strs' in line and line['productidold_bi_strs']:
             line_out['product_id_old'] = line['productidold_bi_strs']
@@ -336,11 +371,11 @@ for i in range(0, 10):
         if temp:
             line_out['url'] = temp
 
-        if 'resources' in line:
-            line_out['resources'] = line['resources']
+#        if 'resources' in line:
+#            line_out['resources'] = line['resources']
 
-        if 'num_resources' in line:
-            line_out['num_resources'] = line['num_resources']
+#        if 'num_resources' in line:
+#            line_out['num_resources'] = line['num_resources']
 
         if 'license_title' in line:
             line_out['license_title'] = line['license_title']
@@ -352,5 +387,3 @@ for i in range(0, 10):
             line_out['license_id'] = line['license_id']
 
         print json.dumps(line_out)
-        count += 1
-    print count
