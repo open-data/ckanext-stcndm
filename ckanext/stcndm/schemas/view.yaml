@@ -75,11 +75,14 @@ dataset_fields:
   schema_extras: true
 
 - field_name: name
-  label:
-    en: Old Unique Catalogue Numbering
-    fr: Ancienne numérotation unique du catalogue
-  form_placeholder: unique-catalog-id
+  # follow our custom name generation with default package name validators
+  validators: view_create_name
+    not_empty unicode name_validator package_name_validator
+  form_snippet: null
   required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
 
 #- field_name: format_code
 #  preset: ndm_format
@@ -256,7 +259,7 @@ dataset_fields:
   label:
     en: Release Date (YYYY-MM-DD)
     fr: Date de diffusion (YYYY-MM-DD)
-#  preset: date
+  preset: date
 
 - field_name: replaced_product_codes
   label:

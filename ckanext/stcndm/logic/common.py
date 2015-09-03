@@ -400,11 +400,11 @@ def get_issues_by_pub_status(context, data_dict):
     if 'productType' in data_dict and data_dict['productType']:
         product_type_code = data_dict['productTypeCode']
     else:
-        product_type_code = '*'
+        product_type_code = '["" TO *]'
 
-    q = 'release_date:[{startReleaseDate} TO {endReleaseDate}] ' \
-        'AND last_publish_status_code:{lastPublishStatusCode} ' \
-        'AND product_type_code:{productTypeCode}' \
+    q = 'extras_release_date:[{startReleaseDate} TO {endReleaseDate}] AND ' \
+        'extras_last_publish_status_code:{lastPublishStatusCode} AND ' \
+        'extras_product_type_code:{productTypeCode}' \
         .format(
             startReleaseDate=arrow.get(start_release_date).format('YYYY-MM-DDTHH:mm:ss')+'Z',
             endReleaseDate=arrow.get(end_release_date).format('YYYY-MM-DDTHH:mm:ss')+'Z',
@@ -442,9 +442,9 @@ def get_issues_by_pub_status(context, data_dict):
 
         for result in query_results['results']:
             result_dict = {}
-            for extra in result['extras']:
-                if extra['key'] in desired_extras:
-                    result_dict[extra['key']] = extra['value'] or ''
+            for extra in desired_extras:
+                if extra in result:
+                    result_dict[extra] = result[extra] or ''
             output.append(result_dict)
 
         return {'count': count, 'results': output}

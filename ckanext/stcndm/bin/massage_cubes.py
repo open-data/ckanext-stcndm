@@ -290,15 +290,18 @@ while i < n:
             if result:
                 line_out['frequency_codes'] = result
 
-        if in_and_def('hierarchyid_bi_strm', line):
-            result = listify(line['hierarchyid_bi_strm'])
-            if result:
-                line_out['parent_product'] = result[0]
+        # if in_and_def('hierarchyid_bi_strm', line):
+        #     result = listify(line['hierarchyid_bi_strm'])
+        #     if result:
+        #         line_out['parent_product'] = result[0]
+        #
+        # if in_and_def('hierarchyid_bi_strs', line):
+        #     result = listify(line['hierarchyid_bi_strs'])
+        #     if result:
+        #         line_out['parent_product'] = result[0]
 
-        if in_and_def('hierarchyid_bi_strs', line):
-            result = listify(line['hierarchyid_bi_strs'])
-            if result:
-                line_out['parent_product'] = result[0]
+        if in_and_def('10uid_bi_strs', line):
+            line_out['parent_product'] = line['10uid_bi_strs']
 
         temp = {}
         if in_and_def('histnotes_en_txts', line):

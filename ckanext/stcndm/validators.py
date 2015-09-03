@@ -230,19 +230,6 @@ def geodescriptor_create_name(key, data, errors, context):
         errors[key].append(_('could not find geodescriptor_code'))
 
 
-def dimension_member_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    dimension_group_code = _data_lookup(('dimension_group_code',), data)
-    if dimension_group_code:
-        data[key] = u'dimension_member-{0}'.format(dimension_group_code.lower())
-    else:
-        errors[key].append(_('could not find dimension_group_code'))
-
-
 @scheming_validator
 def codeset_multiple_choice(field, schema):
     """

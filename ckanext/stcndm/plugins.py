@@ -7,16 +7,18 @@ import ckanext.stcndm.logic.cubes as cubes
 import ckanext.stcndm.logic.daily as daily
 import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
-import arrow
+import datetime
+from dateutil.parser import parse
 
 from ckan.plugins.toolkit import _
+from ckan.plugins.toolkit import ValidationError
 from ckanext.stcndm import validators
 from ckanext.stcndm import helpers
 from ckanext.scheming.helpers import (
     scheming_language_text,
     scheming_get_dataset_schema
 )
-
+from arrow.parser import ParserError
 from helpers import lookup_label
 
 
@@ -36,6 +38,30 @@ class STCNDMPlugin(p.SingletonPlugin):
         """
         p.toolkit.add_template_directory(config, "templates")
         p.toolkit.add_public_directory(config, 'public')
+
+        config.update({
+            # TODO: We can probably just make this dynamic? Are there
+            #       schemas that should *not* be imported other than presets?
+            'scheming.dataset_schemas': '\n'.join([
+                'ckanext.stcndm:schemas/codeset.yaml',
+                'ckanext.stcndm:schemas/conf_service.yaml',
+                'ckanext.stcndm:schemas/corrections.yaml',
+                'ckanext.stcndm:schemas/cube.yaml',
+                'ckanext.stcndm:schemas/daily.yaml',
+                'ckanext.stcndm:schemas/indicator.yaml',
+                'ckanext.stcndm:schemas/issue.yaml',
+                'ckanext.stcndm:schemas/publication.yaml',
+                'ckanext.stcndm:schemas/pumf.yaml',
+                'ckanext.stcndm:schemas/subject.yaml',
+                'ckanext.stcndm:schemas/view.yaml',
+                'ckanext.stcndm:schemas/survey.yaml'
+            ]),
+            'scheming.presets': '\n'.join([
+                'ckanext.scheming:presets.json',
+                'ckanext.fluent:presets.json',
+                'ckanext.stcndm:schemas/presets.yaml'
+            ])
+        })
 
     def _lookup_label(self, lookup_key, value, lookup):
 
@@ -57,10 +83,12 @@ class STCNDMPlugin(p.SingletonPlugin):
         """
         customize data sent to solr
         """
-
+        bogus_date = datetime.datetime(1, 1, 1)
         dataset_schema = scheming_get_dataset_schema(
             data_dict.get('type', 'unknown')
         )
+        if dataset_schema is None:
+            raise ValidationError('Found no schema for following dataset :\n' + json.dumps(data_dict, indent=2) + '\n')
 
         # iterate through dataset fields defined in schema
         field_schema = dict()
@@ -122,7 +150,13 @@ class STCNDMPlugin(p.SingletonPlugin):
                     index_data_dict[label_en] = desc['en']
                     index_data_dict[label_fr] = desc['fr']
             elif item.endswith('_date'):
-                index_data_dict[str(extras_ + item)] = arrow.get(value).format('YYYY-MM-DDTHH:mm:ss')+'Z'
+                if value:
+                    try:
+                        date = parse(value, default=bogus_date)
+                        if date != bogus_date:
+                            index_data_dict[item] = date.isoformat() + 'Z'
+                    except ValueError:
+                        continue
             else:  # all other field types
                 if multivalued:
                     index_data_dict[str(extras_ + item)] = ';'.join(value)
@@ -175,7 +209,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "subject_create_name": validators.subject_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
             "survey_create_name": validators.survey_create_name,
-            "dimension_member_create_name": validators.dimension_member_create_name,
             "cube_create_name": validators.cube_create_name,
             "view_create_name": validators.view_create_name,
             "publication_create_name": validators.publication_create_name,

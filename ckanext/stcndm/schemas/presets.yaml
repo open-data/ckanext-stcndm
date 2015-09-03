@@ -293,6 +293,10 @@ presets:
           en: Current
           fr: Courant
         value: '2'
+      - label:
+          en: Legacy
+          fr: Patrimonial
+        value: '3'
 
 - preset_name: ndm_array_terminated
   values:

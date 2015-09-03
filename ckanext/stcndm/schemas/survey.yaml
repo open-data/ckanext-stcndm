@@ -52,7 +52,7 @@ dataset_fields:
   label:
     en: Archive Date
     fr: Date d'archivage
-#  preset: date
+  preset: date
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -64,7 +64,7 @@ dataset_fields:
   label:
     en: Collection End Date
     fr: Date de fin de collection
-#  preset: date
+  preset: date
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -76,7 +76,7 @@ dataset_fields:
   label:
     en: Collection Start Date
     fr: Date de début de collection
-#  preset: date
+  preset: date
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -182,7 +182,7 @@ dataset_fields:
   label:
     en: Release Date
     fr: Date de diffusion
-#  preset: date
+  preset: date
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true

@@ -32,9 +32,6 @@ dataset_fields:
   # follow our custom name generation with default package name validators
   validators: subject_create_name
     not_empty unicode name_validator package_name_validator
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
   form_snippet: null
   schema_field_type: string
   schema_multivalued: false
