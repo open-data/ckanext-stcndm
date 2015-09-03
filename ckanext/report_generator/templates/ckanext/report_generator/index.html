@@ -176,5 +176,13 @@
     {{ super() }}
     <script src="lib/angular/angular.min.js"></script>
     <script src="app.min.js"></script>
-    <script src="config/config.min.js"></script>
+    <script>
+    (function(window, angular) {'use strict';
+      angular.module('services.config', [])
+          .constant('configuration', {
+              ckanInstance: '',
+              solrCore: '{{c.solr_url}}'
+          });
+    })(window, angular);
+    </script>
 {% endblock %}
