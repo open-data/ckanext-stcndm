@@ -73,26 +73,29 @@ def get_next_product_id(context, data_dict):
     )
 
     try:
-        for extra in response['results'][0]['extras']:
-            if extra['key'] == 'product_id_new':
-                product_id_response = extra['value']
+        view_id = response['results'][0]['product_id_new'][-2:]
+        if view_id == '99':
                 # TODO: implement reusing unused IDs
-                if product_id_response.endswith('99'):
-                    raise _ValidationError(
-                        'All Product IDs have been used. '
-                        'Reusing IDs is in development.'
+            raise _ValidationError(
+                'All Product IDs have been used. '
+                'Reusing IDs is in development.'
+            )
+        else:
+            try:
+                product_id_new = "{subject_code}{product_type}{sequence_id}{view_id}".format(
+                    subject_code=subject_code,
+                    product_type=product_type,
+                    sequence_id=sequence_id,
+                    view_id=str(int(view_id)+1).zfill(2)
+                )
+            except ValueError:
+                raise _ValidationError(
+                    'Invalid product_id {0}'.format(
+                        product_id_new
                     )
-                else:
-                    try:
-                        product_id_new = str(int(product_id_response) + 1)
-                    except ValueError:
-                        raise _ValidationError(
-                            'Invalid product_id {0}'.format(
-                                product_id_response
-                            )
-                        )
-    except (KeyError, IndexError):
-        pass
+                )
+    except (KeyError, IndexError) as e:
+        raise e
 
     return product_id_new
 

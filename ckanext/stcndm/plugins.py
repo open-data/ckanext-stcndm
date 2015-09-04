@@ -117,7 +117,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             elif lookup_type == 'preset':
                 lookup = fs.get('preset', '')[4:]
             else:
-                pass
+                lookup = ''
 
             if field_type == 'fluent':
                 for key in value.keys():
