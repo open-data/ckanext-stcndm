@@ -64,11 +64,11 @@ class STCNDMPlugin(p.SingletonPlugin):
             ])
         })
 
-    def _lookup_label(self, lookup_key, value, lookup):
+    def _lookup_label(self, lookup_key, value, lookup_type):
 
         default = {u'en': u'label for ' + value, u'fr': u'label pour ' + value}
         try:
-            label = lookup_label(lookup_key, value, lookup)
+            label = lookup_label(lookup_key, value, lookup_type)
         except Exception:
             label = default
 
@@ -98,7 +98,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             field_schema[d['field_name']] = d
 
         # iterate through validated data_dict fields and modify as needed
-        index_data_dict = data_dict
+        index_data_dict = data_dict.copy()
         validated_data_dict = json.loads(data_dict['validated_data_dict'])
         for item in validated_data_dict.keys():
             value = validated_data_dict[item]
@@ -111,8 +111,13 @@ class STCNDMPlugin(p.SingletonPlugin):
             multivalued = fs.get('schema_multivalued', False)
             extras = fs.get('schema_extras', False)
             extras_ = 'extras_' if extras else ''
-            lookup = fs.get('lookup', '')
-            lookup_type = fs.get('schema_codeset_type', '')
+            lookup_type = fs.get('lookup', '')
+            if lookup_type == 'codeset':
+                lookup = fs.get('codeset_type', '')
+            elif lookup_type == 'preset':
+                lookup = fs.get('preset', '')[4:]
+            else:
+                pass
 
             if field_type == 'fluent':
                 for key in value.keys():
@@ -126,30 +131,31 @@ class STCNDMPlugin(p.SingletonPlugin):
             # for code type, the en/fr labels need to be looked up
             # and sent to Solr
             elif field_type == 'code':
-                label_en = '{extras}{item}_desc_en'.format(
-                    extras=extras,
-                    item=item
-                )
-                label_fr = '{extras}{item}_desc_fr'.format(
-                    extras=extras,
-                    item=item
-                )
-                if multivalued:
-                    desc_en = []
-                    desc_fr = []
-                    for v in value:
-                        desc = self._lookup_label(lookup, v, lookup_type)
-                        desc_en.append(desc['en'])
-                        desc_fr.append(desc['fr'])
+                if lookup_type and lookup and value:
+                    label_en = '{extras}{item}_desc_en'.format(
+                        extras=extras_,
+                        item=item
+                    )
+                    label_fr = '{extras}{item}_desc_fr'.format(
+                        extras=extras_,
+                        item=item
+                    )
+                    if multivalued:
+                        desc_en = []
+                        desc_fr = []
+                        for v in value:
+                            desc = self._lookup_label(lookup, v, lookup_type)
+                            desc_en.append(desc['en'])
+                            desc_fr.append(desc['fr'])
 
-                    index_data_dict[str(extras_ + item)] = ';'.join(value)
+                        index_data_dict[str(extras_ + item)] = ';'.join(value)
 
-                    index_data_dict[label_en] = ';'.join(desc_en)
-                    index_data_dict[label_fr] = ';'.join(desc_fr)
-                else:
-                    desc = self._lookup_label(lookup, value, lookup_type)
-                    index_data_dict[label_en] = desc['en']
-                    index_data_dict[label_fr] = desc['fr']
+                        index_data_dict[label_en] = ';'.join(desc_en)
+                        index_data_dict[label_fr] = ';'.join(desc_fr)
+                    else:
+                        desc = self._lookup_label(lookup, value, lookup_type)
+                        index_data_dict[label_en] = desc['en']
+                        index_data_dict[label_fr] = desc['fr']
             elif item.endswith('_date'):
                 if value:
                     try:

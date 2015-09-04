@@ -157,12 +157,11 @@ dataset_fields:
 #  preset: codeset_multiple_select
 #  codeset_type: dimension_group
 
-- field_name: dimension_member_codes
+- field_name: dimension_members
   label:
     en: Dimension Member
     fr: Membre de dimension
-  preset: shortcode_multivalue
-  lookup: dimension_member
+  preset: fluent_tags
   schema_field_type: string
   schema_extras: true
 
