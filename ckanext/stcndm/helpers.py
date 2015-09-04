@@ -271,9 +271,11 @@ def lookup_label(field_name, field_value, lookup_type):
         return default
     elif lookup_type == 'codeset':
         results = lc.action.package_search(
-            q='dataset_type:codeset AND extras_codeset_type:{f}'.format(
-                f=field_name
-            )
+            q='dataset_type:codeset AND extras_codeset_type:{f} AND extras_codeset_value:{v}'.format(
+                f=field_name,
+                v=field_value
+            ),
+            rows=100
         )
 
         if not results[u'count']:

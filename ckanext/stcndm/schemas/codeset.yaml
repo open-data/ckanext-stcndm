@@ -47,10 +47,10 @@ dataset_fields:
         en: Geolevel
         fr: Geolevel
       value: 'geolevel'
-    - label:
-        en: Dimension Group
-        fr: Groupe de dimension
-      value: 'dimension_group'
+#    - label:
+#        en: Dimension Group
+#        fr: Groupe de dimension
+#      value: 'dimension_group'
   required: true
   schema_field_type: code
   schema_multivalued: false

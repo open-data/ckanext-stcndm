@@ -58,7 +58,7 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
-- field_name: geolevel_code # tmsgccode_bi_tmtxtm
+- field_name: geolevel_codes # tmsgccode_bi_tmtxtm
   label:
     en: Geolevel Code
     fr: Code geolevel
