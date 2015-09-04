@@ -247,11 +247,11 @@
         <field name="_version_" type="string" indexed="true" stored="true"/>
 
         <!-- Scheming related fields -->
-        <field name="a_to_z_alias_en" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="a_to_z_alias_fr" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="a_to_z_alias_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="a_to_z_alias_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="admin_notes" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="admin_notes_desc_en" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="admin_notes_desc_fr" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="admin_notes_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="admin_notes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="archive_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="archive_status_code" type="text" indexed="true" stored="true" multiValued="false"/>
         <field name="archive_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
@@ -374,114 +374,6 @@
         <dynamicField name="*_bs" type="boolean" indexed="true" stored="true" multiValued="false"/>
         <dynamicField name="*_dts" type="date" indexed="true" stored="true" multiValued="false"/>
 
-        <!-- Scheming related copy fields -->
-        <copyField source="*_codes" dest="text"/>
-        <copyField source="*_en" dest="entext"/>
-        <copyField source="*_fr" dest="frtext"/>
-
-        <copyField source="extras_subject_codes" dest="extras_subjnewcode_bi_txtm"/>
-        <copyField source="extras_subject_codes_desc_en" dest="extras_subjnew_en_txtm"/>
-        <copyField source="extras_subject_codes_desc_fr" dest="extras_subjnew_fr_txtm"/>
-        <copyField source="title_en"  dest="extras_title_en_txts"/>
-        <copyField source="title_fr"  dest="extras_title_fr_txts"/>
-
-        <copyField source="extras_level_subject_codes" dest="extras_subjnewcode_bi_txtm"/>
-        <copyField source="extras_content_type_codes" dest="extras_conttypecode_bi_txtm"/>
-        <copyField source="extras_display_codes" dest="extras_display_bi_txtm"/>
-        <copyField source="extras_tracking_code" dest="extras_dispandtrack_bi_txtm"/>
-        <copyField source="extras_geodescriptor_codes" dest="extras_specificgeocode_bi_txtm"/>
-        <copyField source="extras_geodescriptor_codes_desc_en" dest="extras_specificgeo_en_txtm"/>
-        <copyField source="extras_geodescriptor_codes_desc_fr" dest="extras_specificgeo_fr_txtm"/>
-        <copyField source="extras_archive_status" dest="extras_archived_bi_strs"/>
-        <copyField source="extras_archive_date" dest="extras_archivedate_bi_txts"/>
-        <copyField source="extras_publication_year" dest="extras_pubyear_bi_intm"/>
-        <copyField source="extras_product_id_new" dest="extras_productidnew_bi_strs"/>
-        <copyField source="extras_product_id_old" dest="extras_productidold_bi_strs"/>
-        <copyField source="extras_internal_author" dest="extras_intauthor_bi_txtm"/>
-        <copyField source="extras_external_author" dest="extras_extauthor_bi_txtm"/>
-        <copyField source="extras_frequency_codes_desc_en" dest="extras_freq_en_txtm"/>
-        <copyField source="extras_frequency_codes_desc_fr" dest="extras_freq_fr_txtm"/>
-        <copyField source="extras_price" dest="extras_price_bi_txts"/>
-        <copyField source="extras_price_note_en" dest="extras_pricenote_en_txts"/>
-        <copyField source="extras_price_note_fr" dest="extras_pricenote_fr_txts"/>
-        <copyField source="extras_feature_weight" dest="extras_featureweight_bi_ints"/>
-        <copyField source="extras_history_notes_en" dest="extras_histnotes_en_txts"/>
-        <copyField source="extras_history_notes_fr" dest="extras_histnotes_fr_txts"/>
-        <copyField source="extras_format_codes" dest="extras_formatcode_bi_txtm"/>
-        <copyField source="extras_format_codes_desc_en" dest="extras_format_en_txtm"/>
-        <copyField source="extras_format_codes_desc_fr" dest="extras_format_fr_txtm"/>
-        <copyField source="extras_related_product" dest="extras_related_bi_strm"/>
-        <copyField source="extras_reference_period_en" dest="extras_refperiod_en_txtm"/>
-        <copyField source="extras_reference_period_fr" dest="extras_refperiod_fr_txtm"/>
-        <copyField source="extras_issue_no" dest="extras_issueno_bi_strs"/>
-        <copyField source="extras_release_date" dest="extras_releasedate_bi_strs"/>
-        <copyField source="extras_replaced_product" dest="extras_replaces_bi_strm"/>
-        <copyField source="extras_dimension_group_codes" dest="extras_dimgroupcode_bi_txtm"/>
-        <copyField source="extras_dimension_group_codes_desc_en" dest="extras_dimgroup_en_txtm"/>
-        <copyField source="extras_dimension_group_codes_desc_fr" dest="extras_dimgroup_fr_txtm"/>
-        <copyField source="extras_thesaurus_term_codes_desc_en" dest="stcthesaurus_en_txtm"/>
-        <copyField source="extras_thesaurus_term_codes_desc_fr" dest="stcthesaurus_fr_txtm"/>
-        <copyField source="extras_thesaurus_term_codes_desc_fr" dest="stcthesaurus_fr_txtm"/>
-        <!--copyField source="extras_a_to_z_alias_en" dest="tmtaxatozalias_en_tmtxts"/>
-        <copyField source="extras_a_to_z_alias_fr" dest="tmtaxatozalias_fr_tmtxts"/-->
-        <!-- End of Scheming related copyfields -->
-        <!-- End of Scheming related copy fields -->
-
-
-        <copyField source="extras_subjnewcode_bi_txtm" dest="navsubjcodesemi"/>
-        <copyField source="navsubjcodesemi" dest="navlevsubjcode"/>
-        <copyField source="extras_subjnewcode_bi_txtm" dest="extras_levelsubjcode_bi_txtm"/>
-
-        <copyField source="extras_title_en_txts" dest="attr_srt_title_en"/>
-        <copyField source="extras_title_fr_txts" dest="attr_srt_title_fr"/>
-
-        <copyField source="*_en_strs" dest="entext"/>
-        <copyField source="*_en_strm" dest="entext"/>
-        <copyField source="*_en_strt" dest="entext"/>
-        <copyField source="*_en_txts" dest="entext"/>
-        <copyField source="*_en_txtm" dest="entext"/>
-        <copyField source="*_en_txtt" dest="entext"/>
-        <copyField source="*_en_ints" dest="entext"/>
-        <copyField source="*_en_intm" dest="entext"/>
-        <copyField source="*_en_intt" dest="entext"/>
-        <copyField source="*_en_dats" dest="entext"/>
-
-        <copyField source="*_bi_strs" dest="entext"/>
-        <copyField source="*_bi_strm" dest="entext"/>
-        <copyField source="*_bi_strt" dest="entext"/>
-        <copyField source="*_bi_txts" dest="entext"/>
-        <copyField source="*_bi_txtm" dest="entext"/>
-        <copyField source="*_bi_ints" dest="entext"/>
-        <copyField source="*_bi_intm" dest="entext"/>
-        <copyField source="*_bi_dats" dest="entext"/>
-
-        <copyField source="*_bi_edngr" dest="entext"/>
-
-        <copyField source="*_bi_strs" dest="frtext"/>
-        <copyField source="*_bi_strm" dest="frtext"/>
-        <copyField source="*_bi_strt" dest="frtext"/>
-        <copyField source="*_bi_txts" dest="frtext"/>
-        <copyField source="*_bi_txtm" dest="frtext"/>
-        <copyField source="*_bi_ints" dest="frtext"/>
-        <copyField source="*_bi_intm" dest="frtext"/>
-        <copyField source="*_bi_dats" dest="frtext"/>
-
-        <copyField source="*_bi_edngr" dest="frtext"/>
-
-        <copyField source="*_fr_strs" dest="frtext"/>
-        <copyField source="*_fr_strm" dest="frtext"/>
-        <copyField source="*_fr_strt" dest="frtext"/>
-        <copyField source="*_fr_txts" dest="frtext"/>
-        <copyField source="*_fr_txtm" dest="frtext"/>
-        <copyField source="*_fr_txtt" dest="frtext"/>
-        <copyField source="*_fr_ints" dest="frtext"/>
-        <copyField source="*_fr_intm" dest="frtext"/>
-        <copyField source="*_fr_intt" dest="frtext"/>
-        <copyField source="*_fr_dats" dest="frtext"/>
-
-        <copyField source="frtext" dest="text"/>
-        <copyField source="entext" dest="text"/>
-
         <dynamicField name="vocab_*" type="string" indexed="true" stored="true" multiValued="true"/>
         <dynamicField name="*" type="string" indexed="true" stored="false"/>
     </fields>
@@ -489,6 +381,14 @@
     <uniqueKey>index_id</uniqueKey>
     <defaultSearchField>text</defaultSearchField>
     <solrQueryParser defaultOperator="AND"/>
+
+    <!-- Scheming related copy fields -->
+    <copyField source="*_codes" dest="text"/>
+    <copyField source="*_en" dest="entext"/>
+    <copyField source="*_fr" dest="frtext"/>
+
+    <copyField source="frtext" dest="text"/>
+    <copyField source="entext" dest="text"/>
 
     <copyField source="url" dest="urls"/>
     <copyField source="ckan_url" dest="urls"/>
