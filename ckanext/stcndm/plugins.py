@@ -43,7 +43,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             # TODO: We can probably just make this dynamic? Are there
             #       schemas that should *not* be imported other than presets?
             'scheming.dataset_schemas': '\n'.join([
-                'ckanext.stcndm:schemas/dimension_member.yaml',
                 'ckanext.stcndm:schemas/codeset.yaml',
                 'ckanext.stcndm:schemas/conf_service.yaml',
                 'ckanext.stcndm:schemas/corrections.yaml',
