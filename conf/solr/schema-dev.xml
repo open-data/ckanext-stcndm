@@ -217,14 +217,8 @@
         <field name="text" type="text" indexed="true" stored="false" multiValued="true"/>
 
         <!-- NDM -->
-        <field name="navlevsubjcode" type="text_general_edge_ngram" indexed="true" stored="true" multiValued="true"/>
         <field name="entext" type="text_en" indexed="true" stored="false" multiValued="true"/>
         <field name="frtext" type="text_fr" indexed="true" stored="false" multiValued="true"/>
-
-        <field name="tmtaxsubj_autotext" type="autotext" indexed="true" stored="false" multiValued="true"/>
-        <field name="tmsgc_autotext" type="autotext" indexed="true" stored="false" multiValued="true"/>
-        <field name="tmdimen_autotext" type="autotext" indexed="true" stored="false" multiValued="true"/>
-        <field name="source_autotext" type="autotext" indexed="true" stored="false" multiValued="true"/>
 
         <field name="urls" type="text" indexed="true" stored="false" multiValued="true"/>
 
@@ -247,131 +241,134 @@
 
         <field name="indexed_ts" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
 
-        <!-- Copy the title field into titleString, and treat as a string
-             (rather than text type).  This allows us to sort on the titleString -->
-        <field name="title_string" type="string" indexed="true" stored="false"/>
-
         <field name="data_dict" type="string" indexed="false" stored="true"/>
-
-        <field name="extras_levelsubjcode_bi_txtm" type="subjlevels" indexed="true" stored="true" multiValued="true"/>
-
-        <field name="navsubjcodesemi" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
         <field name="description" type="textgen" indexed="true" stored="true" multiValued="false"/>
         <field name="validated_data_dict" type="string" indexed="false" stored="true"/>
         <field name="_version_" type="string" indexed="true" stored="true"/>
 
         <!-- Scheming related fields -->
-        <field name="extras_a_to_z_alias_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_a_to_z_alias_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_admin_notes" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_admin_notes_desc_en" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_admin_notes_desc_fr" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_archive_date" type="date" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_release_date" type="date" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_archive_status_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_archive_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_archive_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_codeset_type" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_codeset_type_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_codeset_type_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_codeset_value" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_collection_end_date" type="date" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_collection_method_codes" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_collection_method_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_collection_method_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_collection_start_date" type="date" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_content_type_codes" type="text" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_content_type_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_content_type_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_default_view_id" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_dimension_member_alias_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_dimension_member_alias_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_dimension_member_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_display_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_display_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_display_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_external_authors" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_format_codes" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_format_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_format_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_frc" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_frequency_codes" type="text" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_frequency_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_frequency_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_geodescriptor_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_geodescriptor_codes" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_geodescriptor_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_geodescriptor_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_geolevel_codes" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_geolevel_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_geolevel_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_imdb_instance_item" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_imdb_status_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_imdb_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_imdb_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_imdb_survey_item" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_isp_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_isp_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_last_publish_status_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_last_publish_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_last_publish_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_level_subject_codes" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_level_subject_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_level_subject_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_navigation_subject_codes" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_navigation_subject_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_navigation_subject_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_old_title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_old_title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_product_type_code" type="semicolontext" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_product_type_code_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_product_type_code_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_question_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_question_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_resource_url" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_status_codes" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_status_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_status_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_subject_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_subject_codes" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_subject_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_subject_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_subject_display_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_subject_display_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_subject_display_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_subjectold_codes" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_subjectold_codes_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_subjectold_codes_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_survey_owner_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_survey_owner_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_survey_owner_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_survey_participation_code" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_survey_participation_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_survey_participation_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_survey_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_survey_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="extras_tracking_code" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_tracking_code_desc_en" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <field name="extras_tracking_code_desc_fr" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
+        <field name="a_to_z_alias_en" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="a_to_z_alias_fr" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="admin_notes" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="admin_notes_desc_en" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="admin_notes_desc_fr" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="archive_date" type="date" indexed="true" stored="true" multiValued="false"/>
+        <field name="archive_status_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="archive_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="archive_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="codeset_type" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="codeset_type_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="codeset_type_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="codeset_value" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="collection_end_date" type="date" indexed="true" stored="true" multiValued="false"/>
+        <field name="collection_method_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="collection_method_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="collection_method_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="collection_start_date" type="date" indexed="true" stored="true" multiValued="false"/>
+        <field name="content_type_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="content_type_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="content_type_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="default_view_id" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="dimension_member_alias_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="dimension_member_alias_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="dimension_member_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="dimension_group_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="dimension_group_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="dimension_group_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="display_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="display_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="display_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="external_author" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="feature_weight" type="int" indexed="true" stored="true" multiValued="false"/>
+        <field name="format_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="format_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="format_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="frc" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="frequency_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="frequency_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="frequency_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="geodescriptor_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="geodescriptor_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="geodescriptor_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="geodescriptor_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="geolevel_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="geolevel_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="geolevel_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="history_notes_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="history_notes_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="imdb_instance_item" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="imdb_status_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="imdb_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="imdb_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="imdb_survey_item" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="internal_author" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="isp_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="isp_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="issue_no" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="last_publish_status_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="last_publish_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="last_publish_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="level_subject_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="level_subject_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="level_subject_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="navigation_subject_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="navigation_subject_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="navigation_subject_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="old_title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="old_title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="price" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="price_note_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="price_note_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="product_type_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="product_type_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="product_type_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="publication_year" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="question_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="question_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="reference_period_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="reference_period_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="related_product" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="release_date" type="date" indexed="true" stored="true" multiValued="false"/>
+        <field name="replaced_product" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="resource_url" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="status_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="status_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="status_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="subject_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="subject_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="subject_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="subject_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="subject_display_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="subject_display_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="subject_display_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="subjectold_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="subjectold_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="subjectold_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="survey_owner_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="survey_owner_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="survey_owner_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="survey_participation_code" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="survey_participation_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="survey_participation_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="survey_source_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="survey_source_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="survey_source_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="survey_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="survey_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="thesaurus_term_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="thesaurus_term_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="thesaurus_term_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="tracking_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="tracking_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="tracking_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <!-- CKAN core fields needing text loading/processing -->
+        <field name="title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="notes_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="notes_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="url_en" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="url_fr" type="string" indexed="true" stored="true" multiValued="false"/>
         <!-- End of Scheming related fields -->
-
-        <dynamicField name="attr_srt_*" type="string" indexed="true" stored="false"/>
-        <dynamicField name="*_date" type="date" indexed="true" stored="true" multiValued="false"/>
-
-        <dynamicField name="*strs" type="string" indexed="true" stored="true"/>
-        <dynamicField name="*strm" type="semicolonstring" indexed="true" stored="true" multiValued="true"/>
-        <dynamicField name="*strt" type="string" indexed="true" stored="true" multiValued="true"/>
-
-        <dynamicField name="*txts" type="text" indexed="true" stored="true"/>
-        <dynamicField name="*txtm" type="semicolontext" indexed="true" stored="true" multiValued="true"/>
-        <dynamicField name="*txtt" type="text" indexed="true" stored="true" multiValued="true"/>
-
-        <dynamicField name="*ints" type="int" indexed="true" stored="true"/>
-        <dynamicField name="*intm" type="semicolonint" indexed="true" stored="true" multiValued="true"/>
-        <dynamicField name="*intt" type="int" indexed="true" stored="true" multiValued="true"/>
-
-        <dynamicField name="*boos" type="boolean" indexed="true" stored="true" multiValued="false"/>
-        <dynamicField name="*dats" type="date" indexed="true" stored="true" multiValued="false"/>
 
         <dynamicField name="*_i" type="int" indexed="true" stored="true" multiValued="false"/>
         <dynamicField name="*_bs" type="boolean" indexed="true" stored="true" multiValued="false"/>
@@ -383,8 +380,51 @@
         <copyField source="*_fr" dest="frtext"/>
 
         <copyField source="extras_subject_codes" dest="extras_subjnewcode_bi_txtm"/>
+        <copyField source="extras_subject_codes_desc_en" dest="extras_subjnew_en_txtm"/>
+        <copyField source="extras_subject_codes_desc_fr" dest="extras_subjnew_fr_txtm"/>
         <copyField source="title_en"  dest="extras_title_en_txts"/>
         <copyField source="title_fr"  dest="extras_title_fr_txts"/>
+
+        <copyField source="extras_level_subject_codes" dest="extras_subjnewcode_bi_txtm"/>
+        <copyField source="extras_content_type_codes" dest="extras_conttypecode_bi_txtm"/>
+        <copyField source="extras_display_codes" dest="extras_display_bi_txtm"/>
+        <copyField source="extras_tracking_code" dest="extras_dispandtrack_bi_txtm"/>
+        <copyField source="extras_geodescriptor_codes" dest="extras_specificgeocode_bi_txtm"/>
+        <copyField source="extras_geodescriptor_codes_desc_en" dest="extras_specificgeo_en_txtm"/>
+        <copyField source="extras_geodescriptor_codes_desc_fr" dest="extras_specificgeo_fr_txtm"/>
+        <copyField source="extras_archive_status" dest="extras_archived_bi_strs"/>
+        <copyField source="extras_archive_date" dest="extras_archivedate_bi_txts"/>
+        <copyField source="extras_publication_year" dest="extras_pubyear_bi_intm"/>
+        <copyField source="extras_product_id_new" dest="extras_productidnew_bi_strs"/>
+        <copyField source="extras_product_id_old" dest="extras_productidold_bi_strs"/>
+        <copyField source="extras_internal_author" dest="extras_intauthor_bi_txtm"/>
+        <copyField source="extras_external_author" dest="extras_extauthor_bi_txtm"/>
+        <copyField source="extras_frequency_codes_desc_en" dest="extras_freq_en_txtm"/>
+        <copyField source="extras_frequency_codes_desc_fr" dest="extras_freq_fr_txtm"/>
+        <copyField source="extras_price" dest="extras_price_bi_txts"/>
+        <copyField source="extras_price_note_en" dest="extras_pricenote_en_txts"/>
+        <copyField source="extras_price_note_fr" dest="extras_pricenote_fr_txts"/>
+        <copyField source="extras_feature_weight" dest="extras_featureweight_bi_ints"/>
+        <copyField source="extras_history_notes_en" dest="extras_histnotes_en_txts"/>
+        <copyField source="extras_history_notes_fr" dest="extras_histnotes_fr_txts"/>
+        <copyField source="extras_format_codes" dest="extras_formatcode_bi_txtm"/>
+        <copyField source="extras_format_codes_desc_en" dest="extras_format_en_txtm"/>
+        <copyField source="extras_format_codes_desc_fr" dest="extras_format_fr_txtm"/>
+        <copyField source="extras_related_product" dest="extras_related_bi_strm"/>
+        <copyField source="extras_reference_period_en" dest="extras_refperiod_en_txtm"/>
+        <copyField source="extras_reference_period_fr" dest="extras_refperiod_fr_txtm"/>
+        <copyField source="extras_issue_no" dest="extras_issueno_bi_strs"/>
+        <copyField source="extras_release_date" dest="extras_releasedate_bi_strs"/>
+        <copyField source="extras_replaced_product" dest="extras_replaces_bi_strm"/>
+        <copyField source="extras_dimension_group_codes" dest="extras_dimgroupcode_bi_txtm"/>
+        <copyField source="extras_dimension_group_codes_desc_en" dest="extras_dimgroup_en_txtm"/>
+        <copyField source="extras_dimension_group_codes_desc_fr" dest="extras_dimgroup_fr_txtm"/>
+        <copyField source="extras_thesaurus_term_codes_desc_en" dest="stcthesaurus_en_txtm"/>
+        <copyField source="extras_thesaurus_term_codes_desc_fr" dest="stcthesaurus_fr_txtm"/>
+        <copyField source="extras_thesaurus_term_codes_desc_fr" dest="stcthesaurus_fr_txtm"/>
+        <!--copyField source="extras_a_to_z_alias_en" dest="tmtaxatozalias_en_tmtxts"/>
+        <copyField source="extras_a_to_z_alias_fr" dest="tmtaxatozalias_fr_tmtxts"/-->
+        <!-- End of Scheming related copyfields -->
         <!-- End of Scheming related copy fields -->
 
 
@@ -442,34 +482,6 @@
         <copyField source="frtext" dest="text"/>
         <copyField source="entext" dest="text"/>
 
-        <copyField source="extras_tmtaxsubjcode_bi_tmtxtm" dest="tmtaxsubj_autotext"/>
-        <copyField source="extras_tmtaxsubj_en_tmtxtm" dest="tmtaxsubj_autotext"/>
-        <copyField source="extras_tmtaxsubj_fr_tmtxtm" dest="tmtaxsubj_autotext"/>
-
-        <copyField source="extras_tmdimenalias_bi_tmtxtm" dest="tmdimen_autotext"/>
-        <copyField source="extras_tmdimencode_bi_tmtxtm" dest="tmdimen_autotext"/>
-        <copyField source="extras_tmdimentext_en_tmtxtm" dest="tmdimen_autotext"/>
-        <copyField source="extras_tmdimentext_fr_tmtxtm" dest="tmdimen_autotext"/>
-
-        <copyField source="extras_tmsgccode_bi_tmtxtm" dest="tmsgc_autotext"/>
-        <copyField source="extras_tmsgcname_en_tmtxtm" dest="tmsgc_autotext"/>
-        <copyField source="extras_tmsgcname_fr_tmtxtm" dest="tmsgc_autotext"/>
-        <copyField source="extras_tmsgcspecificcode_bi_tmtxtm" dest="tmsgc_autotext"/>
-
-        <copyField source="extras_title_en_txts" dest="source_autotext"/>
-        <copyField source="extras_title_fr_txts" dest="source_autotext"/>
-        <copyField source="extras_productidnew_bi_strs" dest="source_autotext"/>
-
-        <copyField source="extras_subj1_en_*" dest="subj_en_tss"/>
-        <copyField source="extras_subj2_en_*" dest="subj_en_tss"/>
-        <copyField source="extras_subj3_en_*" dest="subj_en_tss"/>
-        <copyField source="extras_subj4_en_*" dest="subj_en_tss"/>
-
-        <copyField source="extras_subj1_fr_*" dest="subj_fr_tss"/>
-        <copyField source="extras_subj2_fr_*" dest="subj_fr_tss"/>
-        <copyField source="extras_subj3_fr_*" dest="subj_fr_tss"/>
-        <copyField source="extras_subj4_fr_*" dest="subj_fr_tss"/>
-
         <dynamicField name="vocab_*" type="string" indexed="true" stored="true" multiValued="true"/>
         <dynamicField name="*" type="string" indexed="true" stored="false"/>
     </fields>
@@ -482,7 +494,7 @@
     <copyField source="ckan_url" dest="urls"/>
     <copyField source="download_url" dest="urls"/>
     <copyField source="res_url" dest="urls"/>
-    <copyField source="extras_*" dest="text"/>
+
     <copyField source="vocab_*" dest="text"/>
     <copyField source="urls" dest="text"/>
     <copyField source="name" dest="text"/>
