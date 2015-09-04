@@ -110,7 +110,9 @@ class STCNDMPlugin(p.SingletonPlugin):
             field_type = fs.get('schema_field_type', 'string')
             multivalued = fs.get('schema_multivalued', False)
             extras = fs.get('schema_extras', False)
-            extras_ = 'extras_' if extras else ''
+            extras_ = ''
+            # extras_ = 'extras_' if extras else ''
+            lookup = None
             lookup_type = fs.get('lookup', '')
             if lookup_type == 'codeset':
                 lookup = fs.get('codeset_type', '')
@@ -148,10 +150,10 @@ class STCNDMPlugin(p.SingletonPlugin):
                             desc_en.append(desc['en'])
                             desc_fr.append(desc['fr'])
 
-                        index_data_dict[str(extras_ + item)] = ';'.join(value)
+                        index_data_dict[str(extras_ + item)] = value
 
-                        index_data_dict[label_en] = ';'.join(desc_en)
-                        index_data_dict[label_fr] = ';'.join(desc_fr)
+                        index_data_dict[label_en] = desc_en
+                        index_data_dict[label_fr] = desc_fr
                     else:
                         desc = self._lookup_label(lookup, value, lookup_type)
                         index_data_dict[label_en] = desc['en']
@@ -166,7 +168,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                         continue
             else:  # all other field types
                 if multivalued:
-                    index_data_dict[str(extras_ + item)] = ';'.join(value)
+                    index_data_dict[str(extras_ + item)] = value
                 else:
                     index_data_dict[str(extras_ + item)] = value
 
