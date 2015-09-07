@@ -206,7 +206,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "UpdateProductGeo": common.update_product_geo,
             "UpdatePublishingStatus": common.update_last_publish_status,
             "GetDatasetSchema": common.get_dataset_schema,
-            "GetGroupSchema": common.get_group_schema
+            "GetGroupSchema": common.get_group_schema,
+            "GetSubjectCodesets": subjects.get_subject_codesets
         }
 
     def get_validators(self):
