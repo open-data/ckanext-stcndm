@@ -211,7 +211,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "UpdatePublishingStatus": common.update_last_publish_status,
             "GetDatasetSchema": common.get_dataset_schema,
             "GetGroupSchema": common.get_group_schema,
-            "GetSurveyCodesets": surveys.get_survey_codesets
+            "GetSurveyCodesets": surveys.get_survey_codesets,
+            "GetSubjectCodesets": subjects.get_subject_codesets
         }
 
     def get_validators(self):

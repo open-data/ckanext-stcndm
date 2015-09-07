@@ -2,6 +2,7 @@
 # encoding: utf-8
 import ckanapi
 
+from ckan import logic
 from ckan.logic import get_or_bust, side_effect_free
 from ckan.plugins.toolkit import ValidationError, ObjectNotFound
 
@@ -68,3 +69,45 @@ def get_top_level_subject_list(context, data_dict):
         'title': r['title'],
         'subject_code': r['subject_code']
     } for r in response['results']]
+
+
+@logic.side_effect_free
+def get_subject_codesets(context, data_dict):
+    """
+    Returns all subject codesets.
+
+    :param limit: Number of results to return.
+    :type limit: int
+    :param start: Number of results to skip.
+    :type start: int
+
+    :rtype: list of dicts
+    """
+    lc = ckanapi.LocalCKAN(context=context)
+
+    # Sort would perform better, but this will be easier
+    # for client to implement.
+    limit = int(logic.get_or_bust(data_dict, 'limit'))
+    start = int(logic.get_or_bust(data_dict, 'start'))
+
+    results = lc.action.package_search(
+        q='dataset_type:subject',
+        rows=limit,
+        start=start,
+        fl=(
+            'name',
+            'title'
+        )
+    )
+
+    return {
+        'count': results['count'],
+        'limit': limit,
+        'start': start,
+        'results': [{
+            'subject_code': r['subject_code'],
+            # FIXME: Required by ticket, no present in schema.
+            'parent_subject_code': None,
+            'title': r['title'],
+        } for r in results['results']]
+    }
