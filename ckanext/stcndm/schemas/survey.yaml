@@ -91,15 +91,6 @@ dataset_fields:
 - field_name: notes
   preset: ndm_description
 
-- field_name: level_subject_codes
-  label:
-    en: Level Subject Code
-    fr: Code sujet niveau
-  preset: shortcode_multivalue
-  schema_field_type: string
-  schema_multivalue: true
-  schema_extras: true
-
 - field_name: feature_weight
   label:
     en: Feature Weight

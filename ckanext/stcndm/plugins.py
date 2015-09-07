@@ -64,21 +64,21 @@ class STCNDMPlugin(p.SingletonPlugin):
             ])
         })
 
-    def _lookup_label(self, lookup_key, value, lookup_type):
-
-        default = {u'en': u'label for ' + value, u'fr': u'label pour ' + value}
-        try:
-            label = lookup_label(lookup_key, value, lookup_type)
-        except Exception:
-            label = default
-
-        if 'fr' not in label:
-            label['fr'] = u'description pour ' + value
-
-        if 'en' not in label:
-            label['en'] = u'label for ' + value
-
-        return label
+    # def _lookup_label(self, lookup_key, value, lookup_type):
+    #
+    #     default = {u'en': u'label for ' + value, u'fr': u'label pour ' + value}
+    #     try:
+    #         label = lookup_label(lookup_key, value, lookup_type)
+    #     except Exception:
+    #         label = default
+    #
+    #     if 'fr' not in label:
+    #         label['fr'] = u'description pour ' + value
+    #
+    #     if 'en' not in label:
+    #         label['en'] = u'label for ' + value
+    #
+    #     return label
 
     def before_index(self, data_dict):
         """
@@ -101,11 +101,18 @@ class STCNDMPlugin(p.SingletonPlugin):
             d = dataset_field
             field_schema[d['field_name']] = d
 
+        index_data_dict = {}
+        # drop extras fields
+        for dict_key in data_dict:
+            if not dict_key.startswith('extras_'):
+                index_data_dict[dict_key] = data_dict[dict_key]
         # iterate through validated data_dict fields and modify as needed
-        index_data_dict = data_dict.copy()
         validated_data_dict = json.loads(data_dict['validated_data_dict'])
         for item in validated_data_dict.keys():
             value = validated_data_dict[item]
+            if not value and item in index_data_dict:
+                index_data_dict.pop(item)
+                continue
             fs = field_schema.get(item, None)
             # ignore all fields not currently in the schema
             if not fs:
@@ -113,22 +120,10 @@ class STCNDMPlugin(p.SingletonPlugin):
 
             field_type = fs.get('schema_field_type', 'string')
             multivalued = fs.get('schema_multivalued', False)
-            extras = fs.get('schema_extras', False)
-            extras_ = ''
-            # extras_ = 'extras_' if extras else ''
-            lookup = None
-            lookup_type = fs.get('lookup', '')
-            if lookup_type == 'codeset':
-                lookup = fs.get('codeset_type', '')
-            elif lookup_type == 'preset':
-                lookup = fs.get('preset', '')[4:]
-            else:
-                lookup = ''
 
             if field_type == 'fluent':
                 for key in value.keys():
-                    label = '{extras}{item}_{key}'.format(
-                        extras=extras_,
+                    label = '{item}_{key}'.format(
                         item=item,
                         key=key
                     )
@@ -137,29 +132,36 @@ class STCNDMPlugin(p.SingletonPlugin):
             # for code type, the en/fr labels need to be looked up
             # and sent to Solr
             elif field_type == 'code':
-                if lookup_type and lookup and value:
-                    label_en = '{extras}{item}_desc_en'.format(
-                        extras=extras_,
+                lookup_type = fs.get('lookup', '')
+                if lookup_type == 'codeset':
+                    lookup = fs.get('codeset_type', '')
+                elif lookup_type == 'preset':
+                    lookup = fs.get('preset', '')[4:]
+                else:
+                    lookup = fs.get('lookup', '')
+                if lookup and value:
+                    label_en = '{item}_desc_en'.format(
                         item=item
                     )
-                    label_fr = '{extras}{item}_desc_fr'.format(
-                        extras=extras_,
+                    label_fr = '{item}_desc_fr'.format(
                         item=item
                     )
                     if multivalued:
                         desc_en = []
                         desc_fr = []
                         for v in value:
-                            desc = self._lookup_label(lookup, v, lookup_type)
+                            if not v:
+                                continue
+                            desc = lookup_label(lookup, v, lookup_type)
                             desc_en.append(desc['en'])
                             desc_fr.append(desc['fr'])
 
-                        index_data_dict[str(extras_ + item)] = value
+                        index_data_dict[str(item)] = value
 
                         index_data_dict[label_en] = desc_en
                         index_data_dict[label_fr] = desc_fr
                     else:
-                        desc = self._lookup_label(lookup, value, lookup_type)
+                        desc = lookup_label(lookup, value, lookup_type)
                         index_data_dict[label_en] = desc['en']
                         index_data_dict[label_fr] = desc['fr']
             elif item.endswith('_date'):
@@ -172,9 +174,9 @@ class STCNDMPlugin(p.SingletonPlugin):
                         continue
             else:  # all other field types
                 if multivalued:
-                    index_data_dict[str(extras_ + item)] = value
+                    index_data_dict[str(item)] = value
                 else:
-                    index_data_dict[str(extras_ + item)] = value
+                    index_data_dict[str(item)] = value
 
         return index_data_dict
 
