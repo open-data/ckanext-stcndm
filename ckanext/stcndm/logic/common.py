@@ -670,6 +670,35 @@ def update_last_publish_status(context, data_dict):
     """
     Update the publishing status code
 
+    :param productIds: publishing status code
+    :type productIds: str
+    :param issueNo: publishing status code
+    :type issueNo: str
+    :param lastPublishStatusCode: publishing status code
+    :type lastPublishStatusCode: str
+
+    :return: updated package
+    :rtype: dict
+    """
+    return [
+        _update_single_publish_status(
+            context,
+            {
+                'productId': product_id,
+                'issueNo': _get_or_bust(data_dict, 'issueNo'),
+                'lastPublishStatusCode': _get_or_bust(
+                    data_dict,
+                    'lastPublishStatusCode'
+                )
+            }
+        ) for product_id in _get_or_bust(data_dict, 'productIds')
+    ]
+
+
+def _update_single_publish_status(context, data_dict):
+    """
+    Update the publishing status code
+
     :param productId: publishing status code
     :type productId: str
     :param issueNo: publishing status code
@@ -680,7 +709,6 @@ def update_last_publish_status(context, data_dict):
     :return: updated package
     :rtype: dict
     """
-
     product_id = _get_or_bust(data_dict, 'productId')
     issue_no = _get_or_bust(data_dict, 'issueNo')
     last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
