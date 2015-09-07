@@ -253,7 +253,7 @@ def lookup_label(field_name, field_value, lookup_type):
     """
     lc = ckanapi.LocalCKAN()
 
-    default = {u'en': field_value, u'found': False}
+    default = {u'en': 'label for ' + field_value, u'fr': 'description de ' + field_value, u'found': False}
 
     if not field_value:
         return default
@@ -271,11 +271,10 @@ def lookup_label(field_name, field_value, lookup_type):
         return default
     elif lookup_type == 'codeset':
         results = lc.action.package_search(
-            q='dataset_type:codeset AND extras_codeset_type:{f} AND extras_codeset_value:{v}'.format(
+            q=u'dataset_type:codeset AND codeset_type:{f} AND codeset_value:{v}'.format(
                 f=field_name,
                 v=field_value
-            ),
-            rows=100
+            )
         )
 
         if not results[u'count']:
@@ -291,10 +290,10 @@ def lookup_label(field_name, field_value, lookup_type):
         return result
     else:
         results = lc.action.package_search(
-            q='dataset_type:{type_}'.format(
-                type_=lookup_type
-            ),
-            rows=1
+            q=u'dataset_type:{lookup_type} AND name:{lookup_type}-{field_value}'.format(
+                lookup_type=lookup_type,
+                field_value=field_value.lower()
+            )
         )
         if not results[u'count']:
             return default
