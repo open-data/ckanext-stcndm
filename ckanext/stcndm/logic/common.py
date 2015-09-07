@@ -82,7 +82,9 @@ def get_next_product_id(context, data_dict):
             )
         else:
             try:
-                product_id_new = "{subject_code}{product_type}{sequence_id}{view_id}".format(
+                product_id_new = (
+                    '{subject_code}{product_type}{sequence_id}{view_id}'
+                ).format(
                     subject_code=subject_code,
                     product_type=product_type,
                     sequence_id=sequence_id,
@@ -379,25 +381,27 @@ def get_upcoming_releases(context, data_dict):
 def get_issues_by_pub_status(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Fields (listed below) for all product issues of type "productType" with a last_publish_status_code equal to that
-    passed in with a release date between the two input parameters
+    Fields (listed below) for all product issues of type "productType" with a
+    last_publish_status_code equal to that passed in with a release date
+    between the two input parameters
 
-    :param lastPublishStatusCode -
-            possible values are outlined on https://confluence.statcan.ca/display/NDMA/Publishing+workflow
+    :param lastPublishStatusCode: Possible values are outlined on
+        https://confluence.statcan.ca/display/NDMA/Publishing+workflow
     :param startReleaseDate: Beginning of date range
     :param endReleaseDate: End of date range
-    :param productTypeCode - [OPTIONAL ]
-            possible values are outlined on https://confluence.statcan.ca/pages/viewpage.action?pageId=20416770.
-            If no product type is passed in, assume all product types are requested.
-
-    :return:  productTypeCode, productIdNew, issueNumber, correctionId, lastPublishStatusCode, releaseDate,
-              referencePeriod - english and french, URL - english and french
+    :param productTypeCode: Possible values are outlined on
+        https://confluence.statcan.ca/pages/viewpage.action?pageId=20416770.
+        If no product type is passed in, assume all product types are
+        requested.
 
     :rtype: list of dicts
     """
     # TODO: date validation? anything else?
 
-    get_last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
+    get_last_publish_status_code = _get_or_bust(
+        data_dict,
+        'lastPublishStatusCode'
+    )
     start_release_date = _get_or_bust(data_dict, 'startReleaseDate')
     end_release_date = _get_or_bust(data_dict, 'endReleaseDate')
     if 'productType' in data_dict and data_dict['productType']:
@@ -405,15 +409,20 @@ def get_issues_by_pub_status(context, data_dict):
     else:
         product_type_code = '["" TO *]'
 
-    q = 'extras_release_date:[{startReleaseDate} TO {endReleaseDate}] AND ' \
-        'extras_last_publish_status_code:{lastPublishStatusCode} AND ' \
-        'extras_product_type_code:{productTypeCode}' \
-        .format(
-            startReleaseDate=arrow.get(start_release_date).format('YYYY-MM-DDTHH:mm:ss')+'Z',
-            endReleaseDate=arrow.get(end_release_date).format('YYYY-MM-DDTHH:mm:ss')+'Z',
-            lastPublishStatusCode=get_last_publish_status_code,
-            productTypeCode=product_type_code
-        )
+    q = (
+        'extras_release_date:[{startReleaseDate} TO {endReleaseDate}] AND '
+        'extras_last_publish_status_code:{lastPublishStatusCode} AND '
+        'extras_product_type_code:{productTypeCode}'
+    ).format(
+        startReleaseDate=arrow.get(
+            start_release_date
+        ).format('YYYY-MM-DDTHH:mm:ss')+'Z',
+        endReleaseDate=arrow.get(
+            end_release_date
+        ).format('YYYY-MM-DDTHH:mm:ss')+'Z',
+        lastPublishStatusCode=get_last_publish_status_code,
+        productTypeCode=product_type_code
+    )
 
     lc = ckanapi.LocalCKAN()
 
