@@ -7,6 +7,7 @@ import ckanext.stcndm.logic.cubes as cubes
 import ckanext.stcndm.logic.daily as daily
 import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
+import ckanext.stcndm.logic.surveys as surveys
 import datetime
 from dateutil.parser import parse
 
@@ -18,7 +19,6 @@ from ckanext.scheming.helpers import (
     scheming_language_text,
     scheming_get_dataset_schema
 )
-from arrow.parser import ParserError
 from helpers import lookup_label
 
 
@@ -89,7 +89,11 @@ class STCNDMPlugin(p.SingletonPlugin):
             data_dict.get('type', 'unknown')
         )
         if dataset_schema is None:
-            raise ValidationError('Found no schema for following dataset :\n' + json.dumps(data_dict, indent=2) + '\n')
+            raise ValidationError(
+                'Found no schema for following dataset :\n{dump}'.format(
+                    dump=json.dumps(data_dict, indent=2)
+                )
+            )
 
         # iterate through dataset fields defined in schema
         field_schema = dict()
@@ -198,7 +202,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "UpdateProductGeo": common.update_product_geo,
             "UpdatePublishingStatus": common.update_last_publish_status,
             "GetDatasetSchema": common.get_dataset_schema,
-            "GetGroupSchema": common.get_group_schema
+            "GetGroupSchema": common.get_group_schema,
+            "GetSurveyCodesets": surveys.get_survey_codesets
         }
 
     def get_validators(self):
