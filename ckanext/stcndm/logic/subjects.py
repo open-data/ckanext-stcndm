@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import textwrap
+
 import ckanapi
 
 from ckan import logic
@@ -100,14 +102,21 @@ def get_subject_codesets(context, data_dict):
         )
     )
 
+    def _massage(s):
+        chunked = textwrap.wrap(s['subject_code'], 2)
+        return (
+            chunked[-1],
+            chunked[-2] if len(chunked) > 1 else None,
+            s['title']
+        )
+
     return {
         'count': results['count'],
         'limit': limit,
         'start': start,
         'results': [{
-            'subject_code': r['subject_code'],
-            # FIXME: Required by ticket, no present in schema.
-            'parent_subject_code': None,
-            'title': r['title'],
-        } for r in results['results']]
+            'subject_code': rr[0],
+            'parent_subject_code': rr[1],
+            'title': rr[2],
+        } for rr in (_massage(r) for r in results['results'])]
     }
