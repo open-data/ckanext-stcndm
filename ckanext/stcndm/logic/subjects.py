@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import textwrap
+
 import ckanapi
 
+from ckan import logic
 from ckan.logic import get_or_bust, side_effect_free
 from ckan.plugins.toolkit import ValidationError, ObjectNotFound
 
@@ -68,3 +71,52 @@ def get_top_level_subject_list(context, data_dict):
         'title': r['title'],
         'subject_code': r['subject_code']
     } for r in response['results']]
+
+
+@logic.side_effect_free
+def get_subject_codesets(context, data_dict):
+    """
+    Returns all subject codesets.
+
+    :param limit: Number of results to return.
+    :type limit: int
+    :param start: Number of results to skip.
+    :type start: int
+
+    :rtype: list of dicts
+    """
+    lc = ckanapi.LocalCKAN(context=context)
+
+    # Sort would perform better, but this will be easier
+    # for client to implement.
+    limit = int(logic.get_or_bust(data_dict, 'limit'))
+    start = int(logic.get_or_bust(data_dict, 'start'))
+
+    results = lc.action.package_search(
+        q='dataset_type:subject',
+        rows=limit,
+        start=start,
+        fl=(
+            'name',
+            'title'
+        )
+    )
+
+    def _massage(s):
+        chunked = textwrap.wrap(s['subject_code'], 2)
+        return (
+            chunked[-1],
+            chunked[-2] if len(chunked) > 1 else None,
+            s['title']
+        )
+
+    return {
+        'count': results['count'],
+        'limit': limit,
+        'start': start,
+        'results': [{
+            'subject_code': rr[0],
+            'parent_subject_code': rr[1],
+            'title': rr[2],
+        } for rr in (_massage(r) for r in results['results'])]
+    }

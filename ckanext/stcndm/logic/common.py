@@ -73,26 +73,31 @@ def get_next_product_id(context, data_dict):
     )
 
     try:
-        for extra in response['results'][0]['extras']:
-            if extra['key'] == 'product_id_new':
-                product_id_response = extra['value']
+        view_id = response['results'][0]['product_id_new'][-2:]
+        if view_id == '99':
                 # TODO: implement reusing unused IDs
-                if product_id_response.endswith('99'):
-                    raise _ValidationError(
-                        'All Product IDs have been used. '
-                        'Reusing IDs is in development.'
+            raise _ValidationError(
+                'All Product IDs have been used. '
+                'Reusing IDs is in development.'
+            )
+        else:
+            try:
+                product_id_new = (
+                    '{subject_code}{product_type}{sequence_id}{view_id}'
+                ).format(
+                    subject_code=subject_code,
+                    product_type=product_type,
+                    sequence_id=sequence_id,
+                    view_id=str(int(view_id)+1).zfill(2)
+                )
+            except ValueError:
+                raise _ValidationError(
+                    'Invalid product_id {0}'.format(
+                        product_id_new
                     )
-                else:
-                    try:
-                        product_id_new = str(int(product_id_response) + 1)
-                    except ValueError:
-                        raise _ValidationError(
-                            'Invalid product_id {0}'.format(
-                                product_id_response
-                            )
-                        )
-    except (KeyError, IndexError):
-        pass
+                )
+    except (KeyError, IndexError) as e:
+        raise e
 
     return product_id_new
 
@@ -376,25 +381,27 @@ def get_upcoming_releases(context, data_dict):
 def get_issues_by_pub_status(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Fields (listed below) for all product issues of type "productType" with a last_publish_status_code equal to that
-    passed in with a release date between the two input parameters
+    Fields (listed below) for all product issues of type "productType" with a
+    last_publish_status_code equal to that passed in with a release date
+    between the two input parameters
 
-    :param lastPublishStatusCode -
-            possible values are outlined on https://confluence.statcan.ca/display/NDMA/Publishing+workflow
+    :param lastPublishStatusCode: Possible values are outlined on
+        https://confluence.statcan.ca/display/NDMA/Publishing+workflow
     :param startReleaseDate: Beginning of date range
     :param endReleaseDate: End of date range
-    :param productTypeCode - [OPTIONAL ]
-            possible values are outlined on https://confluence.statcan.ca/pages/viewpage.action?pageId=20416770.
-            If no product type is passed in, assume all product types are requested.
-
-    :return:  productTypeCode, productIdNew, issueNumber, correctionId, lastPublishStatusCode, releaseDate,
-              referencePeriod - english and french, URL - english and french
+    :param productTypeCode: Possible values are outlined on
+        https://confluence.statcan.ca/pages/viewpage.action?pageId=20416770.
+        If no product type is passed in, assume all product types are
+        requested.
 
     :rtype: list of dicts
     """
     # TODO: date validation? anything else?
 
-    get_last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
+    get_last_publish_status_code = _get_or_bust(
+        data_dict,
+        'lastPublishStatusCode'
+    )
     start_release_date = _get_or_bust(data_dict, 'startReleaseDate')
     end_release_date = _get_or_bust(data_dict, 'endReleaseDate')
     if 'productType' in data_dict and data_dict['productType']:
@@ -402,15 +409,20 @@ def get_issues_by_pub_status(context, data_dict):
     else:
         product_type_code = '["" TO *]'
 
-    q = 'extras_release_date:[{startReleaseDate} TO {endReleaseDate}] AND ' \
-        'extras_last_publish_status_code:{lastPublishStatusCode} AND ' \
-        'extras_product_type_code:{productTypeCode}' \
-        .format(
-            startReleaseDate=arrow.get(start_release_date).format('YYYY-MM-DDTHH:mm:ss')+'Z',
-            endReleaseDate=arrow.get(end_release_date).format('YYYY-MM-DDTHH:mm:ss')+'Z',
-            lastPublishStatusCode=get_last_publish_status_code,
-            productTypeCode=product_type_code
-        )
+    q = (
+        'extras_release_date:[{startReleaseDate} TO {endReleaseDate}] AND '
+        'extras_last_publish_status_code:{lastPublishStatusCode} AND '
+        'extras_product_type_code:{productTypeCode}'
+    ).format(
+        startReleaseDate=arrow.get(
+            start_release_date
+        ).format('YYYY-MM-DDTHH:mm:ss')+'Z',
+        endReleaseDate=arrow.get(
+            end_release_date
+        ).format('YYYY-MM-DDTHH:mm:ss')+'Z',
+        lastPublishStatusCode=get_last_publish_status_code,
+        productTypeCode=product_type_code
+    )
 
     lc = ckanapi.LocalCKAN()
 
@@ -658,6 +670,35 @@ def update_last_publish_status(context, data_dict):
     """
     Update the publishing status code
 
+    :param productIds: publishing status code
+    :type productIds: str
+    :param issueNo: publishing status code
+    :type issueNo: str
+    :param lastPublishStatusCode: publishing status code
+    :type lastPublishStatusCode: str
+
+    :return: updated package
+    :rtype: dict
+    """
+    return [
+        _update_single_publish_status(
+            context,
+            {
+                'productId': product_id,
+                'issueNo': _get_or_bust(data_dict, 'issueNo'),
+                'lastPublishStatusCode': _get_or_bust(
+                    data_dict,
+                    'lastPublishStatusCode'
+                )
+            }
+        ) for product_id in _get_or_bust(data_dict, 'productIds')
+    ]
+
+
+def _update_single_publish_status(context, data_dict):
+    """
+    Update the publishing status code
+
     :param productId: publishing status code
     :type productId: str
     :param issueNo: publishing status code
@@ -668,7 +709,6 @@ def update_last_publish_status(context, data_dict):
     :return: updated package
     :rtype: dict
     """
-
     product_id = _get_or_bust(data_dict, 'productId')
     issue_no = _get_or_bust(data_dict, 'issueNo')
     last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
