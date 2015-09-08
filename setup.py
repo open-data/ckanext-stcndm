@@ -15,6 +15,6 @@ setup(
     entry_points = """
         [ckan.plugins]
         stcndm = ckanext.stcndm.plugins:STCNDMPlugin
-        stcndm-report-generator = ckanext.report_generator.plugins:STCNDMReportGenerator
+        stcndm_report_generator = ckanext.report_generator.plugins:STCNDMReportGenerator
     """
 )
