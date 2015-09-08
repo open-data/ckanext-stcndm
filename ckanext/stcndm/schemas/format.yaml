@@ -1,0 +1,86 @@
+scheming_version: 1
+about: 'Statistics Canada Dissemination: Codesets'
+about_url: http://github.com/open-data/ckanext-stcndm
+catalog_type_label:
+  en: Code
+  fr: Code
+dataset_type: codeset
+dataset_owner_org: statcan
+form_languages:
+- en
+- fr
+languages_label:
+- eng; CAN
+- fra; CAN
+
+lookup_key: codeset_value
+
+dataset_fields:
+
+- field_name: name
+  # follow our custom name generation validator with default package name validators
+  validators: codeset_create_name
+    not_empty unicode name_validator package_name_validator
+  label:
+    en: Internal Unique ID
+    fr: ID interne unique
+  form_snippet: null
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: codeset_type
+  label:
+    en: Type of Codeset
+    fr: Genre de codeset
+  preset: select
+  choices:
+    - label:
+        en: Content Type
+        fr: Genre de contenu
+      value: 'content_type'
+    - label:
+        en: Frequency
+        fr: Fréquence
+      value: 'frequency'
+    - label:
+        en: Geolevel
+        fr: Geolevel
+      value: 'geolevel'
+#    - label:
+#        en: Dimension Group
+#        fr: Groupe de dimension
+#      value: 'dimension_group'
+  required: true
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: codeset_value
+  label:
+    en: The code value of the codeset (e.g. A0001)
+    fr: La valeur du code du 'codeset' (p.e. A0001)
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: title  # codeset label
+  label:
+    en: Descriptive label
+    fr: Étiquette descriptive
+  preset: fluent_text
+  required: true
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: owner_org
+  label:
+    en: Organisation
+    fr: Organisation
+  preset: dataset_organization
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
