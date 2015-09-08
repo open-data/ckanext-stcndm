@@ -117,7 +117,7 @@ def get_product(context, data_dict):
 
     lc = ckanapi.LocalCKAN(context=context)
     result = lc.action.package_search(
-        q='extras_product_id_new:{product_id}'.format(
+        q='product_id_new:{product_id}'.format(
             product_id=product_id
         ),
         rows=1
