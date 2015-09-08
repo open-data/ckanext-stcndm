@@ -1,0 +1,32 @@
+{% extends "page.html" %}
+{% set intro = g.site_intro_text %}
+{% set placeholder = _('E.g. environment') %}
+
+{% block subtitle %}{{ _("Statistics Canada - New Dissemination") }}{% endblock %}
+
+{% block primary_content %}
+{% block datast_type_list %}
+  <ul class="list-unstyled col-md-6">
+    {% set schemas = h.get_dataset_types() %}
+    {% for schema in schemas %}
+      {% set schema_id = schema[0] %}
+      {% set name = h.scheming_language_text(schema[1]['title']) %}
+      {% set count = schema[1].count %}
+      <li class="row" style="margin:0.5em 0">
+        <a href="/{{ schema_id }}">{{ h.truncate(name, 50) }} ({{ count }}<span class="wb-inv"> {{ _("datasets") }}</span>)</a>&nbsp;&nbsp;
+        <a class="btn btn-default" href="/{{ schema_id }}/new">{{ _("New") }}<span class="wb-inv"> {{ _(" %(type)s dataset")|format(type=name) }}</span> <span class="glyphicon glyphicon-plus"></span></a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+{% block report_generator %}
+    <div class="col-md-6">
+        <section class="panel panel-primary">
+          <h2 class="panel-heading" style="margin-top:0">Report Generator</h2>
+          <div class="panel-body">
+            <a href="/report-generator">Report Generator</a>
+          </div>
+        </section>
+    </div>
+{% endblock %}
+{% endblock %}
