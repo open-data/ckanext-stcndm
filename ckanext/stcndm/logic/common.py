@@ -462,8 +462,8 @@ def get_issues_by_pub_status(context, data_dict):
         return {'count': count, 'results': output}
 
 
+@logic.side_effect_free
 def get_derived_product_list(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Return a dict with all ProductIDs and French/English titles that are
     associated with a given SubjectCode and ProductType.
@@ -483,13 +483,13 @@ def get_derived_product_list(context, data_dict):
 
     product_id = _get_or_bust(data_dict, 'parentProductId')
     product_type = _get_or_bust(data_dict, 'productType')
-    # if product_type not in ['10', '11', '12', '13', '14', ]
 
-    subject_code = product_id[:2]
-    sequence_id = product_id[-4:]
+    subject_code, sequence_id = product_id[:2], product_id[-4:]
 
-    query = {
-        'q': (
+    lc = ckanapi.LocalCKAN(context=context)
+
+    response = lc.action.package_search(
+        q=(
             'product_id_new:{subject_code}??{sequence_id}* '
             'AND product_type_code:{product_type}'
         ).format(
@@ -497,26 +497,13 @@ def get_derived_product_list(context, data_dict):
             sequence_id=sequence_id,
             product_type=product_type
         ),
-        'rows': '1000'
-    }
+        rows=1000
+    )
 
-    response = _get_action('package_search')(context, query)
-
-    # TODO: raise error if the cube cannot be located.
-
-    output = []
-
-    for result in response['results']:
-        result_dict = {}
-        for extra in result['extras']:
-            if extra['key'] == 'product_id_new':
-                result_dict['product_id_new'] = extra['value']
-            elif extra['key'] == 'title':
-                result_dict['title'] = extra['value']
-
-        output.append(result_dict)
-
-    return output
+    return [{
+        'title': r['title'],
+        'cube_id': r['product_id_new']
+    } for r in response['results']]
 
 
 def tv_register_product(context, data_dict):
