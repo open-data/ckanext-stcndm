@@ -8,7 +8,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as toolkit
 from ckan.common import c
 
-from ckanext.scheming.helpers import scheming_get_preset
+from ckanext.scheming.helpers import scheming_get_preset, scheming_dataset_schemas
 
 
 _get_action = toolkit.get_action
@@ -50,6 +50,27 @@ def get_schema(org, dataset):
     result = logic.get_action('ndm_get_schema')(context, data_dict)
 
     return result
+
+def get_dataset_types():
+    lc = ckanapi.LocalCKAN()
+    types = lc.action.package_search(
+        q='*:*',
+        rows=0,
+        facet='true',
+        **{"facet.field": ["dataset_type"]}
+    )['search_facets']['dataset_type']['items']
+    schemas = scheming_dataset_schemas()
+    result = {}
+
+    for schema in schemas:
+        result[schema] = {'title': schemas[schema]['catalog_type_label'], 'count': 0}
+
+        for type in types:
+            if schema == type['name']:
+                result[schema]['count'] = type['count']
+                break
+
+    return sorted(result.iteritems(), key=lambda type: type[1], reverse=True)
 
 
 def generate_revision_list(data_set):

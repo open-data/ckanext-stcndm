@@ -239,7 +239,8 @@ class STCNDMPlugin(p.SingletonPlugin):
     def get_helpers(self):
         return {
             "codeset_choices": helpers.codeset_choices,
-            "lookup_label": helpers.lookup_label
+            "lookup_label": helpers.lookup_label,
+            "get_dataset_types": helpers.get_dataset_types
         }
 
     def before_view(self, pkg_dict):
