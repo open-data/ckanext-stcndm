@@ -231,6 +231,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "publication_create_name": validators.publication_create_name,
             "issue_create_name": validators.issue_create_name,
             "article_create_name": validators.article_create_name,
+            "daily_create_name": validators.daily_create_name,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
             "ndm_str2boolean": validators.ndm_str2boolean,
         }
