@@ -57,14 +57,14 @@ def get_top_level_subject_list(context, data_dict):
     """
     lc = ckanapi.LocalCKAN(context=context)
     response = lc.action.package_search(
-        q='dataset_type:subject AND extras_subject_code:??',
+        q='dataset_type:subject AND subject_code:??',
         rows=1000,
         # These are the only fields we need, but they aren't currently
         # actually passed into Solr. If we skip package_search we can
         # get a much faster query.
         fl=','.join((
             'title',
-            'extras_codeset_value'
+            'subject_code'
         ))
     )
     return [{
