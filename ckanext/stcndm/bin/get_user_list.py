@@ -15,9 +15,14 @@ ckan = ckanapi.RemoteCKAN(BASE_URL,
 query_results = ckan.action.user_list()
 users = list()
 for user in query_results:
-    user['password'] = "Password1"
-    del user['number_of_edits']
-    del user['number_administered_packages']
+    # use the API key for the password if present
+    if user['apikey']:
+        user['password'] = user['apikey']
+    else:
+        user['password'] = "pass4{name}!".format(name=user['name'])
+
+    user['number_of_edits'] = 0
+    user['number_administered_packages'] = 0
     users.append(user)
 
 print json.dumps(users)
