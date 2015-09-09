@@ -77,7 +77,7 @@ def get_cube(context, data_dict):
     result = lc.action.package_search(
         q=(
             'dataset_type:cube AND '
-            'extras_product_id_new:{cube_id}'
+            'product_id_new:{cube_id}'
         ).format(cube_id=cube_id),
         rows=1
     )
