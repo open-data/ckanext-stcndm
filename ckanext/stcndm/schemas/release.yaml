@@ -1,10 +1,10 @@
 scheming_version: 1
-about: 'Statistics Canada Dissemination: Formats'
+about: 'Statistics Canada Dissemination: Releases'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Formats
-  fr: Formats
-dataset_type: format
+  en: Releases
+  fr: Diffusions
+dataset_type: release
 form_languages:
 - en
 - fr
@@ -24,6 +24,32 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
+- field_name: release_id
+  label:
+    en: Release ID
+    fr: ID de diffusion
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: release_date
+  label:
+    en: Release Date
+    fr: Date de diffusion
+  preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: reference_period
+  label:
+    en: Reference Period
+    fr: Période référée
+  preset: fluent_text
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: true
+
 - field_name: parent_slug
   label:
     en: Parent Product Slug
@@ -34,38 +60,29 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: format_code
+- field_name: publication_status
+  preset: ndm_status
+
+- field_name: is_correction
   label:
-    en: Product Format
-    fr: Format du produit
-  preset: ndm_format
+    en: Is a correction
+    fr: Est une correction
   required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
-
-#- field_name: title
-#  label:
-#    en: Descriptive label
-#    fr: Étiquette descriptive
-#  preset: fluent_text
-#  required: true
-#  schema_field_type: fluent
-#  schema_multivalued: false
-#  schema_extras: false
-
-- field_name: url
-  label:
-    en: URL
-    fr: URL
-  preset: fluent_text
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: true
+  form_snippet: select.html
+  display_snippet: select.html
+  choices:
+    - label:
+        en: 'No'
+        fr: 'Non'
+      value: '0'
+    - label:
+        en: 'Yes'
+        fr: 'Oui'
+      value: '1'
 
 - field_name: name
   # follow our custom name generation validator with default package name validators
-  validators: format_create_name
+  validators: release_create_name
     not_empty unicode name_validator package_name_validator
   label:
     en: Dataset Slug
@@ -76,7 +93,7 @@ dataset_fields:
   schema_extras: false
 
 - field_name: title
-  validators: format_create_name
+  validators: release_create_name
   form_snippet: null
   schema_field_type: string
   schema_multivalued: false
