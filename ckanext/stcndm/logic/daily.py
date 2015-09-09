@@ -1,6 +1,7 @@
 # --coding: utf-8 --
 __author__ = 'Statistics Canada'
 
+import ckanapi
 import datetime
 from datetime import datetime as dt
 import re
@@ -117,21 +118,21 @@ def register_daily(context, data_dict):
     :raises: ValidationError
     """
 
-    my_org_type = 'statcan'
-#    time = datetime.datetime.today()
+    lc = ckanapi.LocalCKAN()
 
     product_id = _get_or_bust(data_dict, 'productId')
     if not re.match('^00240001[0-9]{3,6}$', product_id):
         raise _ValidationError(_('Invalid product id for Daily: {0}'.format(product_id)))
 
     #  check whether the product ID we were given is already in use
-    q = {'q': 'product_id_new:{0}'.format(product_id)}
-    result = _get_action('package_search')(context, q)
+    result = lc.action.package_search(
+        q='product_id_new:{0}'.format(product_id)
+    )
     count = result['count']
     if count:
         raise _ValidationError(_("product Id '{0}' already in use".format(product_id)))
 
-    title = _get_or_bust(data_dict, 'productTitle')
+    product_title = _get_or_bust(data_dict, 'productTitle')
 
     release_date_str = _get_or_bust(data_dict, 'releaseDate')
     try:
@@ -139,15 +140,11 @@ def register_daily(context, data_dict):
     except ValueError:
         raise _ValidationError(
             _("Incorrect format for releaseDate '{0}', should be YYYY-MM-DD".format(release_date_str)))
-#    publish_status_dict = _get_action('ndm_get_last_publish_status')(context, data_dict)
 
     unique_id = _get_or_bust(data_dict, 'uniqueId')
     if not re.match('^daily[0-9]{3,4}$', unique_id):
         raise _ValidationError(_("Invalid unique ID for Daily: '{0}'".format(unique_id)))
 
-    product_type_code = '24'
-    data_dict['productType'] = product_type_code  # Daily always has productCode 24
-#    product_type_dict = _get_action('ndm_get_product_type')(context, data_dict)
     last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
 
     child_list = _get_or_bust(data_dict, 'childList')
@@ -157,47 +154,23 @@ def register_daily(context, data_dict):
         if not isinstance(child, basestring):
             raise _ValidationError(_('Items in childList must all be strings'))
 
-    extras_dict = {}
-
-    """ for now we won't instantiate all fields to avoid giving unintended meaning to empty fields
-    field_list = _get_action('ndm_get_fieldlist')(context, {'org': my_org_type})
-    for field in field_list['fields']:
-        if str(field).endswith('ints'):
-            extras_dict[field] = 0
-        else:
-            extras_dict[field] = ''
-    """
-
-#    extras_dict['10uid_bi_strs'] = product_id
-    extras_dict['product_id_new'] = product_id
-#    for key in product_type_dict:
-#        extras_dict[key] = unicode(product_type_dict[key])
-    extras_dict['product_type_code'] = product_type_code
-#    for key in publish_status_dict:
-#        extras_dict[key] = unicode(publish_status_dict[key])
-    extras_dict['last_publish_status_code'] = last_publish_status_code
-    extras_dict['parent_product'] = product_id
-    extras_dict['title'] = title
-#    extras_dict['zckcapacity_bi_strs'] = 'public'
-#    extras_dict['zckownerorg_bi_strs'] = my_org_type
-#    extras_dict['zckpubdate_bi_strs'] = time.strftime("%Y-%m-%d")
-#    extras_dict['zckpushtime_bi_strs'] = time.strftime("%Y-%m-%d %H:%M")
-#    extras_dict['zckstatus_bi_txtm'] = 'ndm_register_daily_api'
-    extras_dict['release_date'] = release_date.strftime("%Y-%m-%dT08:30")
-#    extras_dict['pkuniqueidcode_bi_strs'] = unique_id
-    extras_dict['child_list'] = '; '.join(child_list)
-
-    extras = []
-    for key in extras_dict:
-        extras.append({'key': key, 'value': extras_dict[key]})
-
-    package_dict = {'name': product_id,
-                    'owner_org': my_org_type,
-                    'extras': extras,
-                    'title': unique_id}
-    new_product = _get_action('package_create')(context, package_dict)
-    output = _get_action('ndm_get_product')(context, {'productId': new_product['name'],
-                                                      'fl': 'product_id_new'})
+    new_product = lc.action.package_create(
+        name='daily-{0}'.format(product_id),
+        owner_org='statcan',
+        type='daily',
+        # extras=extras,
+        title=product_title,
+        product_id_new=product_id,
+        product_type_code='24',
+        last_publish_status_code=last_publish_status_code,
+        parent_product=product_id,
+        release_date=release_date.strftime("%Y-%m-%dT08:30"),
+        child_list=child_list
+    )
+    output = lc.action.GetProduct(
+        productId=new_product['product_id_new'],
+        fl='product_id_new'
+    )
     return output
 
 

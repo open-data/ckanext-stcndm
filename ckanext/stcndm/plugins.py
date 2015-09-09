@@ -231,6 +231,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "publication_create_name": validators.publication_create_name,
             "issue_create_name": validators.issue_create_name,
             "article_create_name": validators.article_create_name,
+            "daily_create_name": validators.daily_create_name,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
             "ndm_str2boolean": validators.ndm_str2boolean,
         }
@@ -238,7 +239,8 @@ class STCNDMPlugin(p.SingletonPlugin):
     def get_helpers(self):
         return {
             "codeset_choices": helpers.codeset_choices,
-            "lookup_label": helpers.lookup_label
+            "lookup_label": helpers.lookup_label,
+            "get_dataset_types": helpers.get_dataset_types
         }
 
     def before_view(self, pkg_dict):

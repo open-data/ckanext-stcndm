@@ -114,8 +114,8 @@ def get_cube_list_by_subject(context, data_dict):
     result = lc.action.package_search(
         q=(
             'dataset_type:cube AND '
-            '(extras_subject_codes:{code} OR '
-            'extras_subject_codes:{code}*)'
+            '(subject_codes:{code} OR '
+            'subject_codes:{code}*)'
         ).format(code=subject_code),
         rows=1000
     )
