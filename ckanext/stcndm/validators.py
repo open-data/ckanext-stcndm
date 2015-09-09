@@ -5,6 +5,7 @@ from ckanext.stcndm import helpers as h
 from ckan.lib.helpers import lang as lang
 import re
 import ckan.lib.navl.dictization_functions as df
+import ckanapi
 
 
 def scheming_validator(fn):
@@ -98,6 +99,14 @@ def _data_lookup(key, data):
     return value
 
 
+def slug_strip(slug):
+    dash_index = slug.find(u'-')
+    if dash_index >= 0:
+        return slug[dash_index+1:]
+    else:
+        return slug
+
+
 def codeset_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
@@ -110,6 +119,20 @@ def codeset_create_name(key, data, errors, context):
         data[key] = u'{0}-{1}'.format(codeset_type, codeset_value.lower())
     else:
         errors[key].append(_('could not find codeset_type or codeset_value'))
+
+
+def format_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    parent_id = slug_strip(_data_lookup(('parent_slug',), data))
+    format_code = _data_lookup(('format_code',), data)
+    if parent_id and format_code:
+        data[key] = u'format-{0}_{1}'.format(parent_id.lower(), format_code.lower())
+    else:
+        errors[key].append(_('could not find parent_product or format_code'))
 
 
 def subject_create_name(key, data, errors, context):
@@ -177,6 +200,23 @@ def publication_create_name(key, data, errors, context):
         errors[key].append(_('could not find product_id_new'))
 
 
+def release_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    parent_id = slug_strip(_data_lookup(('parent_slug',), data))
+    release_date = _data_lookup(('release_date',), data)
+    if parent_id and release_date:
+        if isinstance(release_date, unicode):
+            data[key] = u'release-{0}_{1}'.format(parent_id.lower(), release_date.lower())
+        else:
+            data[key] = u'release-{0}_{1}'.format(parent_id.lower(), release_date.strftime('%Y-%m-%d'))
+    else:
+        errors[key].append(_('could not find parent_slug or release_date'))
+
+
 def issue_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
@@ -241,6 +281,28 @@ def geodescriptor_create_name(key, data, errors, context):
         data[key] = u'geodescriptor-{0}'.format(geodescriptor_code.lower())
     else:
         errors[key].append(_('could not find geodescriptor_code'))
+
+
+def valid_parent_slug(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return False
+
+    parent_slug = _data_lookup(('parent_slug',), data)
+    if not parent_slug:
+        errors[key].append(_('could not find parent_slug'))
+        return False
+
+    lc = ckanapi.LocalCKAN()
+    query_result = lc.action.package_search(
+        q='name:{0}'.format(parent_slug.lower())
+    )
+    if query_result['count'] < 1:
+        errors[key].append(_('could not find parent_slug'))
+        return False
+
+    return True
 
 
 @scheming_validator

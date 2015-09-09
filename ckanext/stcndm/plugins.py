@@ -48,14 +48,16 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/corrections.yaml',
                 'ckanext.stcndm:schemas/cube.yaml',
                 'ckanext.stcndm:schemas/daily.yaml',
+                'ckanext.stcndm:schemas/format.yaml',
                 'ckanext.stcndm:schemas/geodescriptor.yaml',
                 'ckanext.stcndm:schemas/indicator.yaml',
                 'ckanext.stcndm:schemas/issue.yaml',
                 'ckanext.stcndm:schemas/publication.yaml',
+                'ckanext.stcndm:schemas/release.yaml',
                 'ckanext.stcndm:schemas/pumf.yaml',
                 'ckanext.stcndm:schemas/subject.yaml',
-                'ckanext.stcndm:schemas/view.yaml',
-                'ckanext.stcndm:schemas/survey.yaml'
+                'ckanext.stcndm:schemas/survey.yaml',
+                'ckanext.stcndm:schemas/view.yaml'
             ]),
             'scheming.presets': '\n'.join([
                 'ckanext.scheming:presets.json',
@@ -219,21 +221,24 @@ class STCNDMPlugin(p.SingletonPlugin):
 
     def get_validators(self):
         return {
+            "article_create_name": validators.article_create_name,
+            "codeset_create_name": validators.codeset_create_name,
+            "codeset_multiple_choice": validators.codeset_multiple_choice,
+            "cube_create_name": validators.cube_create_name,
+            "daily_create_name": validators.daily_create_name,
+            "format_create_name": validators.format_create_name,
+            "geodescriptor_create_name": validators.geodescriptor_create_name,
+            "issue_create_name": validators.issue_create_name,
+            "ndm_str2boolean": validators.ndm_str2boolean,
+            "ndm_tag_name_validator": validators.ndm_tag_name_validator,
+            "publication_create_name": validators.publication_create_name,
+            "release_create_name": validators.release_create_name,
             "shortcode_validate": validators.shortcode_validate,
             "shortcode_output": validators.shortcode_output,
-            "codeset_multiple_choice": validators.codeset_multiple_choice,
-            "codeset_create_name": validators.codeset_create_name,
             "subject_create_name": validators.subject_create_name,
-            "geodescriptor_create_name": validators.geodescriptor_create_name,
             "survey_create_name": validators.survey_create_name,
-            "cube_create_name": validators.cube_create_name,
+            "valid_parent_slug": validators.valid_parent_slug,
             "view_create_name": validators.view_create_name,
-            "publication_create_name": validators.publication_create_name,
-            "issue_create_name": validators.issue_create_name,
-            "article_create_name": validators.article_create_name,
-            "daily_create_name": validators.daily_create_name,
-            "ndm_tag_name_validator": validators.ndm_tag_name_validator,
-            "ndm_str2boolean": validators.ndm_str2boolean,
         }
 
     def get_helpers(self):
