@@ -502,7 +502,7 @@ def get_derived_product_list(context, data_dict):
 
     return [{
         'title': r['title'],
-        'cube_id': r['product_id_new']
+        'product_id': r['product_id_new']
     } for r in response['results']]
 
 
