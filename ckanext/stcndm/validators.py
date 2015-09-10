@@ -218,7 +218,8 @@ def release_create_name(key, data, errors, context):
     if not parent_id or not release_id:
         errors[key].append(_('could not find parent_slug or release_id'))
     else:
-        data[key] = u'release-{year}{release_id}'.format(
+        data[key] = u'release-{parent_id}-{year}{release_id}'.format(
+            parent_id=parent_id,
             year=datetime.date.today().year,
             release_id=release_id
         )
