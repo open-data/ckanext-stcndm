@@ -46,7 +46,7 @@ while i < n:
             line_out['name'] = u'geodescriptor-{0}'.format(line['tmsgcspecificcode_bi_tmtxtm'].lower())
 
         if 'tmsgccode_bi_tmtxtm' in line and line['tmsgccode_bi_tmtxtm']:
-            line_out['geolevel_code'] = line['tmsgccode_bi_tmtxtm']
+            line_out['geolevel_codes'] = line['tmsgccode_bi_tmtxtm']
 
         if 'title' in line and line['title']:
             line_out['old_title'] = {
