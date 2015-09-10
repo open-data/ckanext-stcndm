@@ -216,7 +216,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetDatasetSchema": common.get_dataset_schema,
             "GetGroupSchema": common.get_group_schema,
             "GetSurveyCodesets": surveys.get_survey_codesets,
-            "GetSubjectCodesets": subjects.get_subject_codesets
+            "GetSubjectCodesets": subjects.get_subject_codesets,
+            "EnsureReleaseExists": common.ensure_release_exists
         }
 
     def get_validators(self):
@@ -245,7 +246,8 @@ class STCNDMPlugin(p.SingletonPlugin):
         return {
             "codeset_choices": helpers.codeset_choices,
             "lookup_label": helpers.lookup_label,
-            "get_dataset_types": helpers.get_dataset_types
+            "get_dataset_types": helpers.get_dataset_types,
+            'ensure_release_exists': helpers.ensure_release_exists
         }
 
     def before_view(self, pkg_dict):

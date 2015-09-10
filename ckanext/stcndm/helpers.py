@@ -327,3 +327,59 @@ def lookup_label(field_name, field_value, lookup_type):
                 pass
 
         return result
+
+
+def ensure_release_exists(product_id):
+    """
+    Ensure that a release dataset exists for the given product_id.
+
+    :param product_id: The parent product ID.
+    :type product_id: str
+    """
+    allowed_datasets = (
+        'cube',
+        # FIXME: None of the below exist yet. If they're eventually added
+        #        with names other than those used below this list must be
+        #        updated.
+        'video',
+        'analytical_product',
+        'conference',
+        'microdata',
+        'generic',
+        'chart',
+        'indicator',
+        'tableview'
+    )
+
+    lc = ckanapi.LocalCKAN()
+
+    result = lc.action.package_search(
+        q='product_id_new:{product_id}'.format(
+            product_id=product_id
+        ),
+        rows=1,
+        fl=[
+            'name',
+            'type',
+            'owner_org'
+        ]
+    )
+
+    if not result['count']:
+        raise ValueError('product_id does not exist')
+
+    result = result['results'][0]
+
+    if result['type'] not in allowed_datasets:
+        raise ValueError('{type} is not an allowed dataset type.'.format(
+            type=result['type']
+        ))
+
+    print(lc.action.package_create(
+        type=u'release',
+        owner_org=result['owner_org'],
+        release_id='001',
+        parent_slug=result['name'],
+        publication_status='02',
+        is_correction='0'
+    ))

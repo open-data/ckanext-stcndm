@@ -4,6 +4,7 @@ import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
 import ckanext.scheming.helpers as scheming_helpers
+import ckanext.stcndm.helpers as stcndm_helpers
 import arrow
 
 _get_or_bust = logic.get_or_bust
@@ -827,3 +828,14 @@ def update_product_geo(context, data_dict):
     })
 
     return output
+
+
+def ensure_release_exists(context, data_dict):
+    """
+    Ensure a release exists for the given `productId`.
+
+    :param productId: The parent product ID.
+    :type productId: str
+    """
+    product_id = _get_or_bust(data_dict, 'productId')
+    stcndm_helpers.ensure_release_exists(product_id)

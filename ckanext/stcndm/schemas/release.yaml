@@ -61,7 +61,7 @@ dataset_fields:
   schema_extras: true
 
 - field_name: publication_status
-  preset: ndm_status
+  preset: ndm_publish_status
 
 - field_name: is_correction
   label:
@@ -83,7 +83,7 @@ dataset_fields:
 - field_name: name
   # follow our custom name generation validator with default package name validators
   validators: release_create_name
-    not_empty unicode name_validator package_name_validator
+    not_empty unicode package_name_validator
   label:
     en: Dataset Slug
     fr: Slug du dataset
