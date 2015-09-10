@@ -212,17 +212,20 @@ def release_create_name(key, data, errors, context):
     if errors[key]:
         return
 
-    parent_id = slug_strip(_data_lookup(('parent_slug',), data))
-    release_id = _data_lookup(('release_id',), data)
+    if data[('release_id',)] is missing or not data[('release_id',)]:
+        lc = ckanapi.LocalCKAN()
+        query_result = lc.action.package_search(q='name:release*')
+        data[('release_id',)] = query_result['count'] + 1
 
-    if not parent_id or not release_id:
-        errors[key].append(_('could not find parent_slug or release_id'))
+    parent_id = slug_strip(_data_lookup(('parent_slug',), data))
+
+    if not parent_id:
+        errors[key].append(_('could not find parent_slug'))
     else:
-        data[key] = u'release-{parent_id}-{year}{release_id}'.format(
+        data[key] = (u'release-{parent_id}-{ts}'.format(
             parent_id=parent_id,
-            year=datetime.date.today().year,
-            release_id=release_id
-        )
+            ts=datetime.date.today().isoformat()
+        )).lower()
 
 
 def issue_create_name(key, data, errors, context):

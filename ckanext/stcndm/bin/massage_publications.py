@@ -37,11 +37,102 @@ def code_lookup(old_field_name, data_set, choice_list):
             codes.append(code)
     return codes
 
+
+def format_and_release(line):
+    # format fields
+    format_out = {
+        u'owner_org': u'statcan',
+        u'private': False,
+        u'type': u'format',
+        u'parent_slug': 'publication-{0}'.format(line['productidnew_bi_strs'].lower()),
+        u'name':  (u'format-{0}_{1}'.format(line['productidnew_bi_strs'], line['formatcode_bi_txtm'])).lower(),
+        u'title': (u'format-{0}_{1}'.format(line['productidnew_bi_strs'], line['formatcode_bi_txtm'])).lower()
+    }
+
+    if 'formatcode_bi_txtm' in line and line['formatcode_bi_txtm']:
+        format_out['format_code'] = line['formatcode_bi_txtm']
+    else:
+        sys.stderr.write((u'{0} missing format\n').format(line['name']))
+
+    temp = {}
+    if 'issnnum_en_strs' in line and line['issnnum_en_strs']:
+        temp[u'en'] = line['issnnum_en_strs']
+    if 'issnnum_fr_strs' in line and line['issnnum_fr_strs']:
+        temp[u'fr'] = line['issnnum_fr_strs']
+    if temp:
+        format_out['issn_number'] = temp
+
+    temp = {}
+    if 'url_en_strs' in line and line['url_en_strs']:
+        temp[u'en'] = line['url_en_strs']
+    if 'url_fr_strs' in line and line['url_fr_strs']:
+        temp[u'fr'] = line['url_fr_strs']
+    if temp:
+        format_out['url'] = temp
+
+    print json.dumps(format_out)
+
+    # release fields
+
+    release_out = {
+        u'owner_org': u'statcan',
+        u'private': False,
+        u'type': u'release',
+        u'parent_slug': format_out['name'],
+        u'is_correction': '0'
+    }
+
+    temp = {}
+    if 'adminnotes_bi_txts' in line and line['adminnotes_bi_txts']:
+        temp[u'en'] = line['adminnotes_bi_txts']
+        temp[u'fr'] = line['adminnotes_bi_txts']
+    if temp:
+        release_out['admin_notes'] = temp
+
+    if 'releasedate_bi_strs' in line and line['releasedate_bi_strs']:
+        release_out['release_date'] = line['releasedate_bi_strs']
+
+    temp = {}
+    if 'refperiod_en_txtm' in line:
+        result = listify(line['refperiod_en_txtm'])
+        if result:
+            temp[u'en'] = result
+    if 'refperiod_fr_txtm' in line:
+        result = listify(line['refperiod_fr_txtm'])
+        if result:
+            temp[u'fr'] = result
+    if temp:
+        release_out['reference_periods'] = temp
+
+    if 'lastpublishstatuscode_bi_strs' in line and line['lastpublishstatuscode_bi_strs']:
+        release_out['publish_status_code'] = line['lastpublishstatuscode_bi_strs']
+
+    if 'display_en_txtm' in line:
+        result = code_lookup('display_en_txtm', line, display_list)
+        if result:
+            release_out['display_code'] = result
+
+    if 'dispandtrack_bi_txtm' in line:
+        result = code_lookup('dispandtrack_bi_txtm', line, tracking_list)
+        if result:
+            release_out['tracking_codes'] = result
+
+    # release_out['name'] = u'release-{0}_{1}_{2}'.format(
+    #     line['productidnew_bi_strs'],
+    #     line['formatcode_bi_txtm'],
+    #     release_out['release_id'])
+
+    # release_out['title'] = u'release-{0}_{1}_{2}'.format(
+    #     line['productidnew_bi_strs'],
+    #     line['formatcode_bi_txtm'],
+    #     release_out['release_id'])
+
+    print json.dumps(release_out)
+
+
 rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000')
 
-content_type_list = []
 geolevel_list = []
-frequency_list = []
 status_list = []
 tracking_list = []
 archive_status_list = []
@@ -52,18 +143,8 @@ results = rc.action.package_search(
     q='type:codeset',
     rows=1000)
 for codeset in results['results']:
-    if codeset['codeset_type'] == 'content_type':
-        content_type_list.append({
-            'label': codeset['title'],
-            'value': codeset['codeset_value']
-        })
     if codeset['codeset_type'] == 'geolevel':
         geolevel_list.append({
-            'label': codeset['title'],
-            'value': codeset['codeset_value']
-        })
-    if codeset['codeset_type'] == 'frequency':
-        frequency_list.append({
             'label': codeset['title'],
             'value': codeset['codeset_value']
         })
@@ -171,7 +252,7 @@ i = 0
 n = 1
 while i < n:
     query_results = rc.action.package_search(
-        q='organization:maprimary AND extras_pkuniqueidcode_bi_strs:pub*',
+        q='pkuniqueidcode_bi_strs:public* AND title_en_txts:*',
         rows=1000,
         start=i*1000)
     n = query_results['count'] / 1000.0
@@ -181,17 +262,11 @@ while i < n:
         for e in line['extras']:
             line[e['key']] = e['value']
 
-        line_out = {u'owner_org': u'statcan',
-                    u'private': False,
-                    u'type': u'publication',
-                    u'product_type_code': u'20'}
-
-        temp = {}
-        if 'adminnotes_bi_txts' in line and line['adminnotes_bi_txts']:
-            temp[u'en'] = line['adminnotes_bi_txts']
-            temp[u'fr'] = line['adminnotes_bi_txts']
-        if temp:
-            line_out['admin_notes'] = temp
+        product_out = {
+            u'owner_org': u'statcan',
+            u'private': False,
+            u'type': u'publication',
+            u'product_type_code': u'20'}
 
         temp = {}
         if 'title_en_txts' in line and line['title_en_txts']:
@@ -199,7 +274,7 @@ while i < n:
         if 'title_fr_txts' in line and line['title_fr_txts']:
             temp[u'fr'] = line['title_fr_txts']
         if temp:
-            line_out['title'] = temp
+            product_out['title'] = temp
 
         temp = {}
         if 'description_en_txts' in line and line['description_en_txts']:
@@ -207,27 +282,22 @@ while i < n:
         if 'description_fr_txts' in line and line['description_fr_txts']:
             temp[u'fr'] = line['description_fr_txts']
         if temp:
-            line_out['notes'] = temp
+            product_out['notes'] = temp
 
         if 'conttypecode_bi_txtm' in line:
             result = listify(line['conttypecode_bi_txtm'])
             if result:
-                line_out['content_type_codes'] = result
-
-        if 'dispandtrack_bi_txtm' in line:
-            result = code_lookup('dispandtrack_bi_txtm', line, tracking_list)
-            if result:
-                line_out['tracking_codes'] = result
+                product_out['content_type_codes'] = result
 
         if 'geolevel_en_txtm' in line:
             result = code_lookup('geolevel_en_txtm', line, geolevel_list)
             if result:
-                line_out['geolevel_codes'] = result
+                product_out['geolevel_codes'] = result
 
-        # if 'specificgeo_en_txtm' in line:
-        #     result = code_lookup('specificgeo_en_txtm', line, geodescriptor_list)
-        #     if result:
-        #         line_out['geodescriptor_codes'] = result
+        if 'specificgeocode_bi_txtm' in line and line['specificgeocode_bi_txtm']:
+            result = listify('specificgeocode_bi_txtm')
+            if result:
+                product_out['geodescriptor_codes'] = result
 
         if 'subjnewcode_bi_txtm' in line and line['subjnewcode_bi_txtm']:
             result = listify(line['subjnewcode_bi_txtm'])
@@ -236,12 +306,16 @@ while i < n:
                     sys.stderr.write((u'{0}: unknown subject code: .{1}.\n'.format(
                         line['name'],
                         subject_code)).encode('utf-8'))
-            line_out['subject_codes'] = result
+            product_out['subject_codes'] = result
+
+        if 'subjoldcode_bi_txtm' in line and line['subjoldcode_bi_txtm']:
+            result = listify(line['subjnewcode_bi_txtm'])
+            product_out['subjectold_codes'] = result
 
         if 'related_bi_strm' in line and line['related_bi_strm']:
             result = listify(line['related_bi_strm'])
             if result:
-                line_out['related_products'] = result
+                product_out['related_products'] = result
 
         temp = {}
         if 'stcthesaurus_en_txtm' in line:
@@ -253,18 +327,18 @@ while i < n:
             if result:
                 temp[u'fr'] = result
         if temp:
-            line_out['thesaurus'] = temp
+            product_out['thesaurus'] = temp
 
         if 'archivedate_bi_txts' in line and line['archivedate_bi_txts']:
-            line_out['archive_date'] = line['archivedate_bi_txts']
+            product_out['archive_date'] = line['archivedate_bi_txts']
 
         if 'archived_bi_strs' in line:
             result = code_lookup('archived_bi_strs', line, archive_status_list)
             if result:
-                line_out['archive_status_code'] = result[0]
+                product_out['archive_status_code'] = result[0]
 
         # if 'defaultviewid_bi_strs' and line['defaultviewid_bi_strs']:
-        #     line_out['default_view_id'] = line['defaultviewid_bi_strs']
+        #     product_out['default_view_id'] = line['defaultviewid_bi_strs']
 
         temp = {}
         if 'dimmembers_en_txtm':
@@ -276,25 +350,34 @@ while i < n:
             if result:
                 temp[u'fr'] = result
         if temp:
-            line_out['dimension_members'] = temp
-
-        if 'display_en_txtm' in line:
-            result = code_lookup('display_en_txtm', line, display_list)
-            if result:
-                line_out['display_code'] = result
+            product_out['dimension_members'] = temp
 
         if 'frccode_bi_strs' in line and line['frccode_bi_strs']:
-            line_out['frc'] = line['frccode_bi_strs']
+            product_out['frc'] = line['frccode_bi_strs']
 
-        if 'freq_en_txtm' in line:
-            result = code_lookup('freq_en_txtm', line, frequency_list)
-            if result:
-                line_out['frequency_codes'] = result
+        if 'arrayterminatedcode_bi_strs' in line and line['arrayterminatedcode_bi_strs']:
+            product_out['array_terminated'] = line['arrayterminatedcode_bi_strs']
 
-        if 'hierarchyid_bi_strm' in line:
-            result = listify(line['hierarchyid_bi_strm'])
+        if 'featureweight_bi_ints' in line and line['featureweight_bi_ints']:
+            product_out['feature_weight'] = int(line['featureweight_bi_ints'])
+
+        if 'freqcode_bi_txtm' in line and line['freqcode_bi_txtm']:
+            result = listify('freqcode_bi_txtm')
             if result:
-                line_out['parent_product'] = result[0]
+                product_out['frequency_codes'] = result
+
+        if 'hierarchyid_bi_strm' in line and line['hierarchyid_bi_strm']:
+            product_out['parent_product'] = line['hierarchyid_bi_strm']
+
+        if 'extauthor_bi_txtm' in line and line['extauthor_bi_txtm']:
+            result = listify(line['extauthor_bi_txtm'])
+            if result:
+                product_out['external_authors'] = result
+
+        if 'intauthor_bi_txtm' in line and line['intauthor_bi_txtm']:
+            result = listify(line['intauthor_bi_txtm'])
+            if result:
+                product_out['internal_authors'] = result
 
         temp = {}
         if 'histnotes_en_txts' in line and line['histnotes_en_txts']:
@@ -302,12 +385,20 @@ while i < n:
         if 'histnotes_fr_txts' in line and line['histnotes_fr_txts']:
             temp[u'fr'] = line['histnotes_fr_txts']
         if temp:
-            line_out['history_notes'] = temp
+            product_out['history_notes'] = temp
+
+        temp = {}
+        if 'doinum_en_strs' in line and line['doinum_en_strs']:
+            temp[u'en'] = line['doinum_en_strs']
+        if 'doinum_fr_strs' in line and line['doinum_fr_strs']:
+            temp[u'fr'] = line['doinum_fr_strs']
+        if temp:
+            product_out['digital_object_identifier'] = temp
 
         if 'interncontactname_bi_txts' in line and line['interncontactname_bi_txts']:
             result = listify(line['interncontactname_bi_txts'])
             if result:
-                line_out['internal_contacts'] = result
+                product_out['internal_contacts'] = result
 
         temp = {}
         if 'keywordsuncon_en_txtm' in line:
@@ -319,71 +410,58 @@ while i < n:
             if result:
                 temp[u'fr'] = result
         if temp:
-            line_out['keywords'] = temp
-
-        if 'lastpublishstatus_en_strs' in line:
-            result = code_lookup('lastpublishstatus_en_strs', line, publish_list)
-            if result:
-                line_out['last_publish_status_code'] = result[0]
+            product_out['keywords'] = temp
 
         if 'productidnew_bi_strs' in line and line['productidnew_bi_strs']:
-            line_out['product_id_new'] = line['productidnew_bi_strs']
-            line_out['name'] = 'publication-{0}'.format(line['productidnew_bi_strs'].lower())
+            product_out['product_id_new'] = line['productidnew_bi_strs']
+            product_out['name'] = 'publication-{0}'.format(line['productidnew_bi_strs'].lower())
 
         if 'productidold_bi_strs' in line and line['productidold_bi_strs']:
-            line_out['product_id_old'] = line['productidold_bi_strs']
+            product_out['product_id_old'] = line['productidold_bi_strs']
 
-        temp = {}
-        if 'refperiod_en_txtm' in line:
-            result = listify(line['refperiod_en_txtm'])
-            if result:
-                temp[u'en'] = result
-        if 'refperiod_fr_txtm' in line:
-            result = listify(line['refperiod_fr_txtm'])
-            if result:
-                temp[u'fr'] = result
-        if temp:
-            line_out['reference_periods'] = temp
-
-        if 'releasedate_bi_strs' in line and line['releasedate_bi_strs']:
-            line_out['release_date'] = line['releasedate_bi_strs']
+        if 'pubyear_bi_intm' in line and line['pubyear_bi_intm']:
+            product_out['publication_year'] = line['pubyear_bi_intm']
 
         if 'replaces_bi_strm' in line:
             result = listify(line['replaces_bi_strm'])
             if result:
-                line_out['replaced_products'] = result
+                product_out['replaced_products'] = result
 
         if 'sourcecode_bi_txtm' in line and line['sourcecode_bi_txtm']:
             result = listify(line['sourcecode_bi_txtm'])
             if result:
-                line_out['survey_source_codes'] = result
+                product_out['survey_source_codes'] = result
 
-        if 'statusf_en_strs' in line:
-            result = code_lookup('statusf_en_strs', line, status_list)
+        if 'statusfcode_bi_strs' in line and line['statusfcode_bi_strs']:
+            result = listify('statusfcode_bi_strs')
             if result:
-                line_out['status_codes'] = result
-
-        temp = {}
-        if 'url_en_strs' in line and line['url_en_strs']:
-            temp[u'en'] = line['url_en_strs']
-        if 'url_fr_strs' in line and line['url_fr_strs']:
-            temp[u'fr'] = line['url_fr_strs']
-        if temp:
-            line_out['url'] = temp
-
-#        if 'resources' in line:
-#            line_out['resources'] = line['resources']
-
-#        if 'num_resources' in line:
-#            line_out['num_resources'] = line['num_resources']
+                product_out['status_codes'] = result
 
         if 'license_title' in line:
-            line_out['license_title'] = line['license_title']
+            product_out['license_title'] = line['license_title']
 
         if 'license_url' in line:
-            line_out['license_url'] = line['license_url']
+            product_out['license_url'] = line['license_url']
 
         if 'license_id' in line:
-            line_out['license_id'] = line['license_id']
+            product_out['license_id'] = line['license_id']
 
-        print json.dumps(line_out)
+        print json.dumps(product_out)
+
+        format_and_release(line)
+
+i = 0
+n = 1
+while i < n:
+    query_results = rc.action.package_search(
+        q='pkuniqueidcode_bi_strs:public* AND -title_en_txts:*',
+        rows=1000,
+        start=i*1000)
+    n = query_results['count'] / 1000.0
+    i += 1
+
+    for line in query_results['results']:
+        for e in line['extras']:
+            line[e['key']] = e['value']
+
+        format_and_release(line)
