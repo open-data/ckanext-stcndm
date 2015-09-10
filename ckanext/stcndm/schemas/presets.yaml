@@ -193,13 +193,33 @@ presets:
           fr: Vérifié
         value: '08'
       - label:
+          en: Loading
+          fr: En chargement
+        value: '09'
+      - label:
           en: Loaded
           fr: Chargé
         value: '10'
       - label:
+          en: Error Loading
+          fr: Erreur en chargeant
+        value: '11'
+      - label:
           en: Released
           fr: Diffusé
         value: '12'
+      - label:
+          en: Failure Releasing
+          fr: Erreur en diffusant
+        value: '44'
+      - label:
+          en: Freezing
+          fr: Figeant
+        value: '90'
+      - label:
+          en: Failure Freezing
+          fr: Erreur en figeant
+        value: '90'
       - label:
           en: Frozen
           fr: Figé
