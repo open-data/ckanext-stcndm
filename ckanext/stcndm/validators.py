@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+# encoding: utf-8
 import json
+import datetime
 
 from ckan.plugins.toolkit import missing, _
 from ckanext.stcndm import helpers as h
@@ -57,7 +60,7 @@ def shortcode_validate(key, data, errors, context):
             try:
                 element = element.decode('utf-8')
             except UnicodeDecodeError:
-                errors[key]. append(_('invalid encoding for "%s" value') % lang)
+                errors[key].append(_('invalid encoding for "%s" value') % lang)
                 continue
         out.append(element)
 
@@ -130,7 +133,10 @@ def format_create_name(key, data, errors, context):
     parent_id = slug_strip(_data_lookup(('parent_slug',), data))
     format_code = _data_lookup(('format_code',), data)
     if parent_id and format_code:
-        data[key] = u'format-{0}_{1}'.format(parent_id.lower(), format_code.lower())
+        data[key] = u'format-{0}_{1}'.format(
+            parent_id.lower(),
+            format_code.lower()
+        )
     else:
         errors[key].append(_('could not find parent_product or format_code'))
 
@@ -207,14 +213,15 @@ def release_create_name(key, data, errors, context):
         return
 
     parent_id = slug_strip(_data_lookup(('parent_slug',), data))
-    release_date = _data_lookup(('release_date',), data)
-    if parent_id and release_date:
-        if isinstance(release_date, unicode):
-            data[key] = u'release-{0}_{1}'.format(parent_id.lower(), release_date.lower())
-        else:
-            data[key] = u'release-{0}_{1}'.format(parent_id.lower(), release_date.strftime('%Y-%m-%d'))
+    release_id = _data_lookup(('release_id',), data)
+
+    if not parent_id or not release_id:
+        errors[key].append(_('could not find parent_slug or release_id'))
     else:
-        errors[key].append(_('could not find parent_slug or release_date'))
+        data[key] = u'release-{year}{release_id}'.format(
+            year=datetime.date.today().year,
+            release_id=release_id
+        )
 
 
 def issue_create_name(key, data, errors, context):
@@ -262,9 +269,12 @@ def ndm_str2boolean(key, data, errors, context):
     if errors[key]:
         return
 
+    truth_values = ['true', 'yes', 'y', '1']
+
     if isinstance(data[key], bool):
         return
-    if data[key] is missing or data[key].lower() not in ['true', 'yes', 'y', '1']:
+
+    if data[key] is missing or data[key].lower() not in truth_values:
         data[key] = False
     else:
         data[key] = True
@@ -360,5 +370,8 @@ def ndm_tag_name_validator(value, context):
 
     tag_name_match = re.compile('[\w \-.,:\'/()]*$', re.UNICODE)
     if not tag_name_match.match(value):
-        raise df.Invalid(_('Tag "%s" must be alphanumeric characters or symbols: - _ . , : \' / ( )') % value)
+        raise df.Invalid(_(
+            'Tag "%s" must be alphanumeric characters or'
+            ' symbols: - _ . , : \' / ( )'
+        ) % value)
     return value
