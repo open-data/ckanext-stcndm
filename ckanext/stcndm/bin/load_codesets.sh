@@ -5,6 +5,4 @@
     python massage_codesets.py | \
     ckanapi load datasets $@
 
-cat geolevel.js | \
-    jq .[] -c | \
-    ckanapi load datasets $@
+ckanapi load datasets -I datasets/geolevel.jsonl 
