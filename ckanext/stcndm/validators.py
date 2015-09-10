@@ -224,7 +224,7 @@ def release_create_name(key, data, errors, context):
     else:
         data[key] = (u'release-{parent_id}-{ts}'.format(
             parent_id=parent_id,
-            ts=datetime.date.today().isoformat()
+            ts=datetime.datetime.today().isoformat()
         )).lower()
 
 
