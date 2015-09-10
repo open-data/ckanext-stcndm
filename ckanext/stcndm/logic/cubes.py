@@ -7,6 +7,7 @@ from ckan.plugins.toolkit import (
     ObjectNotFound,
     ValidationError
 )
+import ckanext.stcndm.helpers as stcndm_helpers
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -190,6 +191,8 @@ def register_cube(context, data_dict):
         # preset.
         last_publish_status_code='02'
     )
+
+    stcndm_helpers.ensure_release_exists(str(product_id))
 
     # Return our newly created package.
     return lc.action.GetCube(cube_id=product_id)
