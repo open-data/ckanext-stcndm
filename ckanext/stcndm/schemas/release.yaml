@@ -68,12 +68,6 @@ dataset_fields:
 - field_name: publish_status_code
   preset: ndm_publish_status
 
-- field_name: display_code
-  preset: ndm_display
-
-- field_name: tracking_codes
-  preset: ndm_tracking
-
 - field_name: is_correction
   label:
     en: Is a correction

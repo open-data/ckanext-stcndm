@@ -113,6 +113,12 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
+- field_name: display_code
+  preset: ndm_display
+
+- field_name: tracking_codes
+  preset: ndm_tracking
+
 - field_name: digital_object_identifier
   label:
     en: Digital Object Identifier
@@ -197,6 +203,9 @@ dataset_fields:
     fr: Mots clés
   preset: fluent_tags
   tag_validators: ndm_tag_name_validator tag_length_validator
+
+- field_name: last_publish_status_code
+  preset: ndm_publish_status
 
 #- field_name: legacy_date
 #  label:
