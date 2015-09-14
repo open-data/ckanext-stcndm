@@ -59,10 +59,10 @@ def get_next_product_id(context, data_dict):
     )
 
     query = {
-        'q': 'extras_product_id_new:{product_family}*'.format(
+        'q': 'product_id_new:{product_family}*'.format(
             product_family=product_family
         ),
-        'sort': 'extras_product_id_new desc'
+        'sort': 'product_id_new desc'
     }
 
     response = _get_action('package_search')(context, query)
@@ -73,32 +73,33 @@ def get_next_product_id(context, data_dict):
         sequence_id=sequence_id
     )
 
-    try:
-        view_id = response['results'][0]['product_id_new'][-2:]
-        if view_id == '99':
-                # TODO: implement reusing unused IDs
-            raise _ValidationError(
-                'All Product IDs have been used. '
-                'Reusing IDs is in development.'
+    if response['count'] < 1:
+        return product_id_new
+
+    view_id = response['results'][0]['product_id_new'][-2:]
+
+    if view_id == '99':
+            # TODO: implement reusing unused IDs
+        raise _ValidationError(
+            'All Product IDs have been used. '
+            'Reusing IDs is in development.'
+        )
+    else:
+        try:
+            product_id_new = (
+                '{subject_code}{product_type}{sequence_id}{view_id}'
+            ).format(
+                subject_code=subject_code,
+                product_type=product_type,
+                sequence_id=sequence_id,
+                view_id=str(int(view_id)+1).zfill(2)
             )
-        else:
-            try:
-                product_id_new = (
-                    '{subject_code}{product_type}{sequence_id}{view_id}'
-                ).format(
-                    subject_code=subject_code,
-                    product_type=product_type,
-                    sequence_id=sequence_id,
-                    view_id=str(int(view_id)+1).zfill(2)
+        except ValueError:
+            raise _ValidationError(
+                'Invalid product_id {0}'.format(
+                    product_id_new
                 )
-            except ValueError:
-                raise _ValidationError(
-                    'Invalid product_id {0}'.format(
-                        product_id_new
-                    )
-                )
-    except (KeyError, IndexError) as e:
-        raise e
+            )
 
     return product_id_new
 
@@ -616,7 +617,12 @@ def tv_register_product(context, data_dict):
     })
 
     lc.action.package_create(**copied_fields)
-    stcndm_helpers.ensure_release_exists(str(product_id))
+    try:
+        stcndm_helpers.ensure_release_exists(str(product_id))
+    except ValueError:
+        # We don't create releases for this type of product
+        pass
+
     return {'product_id_new': product_id}
 
 
