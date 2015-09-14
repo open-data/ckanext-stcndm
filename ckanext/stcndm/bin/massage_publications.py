@@ -21,6 +21,8 @@ def code_lookup(old_field_name, data_set, choice_list):
         code = None
         if '|' in field_value:
             (field_value, bogon) = field_value.split('|', 1)
+        if '/' in field_value:
+            (field_value, bogon) = field_value.split('/', 1)
         if old_field_name == 'archived_bi_strs' and field_value == 'Archive':
             field_value = 'Archived'
         for choice in choice_list:
@@ -38,37 +40,42 @@ def code_lookup(old_field_name, data_set, choice_list):
     return codes
 
 
-def format_and_release(line):
+def format_and_release(local_line):
     # format fields
     format_out = {
         u'owner_org': u'statcan',
         u'private': False,
         u'type': u'format',
-        u'parent_slug': 'publication-{0}'.format(line['productidnew_bi_strs'].lower()),
-        u'name':  (u'format-{0}_{1}'.format(line['productidnew_bi_strs'], line['formatcode_bi_txtm'])).lower(),
-        u'title': (u'format-{0}_{1}'.format(line['productidnew_bi_strs'], line['formatcode_bi_txtm'])).lower()
+        u'parent_slug': 'publication-{0}'.format(
+            local_line['productidnew_bi_strs'].lower()),
+        u'name':  (u'format-{0}_{1}'.format(
+            local_line['productidnew_bi_strs'],
+            local_line['formatcode_bi_txtm'])).lower(),
+        u'title': (u'format-{0}_{1}'.format(
+            local_line['productidnew_bi_strs'],
+            local_line['formatcode_bi_txtm'])).lower()
     }
 
-    if 'formatcode_bi_txtm' in line and line['formatcode_bi_txtm']:
-        format_out['format_code'] = line['formatcode_bi_txtm']
+    if 'formatcode_bi_txtm' in local_line and local_line['formatcode_bi_txtm']:
+        format_out['format_code'] = local_line['formatcode_bi_txtm']
     else:
-        sys.stderr.write((u'{0} missing format\n').format(line['name']))
+        sys.stderr.write(u'{0} missing format\n'.format(local_line['name']))
 
-    temp = {}
-    if 'issnnum_en_strs' in line and line['issnnum_en_strs']:
-        temp[u'en'] = line['issnnum_en_strs']
-    if 'issnnum_fr_strs' in line and line['issnnum_fr_strs']:
-        temp[u'fr'] = line['issnnum_fr_strs']
-    if temp:
-        format_out['issn_number'] = temp
+    local_temp = {}
+    if 'issnnum_en_strs' in local_line and local_line['issnnum_en_strs']:
+        temp[u'en'] = local_line['issnnum_en_strs']
+    if 'issnnum_fr_strs' in local_line and local_line['issnnum_fr_strs']:
+        local_temp[u'fr'] = local_line['issnnum_fr_strs']
+    if local_temp:
+        format_out['issn_number'] = local_temp
 
-    temp = {}
-    if 'url_en_strs' in line and line['url_en_strs']:
-        temp[u'en'] = line['url_en_strs']
-    if 'url_fr_strs' in line and line['url_fr_strs']:
-        temp[u'fr'] = line['url_fr_strs']
-    if temp:
-        format_out['url'] = temp
+    local_temp = {}
+    if 'url_en_strs' in local_line and local_line['url_en_strs']:
+        local_temp[u'en'] = local_line['url_en_strs']
+    if 'url_fr_strs' in local_line and local_line['url_fr_strs']:
+        local_temp[u'fr'] = local_line['url_fr_strs']
+    if local_temp:
+        format_out['url'] = local_temp
 
     print json.dumps(format_out)
 
@@ -82,50 +89,23 @@ def format_and_release(line):
         u'is_correction': '0'
     }
 
-    temp = {}
-    if 'adminnotes_bi_txts' in line and line['adminnotes_bi_txts']:
-        temp[u'en'] = line['adminnotes_bi_txts']
-        temp[u'fr'] = line['adminnotes_bi_txts']
-    if temp:
-        release_out['admin_notes'] = temp
+    if 'releasedate_bi_strs' in local_line and local_line['releasedate_bi_strs']:
+        release_out['release_date'] = local_line['releasedate_bi_strs']
 
-    if 'releasedate_bi_strs' in line and line['releasedate_bi_strs']:
-        release_out['release_date'] = line['releasedate_bi_strs']
+    local_temp = {}
+    if 'refperiod_en_txtm' in local_line:
+        local_result = listify(local_line['refperiod_en_txtm'])
+        if local_result:
+            local_temp[u'en'] = local_result
+    if 'refperiod_fr_txtm' in local_line:
+        local_result = listify(local_line['refperiod_fr_txtm'])
+        if local_result:
+            local_temp[u'fr'] = local_result
+    if local_temp:
+        release_out['reference_periods'] = local_temp
 
-    temp = {}
-    if 'refperiod_en_txtm' in line:
-        result = listify(line['refperiod_en_txtm'])
-        if result:
-            temp[u'en'] = result
-    if 'refperiod_fr_txtm' in line:
-        result = listify(line['refperiod_fr_txtm'])
-        if result:
-            temp[u'fr'] = result
-    if temp:
-        release_out['reference_periods'] = temp
-
-    if 'lastpublishstatuscode_bi_strs' in line and line['lastpublishstatuscode_bi_strs']:
-        release_out['publish_status_code'] = line['lastpublishstatuscode_bi_strs']
-
-    if 'display_en_txtm' in line:
-        result = code_lookup('display_en_txtm', line, display_list)
-        if result:
-            release_out['display_code'] = result
-
-    if 'dispandtrack_bi_txtm' in line:
-        result = code_lookup('dispandtrack_bi_txtm', line, tracking_list)
-        if result:
-            release_out['tracking_codes'] = result
-
-    # release_out['name'] = u'release-{0}_{1}_{2}'.format(
-    #     line['productidnew_bi_strs'],
-    #     line['formatcode_bi_txtm'],
-    #     release_out['release_id'])
-
-    # release_out['title'] = u'release-{0}_{1}_{2}'.format(
-    #     line['productidnew_bi_strs'],
-    #     line['formatcode_bi_txtm'],
-    #     release_out['release_id'])
+    if 'lastpublishstatuscode_bi_strs' in local_line and local_line['lastpublishstatuscode_bi_strs']:
+        release_out['publish_status_code'] = local_line['lastpublishstatuscode_bi_strs']
 
     print json.dumps(release_out)
 
@@ -252,7 +232,7 @@ i = 0
 n = 1
 while i < n:
     query_results = rc.action.package_search(
-        q='pkuniqueidcode_bi_strs:public* AND title_en_txts:*',
+        q='pkuniqueidcode_bi_strs:public* AND title_en_txts:* AND producttypecode_bi_strs:20',
         rows=1000,
         start=i*1000)
     n = query_results['count'] / 1000.0
@@ -267,6 +247,13 @@ while i < n:
             u'private': False,
             u'type': u'publication',
             u'product_type_code': u'20'}
+
+        temp = {}
+        if 'adminnotes_bi_txts' in line and line['adminnotes_bi_txts']:
+            temp[u'en'] = line['adminnotes_bi_txts']
+            temp[u'fr'] = line['adminnotes_bi_txts']
+        if temp:
+            product_out['admin_notes'] = temp
 
         temp = {}
         if 'title_en_txts' in line and line['title_en_txts']:
@@ -446,22 +433,71 @@ while i < n:
         if 'license_id' in line:
             product_out['license_id'] = line['license_id']
 
+        if 'display_bi_txtm' in line and line['display_bi_txtm']:
+            result = code_lookup('display_bi_txtm', line, display_list)
+            if result:
+                product_out['display_code'] = result[0]
+
+        if 'dispandtrack_bi_txtm' in line:
+            result = code_lookup('dispandtrack_bi_txtm', line, tracking_list)
+            if result:
+                product_out['tracking_codes'] = result
+
         print json.dumps(product_out)
 
         format_and_release(line)
 
-i = 0
-n = 1
-while i < n:
-    query_results = rc.action.package_search(
-        q='pkuniqueidcode_bi_strs:public* AND -title_en_txts:*',
-        rows=1000,
-        start=i*1000)
-    n = query_results['count'] / 1000.0
-    i += 1
+        child_query_results = rc.action.package_search(
+            q='pkuniqueidcode_bi_strs:public* AND -title_en_txts:* AND producttypecode_bi_strs:20'
+              ' AND productidnew_bi_strs:{parent}'.format(parent=product_out['product_id_new']),
+            rows=1000)
 
-    for line in query_results['results']:
-        for e in line['extras']:
-            line[e['key']] = e['value']
+        for child_line in child_query_results['results']:
+            for e in child_line['extras']:
+                child_line[e['key']] = e['value']
 
-        format_and_release(line)
+            format_and_release(child_line)
+
+            if 'adminnotes_bi_txts' in child_line and child_line['adminnotes_bi_txts']:
+                if product_out['admin_notes']:
+                    product_out['admin_notes'] += '\n' + child_line['adminnotes_bi_txts']
+                else:
+                    product_out['admin_notes'] = child_line['adminnotes_bi_txts']
+
+            if 'display_bi_txtm' in child_line and child_line['display_bi_txtm']:
+                result = code_lookup('display_bi_txtm', child_line, display_list)
+                if result:
+                    if 'display_code' in product_out:
+                        if result[0] != product_out['display_code']:
+                            sys.stderr.write(
+                                'display_code not consistent for all releases of '
+                                '{parent}\n'.format(parent=product_out['product_id_new']))
+                    else:
+                        product_out['display_code'] = result[0]
+
+            if 'dispandtrack_bi_txtm' in child_line and child_line['dispandtrack_bi_txtm']:
+                result = code_lookup('dispandtrack_bi_txtm', child_line, tracking_list)
+                if result:
+                    if 'tracking_codes' in product_out:
+                        if result != product_out['tracking_codes']:
+                            sys.stderr.write(
+                                'tracking_codes not consistent for all releases of '
+                                '{parent}\n'.format(parent=product_out['product_id_new']))
+                    else:
+                        product_out['tracking_codes'] = result
+
+# i = 0
+# n = 1
+# while i < n:
+#     query_results = rc.action.package_search(
+#         q='pkuniqueidcode_bi_strs:public* AND -title_en_txts:* AND producttypecode_bi_strs:20',
+#         rows=1000,
+#         start=i*1000)
+#     n = query_results['count'] / 1000.0
+#     i += 1
+#
+#     for line in query_results['results']:
+#         for e in line['extras']:
+#             line[e['key']] = e['value']
+#
+#         format_and_release(line)
