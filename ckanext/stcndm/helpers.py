@@ -338,11 +338,12 @@ def ensure_release_exists(product_id):
     """
     allowed_datasets = (
         'cube',
+        'publication',
+        'article',
         # FIXME: None of the below exist yet. If they're eventually added
         #        with names other than those used below this list must be
         #        updated.
         'video',
-        'analytical_product',
         'conference',
         'microdata',
         'generic',
@@ -375,11 +376,22 @@ def ensure_release_exists(product_id):
             type=result['type']
         ))
 
-    print(lc.action.package_create(
+    release_result = lc.action.package_search(
+        q='dataset_type:release AND parent_slug:{name}'.format(
+            name=result['name']
+        ),
+        rows=1
+    )
+
+    if release_result['count']:
+        # Nothing to do, at least one release already exists.
+        return
+
+    lc.action.package_create(
         type=u'release',
         owner_org=result['owner_org'],
         release_id='001',
         parent_slug=result['name'],
         publication_status='02',
         is_correction='0'
-    ))
+    )

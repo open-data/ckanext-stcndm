@@ -251,8 +251,8 @@
         <field name="collection_method_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="collection_start_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="content_type_codes" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="content_type_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
-        <field name="content_type_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="content_type_codes_desc_en" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="content_type_codes_desc_fr" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="default_view_id" type="text" indexed="true" stored="true" multiValued="false"/>
         <field name="dimension_member_alias_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="dimension_member_alias_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>

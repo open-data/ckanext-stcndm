@@ -593,6 +593,7 @@ def tv_register_product(context, data_dict):
     })
 
     lc.action.package_create(**copied_fields)
+    stcndm_helpers.ensure_release_exists(str(product_id))
     return {'product_id_new': product_id}
 
 
