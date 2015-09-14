@@ -132,7 +132,30 @@ def get_product(context, data_dict):
     # If we're getting more than one result for a given product_id
     # something has gone terribly wrong with the database.
     assert(not result['count'] > 1)
-    return result['results'][0]
+
+    product = result['results'][0]
+
+    # As part of JIRA-5048 we need to resolve _code fields and return
+    # the labels.
+    codes_to_lookup = (
+        ('frequency_codes', 'frequency'),
+        ('geolevel_codes', 'geolevel')
+    )
+
+    for code_field, code_id in codes_to_lookup:
+        cfv = product.get(code_field)
+
+        if not cfv:
+            continue
+
+        codes = cfv if isinstance(cfv, list) else [cfv]
+        product[code_field + '_resolved'] = results = {}
+
+        for code in codes:
+            value = stcndm_helpers.lookup_label(code_id, code, 'codeset')
+            results[code] = value
+
+    return product
 
 
 @logic.side_effect_free
