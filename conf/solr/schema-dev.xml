@@ -348,6 +348,9 @@
         <field name="tracking_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="tracking_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
         <field name="tracking_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <!-- Fields specific to Releases -->
+        <field name="parent_slug" type="string" indexed="true" stored="true" multiValued="false" />
+        <field name="is_correction" type="string" indexed="true" stored="true" multiValued="false" />
         <!-- CKAN core fields needing text loading/processing -->
         <field name="title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
