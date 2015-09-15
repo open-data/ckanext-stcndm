@@ -1,4 +1,4 @@
-{% extends "package/base.html" %}
+{% ckan_extends %}
 
 {% block subtitle %}{{ pkg.title or pkg.name }} - {{ super() }}{% endblock %}
 
@@ -8,8 +8,7 @@
 {% endblock -%}
 
 {% block head_extras -%}
-  {{ super() }}
-  {% set description = pkg.notes|forceescape %}
+  {% set description = h.scheming_language_text(pkg.notes)|forceescape %}
   <meta property="og:title" content="{{ h.dataset_display_name(pkg) }} - {{ g.site_title }}">
   <meta property="og:description" content="{{ description|forceescape|trim }}">
 {% endblock -%}
@@ -18,13 +17,6 @@
   {% if h.check_access('package_update', {'id':pkg.id }) %}
     {% link_for _('Manage'), controller='package', action='edit', id=pkg.name, class_='btn', icon='wrench' %}
   {% endif %}
-{% endblock %}
-
-{% block content_primary_nav %}
-  {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name) }}
-  {{ h.build_nav_icon('dataset_groups', _('Groups'), id=pkg.name) }}
-  {{ h.build_nav_icon('dataset_activity', _('Activity Stream'), id=pkg.name) }}
-  {{ h.build_nav_icon('related_list', _('Related'), id=pkg.name) }}
 {% endblock %}
 
 {% block primary_content_inner %}
