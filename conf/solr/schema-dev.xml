@@ -304,6 +304,8 @@
         <field name="price" type="text" indexed="true" stored="true" multiValued="false"/>
         <field name="price_note_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="price_note_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="product_id_new" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="product_id_old" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="product_type_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="product_type_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="product_type_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
