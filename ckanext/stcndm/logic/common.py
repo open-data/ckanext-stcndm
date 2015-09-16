@@ -765,16 +765,15 @@ def _update_single_publish_status(context, data_dict):
 
 
 def update_product_geo(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Update the specificgeocode_bi_txtm value and sets the geo level
     (geolevel_*) accordingly.
 
-    :param productId: product id
+    :param productId: ID of the product to update.
     :type productId: str
 
     :param dguids: Geo-code values status code
-    :type list of DGUID: array of strs
+    :type dguids: list of strings
 
     :return: updated package
     :rtype: dict
@@ -783,21 +782,16 @@ def update_product_geo(context, data_dict):
     product_id = _get_or_bust(data_dict, 'productId')
     dguids = _get_or_bust(data_dict, 'dguids')
 
-    #    @todo make this work
-    #    try:
-    #        validators.list_of_strings('dguids', data_dict)
-    #    except validators.Invalid, e:
-    #        raise _ValidationError({'dguids': e.error})
-    #
-    if type(dguids) == unicode:
+    lc = ckanapi.LocalCKAN(context=context)
+
+    if isinstance(dguids, basestring):
         dguids = [x.strip() for x in dguids.split(';')]
 
-    q = {
-        'q': 'extras_product_id_new:{product_id}'.format(
+    response = lc.action.package_search(
+        q='product_id_new:{product_id}'.format(
             product_id=product_id
         )
-    }
-    response = _get_action('package_search')(context, q)
+    )
 
     if response['count'] == 0:
         raise _ValidationError('Record not found.')
@@ -808,56 +802,17 @@ def update_product_geo(context, data_dict):
         )
 
     pkg_dict = response['results'][0]
-
-    # Set the geo level fields for each specific geo code.
-#    geo_level = helpers.GeoLevel(context)
-#    geo_specific = helpers.GeoSpecific(context)
-    unique_codes = dict()
-#    geo_level_en = list()
-#    geo_level_fr = list()
-#    geo_specific_en = list()
-#    geo_specific_fr = list()
-
-    for specific_code in dguids:
-        # store the codes in a dictionary to create a unique set
-        unique_codes[specific_code[:5]] = True
-
-# get and append the text for geo levels
-#    for geo_code in sorted(unique_codes.keys()):
-#        (en_text, fr_text) = geo_level.get_by_code(geo_code)
-#        if en_text:
-#            geo_level_en.append(en_text)
-#        if fr_text:
-#            geo_level_fr.append(fr_text)
-
-#    for specific_geo_code in dguids:
-#        (en_text, fr_text) = geo_specific.get_by_code(specific_geo_code)
-#        if en_text:
-#            geo_specific_en.append(en_text)
-#        if fr_text:
-#            geo_specific_fr.append(fr_text)
-
-    for extra in pkg_dict['extras']:  # update the package dictionary
-        if extra['key'] == 'geodescriptor':
-            extra['value'] = '; '.join(dguids)
-        elif extra['key'] == 'geo_level_code':
-            extra['value'] = '; '.join(unique_codes.keys())
-#        elif extra['key'] == 'geolevel_en_txtm':
-#            extra['value'] = '; '.join(geo_level_en)
-#        elif extra['key'] == 'geolevel_fr_txtm':
-#            extra['value'] = '; '.join(geo_level_fr)
-#        elif extra['key'] == 'specificgeo_en_txtm':
-#            extra['value'] = '; '.join(geo_specific_en)
-#        elif extra['key'] == 'specificgeo_fr_txtm':
-#            extra['value'] = '; '.join(geo_specific_fr)
-
-    # result = _get_action('package_update')(context, pkg_dict)
-    # TODO: check result?
-    output = _get_action('package_show')(context, {
-        'name_or_id': pkg_dict['name']
+    pkg_dict.update({
+        # Why only the first 5? What's the business logic here?
+        # Validator *requires* that this be a list.
+        'geolevel_codes': list(set(sc[:5] for sc in dguids)),
+        'geodescriptor_codes': dguids
     })
 
-    return output
+    # TODO: Check the results?
+    lc.action.package_update(**pkg_dict)
+
+    return lc.action.package_show(id=pkg_dict['id'])
 
 
 def ensure_release_exists(context, data_dict):
