@@ -242,3 +242,4 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: false
+  display_snippet: url.html
