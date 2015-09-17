@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Publications
   fr: Publications
+clonable: true
 dataset_type: publication
 form_languages:
 - en
