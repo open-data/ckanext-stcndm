@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Cube
   fr: Cube
+clonable: false
 dataset_type: cube
 form_languages:
 - en

@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Issues
   fr: Émissions
+clonable: true
 dataset_type: issue
 form_languages:
 - en
