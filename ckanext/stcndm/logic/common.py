@@ -627,7 +627,6 @@ def tv_register_product(context, data_dict):
 
 
 def delete_product(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Set the status of a record to 'Deleted' and remove all metadata associated
     with that record. This will make the productid available for reuse.
@@ -645,13 +644,20 @@ def delete_product(context, data_dict):
     """
     product_id = _get_or_bust(data_dict, 'productId')
 
-    result = _get_action('ndm_get_product')(context, data_dict)
+    lc = ckanapi.LocalCKAN(context=context)
 
-    deleted_id = result['product_id_new']
+    result = lc.action.package_search(
+        q='product_id_new:{pid}'.format(pid=product_id),
+        rows=1,
+        fl=['id']
+    )
+
+    if result['count']:
+        lc.action.package_delete(id=result['results'][0]['id'])
 
     return {
         'message': 'Product successfully deleted',
-        'product_id_new': deleted_id
+        'product_id_new': product_id
     }
 
 
