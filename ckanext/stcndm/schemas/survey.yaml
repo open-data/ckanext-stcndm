@@ -158,6 +158,7 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
+  display_snippet: url.html
 
 - field_name: reference_periods
   label:
@@ -188,6 +189,7 @@ dataset_fields:
 #  schema_field_type: string
 #  schema_multivalued: false
 #  schema_extras: true
+#  display_snippet: url.html
 
 - field_name: survey_status_code
   preset: ndm_survey_status
@@ -220,6 +222,7 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
+  display_snippet: url.html
 
 - field_name: survey_participation_code
   preset: ndm_survey_participation

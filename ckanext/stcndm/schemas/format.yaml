@@ -52,6 +52,7 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
+  display_snippet: url.html
 
 - field_name: name
   # follow our custom name generation validator with default package name validators
