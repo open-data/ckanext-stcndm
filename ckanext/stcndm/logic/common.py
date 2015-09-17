@@ -829,3 +829,25 @@ def ensure_release_exists(context, data_dict):
     """
     product_id = _get_or_bust(data_dict, 'productId')
     stcndm_helpers.ensure_release_exists(product_id)
+
+
+@logic.side_effect_free
+def get_releases_for_product(context, data_dict):
+    """
+    Returns all of the releases for the given `productId`.
+
+    :param productId: ID of the parent product.
+    :type productId: str
+    """
+    product_id = _get_or_bust(data_dict, 'productId')
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    results = lc.action.package_search(
+        q='parent_product_id:{pid}'.format(pid=product_id)
+    )
+
+    return {
+        'count': results['count'],
+        'results': [r for r in results['results']]
+    }

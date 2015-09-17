@@ -217,7 +217,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetGroupSchema": common.get_group_schema,
             "GetSurveyCodesets": surveys.get_survey_codesets,
             "GetSubjectCodesets": subjects.get_subject_codesets,
-            "EnsureReleaseExists": common.ensure_release_exists
+            "EnsureReleaseExists": common.ensure_release_exists,
+            "GetReleasesForProduct": common.get_releases_for_product
         }
 
     def get_validators(self):
