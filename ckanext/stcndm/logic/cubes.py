@@ -18,7 +18,6 @@ CUBE_PRODUCT_TYPE = '10'
 
 @logic.side_effect_free
 def get_next_cube_id(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Returns the next available cube_id (without registering it).
 
@@ -37,10 +36,10 @@ def get_next_cube_id(context, data_dict):
     lc = ckanapi.LocalCKAN(context=context)
     response = lc.action.package_search(
         q=(
-            'extras_product_id_new:{subject_code}* AND '
+            'product_id_new:{subject_code}* AND '
             'dataset_type:cube'
         ).format(subject_code=subject_code),
-        sort='extras_product_id_new desc',
+        sort='product_id_new desc',
         rows=1
     )
 
@@ -170,7 +169,6 @@ def register_cube(context, data_dict):
     lc.action.package_create(
         # Old method simply used the product_id, whereas the modern edit
         # form validator uses cube-{product_id}, so lets go with that.
-        name=u'cube-{0}'.format(product_id),
         owner_org='statcan',
         type=u'cube',
         product_id_new=product_id,
@@ -188,4 +186,4 @@ def register_cube(context, data_dict):
     stcndm_helpers.ensure_release_exists(str(product_id))
 
     # Return our newly created package.
-    return lc.action.GetCube(cube_id=product_id)
+    return lc.action.GetCube(cubeId=product_id)
