@@ -778,7 +778,6 @@ def update_product_geo(context, data_dict):
     :return: updated package
     :rtype: dict
     """
-
     product_id = _get_or_bust(data_dict, 'productId')
     dguids = _get_or_bust(data_dict, 'dguids')
 
