@@ -161,9 +161,6 @@ def register_cube(context, data_dict):
 
     lc = ckanapi.LocalCKAN(context=context)
 
-    subject_dict = lc.action.GetSubject(
-        subjectCode=subject_code
-    )
     product_type_dict = lc.action.GetProductType(
         productType=CUBE_PRODUCT_TYPE
     )
@@ -178,11 +175,7 @@ def register_cube(context, data_dict):
         type=u'cube',
         product_id_new=product_id,
         product_type_code=product_type_dict['product_type_code'],
-        subject_codes=[
-            # TODO: Schema defines this as a list, should we accept
-            #       multiple subject codes in the API?
-            subject_dict['subject_code']
-        ],
+        subject_codes=[subject_code],
         title={
             'en': title_en,
             'fr': title_fr,
