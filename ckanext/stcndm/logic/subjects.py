@@ -20,8 +20,9 @@ def get_subject(context, data_dict):
     """
     lc = ckanapi.LocalCKAN(context=context)
     subject_code = get_or_bust(data_dict, 'subjectCode')
+
     response = lc.action.package_search(
-        q='dataset_type:codeset AND extras_codeset_value:{value}'.format(
+        q='dataset_type:subject AND subject_code:{value}'.format(
             value=subject_code
         )
     )
