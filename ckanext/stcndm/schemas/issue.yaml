@@ -220,6 +220,7 @@ dataset_fields:
     en: URL
     fr: URL
   preset: fluent_text
+  display_snippet: url.html
 
 #- field_name: volume_and_number
 #  label:
