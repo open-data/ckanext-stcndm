@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Survey Source
   fr: Source de sondage
+clonable: true
 dataset_type: survey
 dataset_owner_org: statcan
 form_languages:

@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Releases
   fr: Diffusions
+clonable: false
 dataset_type: release
 form_languages:
 - en
