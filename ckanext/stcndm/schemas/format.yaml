@@ -30,7 +30,15 @@ dataset_fields:
     en: Slug of the related release
     fr: Slug de l'émission connexe
   required: true
-  validators: valid_parent_slug
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: parent_product
+  label:
+    en: Parent Product
+    fr: Produit parent
+  required: true
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true

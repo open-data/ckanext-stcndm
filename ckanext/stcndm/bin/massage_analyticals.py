@@ -2,9 +2,10 @@ import sys
 import json
 import ckanapi
 from massage_product import do_format, do_release, do_product
+
 __author__ = 'marc'
 
-
+release_dict = {}
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj')
 i = 0
 n = 1
@@ -20,6 +21,12 @@ while i < n:
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']
+
+        if line['productidnew_bi_strs'] in release_dict:
+            release_dict[line['productidnew_bi_strs']] += 1
+        else:
+            release_dict[line['productidnew_bi_strs']] = 1
+        line['release_id'] = release_dict[line['productidnew_bi_strs']]
 
         if len(line['productidnew_bi_strs']) == 8:
             product_out = do_product(line)

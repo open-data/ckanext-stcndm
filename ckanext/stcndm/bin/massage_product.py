@@ -1,6 +1,7 @@
 import sys
 import yaml
 import ckanapi
+import datetime
 
 __author__ = 'marc'
 
@@ -360,6 +361,15 @@ def do_format(data_set):
     if local_temp:
         format_out[u'url'] = local_temp
 
+    if in_and_def('hierarchyid_bi_strm', data_set):
+        format_out[u'parent_product'] = data_set['hierarchyid_bi_strm']
+
+    if in_and_def('hierarchyid_bi_strs', data_set):
+        format_out[u'parent_product'] = data_set['hierarchyid_bi_strs']
+
+    if u'parent_product' not in format_out:
+        format_out[u'parent_product'] = data_set[u'productidnew_bi_strs']
+
     return format_out
 
 
@@ -370,13 +380,16 @@ def do_release(data_set):
         u'private': False,
         u'type': u'release',
         u'is_correction': '0',
-        u'name': (u'release-{0}_{1}'.format(
-            data_set[u'productidnew_bi_strs'],
-            data_set[u'releasedate_bi_strs'])).lower(),
-        u'title': (u'release-{0}_{1}'.format(
-            data_set[u'productidnew_bi_strs'],
-            data_set[u'releasedate_bi_strs'])).lower()
     }
+
+    if in_and_def('release_id', data_set):
+        release_out[u'release_id'] = data_set['release_id']
+        release_out[u'name'] = u'release-{product_id}_{year}_{release_id}'.format(
+            product_id=data_set['productidnew_bi_strs'],
+            year=datetime.date.today().year,
+            release_id=data_set['release_id']
+        )
+        release_out[u'title'] = release_out[u'name']
 
     if in_and_def('releasedate_bi_strs', data_set):
         release_out[u'release_date'] = data_set[u'releasedate_bi_strs']
@@ -396,14 +409,13 @@ def do_release(data_set):
         release_out[u'issue_number'] = data_set[u'issueno_bi_strs']
 
     if in_and_def('hierarchyid_bi_strm', data_set):
-        result = listify(data_set[u'hierarchyid_bi_strm'])
-        if result:
-            release_out[u'parent_product'] = result[0]
+        release_out[u'parent_product'] = data_set['hierarchyid_bi_strm']
 
     if in_and_def('hierarchyid_bi_strs', data_set):
-        result = listify(data_set[u'hierarchyid_bi_strs'])
-        if result:
-            release_out[u'parent_product'] = result[0]
+        release_out[u'parent_product'] = data_set['hierarchyid_bi_strs']
+
+    if u'parent_product' not in release_out:
+        release_out[u'parent_product'] = data_set[u'productidnew_bi_strs']
 
     return release_out
 
