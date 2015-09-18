@@ -13,7 +13,7 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
-dataset_fields: []
+dataset_fields:
 
 - field_name: owner_org
   help_text:
