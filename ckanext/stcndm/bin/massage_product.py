@@ -381,17 +381,13 @@ def do_release(data_set):
     if in_and_def('releasedate_bi_strs', data_set):
         release_out[u'release_date'] = data_set[u'releasedate_bi_strs']
 
-    local_temp = {}
+    temp = {}
     if in_and_def('refperiod_en_txtm', data_set):
-        result = listify(data_set[u'refperiod_en_txtm'])
-        if result:
-            local_temp[u'en'] = result
+        temp[u'en'] = data_set['refperiod_en_txtm']
     if in_and_def('refperiod_fr_txtm', data_set):
-        result = listify(data_set[u'refperiod_fr_txtm'])
-        if result:
-            local_temp[u'fr'] = result
-    if local_temp:
-        release_out[u'reference_periods'] = local_temp
+        temp[u'fr'] = data_set['refperiod_fr_txtm']
+    if temp:
+        release_out[u'reference_period'] = temp
 
     if in_and_def('lastpublishstatuscode_bi_strs', data_set):
         release_out[u'publish_status_code'] = data_set[u'lastpublishstatuscode_bi_strs']
