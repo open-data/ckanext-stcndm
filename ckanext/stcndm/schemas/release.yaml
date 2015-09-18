@@ -43,14 +43,13 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: reference_periods
+- field_name: reference_period
   label:
     en: Reference Period
     fr: Période référée
-  preset: fluent_tags
-  tag_validators: ndm_tag_name_validator tag_length_validator
+  preset: fluent_text
   schema_field_type: fluent
-  schema_multivalued: true
+  schema_multivalued: false
   schema_extras: true
 
 - field_name: parent_product
