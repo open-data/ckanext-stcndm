@@ -1,25 +1,24 @@
 import json
 import ckanapi
 from massage_product import do_product, do_release  # , do_format
-__author__ = 'marc'
 
 
-rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
+rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj')
 i = 0
 n = 1
 while i < n:
     query_results = rc.action.package_search(
-        q='producttypecode_bi_strs:11',
+        q='producttypecode_bi_strs:23',
         rows=1000,
         start=i*1000)
-    i += 1
     n = query_results['count'] / 1000.0
+    i += 1
     for line in query_results['results']:
         for e in line['extras']:
             line[e['key']] = e['value']
 
         product_out = do_product(line)
-        product_out['type'] = u'view'
+        product_out['type'] = u'service'
         product_out['name'] = u'{type}-{product_id}'.format(
                 type=product_out['type'],
                 product_id=product_out['product_id_new']
@@ -27,6 +26,7 @@ while i < n:
         print json.dumps(product_out)
 
         release_out = do_release(line)
+        release_out['parent_slug'] = product_out['name']
         print json.dumps(release_out)
 
         # format_out = do_format(line)

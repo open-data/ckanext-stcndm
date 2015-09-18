@@ -44,7 +44,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             #       schemas that should *not* be imported other than presets?
             'scheming.dataset_schemas': '\n'.join([
                 'ckanext.stcndm:schemas/codeset.yaml',
-                'ckanext.stcndm:schemas/conf_service.yaml',
+                'ckanext.stcndm:schemas/conference.yaml',
                 'ckanext.stcndm:schemas/corrections.yaml',
                 'ckanext.stcndm:schemas/cube.yaml',
                 'ckanext.stcndm:schemas/daily.yaml',
@@ -55,6 +55,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/publication.yaml',
                 'ckanext.stcndm:schemas/release.yaml',
                 'ckanext.stcndm:schemas/pumf.yaml',
+                'ckanext.stcndm:schemas/service.yaml',
                 'ckanext.stcndm:schemas/subject.yaml',
                 'ckanext.stcndm:schemas/survey.yaml',
                 'ckanext.stcndm:schemas/view.yaml'

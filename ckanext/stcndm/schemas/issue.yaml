@@ -66,7 +66,7 @@ dataset_fields:
 - field_name: product_type_code
   preset: ndm_product
 
-- field_name: related_product_codes
+- field_name: related_products
   label:
     en: Related Products
     fr: Produits reliés

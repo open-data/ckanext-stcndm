@@ -1,11 +1,10 @@
 scheming_version: 1
-about: 'Statistics Canada Dissemination: Articles'
+about: 'Statistics Canada Dissemination: Conferences'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Articles
-  fr: Articles
-clonable: true
-dataset_type: article
+  en: Conferences
+  fr: Conférences
+dataset_type: conference
 form_languages:
 - en
 - fr
@@ -25,6 +24,9 @@ dataset_fields:
     en: Publisher
     fr: Éditeur
   preset: dataset_organization
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
 
 - field_name: admin_notes
   preset: ndm_admin_notes
@@ -74,20 +76,21 @@ dataset_fields:
 
 - field_name: name
   # follow our custom name generation with default package name validators
-  validators: article_create_name
+  validators: pumf_create_name
     not_empty unicode name_validator package_name_validator
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
   form_snippet: null
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
 
 - field_name: product_type_code
   preset: ndm_product
 
 - field_name: related_products
   label:
-    en: Related Products
-    fr: Produits reliés
+    en: Related
+    fr: Relié
   preset: shortcode_multivalue
 
 - field_name: thesaurus
@@ -105,9 +108,6 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: archive_status_code
-  preset: ndm_archive_status
-
 - field_name: archive_date
   label:
     en: Archive Date
@@ -117,18 +117,11 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: correction_id_code
-  label:
-    en: Correction ID Code
-    fr: Code ID de correction
-  preset: shortcode_multivalue
-  lookup: correction
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+- field_name: archive_status_code
+  preset: ndm_archive_status
 
-- field_name: display_code
-  preset: ndm_display
+- field_name: tracking_codes
+  preset: ndm_tracking
 
 - field_name: digital_object_identifier
   label:
@@ -138,6 +131,21 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
+
+- field_name: array_terminated_code
+  preset: ndm_array_terminated
+
+#- field_name: default_view_id
+#  label:
+#    en: Default View ID
+#    fr: ID de vue par défaut
+
+- field_name: dimension_members
+  label:
+    en: Dimension Member
+    fr: Membre de dimension
+  preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: external_authors
   label:
@@ -151,6 +159,9 @@ dataset_fields:
   label:
     en: FRC
     fr: FRC
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: frequency_codes
   label:
@@ -158,6 +169,8 @@ dataset_fields:
     fr: Fréquence
   preset: codeset_multiple_select
   codeset_type: frequency
+  schema_field_type: code
+  schema_multivalued: true
   schema_extras: true
 
 - field_name: history_notes
@@ -165,6 +178,13 @@ dataset_fields:
     en: History Notes
     fr: Notes historiques
   preset: fluent_markdown
+
+- field_name: survey_source_codes
+  label:
+    en: Source
+    fr: Source
+  preset: shortcode_multivalue
+  lookup: survey
 
 - field_name: internal_authors
   label:
@@ -174,13 +194,12 @@ dataset_fields:
   schema_multivalued: true
   schema_extras: true
 
-- field_name: isbn_number
+- field_name: internal_contacts
   label:
-    en: ISBN Number
-    fr: Numéro ISBN
-  preset: fluent_text
-  schema_field_type: fluent
-  schema_multivalued: false
+    en: Internal Contact Name
+    fr: Nom de personne ressource interne
+  schema_field_type: string
+  schema_multivalued: true
   schema_extras: true
 
 - field_name: keywords
@@ -193,45 +212,38 @@ dataset_fields:
 - field_name: last_publish_status_code
   preset: ndm_publish_status
 
-#- field_name: legacy_date
-#  label:
-#    en: Legacy Date
-#    fr: Date du système antérieur
-#  preset: date
+- field_name: legacy_date
+  label:
+    en: Legacy Date
+    fr: Date du système antérieur
+  preset: date
 
 - field_name: parent_product
   label:
     en: Hierarchy
     fr: Hiérarchie
 
-#- field_name: price
-#  label:
-#    en: Price
-#    fr: Prix
+- field_name: price
+  label:
+    en: Price
+    fr: Prix
 
-#- field_name: price_note
-#  label:
-#    en: Price Note
-#    fr: Note sur le prix
-#  preset: fluent_text
+- field_name: price_note
+  label:
+    en: Price Note
+    fr: Note sur le prix
+  preset: fluent_text
 
 - field_name: product_id_new
   label:
     en: Product ID New
     fr: ID produit nouveau
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
-
+  required: True
 
 - field_name: product_id_old
   label:
     en: Product ID Old
     fr: ID produit ancien
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
 
 - field_name: publication_year
   label:
@@ -245,30 +257,17 @@ dataset_fields:
   preset: fluent_tags
   tag_validators: ndm_tag_name_validator tag_length_validator
 
-#- field_name: replaced_product_codes
-#  label:
-#    en: Replaced Product
-#    fr: Produit remplacé
-#  preset: shortcode_multivalue
+- field_name: replaced_product_codes
+  label:
+    en: Replaced Product
+    fr: Produit remplacé
+  preset: shortcode_multivalue
 
 - field_name: status_codes
   preset: ndm_status
 
-#- field_name: subjectold_code
-#  label:
-#    en: Old subject
-#    fr: Ancien sujet
-#  preset: shortcode_multivalue
-
-#- field_name: url
-#  label:
-#    en: URL
-#    fr: URL
-#  preset: fluent_text
-#  display_snippet: url.html
-
-#- field_name: volume_and_number
-#  label:
-#    en: Volume and Number
-#    fr: Volume et nombre
-
+- field_name: subjectold_codes
+  label:
+    en: Old subject
+    fr: Ancien sujet
+  preset: shortcode_multivalue

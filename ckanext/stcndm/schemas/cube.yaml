@@ -105,7 +105,7 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: related_product_codes
+- field_name: related_products
   label:
     en: Related Products
     fr: Produits reliés
