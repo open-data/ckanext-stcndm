@@ -127,18 +127,19 @@ def codeset_create_name(key, data, errors, context):
 def format_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
+    parent_id = _data_lookup(('parent_product',), data)
+    if not parent_id:
+        errors[key].append(_('could not find parent_product'))
+    format_code = _data_lookup(('format_code',), data)
+    if not format_code:
+        errors[key].append(_('could not find format_code'))
     if errors[key]:
         return
 
-    parent_id = slug_strip(_data_lookup(('parent_slug',), data))
-    format_code = _data_lookup(('format_code',), data)
-    if parent_id and format_code:
-        data[key] = u'format-{0}_{1}'.format(
-            parent_id.lower(),
-            format_code.lower()
-        )
-    else:
-        errors[key].append(_('could not find parent_product or format_code'))
+    data[key] = u'format-{0}_{1}'.format(
+        parent_id.lower(),
+        format_code.lower()
+    )
 
 
 def subject_create_name(key, data, errors, context):
@@ -180,6 +181,19 @@ def cube_create_name(key, data, errors, context):
         errors[key].append(_('could not find product_id_new'))
 
 
+def pumf_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'pumf-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('could not find product_id_new'))
+
+
 def view_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
@@ -214,31 +228,19 @@ def release_create_name(key, data, errors, context):
 
     if data[('release_id',)] is missing or not data[('release_id',)]:
         lc = ckanapi.LocalCKAN()
-        query_result = lc.action.package_search(q='name:release*')
+        query_result = lc.action.package_search(
+            q='name:release-{product_id}_{year}*'.format(
+                product_id=data[('parent_product',)],
+                year=datetime.date.today().year
+            )
+        )
         data[('release_id',)] = query_result['count'] + 1
 
-    parent_id = slug_strip(_data_lookup(('parent_slug',), data))
-
-    if not parent_id:
-        errors[key].append(_('could not find parent_slug'))
-    else:
-        data[key] = (u'release-{parent_id}-{ts}'.format(
-            parent_id=parent_id,
-            ts=datetime.datetime.today().isoformat()
+    data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
+            product_id=data[('parent_product',)],
+            year=datetime.date.today().year,
+            release_id=data[('release_id',)]
         )).lower()
-
-
-def issue_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        data[key] = u'issue-{0}'.format(product_id_new.lower())
-    else:
-        errors[key].append(_('could not find product_id_new'))
 
 
 def article_create_name(key, data, errors, context):
@@ -263,6 +265,32 @@ def daily_create_name(key, data, errors, context):
     product_id_new = _data_lookup(('product_id_new',), data)
     if product_id_new:
         data[key] = u'daily-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('could not find product_id_new'))
+
+
+def conference_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'conference-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('could not find product_id_new'))
+
+
+def service_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'service-{0}'.format(product_id_new.lower())
     else:
         errors[key].append(_('could not find product_id_new'))
 

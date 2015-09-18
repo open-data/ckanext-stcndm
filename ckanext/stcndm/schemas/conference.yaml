@@ -76,7 +76,7 @@ dataset_fields:
 
 - field_name: name
   # follow our custom name generation with default package name validators
-  validators: pumf_create_name
+  validators: conference_create_name
     not_empty unicode name_validator package_name_validator
   form_snippet: null
   required: true
