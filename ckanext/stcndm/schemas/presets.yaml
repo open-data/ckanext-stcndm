@@ -306,7 +306,7 @@ presets:
     schema_extras: true
     choices:
       - label:
-          en: Archived
+          en: Archive
           fr: Archivé
         value: '1'
       - label:
@@ -317,6 +317,78 @@ presets:
           en: Legacy
           fr: Patrimonial
         value: '3'
+
+- preset_name: ndm_correction_impact_level
+  values:
+    label:
+      en: Correction Impact Level
+      fr: Niveau d'impact de la correction
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: Low
+          fr: Bas
+        value: '0'
+      - label:
+          en: High
+          fr: Haut
+        value: '1'
+
+- preset_name: ndm_correction_type
+  values:
+    label:
+      en: Correction Type
+      fr: Genre de correction
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: Data correction
+          fr: Correction des données
+        value: '1'
+      - label:
+          en: Analysis correction
+          fr: Correction d'analyse
+        value: '2'
+      - label:
+          en: Application correction
+          fr: Correction de l'application
+        value: '3'
+      - label:
+          en: Missing information
+          fr: Information manquante
+        value: '4'
+      - label:
+          en: Additionnal information
+          fr: Information additionnelle
+        value: '5'
+      - label:
+          en: Clarification
+          fr: Clarification
+        value: '6'
+      - label:
+          en: Typo
+          fr: Typo
+        value: '7'
+      - label:
+          en: Editing correction
+          fr: Correction d'édition
+        value: '8'
+      - label:
+          en: Other
+          fr: Autre
+        value: '9'
 
 - preset_name: ndm_array_terminated
   values:

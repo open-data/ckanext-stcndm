@@ -13,7 +13,7 @@ lookup = {
     # the following fields have become presets
     # 'extras_archived_bi_strs': 'archived',
     # 'extras_dispandtrack_bi_txtm': 'tracking',
-    # 'extras_display_en_txtm': 'display',
+    # 'extras_display_bi_txtm': 'display',
     # 'extras_format_en_txtm': 'format',
     # 'extras_producttype_en_strs': 'product_type',
     # 'extras_tmregorg_bi_tmtxtm': 'bogon',
@@ -40,7 +40,6 @@ while i < n:
                                 'extras_tmregorg_bi_tmtxtm',
                                 'extras_dispandtrack_bi_txtm',
                                 'extras_producttype_en_strs',
-                                'extras_display_en_txtm',
                                 'extras_geolevel_en_txtm',
                                 'extras_format_en_txtm',
                                 'extras_statusf_en_strs',

@@ -103,7 +103,7 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: related_product_codes
+- field_name: related_products
   label:
     en: Related Products
     fr: Produits reliés
@@ -149,8 +149,8 @@ dataset_fields:
 #  schema_field_type: string
 #  schema_extras: true
 
-- field_name: display_code
-  preset: ndm_display
+#- field_name: display_code
+#  preset: ndm_display
 
 - field_name: external_authors
   label:
@@ -270,14 +270,14 @@ dataset_fields:
   schema_multivalued: true
   schema_extras: true
 
-- field_name: release_date
-  label:
-    en: Release Date
-    fr: Date de diffusion
-  preset: date
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+#- field_name: release_date
+#  label:
+#    en: Release Date
+#    fr: Date de diffusion
+#  preset: date
+#  schema_field_type: string
+#  schema_multivalued: false
+#  schema_extras: true
 
 - field_name: replaced_product_codes
   label:
@@ -296,15 +296,15 @@ dataset_fields:
 #    fr: Ancien sujet
 #  preset: shortcode_multivalue
 
-- field_name: url
-  label:
-    en: URL
-    fr: URL
-  preset: fluent_text
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: false
-  display_snippet: url.html
+#- field_name: url
+#  label:
+#    en: URL
+#    fr: URL
+#  preset: fluent_text
+#  schema_field_type: fluent
+#  schema_multivalued: false
+#  schema_extras: false
+#  display_snippet: url.html
 
 #- field_name: volume_and_number
 #  label:

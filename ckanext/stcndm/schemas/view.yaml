@@ -100,7 +100,7 @@ dataset_fields:
       value: '11'
   required: true
 
-- field_name: related_product_codes
+- field_name: related_products
   label:
     en: Related
     fr: Relié
@@ -118,14 +118,17 @@ dataset_fields:
     en: Feature Weight
     fr: Poids
 
-#- field_name: archive_date
-#  label:
-#    en: Archive Date
-#    fr: Date d'archivage
-#  preset: date
+- field_name: archive_status
+  preset: ndm_archive_status
 
-#- field_name: archive_status
-#  preset: ndm_archive_status
+- field_name: archive_date
+  label:
+    en: Archive Date
+    fr: Date d'archivage
+  preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 #- field_name: array_terminated
 #  label:

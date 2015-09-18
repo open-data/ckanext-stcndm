@@ -25,9 +25,6 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
-- field_name: admin_notes
-  preset: ndm_admin_notes
-
 - field_name: release_id
   label:
     en: Release ID
@@ -56,18 +53,25 @@ dataset_fields:
   schema_multivalued: true
   schema_extras: true
 
-- field_name: parent_slug
+- field_name: parent_product
   label:
-    en: Parent Product Slug
-    fr: Slug du produit parent
+    en: Top-most Parent Product
+    fr: Slug du produit parent de plus haut niveau
   required: true
-  validators: valid_parent_slug
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
 
 - field_name: publish_status_code
   preset: ndm_publish_status
+
+- field_name: issue_no
+  label:
+    en: Issue Number
+    fr: Numéro d'émission
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: is_correction
   label:

@@ -25,6 +25,12 @@ dataset_fields:
     en: Publisher
     fr: Éditeur
   preset: dataset_organization
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: admin_notes
+  preset: ndm_admin_notes
 
 - field_name: title
   preset: ndm_title
@@ -73,15 +79,16 @@ dataset_fields:
   # follow our custom name generation with default package name validators
   validators:  publication_create_name
     not_empty unicode name_validator package_name_validator
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
   form_snippet: null
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
 
 - field_name: product_type_code
   preset: ndm_product
 
-- field_name: related_product_codes
+- field_name: related_products
   label:
     en: Related
     fr: Relié
@@ -94,6 +101,14 @@ dataset_fields:
   preset: fluent_tags
   tag_validators: ndm_tag_name_validator tag_length_validator
 
+- field_name: feature_weight
+  label:
+    en: Feature Weight
+    fr: Poids
+  schema_field_type: int
+  schema_multivalued: false
+  schema_extras: true
+
 - field_name: archive_status_code
   preset: ndm_archive_status
 
@@ -103,14 +118,6 @@ dataset_fields:
     fr: Date d'archivage
   preset: date
   schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
-
-- field_name: feature_weight
-  label:
-    en: Feature Weight
-    fr: Poids
-  schema_field_type: int
   schema_multivalued: false
   schema_extras: true
 

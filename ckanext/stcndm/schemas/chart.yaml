@@ -1,0 +1,50 @@
+scheming_version: 1
+about: 'Statistics Canada Dissemination: PUMF'
+about_url: http://github.com/open-data/ckanext-stcndm
+catalog_type_label:
+  en: Charts
+  fr: Graphiques
+dataset_type: chart
+form_languages:
+- en
+- fr
+languages_label:
+- eng; CAN
+- fra; CAN
+
+- field_name: owner_org
+  help_text:
+    en: The organization directly responsible for the dataset and for metadata maintenance.
+    fr: Le nom de l’organisation directement responsable des ensembles de donnée et de la maintenance des métadonnées
+  label:
+    en: Publisher
+    fr: Éditeur
+  preset: dataset_organization
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: name
+  # follow our custom name generation with default package name validators
+  validators: chart_create_name
+    not_empty unicode name_validator package_name_validator
+  form_snippet: null
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+- field_name: archive_date
+  label:
+    en: Archive Date
+    fr: Date d'archivage
+  preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: archive_status_code
+  preset: ndm_archive_status
+
+dataset_fields:
+- field_name: product_type_code
+  preset: ndm_product

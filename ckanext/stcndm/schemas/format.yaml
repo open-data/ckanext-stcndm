@@ -25,10 +25,10 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
-- field_name: parent_slug
+- field_name: release_slug
   label:
-    en: Parent Product Slug
-    fr: Slug du produit parent
+    en: Slug of the related release
+    fr: Slug de l'émission connexe
   required: true
   validators: valid_parent_slug
   schema_field_type: string
