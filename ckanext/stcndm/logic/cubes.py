@@ -11,6 +11,7 @@ import ckanext.stcndm.helpers as stcndm_helpers
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
+_NotFound = logic.NotFound
 
 # All cubes are of product type 10.
 CUBE_PRODUCT_TYPE = '10'
@@ -187,3 +188,83 @@ def register_cube(context, data_dict):
 
     # Return our newly created package.
     return lc.action.GetCube(cubeId=product_id)
+
+
+def create_or_add_cube_release(context, data_dict):
+    """
+    Create or add new Cube release(s).
+
+    :param productId: ID of the cube.
+    :type productId: str
+    :param refPeriod: A list of reference periods.
+    :type refPeriod: list
+    """
+    product_id = _get_or_bust(data_dict, 'productId')
+    reference_periods = _get_or_bust(data_dict, 'refPeriod')
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    product_response = lc.action.package_search(
+        q='dataset_type:cube AND product_id_new:{product_id}'.format(
+            product_id=product_id
+        ),
+        rows=1
+    )
+
+    if not product_response['count']:
+        raise _NotFound('no product with that productId')
+
+    product_result = product_response['results'][0]
+
+    for ref_period in reference_periods:
+        # Step A - determine if it's a new release/ref_period
+        release_response = lc.action.package_search(
+            q=(
+                'dataset_type:release'
+                ' AND parent_product:{pid}'
+                ' AND data_reference_period:{ref_period}'
+            ).format(
+                pid=product_result['product_id_new'],
+                ref_period=ref_period
+            ),
+            rows=1
+        )
+
+        if not release_response['count']:
+            # It's a new release/ref_period, do B
+            # See DISSNDM-3794 for business logic here.
+            # Find the highest release_id.
+            release_response = lc.action.package_search(
+                q=(
+                    'dataset_type:release'
+                    ' AND parent_product:{pid}'
+                ).format(
+                    pid=product_result['product_id_new']
+                ),
+                rows=1,
+                sort='release_id desc'
+            )
+
+            if not release_response['count']:
+                release_id = '001'
+            else:
+                release_id = str(
+                    int(release_response['results'][0]['release_id'])
+                ).zfill(3)
+
+            lc.action.package_create(
+                type=u'release',
+                release_id=release_id,
+                owner_org=product_result['owner_org'],
+                parent_product=product_result['product_id_new'],
+                publish_status_code='04',
+                is_correction='0'
+            )
+        else:
+            # It's an existing release/ref_period, do C
+            # See DISSNDM-3794 for business logic here.
+            release_result = release_response['results'][0]
+            release_result['release_date'] = None
+            # "Working Copy" == 04
+            release_result['publish_status_code'] = '04'
+            lc.action.package_update(**release_result)
