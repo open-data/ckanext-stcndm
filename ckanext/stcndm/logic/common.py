@@ -844,7 +844,7 @@ def get_releases_for_product(context, data_dict):
     lc = ckanapi.LocalCKAN(context=context)
 
     results = lc.action.package_search(
-        q='parent_product_id:{pid}'.format(pid=product_id)
+        q='parent_product:{pid}'.format(pid=product_id)
     )
 
     return {
