@@ -392,6 +392,6 @@ def ensure_release_exists(product_id):
         owner_org=result['owner_org'],
         release_id='001',
         parent_product=result['product_id_new'],
-        publication_status='02',
+        publish_status_code='02',
         is_correction='0'
     )
