@@ -377,8 +377,8 @@ def ensure_release_exists(product_id):
         ))
 
     release_result = lc.action.package_search(
-        q='dataset_type:release AND parent_slug:{name}'.format(
-            name=result['name']
+        q='dataset_type:release AND parent_product:{pid}'.format(
+            name=result['product_id_new']
         ),
         rows=1
     )
@@ -391,7 +391,7 @@ def ensure_release_exists(product_id):
         type=u'release',
         owner_org=result['owner_org'],
         release_id='001',
-        parent_slug=result['name'],
+        parent_product=result['product_id_new'],
         publication_status='02',
         is_correction='0'
     )
