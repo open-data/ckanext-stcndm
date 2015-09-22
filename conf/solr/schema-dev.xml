@@ -175,7 +175,7 @@
         <field name="state" type="string" indexed="true" stored="true" omitNorms="true"/>
         <field name="name" type="string" indexed="true" stored="true" omitNorms="true"/>
         <field name="revision_id" type="string" indexed="true" stored="true" omitNorms="true"/>
-        <field name="version" type="string" indexed="true" stored="true"/>
+        <field name="version" type="long" indexed="true" stored="true"/>
         <field name="url" type="string" indexed="true" stored="true" omitNorms="true"/>
         <field name="ckan_url" type="string" indexed="true" stored="true" omitNorms="true"/>
         <field name="download_url" type="string" indexed="true" stored="true" omitNorms="true"/>
@@ -229,7 +229,7 @@
         <field name="data_dict" type="string" indexed="false" stored="true"/>
         <field name="description" type="textgen" indexed="true" stored="true" multiValued="false"/>
         <field name="validated_data_dict" type="string" indexed="false" stored="true"/>
-        <field name="_version_" type="string" indexed="true" stored="true"/>
+        <field name="_version_" type="long" indexed="true" stored="true"/>
 
         <!-- Scheming related fields -->
         <field name="a_to_z_alias_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
