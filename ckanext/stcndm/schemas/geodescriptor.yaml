@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Geodescriptors
   fr: Geodescriptors
+clonable: true
 dataset_type: geodescriptor
 form_languages:
 - en
@@ -58,7 +59,7 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
-- field_name: geolevel_code # tmsgccode_bi_tmtxtm
+- field_name: geolevel_codes # tmsgccode_bi_tmtxtm
   label:
     en: Geolevel Code
     fr: Code geolevel

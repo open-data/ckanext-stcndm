@@ -44,7 +44,7 @@ presets:
     validators: scheming_required scheming_choices
     lookup: preset
     schema_field_type: code
-    schema_multivalued: true
+    schema_multivalued: false
     schema_extras: true
     choices:
       - label:
@@ -193,27 +193,47 @@ presets:
           fr: Vérifié
         value: '08'
       - label:
+          en: Loading
+          fr: En chargement
+        value: '09'
+      - label:
           en: Loaded
           fr: Chargé
         value: '10'
+      - label:
+          en: Error Loading
+          fr: Erreur en chargeant
+        value: '11'
       - label:
           en: Released
           fr: Diffusé
         value: '12'
       - label:
+          en: Failure Releasing
+          fr: Erreur en diffusant
+        value: '44'
+      - label:
+          en: Freezing
+          fr: Figeant
+        value: '90'
+      - label:
+          en: Failure Freezing
+          fr: Erreur en figeant
+        value: '90'
+      - label:
           en: Frozen
           fr: Figé
         value: '99'
 
-- preset_name: ndm_formats
+- preset_name: ndm_format
   values:
     label:
-      en: Resource Formats
-      fr: Formats de ressources
-    form_snippet: multiple_select.html
-    display_snippet: multiple_choice.html
-    validators: scheming_required scheming_multiple_choice
-    output_validators: shortcode_output
+      en: Resource Format
+      fr: Format de la ressource
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required # scheming_multiple_choice
+#    output_validators: shortcode_output
     lookup: preset
     schema_field_type: code
     schema_multivalued: true
@@ -286,13 +306,89 @@ presets:
     schema_extras: true
     choices:
       - label:
-          en: Archived
+          en: Archive
           fr: Archivé
         value: '1'
       - label:
           en: Current
           fr: Courant
         value: '2'
+      - label:
+          en: Legacy
+          fr: Patrimonial
+        value: '3'
+
+- preset_name: ndm_correction_impact_level
+  values:
+    label:
+      en: Correction Impact Level
+      fr: Niveau d'impact de la correction
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: Low
+          fr: Bas
+        value: '0'
+      - label:
+          en: High
+          fr: Haut
+        value: '1'
+
+- preset_name: ndm_correction_type
+  values:
+    label:
+      en: Correction Type
+      fr: Genre de correction
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: Data correction
+          fr: Correction des données
+        value: '1'
+      - label:
+          en: Analysis correction
+          fr: Correction d'analyse
+        value: '2'
+      - label:
+          en: Application correction
+          fr: Correction de l'application
+        value: '3'
+      - label:
+          en: Missing information
+          fr: Information manquante
+        value: '4'
+      - label:
+          en: Additionnal information
+          fr: Information additionnelle
+        value: '5'
+      - label:
+          en: Clarification
+          fr: Clarification
+        value: '6'
+      - label:
+          en: Typo
+          fr: Typo
+        value: '7'
+      - label:
+          en: Editing correction
+          fr: Correction d'édition
+        value: '8'
+      - label:
+          en: Other
+          fr: Autre
+        value: '9'
 
 - preset_name: ndm_array_terminated
   values:
@@ -763,12 +859,6 @@ presets:
     schema_multivalue: false
     schema_extras: false
     form_placeholder:
-      en: The National Pollutant Release Inventory (NPRI) is Canada's public inventory
-        of pollutant releases (to air, water and land), disposals and transfers for
-        recycling. The NPRI includes...
-      fr: L’Inventaire national des rejets de polluants (INRP) est l’inventaire public
-        des rejets de polluants du Canada…
-    help_text:
       en: A detailed description of the dataset that will allow the user to determine
         the nature and purpose of the data in the dataset.
       fr: Une description détaillée de l’ensemble de données qui permettra à l'utilisateur

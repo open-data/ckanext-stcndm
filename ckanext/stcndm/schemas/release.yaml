@@ -1,0 +1,109 @@
+scheming_version: 1
+about: 'Statistics Canada Dissemination: Releases'
+about_url: http://github.com/open-data/ckanext-stcndm
+catalog_type_label:
+  en: Releases
+  fr: Diffusions
+clonable: false
+dataset_type: release
+form_languages:
+- en
+- fr
+languages_label:
+- eng; CAN
+- fra; CAN
+
+dataset_fields:
+
+- field_name: owner_org
+  label:
+    en: Organisation
+    fr: Organisation
+  preset: dataset_organization
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: release_id
+  label:
+    en: Release ID
+    fr: ID de diffusion
+  form_snippet: null
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: release_date
+  label:
+    en: Release Date
+    fr: Date de diffusion
+  preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: reference_period
+  label:
+    en: Reference Period
+    fr: Période référée
+  preset: fluent_text
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: parent_product
+  label:
+    en: Top-most Parent Product
+    fr: Slug du produit parent de plus haut niveau
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: publish_status_code
+  preset: ndm_publish_status
+
+- field_name: issue_no
+  label:
+    en: Issue Number
+    fr: Numéro d'émission
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: is_correction
+  label:
+    en: Is a correction
+    fr: Est une correction
+  required: true
+  form_snippet: select.html
+  display_snippet: select.html
+  choices:
+    - label:
+        en: 'No'
+        fr: 'Non'
+      value: '0'
+    - label:
+        en: 'Yes'
+        fr: 'Oui'
+      value: '1'
+
+- field_name: name
+  # follow our custom name generation validator with default package name validators
+  validators: release_create_name
+    not_empty unicode package_name_validator
+  label:
+    en: Dataset Slug
+    fr: Slug du dataset
+  form_snippet: null
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: title
+  validators: release_create_name
+  form_snippet: null
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false

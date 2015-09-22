@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Survey Source
   fr: Source de sondage
+clonable: true
 dataset_type: survey
 dataset_owner_org: statcan
 form_languages:
@@ -91,15 +92,6 @@ dataset_fields:
 - field_name: notes
   preset: ndm_description
 
-- field_name: level_subject_codes
-  label:
-    en: Level Subject Code
-    fr: Code sujet niveau
-  preset: shortcode_multivalue
-  schema_field_type: string
-  schema_multivalue: true
-  schema_extras: true
-
 - field_name: feature_weight
   label:
     en: Feature Weight
@@ -167,6 +159,7 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
+  display_snippet: url.html
 
 - field_name: reference_periods
   label:
@@ -187,16 +180,17 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: format_codes
-  preset: ndm_formats
+#- field_name: format_code
+#  preset: ndm_format
 
-- field_name: resource_url
-  label:
-    en: Resource URL
-    fr: URL de la ressource
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+#- field_name: resource_url
+#  label:
+#    en: Resource URL
+#    fr: URL de la ressource
+#  schema_field_type: string
+#  schema_multivalued: false
+#  schema_extras: true
+#  display_snippet: url.html
 
 - field_name: survey_status_code
   preset: ndm_survey_status
@@ -229,6 +223,7 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
+  display_snippet: url.html
 
 - field_name: survey_participation_code
   preset: ndm_survey_participation
@@ -247,3 +242,4 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: false
+  display_snippet: url.html

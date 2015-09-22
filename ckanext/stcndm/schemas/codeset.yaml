@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Code
   fr: Code
+clonable: true
 dataset_type: codeset
 dataset_owner_org: statcan
 form_languages:
@@ -47,10 +48,10 @@ dataset_fields:
         en: Geolevel
         fr: Geolevel
       value: 'geolevel'
-    - label:
-        en: Dimension Group
-        fr: Groupe de dimension
-      value: 'dimension_group'
+#    - label:
+#        en: Dimension Group
+#        fr: Groupe de dimension
+#      value: 'dimension_group'
   required: true
   schema_field_type: code
   schema_multivalued: false

@@ -57,7 +57,7 @@ collection_method_list = []
 survey_status_list = []
 survey_participation_list = []
 survey_owner_list = []
-format_list = []
+# format_list = []
 
 for preset in presetMap['presets']:
     if preset['preset_name'] == 'ndm_archive_status':
@@ -80,10 +80,10 @@ for preset in presetMap['presets']:
         survey_owner_list = preset['values']['choices']
         if not survey_owner_list:
             raise ValueError('could not find survey owner preset')
-    if preset['preset_name'] == 'ndm_formats':
-        format_list = preset['values']['choices']
-        if not format_list:
-            raise ValueError('could not find format preset')
+#    if preset['preset_name'] == 'ndm_format':
+#        format_list = preset['values']['choices']
+#        if not format_list:
+#            raise ValueError('could not find format preset')
 
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
 i = 0

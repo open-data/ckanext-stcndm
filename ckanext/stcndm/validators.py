@@ -1,9 +1,14 @@
+#!/usr/bin/env python
+# encoding: utf-8
 import json
+import datetime
 
 from ckan.plugins.toolkit import missing, _
 from ckanext.stcndm import helpers as h
+from ckan.lib.helpers import lang as lang
 import re
 import ckan.lib.navl.dictization_functions as df
+import ckanapi
 
 
 def scheming_validator(fn):
@@ -55,7 +60,7 @@ def shortcode_validate(key, data, errors, context):
             try:
                 element = element.decode('utf-8')
             except UnicodeDecodeError:
-                errors[key]. append(_('invalid encoding for "%s" value') % lang)
+                errors[key].append(_('invalid encoding for "%s" value') % lang)
                 continue
         out.append(element)
 
@@ -97,6 +102,14 @@ def _data_lookup(key, data):
     return value
 
 
+def slug_strip(slug):
+    dash_index = slug.find(u'-')
+    if dash_index >= 0:
+        return slug[dash_index+1:]
+    else:
+        return slug
+
+
 def codeset_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
@@ -109,6 +122,24 @@ def codeset_create_name(key, data, errors, context):
         data[key] = u'{0}-{1}'.format(codeset_type, codeset_value.lower())
     else:
         errors[key].append(_('could not find codeset_type or codeset_value'))
+
+
+def format_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    parent_id = _data_lookup(('parent_product',), data)
+    if not parent_id:
+        errors[key].append(_('could not find parent_product'))
+    format_code = _data_lookup(('format_code',), data)
+    if not format_code:
+        errors[key].append(_('could not find format_code'))
+    if errors[key]:
+        return
+
+    data[key] = u'format-{0}_{1}'.format(
+        parent_id.lower(),
+        format_code.lower()
+    )
 
 
 def subject_create_name(key, data, errors, context):
@@ -150,6 +181,19 @@ def cube_create_name(key, data, errors, context):
         errors[key].append(_('could not find product_id_new'))
 
 
+def pumf_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'pumf-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('could not find product_id_new'))
+
+
 def view_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
@@ -176,17 +220,27 @@ def publication_create_name(key, data, errors, context):
         errors[key].append(_('could not find product_id_new'))
 
 
-def issue_create_name(key, data, errors, context):
+def release_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
         return
 
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        data[key] = u'issue-{0}'.format(product_id_new.lower())
-    else:
-        errors[key].append(_('could not find product_id_new'))
+    if data[('release_id',)] is missing or not data[('release_id',)]:
+        lc = ckanapi.LocalCKAN()
+        query_result = lc.action.package_search(
+            q='name:release-{product_id}_{year}*'.format(
+                product_id=data[('parent_product',)],
+                year=datetime.date.today().year
+            )
+        )
+        data[('release_id',)] = query_result['count'] + 1
+
+    data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
+            product_id=data[('parent_product',)],
+            year=datetime.date.today().year,
+            release_id=data[('release_id',)]
+        )).lower()
 
 
 def article_create_name(key, data, errors, context):
@@ -202,15 +256,57 @@ def article_create_name(key, data, errors, context):
         errors[key].append(_('could not find product_id_new'))
 
 
+def daily_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'daily-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('could not find product_id_new'))
+
+
+def conference_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'conference-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('could not find product_id_new'))
+
+
+def service_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'service-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('could not find product_id_new'))
+
+
 def ndm_str2boolean(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
         return
 
+    truth_values = ['true', 'yes', 'y', '1']
+
     if isinstance(data[key], bool):
         return
-    if data[key] is missing or data[key].lower() not in ['true', 'yes', 'y', '1']:
+
+    if data[key] is missing or data[key].lower() not in truth_values:
         data[key] = False
     else:
         data[key] = True
@@ -229,17 +325,26 @@ def geodescriptor_create_name(key, data, errors, context):
         errors[key].append(_('could not find geodescriptor_code'))
 
 
-def dimension_member_create_name(key, data, errors, context):
+def valid_parent_slug(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
-        return
+        return False
 
-    dimension_group_code = _data_lookup(('dimension_group_code',), data)
-    if dimension_group_code:
-        data[key] = u'dimension_member-{0}'.format(dimension_group_code.lower())
-    else:
-        errors[key].append(_('could not find dimension_group_code'))
+    parent_slug = _data_lookup(('parent_slug',), data)
+    if not parent_slug:
+        errors[key].append(_('could not find parent_slug'))
+        return False
+
+    lc = ckanapi.LocalCKAN()
+    query_result = lc.action.package_search(
+        q='name:{0}'.format(parent_slug.lower())
+    )
+    if query_result['count'] < 1:
+        errors[key].append(_('could not find parent_slug'))
+        return False
+
+    return True
 
 
 @scheming_validator
@@ -297,5 +402,8 @@ def ndm_tag_name_validator(value, context):
 
     tag_name_match = re.compile('[\w \-.,:\'/()]*$', re.UNICODE)
     if not tag_name_match.match(value):
-        raise df.Invalid(_('Tag "%s" must be alphanumeric characters or symbols: - _ . , : \' / ( )') % value)
+        raise df.Invalid(_(
+            'Tag "%s" must be alphanumeric characters or'
+            ' symbols: - _ . , : \' / ( )'
+        ) % value)
     return value

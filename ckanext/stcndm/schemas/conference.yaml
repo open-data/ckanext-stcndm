@@ -1,0 +1,273 @@
+scheming_version: 1
+about: 'Statistics Canada Dissemination: Conferences'
+about_url: http://github.com/open-data/ckanext-stcndm
+catalog_type_label:
+  en: Conferences
+  fr: Conférences
+dataset_type: conference
+form_languages:
+- en
+- fr
+languages_label:
+- eng; CAN
+- fra; CAN
+
+lookup_key: product_id_new
+
+dataset_fields:
+
+- field_name: owner_org
+  help_text:
+    en: The organization directly responsible for the dataset and for metadata maintenance.
+    fr: Le nom de l’organisation directement responsable des ensembles de donnée et de la maintenance des métadonnées
+  label:
+    en: Publisher
+    fr: Éditeur
+  preset: dataset_organization
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: admin_notes
+  preset: ndm_admin_notes
+
+- field_name: title
+  preset: ndm_title
+
+- field_name: notes
+  preset: ndm_description
+
+- field_name: content_type_codes
+  label:
+    en: Content Type
+    fr: Type de contenu
+  preset: codeset_multiple_select
+  codeset_type: content_type
+  schema_field_type: code
+  schema_multivalued: true
+  schema_extras: true
+
+- field_name: geolevel_codes
+  label:
+    en: Geolevel
+    fr: Geolevel
+  preset: codeset_multiple_select
+  codeset_type: geolevel
+
+- field_name: geodescriptor_codes
+  label:
+    en: Geo Specific
+    fr: Géo spécifique
+  preset: shortcode_multivalue
+  lookup: geodescriptor
+  schema_field_type: code
+  schema_multivalued: true
+  schema_extras: true
+
+- field_name: subject_codes
+  label:
+    en: Subject
+    fr: Sujet
+  preset: shortcode_multivalue
+  lookup: subject
+  schema_field_type: code
+  schema_multivalued: true
+  schema_extras: true
+
+- field_name: name
+  # follow our custom name generation with default package name validators
+  validators: conference_create_name
+    not_empty unicode name_validator package_name_validator
+  form_snippet: null
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: product_type_code
+  preset: ndm_product
+
+- field_name: related_products
+  label:
+    en: Related
+    fr: Relié
+  preset: shortcode_multivalue
+
+- field_name: thesaurus
+  label:
+    en: STC Thesaurus
+    fr: STC dictionnaire de synonymes
+  preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
+
+- field_name: feature_weight
+  label:
+    en: Feature Weight
+    fr: Poids
+  schema_field_type: int
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: archive_date
+  label:
+    en: Archive Date
+    fr: Date d'archivage
+  preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: archive_status_code
+  preset: ndm_archive_status
+
+- field_name: tracking_codes
+  preset: ndm_tracking
+
+- field_name: digital_object_identifier
+  label:
+    en: Digital Object Identifier
+    fr: Identificateur d'objet numérique
+  preset: fluent_text
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: array_terminated_code
+  preset: ndm_array_terminated
+
+#- field_name: default_view_id
+#  label:
+#    en: Default View ID
+#    fr: ID de vue par défaut
+
+- field_name: dimension_members
+  label:
+    en: Dimension Member
+    fr: Membre de dimension
+  preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
+
+- field_name: external_authors
+  label:
+    en: External Author
+    fr: Auteur externe
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
+
+- field_name: frc
+  label:
+    en: FRC
+    fr: FRC
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: frequency_codes
+  label:
+    en: Frequency
+    fr: Fréquence
+  preset: codeset_multiple_select
+  codeset_type: frequency
+  schema_field_type: code
+  schema_multivalued: true
+  schema_extras: true
+
+- field_name: history_notes
+  label:
+    en: History Notes
+    fr: Notes historiques
+  preset: fluent_markdown
+
+- field_name: survey_source_codes
+  label:
+    en: Source
+    fr: Source
+  preset: shortcode_multivalue
+  lookup: survey
+
+- field_name: internal_authors
+  label:
+    en: Internal Author
+    fr: Auteur interne
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
+
+- field_name: internal_contacts
+  label:
+    en: Internal Contact Name
+    fr: Nom de personne ressource interne
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
+
+- field_name: keywords
+  label:
+    en: Keywords
+    fr: Mots clés
+  preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
+
+- field_name: last_publish_status_code
+  preset: ndm_publish_status
+
+- field_name: legacy_date
+  label:
+    en: Legacy Date
+    fr: Date du système antérieur
+  preset: date
+
+- field_name: parent_product
+  label:
+    en: Hierarchy
+    fr: Hiérarchie
+
+- field_name: price
+  label:
+    en: Price
+    fr: Prix
+
+- field_name: price_note
+  label:
+    en: Price Note
+    fr: Note sur le prix
+  preset: fluent_text
+
+- field_name: product_id_new
+  label:
+    en: Product ID New
+    fr: ID produit nouveau
+  required: True
+
+- field_name: product_id_old
+  label:
+    en: Product ID Old
+    fr: ID produit ancien
+
+- field_name: publication_year
+  label:
+    en: Publication Year
+    fr: Année de publication
+
+- field_name: reference_periods
+  label:
+    en: Reference Period
+    fr: Période de référence
+  preset: fluent_tags
+  tag_validators: ndm_tag_name_validator tag_length_validator
+
+- field_name: replaced_product_codes
+  label:
+    en: Replaced Product
+    fr: Produit remplacé
+  preset: shortcode_multivalue
+
+- field_name: status_codes
+  preset: ndm_status
+
+- field_name: subjectold_codes
+  label:
+    en: Old subject
+    fr: Ancien sujet
+  preset: shortcode_multivalue

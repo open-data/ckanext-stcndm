@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Subjects
   fr: Sujets
+clonable: true
 dataset_type: subject
 form_languages:
 - en
@@ -32,9 +33,6 @@ dataset_fields:
   # follow our custom name generation with default package name validators
   validators: subject_create_name
     not_empty unicode name_validator package_name_validator
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
   form_snippet: null
   schema_field_type: string
   schema_multivalued: false
@@ -58,7 +56,7 @@ dataset_fields:
     en: Admin Notes
     fr: Notes
   preset: fluent_markdown
-  schema_field_type: flauent
+  schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
 

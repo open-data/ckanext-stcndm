@@ -8,7 +8,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as toolkit
 from ckan.common import c
 
-from ckanext.scheming.helpers import scheming_get_preset
+from ckanext.scheming.helpers import scheming_get_preset, scheming_dataset_schemas
 
 
 _get_action = toolkit.get_action
@@ -50,6 +50,27 @@ def get_schema(org, dataset):
     result = logic.get_action('ndm_get_schema')(context, data_dict)
 
     return result
+
+def get_dataset_types():
+    lc = ckanapi.LocalCKAN()
+    types = lc.action.package_search(
+        q='*:*',
+        rows=0,
+        facet='true',
+        **{"facet.field": ["dataset_type"]}
+    )['search_facets']['dataset_type']['items']
+    schemas = scheming_dataset_schemas()
+    result = {}
+
+    for schema in schemas:
+        result[schema] = {'title': schemas[schema]['catalog_type_label'], 'count': 0}
+
+        for type in types:
+            if schema == type['name']:
+                result[schema]['count'] = type['count']
+                break
+
+    return sorted(result.iteritems(), key=lambda type: type[1], reverse=True)
 
 
 def generate_revision_list(data_set):
@@ -253,7 +274,7 @@ def lookup_label(field_name, field_value, lookup_type):
     """
     lc = ckanapi.LocalCKAN()
 
-    default = {u'en': field_value, u'found': False}
+    default = {u'en': 'label for ' + field_value, u'fr': 'description de ' + field_value, u'found': False}
 
     if not field_value:
         return default
@@ -271,8 +292,9 @@ def lookup_label(field_name, field_value, lookup_type):
         return default
     elif lookup_type == 'codeset':
         results = lc.action.package_search(
-            q='dataset_type:codeset AND extras_codeset_type:{f}'.format(
-                f=field_name
+            q=u'dataset_type:codeset AND codeset_type:{f} AND codeset_value:{v}'.format(
+                f=field_name,
+                v=field_value
             )
         )
 
@@ -289,10 +311,10 @@ def lookup_label(field_name, field_value, lookup_type):
         return result
     else:
         results = lc.action.package_search(
-            q='dataset_type:{type_}'.format(
-                type_=lookup_type
-            ),
-            rows=1
+            q=u'dataset_type:{lookup_type} AND name:{lookup_type}-{field_value}'.format(
+                lookup_type=lookup_type,
+                field_value=field_value.lower()
+            )
         )
         if not results[u'count']:
             return default
@@ -305,3 +327,71 @@ def lookup_label(field_name, field_value, lookup_type):
                 pass
 
         return result
+
+
+def ensure_release_exists(product_id):
+    """
+    Ensure that a release dataset exists for the given product_id.
+
+    :param product_id: The parent product ID.
+    :type product_id: str
+    """
+    allowed_datasets = (
+        'cube',
+        'publication',
+        'article',
+        # FIXME: None of the below exist yet. If they're eventually added
+        #        with names other than those used below this list must be
+        #        updated.
+        'video',
+        'conference',
+        'microdata',
+        'generic',
+        'chart',
+        'indicator',
+        'tableview'
+    )
+
+    lc = ckanapi.LocalCKAN()
+
+    result = lc.action.package_search(
+        q='product_id_new:{product_id}'.format(
+            product_id=product_id
+        ),
+        rows=1,
+        fl=[
+            'name',
+            'type',
+            'owner_org'
+        ]
+    )
+
+    if not result['count']:
+        raise ValueError('product_id does not exist')
+
+    result = result['results'][0]
+
+    if result['type'] not in allowed_datasets:
+        raise ValueError('{type} is not an allowed dataset type.'.format(
+            type=result['type']
+        ))
+
+    release_result = lc.action.package_search(
+        q='dataset_type:release AND parent_product:{pid}'.format(
+            name=result['product_id_new']
+        ),
+        rows=1
+    )
+
+    if release_result['count']:
+        # Nothing to do, at least one release already exists.
+        return
+
+    lc.action.package_create(
+        type=u'release',
+        owner_org=result['owner_org'],
+        release_id='001',
+        parent_product=result['product_id_new'],
+        publish_status_code='02',
+        is_correction='0'
+    )

@@ -1,0 +1,92 @@
+scheming_version: 1
+about: 'Statistics Canada Dissemination: Formats'
+about_url: http://github.com/open-data/ckanext-stcndm
+catalog_type_label:
+  en: Formats
+  fr: Formats
+clonable: true
+dataset_type: format
+form_languages:
+- en
+- fr
+languages_label:
+- eng; CAN
+- fra; CAN
+
+dataset_fields:
+
+- field_name: owner_org
+  label:
+    en: Organisation
+    fr: Organisation
+  preset: dataset_organization
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: release_slug
+  label:
+    en: Slug of the related release
+    fr: Slug de l'émission connexe
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: parent_product
+  label:
+    en: Parent Product
+    fr: Produit parent
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: format_code
+  label:
+    en: Product Format
+    fr: Format du produit
+  preset: ndm_format
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: url
+  label:
+    en: URL
+    fr: URL
+  preset: fluent_text
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: true
+  display_snippet: url.html
+
+- field_name: name
+  # follow our custom name generation validator with default package name validators
+  validators: format_create_name
+    not_empty unicode name_validator package_name_validator
+  label:
+    en: Dataset Slug
+    fr: Slug du dataset
+  form_snippet: null
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: title
+  validators: format_create_name
+  form_snippet: null
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+
+- field_name: issn_number
+  label:
+    en: ISSN Number
+    fr: Nombre ISSN
+  preset: fluent_text
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: true

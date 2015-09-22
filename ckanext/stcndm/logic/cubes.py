@@ -7,9 +7,11 @@ from ckan.plugins.toolkit import (
     ObjectNotFound,
     ValidationError
 )
+import ckanext.stcndm.helpers as stcndm_helpers
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
+_NotFound = logic.NotFound
 
 # All cubes are of product type 10.
 CUBE_PRODUCT_TYPE = '10'
@@ -17,7 +19,6 @@ CUBE_PRODUCT_TYPE = '10'
 
 @logic.side_effect_free
 def get_next_cube_id(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Returns the next available cube_id (without registering it).
 
@@ -36,10 +37,10 @@ def get_next_cube_id(context, data_dict):
     lc = ckanapi.LocalCKAN(context=context)
     response = lc.action.package_search(
         q=(
-            'extras_product_id_new:{subject_code}* AND '
+            'product_id_new:{subject_code}* AND '
             'dataset_type:cube'
         ).format(subject_code=subject_code),
-        sort='extras_product_id_new desc',
+        sort='product_id_new desc',
         rows=1
     )
 
@@ -62,22 +63,22 @@ def get_next_cube_id(context, data_dict):
 @logic.side_effect_free
 def get_cube(context, data_dict):
     """
-    Return a dict representation of a cube, given a cube_id, if it exists.
+    Return a dict representation of a cube, given a cubeId, if it exists.
 
-    :param cube_id: ID of the cube to retrieve. (i.e. 1310001)
-    :type cube_id: str
+    :param cubeId: ID of the cube to retrieve. (i.e. 1310001)
+    :type cubeId: str
 
     :return: requested cube
     :rtype: dict
 
     :raises: ValidationError, ObjectObjectNotFound
     """
-    cube_id = _get_or_bust(data_dict, 'cube_id')
+    cube_id = _get_or_bust(data_dict, 'cubeId')
     lc = ckanapi.LocalCKAN(context=context)
     result = lc.action.package_search(
         q=(
             'dataset_type:cube AND '
-            'extras_product_id_new:{cube_id}'
+            'product_id_new:{cube_id}'
         ).format(cube_id=cube_id),
         rows=1
     )
@@ -114,8 +115,8 @@ def get_cube_list_by_subject(context, data_dict):
     result = lc.action.package_search(
         q=(
             'dataset_type:cube AND '
-            '(extras_subject_codes:{code} OR '
-            'extras_subject_codes:{code}*)'
+            '(subject_codes:{code} OR '
+            'subject_codes:{code}*)'
         ).format(code=subject_code),
         rows=1000
     )
@@ -160,9 +161,6 @@ def register_cube(context, data_dict):
 
     lc = ckanapi.LocalCKAN(context=context)
 
-    subject_dict = lc.action.GetSubject(
-        subjectCode=subject_code
-    )
     product_type_dict = lc.action.GetProductType(
         productType=CUBE_PRODUCT_TYPE
     )
@@ -172,16 +170,11 @@ def register_cube(context, data_dict):
     lc.action.package_create(
         # Old method simply used the product_id, whereas the modern edit
         # form validator uses cube-{product_id}, so lets go with that.
-        name=u'cube-{0}'.format(product_id),
         owner_org='statcan',
         type=u'cube',
         product_id_new=product_id,
         product_type_code=product_type_dict['product_type_code'],
-        subject_codes=[
-            # TODO: Schema defines this as a list, should we accept
-            #       multiple subject codes in the API?
-            subject_dict['subject_code']
-        ],
+        subject_codes=[subject_code],
         title={
             'en': title_en,
             'fr': title_fr,
@@ -191,5 +184,87 @@ def register_cube(context, data_dict):
         last_publish_status_code='02'
     )
 
+    stcndm_helpers.ensure_release_exists(str(product_id))
+
     # Return our newly created package.
-    return lc.action.GetCube(cube_id=product_id)
+    return lc.action.GetCube(cubeId=product_id)
+
+
+def create_or_add_cube_release(context, data_dict):
+    """
+    Create or add new Cube release(s).
+
+    :param productId: ID of the cube.
+    :type productId: str
+    :param refPeriod: A list of reference periods.
+    :type refPeriod: list
+    """
+    product_id = _get_or_bust(data_dict, 'productId')
+    reference_periods = _get_or_bust(data_dict, 'refPeriod')
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    product_response = lc.action.package_search(
+        q='dataset_type:cube AND product_id_new:{product_id}'.format(
+            product_id=product_id
+        ),
+        rows=1
+    )
+
+    if not product_response['count']:
+        raise _NotFound('no product with that productId')
+
+    product_result = product_response['results'][0]
+
+    for ref_period in reference_periods:
+        # Step A - determine if it's a new release/ref_period
+        release_response = lc.action.package_search(
+            q=(
+                'dataset_type:release'
+                ' AND parent_product:{pid}'
+                ' AND data_reference_period:{ref_period}'
+            ).format(
+                pid=product_result['product_id_new'],
+                ref_period=ref_period
+            ),
+            rows=1
+        )
+
+        if not release_response['count']:
+            # It's a new release/ref_period, do B
+            # See DISSNDM-3794 for business logic here.
+            # Find the highest release_id.
+            release_response = lc.action.package_search(
+                q=(
+                    'dataset_type:release'
+                    ' AND parent_product:{pid}'
+                ).format(
+                    pid=product_result['product_id_new']
+                ),
+                rows=1,
+                sort='release_id desc'
+            )
+
+            if not release_response['count']:
+                release_id = '001'
+            else:
+                release_id = str(
+                    int(release_response['results'][0]['release_id'])
+                ).zfill(3)
+
+            lc.action.package_create(
+                type=u'release',
+                release_id=release_id,
+                owner_org=product_result['owner_org'],
+                parent_product=product_result['product_id_new'],
+                publish_status_code='04',
+                is_correction='0'
+            )
+        else:
+            # It's an existing release/ref_period, do C
+            # See DISSNDM-3794 for business logic here.
+            release_result = release_response['results'][0]
+            release_result['release_date'] = None
+            # "Working Copy" == 04
+            release_result['publish_status_code'] = '04'
+            lc.action.package_update(**release_result)

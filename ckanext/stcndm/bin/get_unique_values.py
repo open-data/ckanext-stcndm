@@ -49,7 +49,10 @@ while i < n:
             temp = u''
             for field in ckan_fields:
                 if field in line:
-                    temp += line[field].lower().strip() + u' | '
+                    if line[field] is None:
+			temp += u'N/A | '
+		    else:
+                    	temp += line[field].lower().strip() + u' | '
                 elif len(ckan_fields) > 1:
                     temp += u'N/A | '
             if temp:

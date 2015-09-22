@@ -4,6 +4,8 @@ import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
 import ckanext.scheming.helpers as scheming_helpers
+import ckanext.stcndm.helpers as stcndm_helpers
+import arrow
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -40,8 +42,8 @@ def get_next_product_id(context, data_dict):
 
     product_type = _get_or_bust(data_dict, 'productType')
 
-    # testing for existance of cubeid
-    lc.actions.ndm_get_cube(**data_dict)
+    # testing for existence of cubeid
+    lc.action.GetCube(cubeId=product_id)
 
     subject_code = str(product_id)[:2]
     # TODO Do we want to rely on the subject_code in the cube dict?
@@ -57,10 +59,10 @@ def get_next_product_id(context, data_dict):
     )
 
     query = {
-        'q': 'extras_product_id_new:{product_family}*'.format(
+        'q': 'product_id_new:{product_family}*'.format(
             product_family=product_family
         ),
-        'sort': 'extras_product_id_new desc'
+        'sort': 'product_id_new desc'
     }
 
     response = _get_action('package_search')(context, query)
@@ -71,27 +73,33 @@ def get_next_product_id(context, data_dict):
         sequence_id=sequence_id
     )
 
-    try:
-        for extra in response['results'][0]['extras']:
-            if extra['key'] == 'product_id_new':
-                product_id_response = extra['value']
-                # TODO: implement reusing unused IDs
-                if product_id_response.endswith('99'):
-                    raise _ValidationError(
-                        'All Product IDs have been used. '
-                        'Reusing IDs is in development.'
-                    )
-                else:
-                    try:
-                        product_id_new = str(int(product_id_response) + 1)
-                    except ValueError:
-                        raise _ValidationError(
-                            'Invalid product_id {0}'.format(
-                                product_id_response
-                            )
-                        )
-    except KeyError:
-        pass
+    if response['count'] < 1:
+        return product_id_new
+
+    view_id = response['results'][0]['product_id_new'][-2:]
+
+    if view_id == '99':
+            # TODO: implement reusing unused IDs
+        raise _ValidationError(
+            'All Product IDs have been used. '
+            'Reusing IDs is in development.'
+        )
+    else:
+        try:
+            product_id_new = (
+                '{subject_code}{product_type}{sequence_id}{view_id}'
+            ).format(
+                subject_code=subject_code,
+                product_type=product_type,
+                sequence_id=sequence_id,
+                view_id=str(int(view_id)+1).zfill(2)
+            )
+        except ValueError:
+            raise _ValidationError(
+                'Invalid product_id {0}'.format(
+                    product_id_new
+                )
+            )
 
     return product_id_new
 
@@ -111,7 +119,7 @@ def get_product(context, data_dict):
 
     lc = ckanapi.LocalCKAN(context=context)
     result = lc.action.package_search(
-        q='extras_product_id_new:{product_id}'.format(
+        q='product_id_new:{product_id}'.format(
             product_id=product_id
         ),
         rows=1
@@ -125,7 +133,30 @@ def get_product(context, data_dict):
     # If we're getting more than one result for a given product_id
     # something has gone terribly wrong with the database.
     assert(not result['count'] > 1)
-    return result['results'][0]
+
+    product = result['results'][0]
+
+    # As part of JIRA-5048 we need to resolve _code fields and return
+    # the labels.
+    codes_to_lookup = (
+        ('frequency_codes', 'frequency'),
+        ('geolevel_codes', 'geolevel')
+    )
+
+    for code_field, code_id in codes_to_lookup:
+        cfv = product.get(code_field)
+
+        if not cfv:
+            continue
+
+        codes = cfv if isinstance(cfv, list) else [cfv]
+        product[code_field + '_resolved'] = results = {}
+
+        for code in codes:
+            value = stcndm_helpers.lookup_label(code_id, code, 'codeset')
+            results[code] = value
+
+    return product
 
 
 @logic.side_effect_free
@@ -301,7 +332,7 @@ def get_format_description(context, data_dict):
         'formatCode'
     ).zfill(2)
 
-    preset = scheming_helpers.scheming_get_preset(u'ndm_formats')
+    preset = scheming_helpers.scheming_get_preset(u'ndm_format')
     format_codes = preset['choices']
 
     for fc in format_codes:
@@ -371,8 +402,93 @@ def get_upcoming_releases(context, data_dict):
         return {'count': count, 'results': output}
 
 
-def get_derived_product_list(context, data_dict):
+@logic.side_effect_free
+def get_issues_by_pub_status(context, data_dict):
     # noinspection PyUnresolvedReferences
+    """
+    Fields (listed below) for all product issues of type "productType" with a
+    last_publish_status_code equal to that passed in with a release date
+    between the two input parameters
+
+    :param lastPublishStatusCode: Possible values are outlined on
+        https://confluence.statcan.ca/display/NDMA/Publishing+workflow
+    :param startReleaseDate: Beginning of date range
+    :param endReleaseDate: End of date range
+    :param productTypeCode: Possible values are outlined on
+        https://confluence.statcan.ca/pages/viewpage.action?pageId=20416770.
+        If no product type is passed in, assume all product types are
+        requested.
+
+    :rtype: list of dicts
+    """
+    # TODO: date validation? anything else?
+
+    get_last_publish_status_code = _get_or_bust(
+        data_dict,
+        'lastPublishStatusCode'
+    )
+    start_release_date = _get_or_bust(data_dict, 'startReleaseDate')
+    end_release_date = _get_or_bust(data_dict, 'endReleaseDate')
+    if 'productType' in data_dict and data_dict['productType']:
+        product_type_code = data_dict['productTypeCode']
+    else:
+        product_type_code = '["" TO *]'
+
+    q = (
+        'extras_release_date:[{startReleaseDate} TO {endReleaseDate}] AND '
+        'extras_last_publish_status_code:{lastPublishStatusCode} AND '
+        'extras_product_type_code:{productTypeCode}'
+    ).format(
+        startReleaseDate=arrow.get(
+            start_release_date
+        ).format('YYYY-MM-DDTHH:mm:ss')+'Z',
+        endReleaseDate=arrow.get(
+            end_release_date
+        ).format('YYYY-MM-DDTHH:mm:ss')+'Z',
+        lastPublishStatusCode=get_last_publish_status_code,
+        productTypeCode=product_type_code
+    )
+
+    lc = ckanapi.LocalCKAN()
+
+    i = 0
+    n = 1
+    while i < n:
+        query_results = lc.action.package_search(
+            q=q,
+            rows=1000,
+            start=i*1000)
+        i += 1
+        n = query_results['count'] / 1000.0
+        count = query_results['count']
+        if count == 0:
+            raise _NotFound
+
+        desired_extras = [
+            'product_type_code',
+            'product_id_new',
+            'issue_no',
+            'correction_id_code',
+            'last_publish_status_code',
+            'release_date',
+            'reference_period',
+            'url'
+        ]
+
+        output = []
+
+        for result in query_results['results']:
+            result_dict = {}
+            for extra in desired_extras:
+                if extra in result:
+                    result_dict[extra] = result[extra] or ''
+            output.append(result_dict)
+
+        return {'count': count, 'results': output}
+
+
+@logic.side_effect_free
+def get_derived_product_list(context, data_dict):
     """
     Return a dict with all ProductIDs and French/English titles that are
     associated with a given SubjectCode and ProductType.
@@ -392,13 +508,13 @@ def get_derived_product_list(context, data_dict):
 
     product_id = _get_or_bust(data_dict, 'parentProductId')
     product_type = _get_or_bust(data_dict, 'productType')
-    # if product_type not in ['10', '11', '12', '13', '14', ]
 
-    subject_code = product_id[:2]
-    sequence_id = product_id[-4:]
+    subject_code, sequence_id = product_id[:2], product_id[-4:]
 
-    query = {
-        'q': (
+    lc = ckanapi.LocalCKAN(context=context)
+
+    response = lc.action.package_search(
+        q=(
             'product_id_new:{subject_code}??{sequence_id}* '
             'AND product_type_code:{product_type}'
         ).format(
@@ -406,26 +522,13 @@ def get_derived_product_list(context, data_dict):
             sequence_id=sequence_id,
             product_type=product_type
         ),
-        'rows': '1000'
-    }
+        rows=1000
+    )
 
-    response = _get_action('package_search')(context, query)
-
-    # TODO: raise error if the cube cannot be located.
-
-    output = []
-
-    for result in response['results']:
-        result_dict = {}
-        for extra in result['extras']:
-            if extra['key'] == 'product_id_new':
-                result_dict['product_id_new'] = extra['value']
-            elif extra['key'] == 'title':
-                result_dict['title'] = extra['value']
-
-        output.append(result_dict)
-
-    return output
+    return [{
+        'title': r['title'],
+        'product_id': r['product_id_new']
+    } for r in response['results']]
 
 
 def tv_register_product(context, data_dict):
@@ -458,7 +561,7 @@ def tv_register_product(context, data_dict):
     # TODO: Can we pull this from somewhere? Presets.yaml does not
     #       necessarily have the exact schema name in ndm_product_type.
     VALID_DATA_TYPES = {
-        u'11': 'table',
+        u'11': 'view',
         u'12': 'indicator',
         u'13': 'chart',
         u'14': 'map'
@@ -480,7 +583,7 @@ def tv_register_product(context, data_dict):
         )
 
     lc = ckanapi.LocalCKAN(context=context)
-    cube_dict = lc.action.GetCube(cube_id=cube_id)
+    cube_dict = lc.action.GetCube(cubeId=cube_id)
 
     product_type_schema = lc.action.GetDatasetSchema(
         name=VALID_DATA_TYPES[product_type]
@@ -489,7 +592,7 @@ def tv_register_product(context, data_dict):
     # Copy fields that overlap between the cubes and the destination
     # type.
     copied_fields = {}
-    for field in product_type_schema['fields']:
+    for field in product_type_schema['dataset_fields']:
         field_name = field['field_name']
         if field_name in cube_dict:
             copied_fields[field_name] = cube_dict[field_name]
@@ -504,6 +607,7 @@ def tv_register_product(context, data_dict):
     # Overwrite/add some fields that we don't want to inherit
     # from the cube.
     copied_fields.update({
+        'type': VALID_DATA_TYPES[product_type],
         'name': product_id,
         'owner_org': 'statcan',
         'product_id_new': product_id,
@@ -513,11 +617,16 @@ def tv_register_product(context, data_dict):
     })
 
     lc.action.package_create(**copied_fields)
+    try:
+        stcndm_helpers.ensure_release_exists(str(product_id))
+    except ValueError:
+        # We don't create releases for this type of product
+        pass
+
     return {'product_id_new': product_id}
 
 
 def delete_product(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Set the status of a record to 'Deleted' and remove all metadata associated
     with that record. This will make the productid available for reuse.
@@ -535,13 +644,20 @@ def delete_product(context, data_dict):
     """
     product_id = _get_or_bust(data_dict, 'productId')
 
-    result = _get_action('ndm_get_product')(context, data_dict)
+    lc = ckanapi.LocalCKAN(context=context)
 
-    deleted_id = result['product_id_new']
+    result = lc.action.package_search(
+        q='product_id_new:{pid}'.format(pid=product_id),
+        rows=1,
+        fl=['id']
+    )
+
+    if result['count']:
+        lc.action.package_delete(id=result['results'][0]['id'])
 
     return {
         'message': 'Product successfully deleted',
-        'product_id_new': deleted_id
+        'product_id_new': product_id
     }
 
 
@@ -578,6 +694,35 @@ def update_last_publish_status(context, data_dict):
     """
     Update the publishing status code
 
+    :param productIds: publishing status code
+    :type productIds: str
+    :param issueNo: publishing status code
+    :type issueNo: str
+    :param lastPublishStatusCode: publishing status code
+    :type lastPublishStatusCode: str
+
+    :return: updated package
+    :rtype: dict
+    """
+    return [
+        _update_single_publish_status(
+            context,
+            {
+                'productId': product_id,
+                'issueNo': _get_or_bust(data_dict, 'issueNo'),
+                'lastPublishStatusCode': _get_or_bust(
+                    data_dict,
+                    'lastPublishStatusCode'
+                )
+            }
+        ) for product_id in _get_or_bust(data_dict, 'productIds')
+    ]
+
+
+def _update_single_publish_status(context, data_dict):
+    """
+    Update the publishing status code
+
     :param productId: publishing status code
     :type productId: str
     :param issueNo: publishing status code
@@ -588,7 +733,6 @@ def update_last_publish_status(context, data_dict):
     :return: updated package
     :rtype: dict
     """
-
     product_id = _get_or_bust(data_dict, 'productId')
     issue_no = _get_or_bust(data_dict, 'issueNo')
     last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
@@ -627,39 +771,32 @@ def update_last_publish_status(context, data_dict):
 
 
 def update_product_geo(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Update the specificgeocode_bi_txtm value and sets the geo level
     (geolevel_*) accordingly.
 
-    :param productId: product id
+    :param productId: ID of the product to update.
     :type productId: str
 
     :param dguids: Geo-code values status code
-    :type list of DGUID: array of strs
+    :type dguids: list of strings
 
     :return: updated package
     :rtype: dict
     """
-
     product_id = _get_or_bust(data_dict, 'productId')
     dguids = _get_or_bust(data_dict, 'dguids')
 
-    #    @todo make this work
-    #    try:
-    #        validators.list_of_strings('dguids', data_dict)
-    #    except validators.Invalid, e:
-    #        raise _ValidationError({'dguids': e.error})
-    #
-    if type(dguids) == unicode:
+    lc = ckanapi.LocalCKAN(context=context)
+
+    if isinstance(dguids, basestring):
         dguids = [x.strip() for x in dguids.split(';')]
 
-    q = {
-        'q': 'extras_product_id_new:{product_id}'.format(
+    response = lc.action.package_search(
+        q='product_id_new:{product_id}'.format(
             product_id=product_id
         )
-    }
-    response = _get_action('package_search')(context, q)
+    )
 
     if response['count'] == 0:
         raise _ValidationError('Record not found.')
@@ -670,53 +807,47 @@ def update_product_geo(context, data_dict):
         )
 
     pkg_dict = response['results'][0]
-
-    # Set the geo level fields for each specific geo code.
-#    geo_level = helpers.GeoLevel(context)
-#    geo_specific = helpers.GeoSpecific(context)
-    unique_codes = dict()
-#    geo_level_en = list()
-#    geo_level_fr = list()
-#    geo_specific_en = list()
-#    geo_specific_fr = list()
-
-    for specific_code in dguids:
-        # store the codes in a dictionary to create a unique set
-        unique_codes[specific_code[:5]] = True
-
-# get and append the text for geo levels
-#    for geo_code in sorted(unique_codes.keys()):
-#        (en_text, fr_text) = geo_level.get_by_code(geo_code)
-#        if en_text:
-#            geo_level_en.append(en_text)
-#        if fr_text:
-#            geo_level_fr.append(fr_text)
-
-#    for specific_geo_code in dguids:
-#        (en_text, fr_text) = geo_specific.get_by_code(specific_geo_code)
-#        if en_text:
-#            geo_specific_en.append(en_text)
-#        if fr_text:
-#            geo_specific_fr.append(fr_text)
-
-    for extra in pkg_dict['extras']:  # update the package dictionary
-        if extra['key'] == 'geodescriptor':
-            extra['value'] = '; '.join(dguids)
-        elif extra['key'] == 'geo_level_code':
-            extra['value'] = '; '.join(unique_codes.keys())
-#        elif extra['key'] == 'geolevel_en_txtm':
-#            extra['value'] = '; '.join(geo_level_en)
-#        elif extra['key'] == 'geolevel_fr_txtm':
-#            extra['value'] = '; '.join(geo_level_fr)
-#        elif extra['key'] == 'specificgeo_en_txtm':
-#            extra['value'] = '; '.join(geo_specific_en)
-#        elif extra['key'] == 'specificgeo_fr_txtm':
-#            extra['value'] = '; '.join(geo_specific_fr)
-
-    # result = _get_action('package_update')(context, pkg_dict)
-    # TODO: check result?
-    output = _get_action('package_show')(context, {
-        'name_or_id': pkg_dict['name']
+    pkg_dict.update({
+        # Why only the first 5? What's the business logic here?
+        # Validator *requires* that this be a list.
+        'geolevel_codes': list(set(sc[:5] for sc in dguids)),
+        'geodescriptor_codes': dguids
     })
 
-    return output
+    # TODO: Check the results?
+    lc.action.package_update(**pkg_dict)
+
+    return lc.action.package_show(id=pkg_dict['id'])
+
+
+def ensure_release_exists(context, data_dict):
+    """
+    Ensure a release exists for the given `productId`.
+
+    :param productId: The parent product ID.
+    :type productId: str
+    """
+    product_id = _get_or_bust(data_dict, 'productId')
+    stcndm_helpers.ensure_release_exists(product_id)
+
+
+@logic.side_effect_free
+def get_releases_for_product(context, data_dict):
+    """
+    Returns all of the releases for the given `productId`.
+
+    :param productId: ID of the parent product.
+    :type productId: str
+    """
+    product_id = _get_or_bust(data_dict, 'productId')
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    results = lc.action.package_search(
+        q='parent_product:{pid}'.format(pid=product_id)
+    )
+
+    return {
+        'count': results['count'],
+        'results': [r for r in results['results']]
+    }

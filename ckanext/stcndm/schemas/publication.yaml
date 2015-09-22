@@ -4,6 +4,7 @@ about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Publications
   fr: Publications
+clonable: true
 dataset_type: publication
 form_languages:
 - en
@@ -15,6 +16,18 @@ languages_label:
 lookup_key: product_id_new
 
 dataset_fields:
+
+- field_name: owner_org
+  help_text:
+    en: The organization directly responsible for the dataset and for metadata maintenance.
+    fr: Le nom de l’organisation directement responsable des ensembles de donnée et de la maintenance des métadonnées
+  label:
+    en: Publisher
+    fr: Éditeur
+  preset: dataset_organization
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
 
 - field_name: admin_notes
   preset: ndm_admin_notes
@@ -66,15 +79,16 @@ dataset_fields:
   # follow our custom name generation with default package name validators
   validators:  publication_create_name
     not_empty unicode name_validator package_name_validator
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
   form_snippet: null
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
 
 - field_name: product_type_code
   preset: ndm_product
 
-- field_name: related_product_codes
+- field_name: related_products
   label:
     en: Related
     fr: Relié
@@ -91,11 +105,36 @@ dataset_fields:
   label:
     en: Feature Weight
     fr: Poids
+  schema_field_type: int
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: archive_status_code
+  preset: ndm_archive_status
+
+- field_name: archive_date
+  label:
+    en: Archive Date
+    fr: Date d'archivage
+  preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: display_code
+  preset: ndm_display
+
+- field_name: tracking_codes
+  preset: ndm_tracking
 
 - field_name: digital_object_identifier
   label:
     en: Digital Object Identifier
     fr: Identificateur d'objet numérique
+  preset: fluent_text
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 #- field_name: array_terminated_code
 #  preset: ndm_array_terminated
@@ -104,12 +143,6 @@ dataset_fields:
 #  label:
 #    en: Default View ID
 #    fr: ID de vue par défaut
-
-#- field_name: dimension_group_code
-#  label:
-#    en: Dimension Group
-#    fr: Groupe de dimension
-#  preset: shortcode_multivalue
 
 #- field_name: dimmember_code
 #  label:
@@ -121,11 +154,17 @@ dataset_fields:
   label:
     en: External Author
     fr: Auteur externe
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: frc
   label:
     en: FRC
     fr: FRC
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: frequency_codes
   label:
@@ -154,11 +193,17 @@ dataset_fields:
   label:
     en: Internal Author
     fr: Auteur interne
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: internal_contacts
   label:
     en: Internal Contact Name
     fr: Nom de personne ressource interne
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: keywords
   label:
@@ -166,6 +211,9 @@ dataset_fields:
     fr: Mots clés
   preset: fluent_tags
   tag_validators: ndm_tag_name_validator tag_length_validator
+
+- field_name: last_publish_status_code
+  preset: ndm_publish_status
 
 #- field_name: legacy_date
 #  label:
@@ -205,18 +253,21 @@ dataset_fields:
     en: Publication Year
     fr: Année de publication
 
-- field_name: reference_periods
-  label:
-    en: Reference Period
-    fr: Période de référence
-  preset: fluent_tags
-  tag_validators: ndm_tag_name_validator tag_length_validator
+#- field_name: reference_periods
+#  label:
+#    en: Reference Period
+#    fr: Période de référence
+#  preset: fluent_tags
+#  tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: replaced_product_codes
   label:
     en: Replaced Product
     fr: Produit remplacé
   preset: shortcode_multivalue
+
+- field_name: status_codes
+  preset: ndm_status
 
 - field_name: subjectold_codes
   label:
@@ -233,59 +284,3 @@ dataset_fields:
 #  label:
 #    en: URL
 #    fr: URL
-
-- field_name: owner_org
-  help_text:
-    en: The organization directly responsible for the dataset and for metadata maintenance.
-    fr: Le nom de l’organisation directement responsable des ensembles de donnée et de la maintenance des métadonnées
-  label:
-    en: Publisher
-    fr: Éditeur
-  preset: dataset_organization
-
-resource_fields:
-
-- field_name: format_code
-  preset: ndm_formats
-  form_snippet: select.html
-  required: true
-
-- field_name: language
-  preset: ndm_language
-  required: true
-
-- field_name: url
-  label:
-    en: URL
-    fr: URL
-  required: true
-
-- field_name: issn_number
-  label:
-    en: ISSN Number
-    fr: Nombre ISSN
-
-- field_name: archive_status_code
-  preset: ndm_archive_status
-
-- field_name: archive_date
-  label:
-    en: Archive Date
-    fr: Date d'archivage
-
-- field_name: release_date
-  label:
-    en: Release Date
-    fr: Date de diffusion
-
-- field_name: display_code
-  preset: ndm_display
-
-- field_name: tracking_codes
-  preset: ndm_tracking
-
-- field_name: last_publish_status_code
-  preset: ndm_publish_status
-
-- field_name: status_codes
-  preset: ndm_status

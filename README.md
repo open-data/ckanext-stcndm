@@ -11,30 +11,9 @@ required settings in developent.ini:
 ```ini
 ckan.plugins =
     text_view recline_grid_view recline_graph_view
-    stcndm scheming_datasets fluent wet_theme
+    stcndm scheming_datasets fluent wet_boew_theme_gc_intranet
 
-scheming.dataset_schemas =
-    ckanext.stcndm:schemas/codeset.yaml
-    ckanext.stcndm:schemas/conf_service.yaml
-    ckanext.stcndm:schemas/corrections.yaml
-    ckanext.stcndm:schemas/cube.yaml
-    ckanext.stcndm:schemas/daily.yaml
-    ckanext.stcndm:schemas/indicator.yaml
-    ckanext.stcndm:schemas/issue.yaml
-    ckanext.stcndm:schemas/publication.yaml
-    ckanext.stcndm:schemas/pumf.yaml
-    ckanext.stcndm:schemas/subject.yaml
-    ckanext.stcndm:schemas/view.yaml
-    ckanext.stcndm:schemas/survey.yaml
-
-
-scheming.presets =
-    ckanext.scheming:presets.json
-    ckanext.fluent:presets.json
-    ckanext.stcndm:schemas/presets.yaml
-    
-wet_theme.url = http://localhost:5000/theme-intranet
-
+wet_boew.url = htp://127.0.0.1:5000
 wet_theme.geo_map_type = static
 ```
 
