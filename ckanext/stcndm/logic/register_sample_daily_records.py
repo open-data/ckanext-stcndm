@@ -5,21 +5,21 @@ import ckan
 import ConfigParser
 
 parser = ConfigParser.SafeConfigParser()
-parser.read('./ckanparameters.config')
+parser.read("./ckanparameters.config")
 
-API_KEY = parser.get('ckan', 'api_key')
-BASE_URL = parser.get('ckan', 'base_url')
+API_KEY = parser.get("ckan", "api_key")
+BASE_URL = parser.get("ckan", "base_url")
 
 
 def get_daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield str(start_date + datetime.timedelta(n))
 
-
+c
 def main():
     rc = ckanapi.RemoteCKAN(BASE_URL,
                               apikey=API_KEY,
-                              user_agent='register_sample_daily_records')
+                              user_agent="register_sample_daily_records")
 
     start_date = datetime.datetime.now()
     end_date = datetime.datetime.now() + datetime.timedelta(weeks=4)
@@ -50,5 +50,5 @@ def main():
         count += 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
