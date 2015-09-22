@@ -15,11 +15,11 @@ def get_daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield str(start_date + datetime.timedelta(n))
 
-c
+
 def main():
     rc = ckanapi.RemoteCKAN(BASE_URL,
-                              apikey=API_KEY,
-                              user_agent="register_sample_daily_records")
+                            apikey=API_KEY,
+                            user_agent="register_sample_daily_records")
 
     start_date = datetime.datetime.now()
     end_date = datetime.datetime.now() + datetime.timedelta(weeks=4)
@@ -40,9 +40,8 @@ def main():
                     "lastPublishStatusCode": "08",
                     "childList": "12345"}
 
-        print rc.action.RegisterDaily(**pkg_dict)
         try:
-            print rc.action.RegisterDaily(**pkg_dict)
+            rc.action.RegisterDaily(**pkg_dict)
 
         except ckan.logic.ValidationError:
             print "dataset already registered: {pid}".format(pid=pid)
