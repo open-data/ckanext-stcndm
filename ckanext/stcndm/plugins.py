@@ -232,6 +232,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "daily_create_name": validators.daily_create_name,
             "format_create_name": validators.format_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
+            "indicator_create_name": validators.indicator_create_name,
             "ndm_str2boolean": validators.ndm_str2boolean,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
             "publication_create_name": validators.publication_create_name,
