@@ -646,14 +646,30 @@ def delete_product(context, data_dict):
 
     lc = ckanapi.LocalCKAN(context=context)
 
-    result = lc.action.package_search(
+    response = lc.action.package_search(
         q='product_id_new:{pid}'.format(pid=product_id),
         rows=1,
-        fl=['id']
+        fl=['id', 'type']
     )
 
-    if result['count']:
-        lc.action.package_delete(id=result['results'][0]['id'])
+    if response['count']:
+        result = response['results'][0]
+
+        # Delete the parent package.
+        lc.action.package_delete(id=result['id'])
+
+        # As part of ticket #4576 and #4575, delete all the releases
+        # associated with a View and a Cube.
+        if result['type'] in ('view', 'cube'):
+            response = lc.action.package_search(
+                q='dataset_type:release AND parent_product:{pid}'.format(
+                    pid=product_id
+                ),
+                fl=['id']
+            )
+
+            for result in response['results']:
+                lc.action.package_delete(id=result['id'])
 
     return {
         'message': 'Product successfully deleted',
