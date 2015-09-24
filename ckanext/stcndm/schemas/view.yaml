@@ -104,7 +104,11 @@ dataset_fields:
   label:
     en: Related
     fr: Relié
-  preset: shortcode_multivalue
+  preset: repeating_text
+  form_blanks: 3
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: thesaurus
   label:
@@ -160,8 +164,13 @@ dataset_fields:
 
 - field_name: external_authors
   label:
-    en: External Author
-    fr: Auteur externe
+    en: External Authors
+    fr: Auteurs externes
+  preset: repeating_text
+  form_blanks: 3
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: frc
   label:
@@ -201,6 +210,11 @@ dataset_fields:
   label:
     en: Internal Contact Name
     fr: Nom de personne ressource interne
+  preset: repeating_text
+  form_blanks: 3
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: keywords
   label:
@@ -270,7 +284,11 @@ dataset_fields:
   label:
     en: Replaced Product
     fr: Produit remplacé
-  preset: shortcode_multivalue
+  preset: repeating_text
+  form_blanks: 3
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: status_codes
   preset: ndm_status

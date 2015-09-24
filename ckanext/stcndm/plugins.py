@@ -52,7 +52,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/format.yaml',
                 'ckanext.stcndm:schemas/geodescriptor.yaml',
                 'ckanext.stcndm:schemas/indicator.yaml',
-                'ckanext.stcndm:schemas/issue.yaml',
                 'ckanext.stcndm:schemas/publication.yaml',
                 'ckanext.stcndm:schemas/release.yaml',
                 'ckanext.stcndm:schemas/pumf.yaml',
@@ -63,6 +62,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             ]),
             'scheming.presets': '\n'.join([
                 'ckanext.scheming:presets.json',
+                'ckanext.repeating:presets.json',
                 'ckanext.fluent:presets.json',
                 'ckanext.stcndm:schemas/presets.yaml'
             ])

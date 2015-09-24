@@ -107,7 +107,8 @@ dataset_fields:
   label:
     en: Related Products
     fr: Produits reliés
-  preset: shortcode_multivalue
+  preset: repeating_text
+  form_blanks: 3
   schema_field_type: string
   schema_extras: true
 
@@ -156,6 +157,8 @@ dataset_fields:
   label:
     en: External Author
     fr: Auteur externe
+  preset: repeating_text
+  form_blanks: 3
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
@@ -189,6 +192,8 @@ dataset_fields:
   label:
     en: Internal Author
     fr: Auteur interne
+  preset: repeating_text
+  form_blanks: 3
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
@@ -197,6 +202,8 @@ dataset_fields:
   label:
     en: Internal Contact Name
     fr: Nom de personne ressource interne
+  preset: repeating_text
+  form_blanks: 3
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
@@ -283,7 +290,8 @@ dataset_fields:
   label:
     en: Replaced Products
     fr: Produits remplacés
-  preset: shortcode_multivalue
+  preset: repeating_text
+  form_blanks: 3
   schema_field_type: string
   schema_extras: true
 
@@ -315,6 +323,8 @@ dataset_fields:
   label:
     en: Child List
     fr: Liste d'enfants
-  preset: shortcode_multivalue
+  preset: repeating_text
+  form_blanks: 3
   schema_field_type: string
+  schema_multivalued: true
   schema_extras: true

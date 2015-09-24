@@ -38,7 +38,7 @@ def dict2dict_list(dictionary):
 def get_schema(org, dataset):
     """
     Return a dict having fields in a given org for keys and the values stored
-    for that field in the tmschama organization as a dict.
+    for that field in the tmschema organization as a dict.
 
     :return: dict of dicts
     """
@@ -50,6 +50,7 @@ def get_schema(org, dataset):
     result = logic.get_action('ndm_get_schema')(context, data_dict)
 
     return result
+
 
 def get_dataset_types():
     lc = ckanapi.LocalCKAN()

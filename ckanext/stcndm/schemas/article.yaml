@@ -88,7 +88,11 @@ dataset_fields:
   label:
     en: Related Products
     fr: Produits reliés
-  preset: shortcode_multivalue
+  preset: repeating_text
+  form_blanks: 3
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
 
 - field_name: thesaurus
   label:
@@ -143,6 +147,8 @@ dataset_fields:
   label:
     en: External Authors
     fr: Auteurs externes
+  preset: repeating_text
+  form_blanks: 3
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
@@ -170,6 +176,8 @@ dataset_fields:
   label:
     en: Internal Authors
     fr: Auteurs internes
+  preset: repeating_text
+  form_blanks: 3
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
