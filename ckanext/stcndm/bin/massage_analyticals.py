@@ -35,6 +35,7 @@ while i < n:
                     type=product_out['type'],
                     product_id=product_out['product_id_new']
                 ).lower()
+            print json.dumps(product_out)
 
             release_out = do_release(line)
             print json.dumps(release_out)
@@ -51,12 +52,14 @@ while i < n:
             format_out['release_slug'] = release_out['name']
             print json.dumps(format_out)
         elif len(line['productidnew_bi_strs']) > 15:
-            product_out = do_product(line)
-            product_out['type'] = u'article'
-            product_out['name'] = u'{type}-{product_id}'.format(
-                    type=product_out['type'],
-                    product_id=product_out['product_id_new']
-                ).lower()
+            if 'zckownerorg_bi_strs' in line and line['zckownerorg_bi_strs'] == 'maprimary':
+                product_out = do_product(line)
+                product_out['type'] = u'article'
+                product_out['name'] = u'{type}-{product_id}'.format(
+                        type=product_out['type'],
+                        product_id=product_out['product_id_new']
+                    ).lower()
+                print json.dumps(product_out)
 
             release_out = do_release(line)
             print json.dumps(release_out)

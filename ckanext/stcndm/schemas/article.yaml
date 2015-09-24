@@ -141,8 +141,8 @@ dataset_fields:
 
 - field_name: external_authors
   label:
-    en: External Author
-    fr: Auteur externe
+    en: External Authors
+    fr: Auteurs externes
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
@@ -168,8 +168,8 @@ dataset_fields:
 
 - field_name: internal_authors
   label:
-    en: Internal Author
-    fr: Auteur interne
+    en: Internal Authors
+    fr: Auteurs internes
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
