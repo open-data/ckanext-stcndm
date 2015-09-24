@@ -141,9 +141,9 @@ def register_daily(context, data_dict):
         raise _ValidationError(
             _("Incorrect format for releaseDate '{0}', should be YYYY-MM-DD".format(release_date_str)))
 
-    unique_id = _get_or_bust(data_dict, 'uniqueId')
-    if not re.match('^daily[0-9]{3,4}$', unique_id):
-        raise _ValidationError(_("Invalid unique ID for Daily: '{0}'".format(unique_id)))
+    # unique_id = _get_or_bust(data_dict, 'uniqueId')
+    # if not re.match('^daily[0-9]{3,4}$', unique_id):
+    #     raise _ValidationError(_("Invalid unique ID for Daily: '{0}'".format(unique_id)))
 
     last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
 
@@ -157,6 +157,7 @@ def register_daily(context, data_dict):
     new_product = lc.action.package_create(
         name='daily-{0}'.format(product_id),
         owner_org='statcan',
+        private=False,
         type='daily',
         # extras=extras,
         title=product_title,
@@ -164,8 +165,19 @@ def register_daily(context, data_dict):
         product_type_code='24',
         last_publish_status_code=last_publish_status_code,
         parent_product=product_id,
-        release_date=release_date.strftime("%Y-%m-%dT08:30"),
         child_list=child_list
+    )
+    new_release = lc.action.package_create(
+        owner_org='statcan',
+        private=False,
+        type='release',
+        name='release-{0}_{1}_1'.format(product_id, datetime.date.today().year),
+        title='release={0}_{0}_1'.format(product_id, datetime.date.today().year),
+        release_id='1',
+        release_date=release_date.strftime("%Y-%m-%dT08:30"),
+        publish_status_code=last_publish_status_code,
+        parent_product=product_id,
+        is_correction='0'
     )
     output = lc.action.GetProduct(
         productId=new_product['product_id_new'],
