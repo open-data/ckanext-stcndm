@@ -92,7 +92,8 @@ dataset_fields:
   label:
     en: Old Subject Code
     fr: Ancien code du sujet
-  preset: shortcode_multivalue
+  preset: repeating_text
+  form_blanks: 3
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true

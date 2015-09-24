@@ -4,16 +4,16 @@ Requirements:
 * ckan 2.3
 * ckanext-scheming
 * ckanext-fluent
-* ckanext-repeating (if you need repeating free-form fields)
+* ckanext-repeating
 * ckanext-wet-boew and a copy of the WET production files
 
-required settings in developent.ini:
-```ini
+required settings in development.ini:
+```
 ckan.plugins =
     text_view recline_grid_view recline_graph_view
-    stcndm scheming_datasets fluent wet_boew_theme_gc_intranet
+    stcndm scheming_datasets repeating fluent wet_boew_theme_gc_intranet
 
-wet_boew.url = htp://127.0.0.1:5000
+wet_boew.url = http://127.0.0.1:5000
 wet_theme.geo_map_type = static
 ```
 
@@ -32,7 +32,7 @@ for the primary and format types at:
     *  https://github.com/ckan/ckanapi.git
     *  https://github.com/open-data/ckanext-scheming.git
     *  https://github.com/open-data/ckanext-fluent.git
-    *  https://github.com/open-data/ckanext-repeating
+    *  https://github.com/open-data/ckanext-repeating.git
     *  https://github.com/open-data/ckanext-wet-boew.git
     *  https://github.com/<your fork&gt;/ckanext-stcndm.git
   4. Create and activate a virtual environment for your project:
@@ -47,8 +47,8 @@ for the primary and format types at:
     cd ..
   ```
   
-  6. Use the wet4-scheming branch of the Open Data CKAN WET extension
-    ```
+  6. Use the wet4-scheming branch of the Open Data CKAN WET extension.
+  ```
     cd ckanext-wet-boew
     git checkout wet4-scheming
     cd ..
@@ -58,11 +58,10 @@ for the primary and format types at:
      In this case, just install pdr manually from pypi.
   ```
     pip install pbr
-  ```     
-  8. Install the requirements and other projects.
-  
   ```
-    
+  
+  8. Install the requirements and other projects.
+  ```
     cd ckan
     python setup.py develop
     cd ..
@@ -92,8 +91,10 @@ for the primary and format types at:
     pip install -r requirements.txt
     python setup.py develop
     cd ..
-  ``` 
+  ```
+
   9. Install the libgeos library required by ckanext-wet-beow (`brew install geos` on OS X or `apt-get install libgeos-dev` on Debian/Ubuntu)
+
   10. Create the .ini file as per the normal CKAN installation instructions and modify as noted above.
   
   11. Configure the WET extension for use as per https://github.com/open-data/ckanext-wet-boew/tree/wet4-scheming
