@@ -1,10 +1,11 @@
 # --coding: utf-8 --
 
-__author__ = 'Statistics Canada'
-
 import ckan.plugins.toolkit as toolkit
 import ckan.logic as logic
 import ckan.logic.validators as validators
+import ckanapi
+
+__author__ = 'Statistics Canada'
 
 _get_or_bust = logic.get_or_bust
 # noinspection PyUnresolvedReferences
@@ -30,7 +31,7 @@ def update_default_view(context, data_dict):
     default_view = _get_or_bust(data_dict, 'defaultView')
 
     try:
-        validators.package_name_exists(cube_id, context)
+        validators.package_name_exists('cube-'+cube_id, context)
     except validators.Invalid, e:
         raise _ValidationError({'cubeId': e.error})
 
@@ -40,14 +41,11 @@ def update_default_view(context, data_dict):
     # except validators.Invalid, e:
     #     raise _ValidationError({'defaultView': e.error})
 
-    pkg_dict = _get_action('package_show')(context, {'name_or_id': str(cube_id)})
+    lc = ckanapi.LocalCKAN(context=context)
+    pkg_dict = lc.action.package_show(**{'name_or_id': 'cube-'+str(cube_id)})
 
-    for extra in pkg_dict['extras']:
-        if extra['key'] == 'default_view_id':
-            extra['value'] = default_view
+    pkg_dict['default_view_id'] = default_view
 
-    result = _get_action('package_update')(context, pkg_dict)
+    result = lc.action.package_update(**pkg_dict)
 
-    output = _get_action('ndm_get_cube')(context, {'productId': result['name']})
-
-    return output
+    return lc.action.GetCube(**{'cubeId': result['product_id_new']})

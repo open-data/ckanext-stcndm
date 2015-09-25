@@ -1,6 +1,4 @@
 # --coding: utf-8 --
-__author__ = 'Statistics Canada'
-
 import ckanapi
 import datetime
 from datetime import datetime as dt
@@ -9,6 +7,8 @@ from ckan.common import _
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
 from ckanext.stcndm.logic.common import get_product
+
+__author__ = 'Statistics Canada'
 
 _get_or_bust = logic.get_or_bust
 _stub_msg = {"result": "This method is just a stub for now. Please do not use."}
@@ -94,7 +94,7 @@ def get_daily_list(context, data_dict):
 def register_daily(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
-    Register a Daily in the maprimary organization.
+    Register a Daily.
 
     Automatically populate fields based on provided parameters.
 
@@ -118,7 +118,7 @@ def register_daily(context, data_dict):
     :raises: ValidationError
     """
 
-    lc = ckanapi.LocalCKAN()
+    lc = ckanapi.LocalCKAN(context=context)
 
     product_id = _get_or_bust(data_dict, 'productId')
     if not re.match('^00240001[0-9]{3,6}$', product_id):
@@ -135,15 +135,6 @@ def register_daily(context, data_dict):
     product_title = _get_or_bust(data_dict, 'productTitle')
 
     release_date_str = _get_or_bust(data_dict, 'releaseDate')
-    try:
-        release_date = datetime.datetime.strptime(release_date_str, '%Y-%m-%d')
-    except ValueError:
-        raise _ValidationError(
-            _("Incorrect format for releaseDate '{0}', should be YYYY-MM-DD".format(release_date_str)))
-
-    # unique_id = _get_or_bust(data_dict, 'uniqueId')
-    # if not re.match('^daily[0-9]{3,4}$', unique_id):
-    #     raise _ValidationError(_("Invalid unique ID for Daily: '{0}'".format(unique_id)))
 
     last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
 
@@ -154,36 +145,38 @@ def register_daily(context, data_dict):
         if not isinstance(child, basestring):
             raise _ValidationError(_('Items in childList must all be strings'))
 
-    new_product = lc.action.package_create(
-        name='daily-{0}'.format(product_id),
-        owner_org='statcan',
-        private=False,
-        type='daily',
-        # extras=extras,
-        title=product_title,
-        product_id_new=product_id,
-        product_type_code='24',
-        last_publish_status_code=last_publish_status_code,
-        parent_product=product_id,
-        child_list=child_list
-    )
-    new_release = lc.action.package_create(
-        owner_org='statcan',
-        private=False,
-        type='release',
-        name='release-{0}_{1}_1'.format(product_id, datetime.date.today().year),
-        title='release={0}_{0}_1'.format(product_id, datetime.date.today().year),
-        release_id='1',
-        release_date=release_date.strftime("%Y-%m-%dT08:30"),
-        publish_status_code=last_publish_status_code,
-        parent_product=product_id,
-        is_correction='0'
-    )
-    output = lc.action.GetProduct(
+    daily_dict = {
+        'name': 'daily-{0}'.format(product_id),
+        'owner_org': 'statcan',
+        'private': False,
+        'type': 'daily',
+        'title': product_title,
+        'product_id_new': product_id,
+        'product_type_code': '24',
+        'last_publish_status_code': last_publish_status_code,
+        'parent_product': product_id,
+        'child_list': child_list
+    }
+    if 'geolevelCodes' in data_dict and data_dict['geolevelCodes']:
+        daily_dict['geolevel_codes'] = data_dict['geolevelCodes']
+    if 'geodescriptorCodes' in data_dict and data_dict['geodescriptorCodes']:
+        daily_dict['geodescriptor_codes'] = data_dict['geodescriptorCodes']
+    new_product = lc.action.package_create(**daily_dict)
+
+    release_dict = {
+            'releasedProductId': product_id,
+            'parentProduct': product_id,
+            'releaseDate': release_date_str,
+            'lastPublishStatusCode': last_publish_status_code
+    }
+    if 'referencePeriod' in data_dict and data_dict['referencePeriod']:
+        release_dict['referencePeriod'] = data_dict['referencePeriod']
+
+    lc.action.RegisterRelease(**release_dict)
+    return lc.action.GetProduct(
         productId=new_product['product_id_new'],
         fl='product_id_new'
     )
-    return output
 
 
 @logic.side_effect_free
@@ -257,7 +250,7 @@ def get_product_issue_articles(context, data_dict):
     :rtype: dict
     """
 
-    product_id = _get_or_bust(data_dict, 'produc:tId')
+    product_id = _get_or_bust(data_dict, 'productId')
     issue_no = _get_or_bust(data_dict, 'issueNo')
 
     output = _stub_msg

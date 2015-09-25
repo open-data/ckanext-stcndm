@@ -5,6 +5,7 @@ import ckan.plugins as p
 import ckanext.stcndm.logic.common as common
 import ckanext.stcndm.logic.cubes as cubes
 import ckanext.stcndm.logic.daily as daily
+import ckanext.stcndm.logic.releases as releases
 import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
 import ckanext.stcndm.logic.surveys as surveys
@@ -188,6 +189,7 @@ class STCNDMPlugin(p.SingletonPlugin):
         # Some Java web clients require the web service to use Pascal Case
         return {
             "DeleteProduct": common.delete_product,
+            "EnsureReleaseExists": releases.ensure_release_exists,
             "GetBookableReleases": daily.get_bookable_releases,
             "GetCubeList": cubes.get_cube_list_by_subject,
             "GetCube": cubes.get_cube,
@@ -202,6 +204,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetProductIssueArticles": daily.get_product_issue_articles,
             "GetProductIssues": daily.get_product_issues,
             "GetProductType": common.get_product_type,
+            "GetRelease": releases.get_release,
+            "GetReleasesForProduct": releases.get_releases_for_product,
             "GetSubject": subjects.get_subject,
             "GetSubjectList": subjects.get_top_level_subject_list,
             "GetSurveys": daily.get_surveys,
@@ -212,6 +216,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "RegisterCube": cubes.register_cube,
             "RegisterDaily": daily.register_daily,
             "RegisterProduct": common.tv_register_product,
+            "RegisterRelease": releases.register_release,
             "UpdateDefaultView": views.update_default_view,
             "UpdateProductGeo": common.update_product_geo,
             "UpdatePublishingStatus": common.update_last_publish_status,
@@ -219,8 +224,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetGroupSchema": common.get_group_schema,
             "GetSurveyCodesets": surveys.get_survey_codesets,
             "GetSubjectCodesets": subjects.get_subject_codesets,
-            "EnsureReleaseExists": common.ensure_release_exists,
-            "GetReleasesForProduct": common.get_releases_for_product
         }
 
     def get_validators(self):
