@@ -15,6 +15,7 @@ _NotFound = toolkit.ObjectNotFound
 _NotAuthorized = toolkit.NotAuthorized
 
 
+@logic.side_effect_free
 def register_release(context, data_dict):
     """
     Register a release.
@@ -47,21 +48,17 @@ def register_release(context, data_dict):
         ),
         sort='release_id DESC'
     )
-
-    if not result['count']:
-        release_id = '1'
+    if result['count'] and 'release_id' in result['results'][0] and result['results'][0]['release_id']:
+        release_id = unicode(int(result['results'][0]['release_id']) + 1).zfill(3)
     else:
-        release_id = result['results'][0].get('release_id', '0')
-        release_id = unicode(int(release_id) + 1)
+        release_id = '001'
 
     release_date_str = _get_or_bust(data_dict, 'releaseDate')
     try:
-        release_date = datetime.datetime.strptime(release_date_str, '%Y-%m-%d')
+        release_date = datetime.datetime.strptime(release_date_str, '%Y-%m-%dT%HH:%MM')
     except ValueError:
-        raise _ValidationError(_(
-            'Incorrect format for releaseDate \'{0}\', should be'
-            ' YYYY-MM-DD'.format(release_date_str)
-        ))
+        raise _ValidationError(
+            _("Incorrect format for releaseDate '{0}', should be YYYY-MM-DDTHH:MM".format(release_date_str)))
 
     if 'parentProduct' in data_dict and data_dict['parentProduct']:
         parent_product = data_dict['parentProduct']

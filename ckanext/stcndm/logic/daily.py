@@ -130,6 +130,7 @@ def register_daily(context, data_dict):
     )
     count = result['count']
     if count:
+        lc.action.EnsureReleaseExists(productId=product_id)
         raise _ValidationError(_("product Id '{0}' already in use".format(product_id)))
 
     product_title = _get_or_bust(data_dict, 'productTitle')
@@ -171,8 +172,8 @@ def register_daily(context, data_dict):
     }
     if 'referencePeriod' in data_dict and data_dict['referencePeriod']:
         release_dict['referencePeriod'] = data_dict['referencePeriod']
-
     lc.action.RegisterRelease(**release_dict)
+
     return lc.action.GetProduct(
         productId=new_product['product_id_new'],
         fl='product_id_new'

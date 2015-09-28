@@ -507,9 +507,9 @@ def get_derived_product_list(context, data_dict):
     } for r in response['results']]
 
 
-def tv_register_product(context, data_dict):
+def register_data_product(context, data_dict):
     """
-    Register a new product based on a given `parentProductId` (the 8-digit ID
+    Register a new data product based on a given `parentProductId` (the 8-digit ID
     of a cube) and the desired `productTypeCode`. The new product's fields will
     be populated based on the cube record.
 
@@ -603,6 +603,77 @@ def tv_register_product(context, data_dict):
         lc.action.UpdateDefaultView(cubeId=cube_id, defaultView=product_id)
 
     return {'product_id_new': product_id}
+
+
+def register_non_data_product(context, data_dict):
+    """
+    Register a new non data product.
+
+    :param productId:
+    :type ProductId: str
+    :param productType: one of publication, article, video, conference, service, pumf, prt
+    :type productType: str
+    :param productTitle: EN/FR title dictionary
+    :type productTitle: dict
+    :param parentProduct
+    :type parentProduct: str
+
+    :return: newly-registered product id
+    :rtype: dict
+    """
+    # These are the only product types that can be registered using
+    # this method as these are the only "data products".
+    # TODO: Can we pull this from somewhere? Presets.yaml does not
+    #       necessarily have the exact schema name in ndm_product_type.
+    VALID_DATA_TYPES = {
+        u'publication': u'20',
+        u'article': u'20',
+        u'video': u'21',
+        u'conference': u'22',
+        u'service': u'23',
+        u'pumf': u'25',
+        u'pwrt': u'26',  # publication with repeating titles
+    }
+
+    product_id = _get_or_bust(data_dict, 'productId')
+    title = _get_or_bust(data_dict, 'productTitle')
+    product_type = _get_or_bust(data_dict, 'productType')
+    parent_product = _get_or_bust(data_dict, 'parentProduct')
+
+    if product_type == u'daily':
+        raise _ValidationError(
+            'Please use RegisterDaily to register a Daily'
+        )
+    elif product_type not in VALID_DATA_TYPES:
+        raise _ValidationError(
+            'Invalid non data productType, only non data products may be registered '
+            'with this service'
+        )
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    product_dict = {
+        u'owner_org': u'statcan',
+        u'private': False,
+        u'type': product_type,
+        u'product_type_code': VALID_DATA_TYPES[product_type],
+        u'product_id_new': product_id,
+        u'parent_product': parent_product,
+        u'title': title,
+        u'name': u'{product_type}-{product_id}'.format(
+            product_type=product_type,
+            product_id=product_id
+        )
+    }
+
+    lc.action.package_create(**product_dict)
+    try:
+        stcndm_helpers.ensure_release_exists(str(product_id))
+    except ValueError:
+        # We don't create releases for this type of product
+        pass
+
+    return lc.action.GetProduct(**{'productId': product_id})
 
 
 def delete_product(context, data_dict):

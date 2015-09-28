@@ -341,6 +341,7 @@ def ensure_release_exists(product_id):
         'cube',
         'publication',
         'article',
+        'daily',
         # FIXME: None of the below exist yet. If they're eventually added
         #        with names other than those used below this list must be
         #        updated.
