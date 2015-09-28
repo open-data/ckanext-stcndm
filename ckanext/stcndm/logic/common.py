@@ -623,6 +623,9 @@ def tv_register_product(context, data_dict):
         # We don't create releases for this type of product
         pass
 
+    if product_type == '11' and product_id.endswith('01'):
+        lc.action.UpdateDefaultView(cubeId=cube_id, defaultView=product_id)
+
     return {'product_id_new': product_id}
 
 
@@ -834,36 +837,3 @@ def update_product_geo(context, data_dict):
     lc.action.package_update(**pkg_dict)
 
     return lc.action.package_show(id=pkg_dict['id'])
-
-
-def ensure_release_exists(context, data_dict):
-    """
-    Ensure a release exists for the given `productId`.
-
-    :param productId: The parent product ID.
-    :type productId: str
-    """
-    product_id = _get_or_bust(data_dict, 'productId')
-    stcndm_helpers.ensure_release_exists(product_id)
-
-
-@logic.side_effect_free
-def get_releases_for_product(context, data_dict):
-    """
-    Returns all of the releases for the given `productId`.
-
-    :param productId: ID of the parent product.
-    :type productId: str
-    """
-    product_id = _get_or_bust(data_dict, 'productId')
-
-    lc = ckanapi.LocalCKAN(context=context)
-
-    results = lc.action.package_search(
-        q='parent_product:{pid}'.format(pid=product_id)
-    )
-
-    return {
-        'count': results['count'],
-        'results': [r for r in results['results']]
-    }

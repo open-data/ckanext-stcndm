@@ -38,7 +38,7 @@ dataset_fields:
   label:
     en: Release Date
     fr: Date de diffusion
-  preset: date
+  preset: ndm_datetime
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
