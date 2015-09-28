@@ -347,14 +347,13 @@ def get_format_description(context, data_dict):
 @logic.side_effect_free
 def get_upcoming_releases(context, data_dict):
     """
-    Return all records with a lastpublishstatuscode of Verified (8) and a
+    Return all records with a publish_status_code of Verified (08) and a
     release date between the two parameters.
 
     :param startDate: Beginning of date range
     :param endDate: End of date range
 
-    :return: productId, issueno, correctionid, reference_period,
-             release_date for each matching record.
+    :returns: All matching results.
     :rtype: list of dicts
     """
     # TODO: date validation? anything else?
@@ -364,43 +363,20 @@ def get_upcoming_releases(context, data_dict):
 
     q = {
         'q': (
-            'release_date:[{startDate}:00Z TO {endDate}:00Z] '
+            'release_date:[{start_date}:00Z TO {end_date}:00Z] '
             'AND publish_status_code:08'
         ).format(
-            startDate=start_date,
-            endDate=end_date
+            start_date=start_date,
+            end_date=end_date
         ),
         'rows': 500
     }
 
     result = _get_action('package_search')(context, q)
-
-    count = result['count']
-
-    if count == 0:
+    if not result['count']:
         raise _NotFound
-    else:
-        desired_extras = [
-            'product_id_new',
-            'issue_no',
-            'correction_id_code',
-            'reference_period',
-            'release_date',
-            'url',
-            'product_type_code',
-            'last_publish_status_code'
-        ]
 
-        output = []
-
-        for result in result['results']:
-            result_dict = {}
-            for extra in result['extras']:
-                if extra['key'] in desired_extras:
-                    result_dict[extra['key']] = extra['value'] or ''
-            output.append(result_dict)
-
-        return {'count': count, 'results': output}
+    return {'count': result['count'], 'results': result['results']}
 
 
 @logic.side_effect_free
