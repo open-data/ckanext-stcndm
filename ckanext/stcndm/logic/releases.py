@@ -7,7 +7,9 @@ import ckan.plugins.toolkit as toolkit
 import ckanext.stcndm.helpers as stcndm_helpers
 
 _get_or_bust = logic.get_or_bust
-_stub_msg = {"result": "This method is just a stub for now. Please do not use."}
+_stub_msg = {
+    'result': 'This method is just a stub for now. Please do not use.'
+}
 _ValidationError = toolkit.ValidationError
 _NotFound = toolkit.ObjectNotFound
 _NotAuthorized = toolkit.NotAuthorized
@@ -33,7 +35,6 @@ def register_release(context, data_dict):
 
     :raises: ValidationError
     """
-
     lc = ckanapi.LocalCKAN(context=context)
 
     released_product_id = _get_or_bust(data_dict, 'releasedProductId')
@@ -46,17 +47,21 @@ def register_release(context, data_dict):
         ),
         sort='release_id DESC'
     )
-    if result['count'] and 'release_id' in result['results'][0] and result['results'][0]['release_id']:
-        release_id = unicode(int(result['results'][0]['release_id']) + 1)
-    else:
+
+    if not result['count']:
         release_id = '1'
+    else:
+        release_id = result['results'][0].get('release_id', '0')
+        release_id = unicode(int(release_id) + 1)
 
     release_date_str = _get_or_bust(data_dict, 'releaseDate')
     try:
         release_date = datetime.datetime.strptime(release_date_str, '%Y-%m-%d')
     except ValueError:
-        raise _ValidationError(
-            _("Incorrect format for releaseDate '{0}', should be YYYY-MM-DD".format(release_date_str)))
+        raise _ValidationError(_(
+            'Incorrect format for releaseDate \'{0}\', should be'
+            ' YYYY-MM-DD'.format(release_date_str)
+        ))
 
     if 'parentProduct' in data_dict and data_dict['parentProduct']:
         parent_product = data_dict['parentProduct']
@@ -98,9 +103,11 @@ def register_release(context, data_dict):
 @logic.side_effect_free
 def get_release(context, data_dict):
     """
-    Return a dict representation of a release, given a releaseName, if it exists.
+    Return a dict representation of a release, given a releaseName,
+    if it exists.
 
-    :param releaseName: slug of the release to retrieve. (i.e. release-10230123_2015_1)
+    :param releaseName: slug of the release to retrieve. (i.e.
+                        release-10230123_2015_1)
     :type releaseName: str
 
     :return: requested release
@@ -121,7 +128,9 @@ def get_release(context, data_dict):
     if not result['count']:
         raise _NotFound('Release not found')
     elif result['count'] > 1:
-        raise _ValidationError('More than one release with given releaseName found')
+        raise _ValidationError(
+            'More than one release with given releaseName found'
+        )
     else:
         return result['results'][-1]
 
