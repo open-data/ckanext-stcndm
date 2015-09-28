@@ -384,11 +384,11 @@ def do_release(data_set):
 
     if in_and_def('release_id', data_set):
         release_out[u'release_id'] = data_set['release_id']
-        release_out[u'name'] = u'release-{product_id}_{year}_{release_id}'.format(
+        release_out[u'name'] = (u'release-{product_id}_{year}_{release_id}'.format(
             product_id=data_set['productidnew_bi_strs'],
             year=datetime.date.today().year,
-            release_id=data_set['release_id']
-        )
+            release_id=data_set['release_id'].zfill(3)
+        )).lower()
         release_out[u'title'] = release_out[u'name']
 
     if in_and_def('releasedate_bi_strs', data_set):

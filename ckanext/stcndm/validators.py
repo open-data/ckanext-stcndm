@@ -252,7 +252,7 @@ def release_create_name(key, data, errors, context):
     data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
             product_id=data[('parent_product',)],
             year=datetime.date.today().year,
-            release_id=data[('release_id',)]
+            release_id=data[('release_id',)].zfill(3)
         )).lower()
 
 
