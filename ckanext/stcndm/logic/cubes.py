@@ -190,7 +190,7 @@ def register_cube(context, data_dict):
     return lc.action.GetCube(cubeId=product_id)
 
 
-def create_or_add_cube_release(context, data_dict):
+def create_or_update_cube_release(context, data_dict):
     """
     Create or add new Cube release(s).
 

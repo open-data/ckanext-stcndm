@@ -194,6 +194,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetCubeList": cubes.get_cube_list_by_subject,
             "GetCube": cubes.get_cube,
             "GetNextCubeId": cubes.get_next_cube_id,
+            "CreateOrUpdateCubeRelease": cubes.create_or_update_cube_release,
             "GetDailyList": daily.get_daily_list,
             "GetDefaultViews": daily.get_default_views,
             "GetDerivedProductList": common.get_derived_product_list,
