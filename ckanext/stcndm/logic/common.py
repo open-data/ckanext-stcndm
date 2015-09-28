@@ -346,7 +346,6 @@ def get_format_description(context, data_dict):
 
 @logic.side_effect_free
 def get_upcoming_releases(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Return all records with a lastpublishstatuscode of Verified (8) and a
     release date between the two parameters.
@@ -366,7 +365,7 @@ def get_upcoming_releases(context, data_dict):
     q = {
         'q': (
             'release_date:[{startDate}:00Z TO {endDate}:00Z] '
-            'AND last_publish_status_code:8'
+            'AND publish_status_code:08'
         ).format(
             startDate=start_date,
             endDate=end_date
@@ -381,14 +380,16 @@ def get_upcoming_releases(context, data_dict):
     if count == 0:
         raise _NotFound
     else:
-        desired_extras = ['product_id_new',
-                          'issue_no',
-                          'correction_id_code',
-                          'reference_period',
-                          'release_date',
-                          'url',
-                          'product_type_code',
-                          'last_publish_status_code']
+        desired_extras = [
+            'product_id_new',
+            'issue_no',
+            'correction_id_code',
+            'reference_period',
+            'release_date',
+            'url',
+            'product_type_code',
+            'last_publish_status_code'
+        ]
 
         output = []
 
