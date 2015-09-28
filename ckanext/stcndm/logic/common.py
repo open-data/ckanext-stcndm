@@ -373,10 +373,9 @@ def get_upcoming_releases(context, data_dict):
     }
 
     result = _get_action('package_search')(context, q)
-    if not result['count']:
-        raise _NotFound
-
-    return {'count': result['count'], 'results': result['results']}
+    # Per JIRA #5173, return an empty list instead of the standard
+    # NotFound Exception (404).
+    return {'count': result['count'], 'results': result.get('results', [])}
 
 
 @logic.side_effect_free
