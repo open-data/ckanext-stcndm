@@ -8,16 +8,12 @@ import ckanext.stcndm.helpers as stcndm_helpers
 
 _get_or_bust = logic.get_or_bust
 _stub_msg = {"result": "This method is just a stub for now. Please do not use."}
-# noinspection PyUnresolvedReferences
 _ValidationError = toolkit.ValidationError
-# noinspection PyUnresolvedReferences
 _NotFound = toolkit.ObjectNotFound
-# noinspection PyUnresolvedReferences
 _NotAuthorized = toolkit.NotAuthorized
 
 
 def register_release(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Register a release.
 
@@ -101,7 +97,6 @@ def register_release(context, data_dict):
 
 @logic.side_effect_free
 def get_release(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Return a dict representation of a release, given a releaseName, if it exists.
 
@@ -133,7 +128,6 @@ def get_release(context, data_dict):
 
 @logic.side_effect_free
 def get_releases_for_product(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Returns all of the releases for the given `productId`.
 
@@ -155,7 +149,6 @@ def get_releases_for_product(context, data_dict):
 
 
 def ensure_release_exists(context, data_dict):
-    # noinspection PyUnresolvedReferences
     """
     Ensure a release exists for the given `productId`.
 
