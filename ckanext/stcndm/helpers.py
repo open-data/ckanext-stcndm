@@ -330,6 +330,29 @@ def lookup_label(field_name, field_value, lookup_type):
         return result
 
 
+def next_correction_id():
+    """
+    :return next available correction id
+    """
+    lc = ckanapi.LocalCKAN()
+    result = lc.action.package_search(
+        q='correction_id:*',
+        sort='correction_id DESC',
+        rows=1
+    )
+
+    last_id = 0
+    if result['count'] and 'correction_id' in result['results'][0]:
+        try:
+            last_id = int(result['results'][0]['correction_id'])
+        except ValueError:
+            pass
+    if last_id >= 2000:
+        return unicode(last_id + 1)
+    else:
+        return u'2000'
+
+
 def ensure_release_exists(product_id):
     """
     Ensure that a release dataset exists for the given product_id.

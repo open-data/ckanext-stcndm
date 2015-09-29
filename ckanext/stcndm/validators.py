@@ -168,6 +168,25 @@ def survey_create_name(key, data, errors, context):
         errors[key].append(_('could not find product_id_new'))
 
 
+def correction_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    correction_id = _data_lookup(('correction_id',), data)
+    if not product_id_new:
+        errors[key].append(_('could not find product_id_new'))
+    elif not correction_id:
+        errors[key].append(_('could not find correction_id'))
+    else:
+        data[key] = (u'correction-{product_id}_{correction_id}'.format(
+            product_id=product_id_new,
+            correction_id=correction_id
+        )).lower()
+
+
 def cube_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
@@ -218,6 +237,15 @@ def view_create_name(key, data, errors, context):
         data[key] = u'view-{0}'.format(product_id_new.lower())
     else:
         errors[key].append(_('could not find product_id_new'))
+
+
+def next_correction_id(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    data[key] = h.next_correction_id()
 
 
 def publication_create_name(key, data, errors, context):
