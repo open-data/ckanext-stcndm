@@ -236,7 +236,7 @@ presets:
 #    output_validators: shortcode_output
     lookup: preset
     schema_field_type: code
-    schema_multivalued: true
+    schema_multivalued: false
     schema_extras: true
     choices:
       - label:
