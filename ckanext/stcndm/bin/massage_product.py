@@ -71,6 +71,14 @@ def do_product(data_set):
     if in_and_def('arrayterminatedcode_bi_strs', data_set):
         product_out[u'array_terminated_code'] = data_set[u'arrayterminatedcode_bi_strs']
 
+    if in_and_def('calculation_bi_instrm', data_set):
+        result = listify(data_set[u'calculation_bi_instrm'])
+        if result:
+            product_out[u'calculations'] = result
+
+    if in_and_def('coordinates_bi_instrs', data_set):
+        product_out[u'coordinates'] = data_set[u'coordinates_bi_instrs']
+
     if in_and_def('conttypecode_bi_txtm', data_set):
         result = listify(data_set[u'conttypecode_bi_txtm'])
         if result:
@@ -107,6 +115,14 @@ def do_product(data_set):
         product_out[u'notes'] = temp
 
     temp = {}
+    if in_and_def('description_en_intxts', data_set):
+        temp[u'en'] = data_set[u'description_en_intxts']
+    if in_and_def('description_fr_intxts', data_set):
+        temp[u'fr'] = data_set[u'description_fr_intxts']
+    if temp:
+        product_out[u'notes'] = temp
+
+    temp = {}
     if in_and_def('dimmembers_en_txtm', data_set):
         result = listify(data_set[u'dimmembers_en_txtm'])
         if result:
@@ -122,6 +138,9 @@ def do_product(data_set):
         result = code_lookup('dispandtrack_bi_txtm', data_set, tracking_list)
         if result:
             product_out[u'tracking_codes'] = result
+
+    if in_and_def('displayorder_bi_inints', data_set):
+        product_out[u'display_order'] = data_set[u'displayorder_bi_inints']
 
     temp = {}
     if in_and_def('doinum_en_strs', data_set):
@@ -139,6 +158,9 @@ def do_product(data_set):
     if in_and_def('featureweight_bi_ints', data_set):
         product_out[u'feature_weight'] = int(data_set[u'featureweight_bi_ints'])
 
+    if in_and_def('featureweight_bi_inints', data_set):
+        product_out[u'feature_weight'] = int(data_set[u'featureweight_bi_inints'])
+
     if in_and_def('frccode_bi_strs', data_set):
         product_out[u'frc'] = data_set[u'frccode_bi_strs']
 
@@ -147,10 +169,20 @@ def do_product(data_set):
         if result:
             product_out[u'frequency_codes'] = result
 
+    if in_and_def('freqcode_bi_intxtm', data_set):
+        result = listify(data_set[u'freqcode_bi_intxtm'])
+        if result:
+            product_out[u'frequency_codes'] = result
+
     if in_and_def('geolevel_en_txtm', data_set):
         result = code_lookup('geolevel_en_txtm', data_set, geolevel_list)
         if result:
             product_out[u'geolevel_codes'] = result
+
+    if in_and_def('geonamecode_bi_intxtm', data_set):
+        result = listify(data_set[u'geonamecode_bi_intxtm'])
+        if result:
+            product_out[u'geodescriptor_codes'] = result
 
     if in_and_def('hierarchyid_bi_strm', data_set):
         result = listify(data_set[u'hierarchyid_bi_strm'])
@@ -208,6 +240,11 @@ def do_product(data_set):
 
     if in_and_def('license_url', data_set):
         product_out[u'license_url'] = data_set[u'license_url']
+
+    if in_and_def('ndmstate_en_intxtm', data_set):
+        result = listify(data_set[u'ndmstate_en_intxtm'])
+        if result:
+            product_out[u'ndm_states'] = result
 
     if in_and_def('pecode_bi_strs', data_set):
         product_out[u'pe_code'] = data_set[u'pecode_bi_strs']
@@ -298,6 +335,11 @@ def do_product(data_set):
         result = listify(data_set[u'subjoldcode_bi_txtm'])
         if result:
             product_out[u'subjectold_codes'] = result
+
+    if in_and_def('tableid_bi_instrm', data_set):
+        result = listify(data_set[u'tableid_bi_instrm'])
+        if result:
+            product_out[u'table_ids'] = result
 
     temp = {}
     if in_and_def('title_en_txts', data_set):

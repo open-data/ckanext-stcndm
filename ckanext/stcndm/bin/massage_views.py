@@ -25,13 +25,20 @@ while i < n:
                 type=product_out['type'],
                 product_id=product_out['product_id_new']
             ).lower()
+        url_dict = {
+            'en': line.get('url_en_strs', ''),
+            'fr': line.get('url_fr_strs', '')
+        }
+        if url_dict['en'] or url_dict['fr']:
+            product_out['url'] = url_dict
+
         print json.dumps(product_out)
 
         if product_out['product_id_new'] in release_dict:
             release_dict[product_out['product_id_new']] += 1
         else:
             release_dict[product_out['product_id_new']] = 1
-        line['release_id'] = release_dict[product_out['product_id_new']]
+        line['release_id'] = unicode(release_dict[product_out['product_id_new']])
 
         release_out = do_release(line)
         print json.dumps(release_out)

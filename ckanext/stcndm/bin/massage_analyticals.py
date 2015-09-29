@@ -26,7 +26,7 @@ while i < n:
             release_dict[line['productidnew_bi_strs']] += 1
         else:
             release_dict[line['productidnew_bi_strs']] = 1
-        line['release_id'] = release_dict[line['productidnew_bi_strs']]
+        line['release_id'] = unicode(release_dict[line['productidnew_bi_strs']])
 
         if len(line['productidnew_bi_strs']) == 8:
             product_out = do_product(line)

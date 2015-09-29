@@ -30,12 +30,13 @@ def main():
 
     for date in daterange:
 
-        pid = "002400011{id}".format(id=str(count).zfill(4))  # 00240001 is the prefix to all daily records
+        pid = u"002400011{id}".format(id=str(count).zfill(4))  # 00240001 is the prefix to all daily records
 
-        pkg_dict = {"productId": pid,
+        pkg_dict = {"name": (u"daily-{pid}".format(pid=pid)).lower(),
+                    "productId": pid,
                     "productTitle": {"en": "sample data - {pid}".format(pid=pid),
                                      "fr": "sample data - {pid}".format(pid=pid)},
-                    "releaseDate": str(date)[:10],
+                    "releaseDate": "{date}T08:30".format(date=str(date)[:10]),
                     "uniqueId": "daily{pid}".format(pid=pid[-4:]),
                     "lastPublishStatusCode": "08",
                     "childList": "12345"}
@@ -43,8 +44,9 @@ def main():
         try:
             rc.action.RegisterDaily(**pkg_dict)
 
-        except ckan.logic.ValidationError:
-            print "dataset already registered: {pid}".format(pid=pid)
+        except ckan.logic.ValidationError as e:
+            print e
+#            print "dataset already registered: {pid}".format(pid=pid)
 
         count += 1
 
