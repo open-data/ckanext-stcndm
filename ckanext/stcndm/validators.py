@@ -275,7 +275,7 @@ def release_create_name(key, data, errors, context):
                 year=datetime.date.today().year
             )
         )
-        data[('release_id',)] = query_result['count'] + 1
+        data[('release_id',)] = unicode(query_result['count'] + 1)
 
     data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
             product_id=data[('parent_product',)],

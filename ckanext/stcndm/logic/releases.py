@@ -55,7 +55,7 @@ def register_release(context, data_dict):
 
     release_date_str = _get_or_bust(data_dict, 'releaseDate')
     try:
-        release_date = datetime.datetime.strptime(release_date_str, '%Y-%m-%dT%HH:%MM')
+        release_date = datetime.datetime.strptime(release_date_str[:16], '%Y-%m-%dT%H:%M')
     except ValueError:
         raise _ValidationError(
             _("Incorrect format for releaseDate '{0}', should be YYYY-MM-DDTHH:MM".format(release_date_str)))

@@ -31,7 +31,7 @@ while i < n:
             release_dict[product_out['product_id_new']] += 1
         else:
             release_dict[product_out['product_id_new']] = 1
-        line['release_id'] = release_dict[product_out['product_id_new']]
+        line['release_id'] = unicode(release_dict[product_out['product_id_new']])
 
         release_out = do_release(line)
         print json.dumps(release_out)
