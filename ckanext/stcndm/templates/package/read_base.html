@@ -19,6 +19,11 @@
   {% endif %}
 {% endblock %}
 
+{% block content_primary_nav %}
+  {{  super()  }}
+  {{ h.build_nav_icon(pkg.type + '_history', _('History'), id=pkg.name) }}
+{% endblock %}
+
 {% block primary_content_inner %}
     {% block package_revision_info %}
       {% if c.revision_date %}
