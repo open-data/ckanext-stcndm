@@ -278,6 +278,36 @@ dataset_fields:
 - field_name: status_code
   preset: ndm_status
 
+- field_name: discontinued_code
+  label:
+    en: Discontinued/Not Available
+    fr: Discontinué/Non Disponible
+  preset: ndm_boolean
+  schema_extras: true
+
+- field_name: discontinued_date
+  label:
+    en: Discontinued Date
+    fr: Date discontinué
+  preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: census_grouping_code
+  label:
+    en: Census Grouping
+    fr: Regroupement du recensement
+  preset: ndm_boolean
+  schema_extras: true
+
+- field_name: load_to_olc_code
+  label:
+    en: Load to OLC
+    fr: Charger au OLC
+  preset: ndm_boolean
+  schema_extras: true
+
 - field_name: subjectold_codes
   label:
     en: Old subject

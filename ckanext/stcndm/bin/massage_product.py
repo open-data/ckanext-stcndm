@@ -309,8 +309,13 @@ def do_product(data_set):
         if result:
             product_out[u'geodescriptor_codes'] = result
 
-    if in_and_def('statusfcode_bi_strs', data_set):
-        product_out[u'status_code'] = data_set['statusfcode_bi_strs']
+    if in_and_def(u'statusfcode_bi_strs', data_set):
+        if data_set[u'statusfcode_bi_strs'] == '33':  # tease out discontinued to a new field
+            product_out[u'discontinued_code'] = '1'
+        elif data_set[u'statusfcode_bi_strs'] == '35':  # tease out do not load to OLC to a new field
+            product_out[u'load_to_olc_code'] = '0'
+        else:
+            product_out[u'status_code'] = data_set[u'statusfcode_bi_strs']
 
     temp = {}
     if in_and_def('stcthesaurus_en_txtm', data_set):

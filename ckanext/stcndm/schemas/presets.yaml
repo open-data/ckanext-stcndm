@@ -137,10 +137,10 @@ presets:
           fr: À venir
           en: Forthcoming
         value: '32'
-      - label:
-         fr: Discontinué/Plus disponible
-         en: Discontinued/Not available
-        value: '33'
+#      - label:
+#         fr: Discontinué/Plus disponible
+#         en: Discontinued/Not available
+#        value: '33'
       - label:
           fr: Remplacé par une autre langue
           en: Replaced by other language
@@ -149,10 +149,10 @@ presets:
           fr: Annulé
           en: Cancelled
         value: '35'
-      - label:
-          fr: Ne pas télécharger au CEL
-          en: Do not load to OLC
-        value: '36'
+#      - label:
+#          fr: Ne pas télécharger au CEL
+#          en: Do not load to OLC
+#        value: '36'
       - label:
           fr: Dernier numéro completé
           en: Last completed issue
@@ -892,7 +892,24 @@ presets:
   values:
     schema_field_type: string
     schema_multivalued: false
-    schema_extras: true
     form_snippet: datetime.html
     display_snippet: datetime.html
     validators: scheming_required isodate
+
+- preset_name: ndm_boolean
+  values:
+    choices:
+      - label:
+          en: 'False'
+          fr: 'Faux'
+        value: '0'
+      - label:
+          en: 'True'
+          fr: 'Vrai'
+        value: '1'
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
