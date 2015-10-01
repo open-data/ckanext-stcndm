@@ -320,7 +320,7 @@ dataset_fields:
   schema_field_type: string
   schema_extras: true
 
-- field_name: status_codes
+- field_name: status_code
   preset: ndm_status
 
 #- field_name: subjectold_code

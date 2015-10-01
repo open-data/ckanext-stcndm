@@ -324,13 +324,13 @@
         <field name="question_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="reference_period_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="reference_period_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="related_product" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="related_products" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="release_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="replaced_product" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="resource_url" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="status_codes" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="status_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
-        <field name="status_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="status_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="subject_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="subject_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="subject_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>

@@ -310,9 +310,7 @@ def do_product(data_set):
             product_out[u'geodescriptor_codes'] = result
 
     if in_and_def('statusfcode_bi_strs', data_set):
-        result = listify(data_set[u'statusfcode_bi_strs'])
-        if result:
-            product_out[u'status_codes'] = result
+        product_out[u'status_code'] = data_set['statusfcode_bi_strs']
 
     temp = {}
     if in_and_def('stcthesaurus_en_txtm', data_set):

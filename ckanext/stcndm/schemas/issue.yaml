@@ -279,7 +279,7 @@ dataset_fields:
 #- field_name: last_publish_status_code
 #  preset: ndm_publish_status
 
-#- field_name: status_codes
+#- field_name: status_code
 #  preset: ndm_status
 
 #- field_name: correction_id_codes

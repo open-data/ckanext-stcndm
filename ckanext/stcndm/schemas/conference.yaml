@@ -274,7 +274,7 @@ dataset_fields:
   preset: repeating_text
   form_blanks: 3
 
-- field_name: status_codes
+- field_name: status_code
   preset: ndm_status
 
 - field_name: subjectold_codes

@@ -101,13 +101,12 @@ presets:
     label:
       en: Status
       fr: État
-    form_snippet: multiple_select.html
-    display_snippet: multiple_choice.html
-    validators: scheming_required scheming_multiple_choice
-    output_validators: shortcode_output
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
     lookup: preset
     schema_field_type: code
-    schema_multivalued: true
+    schema_multivalued: false
     schema_extras: true
     choices:
       - label:

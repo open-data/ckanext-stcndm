@@ -259,7 +259,7 @@ dataset_fields:
 #    fr: Produit remplacé
 #  preset: shortcode_multivalue
 
-- field_name: status_codes
+- field_name: status_code
   preset: ndm_status
 
 #- field_name: subjectold_code
