@@ -139,11 +139,13 @@ def get_product(context, data_dict):
     # As part of JIRA-5048 we need to resolve _code fields and return
     # the labels.
     codes_to_lookup = (
-        ('frequency_codes', 'frequency'),
-        ('geolevel_codes', 'geolevel')
+        ('frequency_codes', 'frequency', 'codeset'),
+        ('geolevel_codes', 'geolevel', 'codeset'),
+        ('subject_codes', 'subjects', 'subject'),
+        ('survey_source_codes', 'surveys', 'survey')
     )
 
-    for code_field, code_id in codes_to_lookup:
+    for code_field, code_id, lookup_type in codes_to_lookup:
         cfv = product.get(code_field)
 
         if not cfv:
@@ -153,7 +155,7 @@ def get_product(context, data_dict):
         product[code_field + '_resolved'] = results = {}
 
         for code in codes:
-            value = stcndm_helpers.lookup_label(code_id, code, 'codeset')
+            value = stcndm_helpers.lookup_label(code_id, code, lookup_type)
             results[code] = value
 
     return product
