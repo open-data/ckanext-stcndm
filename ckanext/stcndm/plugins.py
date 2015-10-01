@@ -15,7 +15,6 @@ from dateutil.parser import parse
 from ckan.plugins.toolkit import _
 from ckan.plugins.toolkit import ValidationError
 from ckanext.stcndm import validators
-from ckanext.repeating import validators as repeating_validators
 from ckanext.stcndm import helpers
 from ckanext.scheming.helpers import (
     scheming_language_text,
@@ -255,8 +254,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "survey_create_name": validators.survey_create_name,
             "valid_parent_slug": validators.valid_parent_slug,
             "view_create_name": validators.view_create_name,
-            "repeating_text": repeating_validators.repeating_text,
-            "repeating_text_output": repeating_validators.repeating_text_output,
         }
 
     def get_helpers(self):
