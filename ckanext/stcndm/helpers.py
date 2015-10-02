@@ -275,9 +275,12 @@ def lookup_label(field_name, field_value, lookup_type):
     """
     lc = ckanapi.LocalCKAN()
 
+    if not field_value:
+        return {u'en': '', u'fr': ''}
+
     default = {u'en': 'label for ' + field_value, u'fr': 'description de ' + field_value, u'found': False}
 
-    if not field_value or not lookup_type:
+    if not lookup_type:
         return default
 
     if lookup_type == 'preset':
