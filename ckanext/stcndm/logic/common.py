@@ -44,7 +44,15 @@ def get_autocomplete(context, data_dict):
             'title': r['title']
         }
 
-        results['results'].append(result);
+        if type == 'subject':
+            type_schema = scheming_helpers.scheming_get_dataset_schema(type)
+            for field in type_schema['dataset_fields']:
+                if field['field_name'] == 'subject_display_code':
+                    for choice in field['choices']:
+                        if choice['value'] == r.get('subject_display_code', '-1'):
+                            result['group'] = choice['label']
+
+        results['results'].append(result)
 
     return results
 
