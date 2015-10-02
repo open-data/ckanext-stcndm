@@ -661,6 +661,10 @@ presets:
           en: Hide subject
           fr: Masquer sujet
         value: '4'
+      - label:
+          en: Undefined
+          fr: Non défini
+        value: '-1'
 
 - preset_name: ndm_survey_participation
   values:
