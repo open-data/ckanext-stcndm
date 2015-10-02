@@ -188,6 +188,7 @@ class STCNDMPlugin(p.SingletonPlugin):
     def get_actions(self):
         # Some Java web clients require the web service to use Pascal Case
         return {
+            "GetAutocomplete": common.get_autocomplete,
             "DeleteProduct": common.delete_product,
             "EnsureReleaseExists": releases.ensure_release_exists,
             "GetBookableReleases": daily.get_bookable_releases,
