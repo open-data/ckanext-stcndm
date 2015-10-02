@@ -13,6 +13,48 @@ _ValidationError = toolkit.ValidationError
 _NotFound = toolkit.ObjectNotFound
 _NotAuthorized = toolkit.NotAuthorized
 
+autocomplete = {
+    'subject': {
+        'code': 'subject_code'
+    },
+    'geodescriptor': {
+        'code': 'geodescriptor_code'
+    },
+    'survey': {
+        'code': 'product_id_new'
+    }
+}
+
+@logic.side_effect_free
+def get_autocomplete(context, data_dict):
+    type = _get_or_bust(data_dict, 'type')
+    q = _get_or_bust(data_dict, 'q')
+
+    lc = ckanapi.LocalCKAN()
+    query_result = lc.action.package_search(
+        q = 'dataset_type:' + type + ' AND (title_en:' + q + ' OR title_en:' + q + ' OR ' + autocomplete[type]['code'] + ':' + q + ')',
+        rows = 100
+    )
+
+    results = {'count': query_result['count'], 'results': []}
+
+    for r in query_result['results']:
+        result = {
+            'code': r[autocomplete[type]['code']],
+            'title': r['title']
+        }
+
+        if type == 'subject':
+            type_schema = scheming_helpers.scheming_get_dataset_schema(type)
+            for field in type_schema['dataset_fields']:
+                if field['field_name'] == 'subject_display_code':
+                    for choice in field['choices']:
+                        if choice['value'] == r.get('subject_display_code', '-1'):
+                            result['group'] = choice['label']
+
+        results['results'].append(result)
+
+    return results
 
 @logic.side_effect_free
 def get_next_product_id(context, data_dict):
