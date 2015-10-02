@@ -1,5 +1,5 @@
 scheming_version: 1
-about: 'Statistics Canada Dissemination: PUMF'
+about: 'Statistics Canada Dissemination: Charts'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Charts
@@ -12,6 +12,7 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
+dataset_fields:
 - field_name: owner_org
   help_text:
     en: The organization directly responsible for the dataset and for metadata maintenance.
@@ -45,6 +46,34 @@ languages_label:
 - field_name: archive_status_code
   preset: ndm_archive_status
 
-dataset_fields:
 - field_name: product_type_code
   preset: ndm_product
+
+- field_name: status_code
+  preset: ndm_status
+
+- field_name: discontinued_code
+  label:
+    en: Discontinued/Not Available
+    fr: Discontinué/Non Disponible
+  preset: ndm_boolean
+  schema_extras: true
+
+- field_name: discontinued_date
+  label:
+    en: Discontinued Date
+    fr: Date discontinué
+  preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: census_grouping_code
+  preset: ndm_census_grouping
+
+- field_name: load_to_olc_code
+  label:
+    en: Load to OLC
+    fr: Charger au OLC
+  preset: ndm_boolean
+  schema_extras: true

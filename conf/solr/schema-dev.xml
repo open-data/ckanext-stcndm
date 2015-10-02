@@ -242,6 +242,7 @@
         <field name="archive_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="archive_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="calculations" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="census_grouping_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="codeset_type" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="codeset_type_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="codeset_type_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
@@ -267,6 +268,8 @@
         <field name="dimension_group_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="dimension_group_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
         <field name="dimension_group_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="discontinued_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="discontinued_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="display_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="display_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="display_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
@@ -303,6 +306,7 @@
         <field name="last_publish_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="last_publish_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="level_subject_codes" type="subjlevels" indexed="true" stored="true" multiValued="true"/>
+        <field name="load_to_olc_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <!--field name="level_subject_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
         <field name="level_subject_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/-->
         <!--field name="navigation_subject_codes" type="string" indexed="true" stored="true" multiValued="true"/>
@@ -328,9 +332,9 @@
         <field name="release_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="replaced_product" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="resource_url" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="status_codes" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="status_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
-        <field name="status_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="status_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="subject_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="subject_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="subject_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
@@ -356,13 +360,14 @@
         <field name="thesaurus_term_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
         <field name="thesaurus_term_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="thesaurus_term_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="top_parent_id" type="string" indexed="true" stored="true" multiValued="false" />
         <field name="tracking_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="tracking_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
         <field name="tracking_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <!-- Fields specific to Releases -->
-        <field name="parent_product" type="string" indexed="true" stored="true" multiValued="false" />
+        <field name="parent_id" type="string" indexed="true" stored="true" multiValued="false" />
         <field name="is_correction" type="string" indexed="true" stored="true" multiValued="false" />
-        <field name="data_reference_period" type="string" indexed="true" stored="true" multiValued="false" />
+        <field name="reference_period" type="string" indexed="true" stored="true" multiValued="false" />
         <!-- CKAN core fields needing text loading/processing -->
         <field name="title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>

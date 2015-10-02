@@ -1,16 +1,424 @@
 scheming_presets_version: 1
 about: scheming presets for ckanext-stcndm
 about_url:
+
 presets:
 
-- preset_name: shortcode_multivalue
+- preset_name: codeset_multiple_select
   values:
-    form_snippet: shortcode_multivalue.html
-    display_snippet: shortcode_multivalue.html
-    validators: shortcode_validate
-    output_validators: shortcode_output
     schema_field_type: code
     schema_multivalued: true
+    schema_extras: true
+    form_snippet: codeset_multiple_select.html
+    display_snippet: codeset_multiple_choice.html
+    validators: ignore_missing codeset_multiple_choice
+    output_validators: scheming_multiple_choice_output
+    lookup: codeset
+
+- preset_name: codeset_select
+  values:
+    schema_field_type: code
+    schema_multivalued: false
+    form_snippet: codeset_select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: codeset
+
+- preset_name: ndm_admin_notes
+  values:
+    label:
+      en: Admin Notes
+      fr: Notes
+    form_placeholder:
+      en: Admin Notes
+      fr: Notes
+    schema_field_type: fluent
+    schema_multivalue: false
+    schema_extras: true
+    form_snippet: fluent_markdown.html
+    display_snippet: fluent_markdown.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+
+- preset_name: ndm_archive_status
+  values:
+    label:
+      en: Archive Status
+      fr: État d'archivage
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: Archive
+          fr: Archivé
+        value: '1'
+      - label:
+          en: Current
+          fr: Courant
+        value: '2'
+      - label:
+          en: Legacy
+          fr: Patrimonial
+        value: '3'
+
+- preset_name: ndm_array_terminated
+  values:
+    label:
+      en: Array Terminated (CANSIM)
+      fr: Tableau terminé (CANSIM)
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: 'No'
+          fr: 'Non'
+        value: '1'
+      - label:
+          en: 'Yes'
+          fr: 'Oui'
+        value: '0'
+
+- preset_name: ndm_boolean
+  values:
+    choices:
+      - label:
+          en: 'False'
+          fr: 'Faux'
+        value: '0'
+      - label:
+          en: 'True'
+          fr: 'Vrai'
+        value: '1'
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+
+- preset_name: ndm_census_grouping
+  values:
+    label:
+      en: Census Grouping
+      fr: Regroupement du recensement
+    choices:
+    - label:
+        en: Parent
+        fr: Parent
+      value: '01'
+    - label:
+        en: Child
+        fr: Enfant
+      value: '02'
+    - label:
+        en: Release 1
+        fr: Émission 1
+      value: '03'
+    - label:
+        en: Release 2
+        fr: Émission 2
+      value: '04'
+    - label:
+        en: Release 3
+        fr: Émission 3
+      value: '05'
+    - label:
+        en: Release 4
+        fr: Émission 4
+      value: '06'
+    - label:
+        en: Release 5
+        fr: Émission 5
+      value: '07'
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+
+- preset_name: ndm_collection_methods
+  values:
+    label:
+      en: Collection Method
+      fr: Méthode de collection
+    form_snippet: multiple_select.html
+    display_snippet: multiple_choice.html
+    validators: scheming_required scheming_multiple_choice
+    output_validators: shortcode_output
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+    choices:
+      - label:
+            en: Computer Assisted Interview
+            fr: Interview assistée par ordinateur
+        value: '01'
+      - label:
+            en: Computer-assisted personal interview (CAPI)
+            fr: Interview sur place assistée par ordinateur (IPAO)
+        value: '06'
+      - label:
+            en: Computer-assisted telephone interview (CATI)
+            fr: Interview téléphonique assistée par ordinateur
+        value: '08'
+      - label:
+            en: Electronic data interchange
+            fr: Échange de données informatisées
+        value: '11'
+      - label:
+            en: Electronic questionnaire
+            fr: Questionnaire électronique
+        value: '12'
+      - label:
+            en: Face-to-face interview (not computer assisted)
+            fr: Interview personnelle (sans ordinateur)
+        value: '14'
+      - label:
+            en: Interview (Non computer) - Completed by respondent
+            fr: Interview (sans ordinateur) - par le répondant
+        value: '15'
+      - label:
+            en: Interview (non computer)
+            fr: Interview (sans ordinateur)
+        value: '16'
+      - label:
+            en: Not Specified
+            fr: Non spécifié
+        value: '18'
+      - label:
+            en: Personal (non computer) - mail out mail back
+            fr: Personnelle (sans ordinateur)
+        value: '19'
+      - label:
+            en: Self completion - Electronic questionnaire
+            fr: Remplir soi-même - Questionnaire électronique
+        value: '20'
+      - label:
+            en: Self completion - drop-off/mail-back (hard copy)
+            fr: Remplir soi-même - Livraison et cueillette
+        value: '21'
+      - label:
+            en: Self completion - drop-off/pick-up (hard copy)
+            fr: Remplir soi-même - Livraison et cueillette
+        value: '22'
+      - label:
+            en: Self completion - mail-out/mail-back (hard copy)
+            fr: Remplir soi-même - Envoi par la poste
+        value: '23'
+      - label:
+            en: Self completion - mail-out/pick-up (hard copy)
+            fr: Remplir soi-même-Envoi par la poste et cueillette
+        value: '24'
+      - label:
+            en: Telephone Interview (non computer)
+            fr: Interview téléphonique (sans ordinateur)
+        value: '25'
+
+- preset_name: ndm_correction_impact_level
+  values:
+    label:
+      en: Correction Impact Level
+      fr: Niveau d'impact de la correction
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: Low
+          fr: Bas
+        value: '0'
+      - label:
+          en: High
+          fr: Haut
+        value: '1'
+
+- preset_name: ndm_correction_type
+  values:
+    label:
+      en: Correction Type
+      fr: Genre de correction
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: Data correction
+          fr: Correction des données
+        value: '1'
+      - label:
+          en: Analysis correction
+          fr: Correction d'analyse
+        value: '2'
+      - label:
+          en: Application correction
+          fr: Correction de l'application
+        value: '3'
+      - label:
+          en: Missing information
+          fr: Information manquante
+        value: '4'
+      - label:
+          en: Additionnal information
+          fr: Information additionnelle
+        value: '5'
+      - label:
+          en: Clarification
+          fr: Clarification
+        value: '6'
+      - label:
+          en: Typo
+          fr: Typo
+        value: '7'
+      - label:
+          en: Editing correction
+          fr: Correction d'édition
+        value: '8'
+      - label:
+          en: Other
+          fr: Autre
+        value: '9'
+
+- preset_name: ndm_datetime
+  values:
+    schema_field_type: string
+    schema_multivalued: false
+    form_snippet: datetime.html
+    display_snippet: datetime.html
+    validators: scheming_required isodate
+
+- preset_name: ndm_description
+  values:
+    label:
+      en: Description
+      fr: Description
+    schema_field_type: fluent
+    schema_multivalue: false
+    schema_extras: false
+    form_placeholder:
+      en: A detailed description of the dataset that will allow the user to determine
+        the nature and purpose of the data in the dataset.
+      fr: Une description détaillée de l’ensemble de données qui permettra à l'utilisateur
+        de connaître la nature et le but des données comprises dans l’ensemble de données.
+    form_snippet: fluent_markdown.html
+    display_snippet: fluent_markdown.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+
+- preset_name: ndm_display
+  values:
+    label:
+      en: Display
+      fr: Affichage
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: Show product info page
+          fr: Voir la page d'information du produit
+        value: '1'
+      - label:
+          en: Hide product info page
+          fr: Cacher la page d'information du produit
+        value: '2'
+      - label:
+          en: Hide navigation link
+          fr: Masquer le lien de navigation
+        value: '3'
+
+- preset_name: ndm_format
+  values:
+    label:
+      en: Resource Format
+      fr: Format de la ressource
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required # scheming_multiple_choice
+#    output_validators: shortcode_output
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+            en: Database
+            fr: Base de données
+        value: '02'
+      - label:
+            en: CD-ROM
+            fr: CD-ROM
+        value: '03'
+      - label:
+            en: Diskette
+            fr: Disquette
+        value: '04'
+      - label:
+            en: Fax/email
+            fr: Télécopieur
+        value: '05'
+      - label:
+            en: PDF
+            fr: PDF
+        value: '08'
+      - label:
+            en: Microfiche
+            fr: Microfiche
+        value: '10'
+      - label:
+            en: Paper
+            fr: Imprimé
+        value: '12'
+      - label:
+            en: Symposium/Workshop
+            fr: Symposium/Atelier
+        value: '13'
+      - label:
+            en: Tape/Cassette
+            fr: Bande magnétique/Cassette
+        value: '14'
+      - label:
+            en: DVD
+            fr: DVD
+        value: '15'
+      - label:
+            en: HTML
+            fr: HTML
+        value: '17'
+      - label:
+            en: Video
+            fr: Vidéo
+        value: '18'
+      - label:
+            en: ETF
+            fr: ETF
+        value: '19'
 
 - preset_name: ndm_language
   values:
@@ -96,69 +504,6 @@ presets:
           fr: Publications avec des titres répétitifs (générique)
         value: '26'
 
-- preset_name: ndm_status
-  values:
-    label:
-      en: Status
-      fr: État
-    form_snippet: multiple_select.html
-    display_snippet: multiple_choice.html
-    validators: scheming_required scheming_multiple_choice
-    output_validators: shortcode_output
-    lookup: preset
-    schema_field_type: code
-    schema_multivalued: true
-    schema_extras: true
-    choices:
-      - label:
-          fr: Accessible
-          en: Full Access
-        value: '0'
-      - label:
-          fr: En cours
-          en: In progress
-        value: '1'
-      - label:
-          fr: Annulé
-          en: Cancelled
-        value: '2'
-      - label:
-          fr: Terminé
-          en: Completed
-        value: '3'
-      - label:
-          fr: Pré-diffusion
-          en: Pre-release
-        value: '11'
-      - label:
-          fr: Produit en cours/Disponible
-          en: Ongoing/Available
-        value: '31'
-      - label:
-          fr: À venir
-          en: Forthcoming
-        value: '32'
-      - label:
-         fr: Discontinué/Plus disponible
-         en: Discontinued/Not available
-        value: '33'
-      - label:
-          fr: Remplacé par une autre langue
-          en: Replaced by other language
-        value: '34'
-      - label:
-          fr: Annulé
-          en: Cancelled
-        value: '35'
-      - label:
-          fr: Ne pas télécharger au CEL
-          en: Do not load to OLC
-        value: '36'
-      - label:
-          fr: Dernier numéro completé
-          en: Last completed issue
-        value: '90'
-
 - preset_name: ndm_publish_status
   values:
     label:
@@ -225,220 +570,7 @@ presets:
           fr: Figé
         value: '99'
 
-- preset_name: ndm_format
-  values:
-    label:
-      en: Resource Format
-      fr: Format de la ressource
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required # scheming_multiple_choice
-#    output_validators: shortcode_output
-    lookup: preset
-    schema_field_type: code
-    schema_multivalued: false
-    schema_extras: true
-    choices:
-      - label:
-            en: Database
-            fr: Base de données
-        value: '02'
-      - label:
-            en: CD-ROM
-            fr: CD-ROM
-        value: '03'
-      - label:
-            en: Diskette
-            fr: Disquette
-        value: '04'
-      - label:
-            en: Fax/email
-            fr: Télécopieur
-        value: '05'
-      - label:
-            en: PDF
-            fr: PDF
-        value: '08'
-      - label:
-            en: Microfiche
-            fr: Microfiche
-        value: '10'
-      - label:
-            en: Paper
-            fr: Imprimé
-        value: '12'
-      - label:
-            en: Symposium/Workshop
-            fr: Symposium/Atelier
-        value: '13'
-      - label:
-            en: Tape/Cassette
-            fr: Bande magnétique/Cassette
-        value: '14'
-      - label:
-            en: DVD
-            fr: DVD
-        value: '15'
-      - label:
-            en: HTML
-            fr: HTML
-        value: '17'
-      - label:
-            en: Video
-            fr: Vidéo
-        value: '18'
-      - label:
-            en: ETF
-            fr: ETF
-        value: '19'
-
-- preset_name: ndm_archive_status
-  values:
-    label:
-      en: Archive Status
-      fr: État d'archivage
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
-    lookup: preset
-    schema_field_type: code
-    schema_multivalued: false
-    schema_extras: true
-    choices:
-      - label:
-          en: Archive
-          fr: Archivé
-        value: '1'
-      - label:
-          en: Current
-          fr: Courant
-        value: '2'
-      - label:
-          en: Legacy
-          fr: Patrimonial
-        value: '3'
-
-- preset_name: ndm_correction_impact_level
-  values:
-    label:
-      en: Correction Impact Level
-      fr: Niveau d'impact de la correction
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
-    lookup: preset
-    schema_field_type: code
-    schema_multivalued: false
-    schema_extras: true
-    choices:
-      - label:
-          en: Low
-          fr: Bas
-        value: '0'
-      - label:
-          en: High
-          fr: Haut
-        value: '1'
-
-- preset_name: ndm_correction_type
-  values:
-    label:
-      en: Correction Type
-      fr: Genre de correction
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
-    lookup: preset
-    schema_field_type: code
-    schema_multivalued: false
-    schema_extras: true
-    choices:
-      - label:
-          en: Data correction
-          fr: Correction des données
-        value: '1'
-      - label:
-          en: Analysis correction
-          fr: Correction d'analyse
-        value: '2'
-      - label:
-          en: Application correction
-          fr: Correction de l'application
-        value: '3'
-      - label:
-          en: Missing information
-          fr: Information manquante
-        value: '4'
-      - label:
-          en: Additionnal information
-          fr: Information additionnelle
-        value: '5'
-      - label:
-          en: Clarification
-          fr: Clarification
-        value: '6'
-      - label:
-          en: Typo
-          fr: Typo
-        value: '7'
-      - label:
-          en: Editing correction
-          fr: Correction d'édition
-        value: '8'
-      - label:
-          en: Other
-          fr: Autre
-        value: '9'
-
-- preset_name: ndm_array_terminated
-  values:
-    label:
-      en: Array Terminated (CANSIM)
-      fr: Tableau terminé (CANSIM)
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
-    lookup: preset
-    schema_field_type: code
-    schema_multivalued: false
-    schema_extras: true
-    choices:
-      - label:
-          en: 'No'
-          fr: 'Non'
-        value: '1'
-      - label:
-          en: 'Yes'
-          fr: 'Oui'
-        value: '0'
-
-- preset_name: ndm_display
-  values:
-    label:
-      en: Display
-      fr: Affichage
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
-    lookup: preset
-    schema_field_type: code
-    schema_multivalued: false
-    schema_extras: true
-    choices:
-      - label:
-          en: Show product info page
-          fr: Voir la page d'information du produit
-        value: '1'
-      - label:
-          en: Hide product info page
-          fr: Cacher la page d'information du produit
-        value: '2'
-      - label:
-          en: Hide navigation link
-          fr: Masquer le lien de navigation
-        value: '3'
-
-- preset_name: ndm_survey_status
+- preset_name: ndm_status
   values:
     label:
       en: Status
@@ -452,13 +584,53 @@ presets:
     schema_extras: true
     choices:
       - label:
-          en: Active
-          fr: Actif
+          fr: Accessible
+          en: Full Access
+        value: '0'
+      - label:
+          fr: En cours
+          en: In progress
         value: '1'
       - label:
-          en: Inactive
-          fr: Inactif
+          fr: Annulé
+          en: Cancelled
         value: '2'
+      - label:
+          fr: Terminé
+          en: Completed
+        value: '3'
+      - label:
+          fr: Pré-diffusion
+          en: Pre-release
+        value: '11'
+      - label:
+          fr: Produit en cours/Disponible
+          en: Ongoing/Available
+        value: '31'
+      - label:
+          fr: À venir
+          en: Forthcoming
+        value: '32'
+#      - label:
+#         fr: Discontinué/Plus disponible
+#         en: Discontinued/Not available
+#        value: '33'
+      - label:
+          fr: Remplacé par une autre langue
+          en: Replaced by other language
+        value: '34'
+      - label:
+          fr: Annulé
+          en: Cancelled
+        value: '35'
+#      - label:
+#          fr: Ne pas télécharger au CEL
+#          en: Do not load to OLC
+#        value: '36'
+      - label:
+          fr: Dernier numéro completé
+          en: Last completed issue
+        value: '90'
 
 - preset_name: ndm_subject_display
   values:
@@ -646,6 +818,45 @@ presets:
           fr: Tourisme et le Centre de la statistique de l'éducation (DTCSE)
         value: '28'
 
+- preset_name: ndm_survey_status
+  values:
+    label:
+      en: Status
+      fr: État
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: Active
+          fr: Actif
+        value: '1'
+      - label:
+          en: Inactive
+          fr: Inactif
+        value: '2'
+
+- preset_name: ndm_title
+  values:
+    label:
+      en: Title
+      fr: Titre
+    schema_field_type: fluent
+    schema_multivalue: false
+    schema_extras: false
+    form_placeholder:
+      en: Canada Border Wait Times
+      fr: Temps d’attente à la frontière
+    form_snippet: fluent_text.html
+    display_snippet: fluent_text.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+
 - preset_name: ndm_tracking
   values:
     label:
@@ -737,163 +948,11 @@ presets:
             fr: En attente - rgtabv
         value: '19'
 
-- preset_name: ndm_collection_methods
+- preset_name: shortcode_multivalue
   values:
-    label:
-      en: Collection Method
-      fr: Méthode de collection
-    form_snippet: multiple_select.html
-    display_snippet: multiple_choice.html
-    validators: scheming_required scheming_multiple_choice
+    form_snippet: shortcode_multivalue.html
+    display_snippet: shortcode_multivalue.html
+    validators: shortcode_validate
     output_validators: shortcode_output
-    lookup: preset
     schema_field_type: code
     schema_multivalued: true
-    schema_extras: true
-    choices:
-      - label:
-            en: Computer Assisted Interview
-            fr: Interview assistée par ordinateur
-        value: '01'
-      - label:
-            en: Computer-assisted personal interview (CAPI)
-            fr: Interview sur place assistée par ordinateur (IPAO)
-        value: '06'
-      - label:
-            en: Computer-assisted telephone interview (CATI)
-            fr: Interview téléphonique assistée par ordinateur
-        value: '08'
-      - label:
-            en: Electronic data interchange
-            fr: Échange de données informatisées
-        value: '11'
-      - label:
-            en: Electronic questionnaire
-            fr: Questionnaire électronique
-        value: '12'
-      - label:
-            en: Face-to-face interview (not computer assisted)
-            fr: Interview personnelle (sans ordinateur)
-        value: '14'
-      - label:
-            en: Interview (Non computer) - Completed by respondent
-            fr: Interview (sans ordinateur) - par le répondant
-        value: '15'
-      - label:
-            en: Interview (non computer)
-            fr: Interview (sans ordinateur)
-        value: '16'
-      - label:
-            en: Not Specified
-            fr: Non spécifié
-        value: '18'
-      - label:
-            en: Personal (non computer) - mail out mail back
-            fr: Personnelle (sans ordinateur)
-        value: '19'
-      - label:
-            en: Self completion - Electronic questionnaire
-            fr: Remplir soi-même - Questionnaire électronique
-        value: '20'
-      - label:
-            en: Self completion - drop-off/mail-back (hard copy)
-            fr: Remplir soi-même - Livraison et cueillette
-        value: '21'
-      - label:
-            en: Self completion - drop-off/pick-up (hard copy)
-            fr: Remplir soi-même - Livraison et cueillette
-        value: '22'
-      - label:
-            en: Self completion - mail-out/mail-back (hard copy)
-            fr: Remplir soi-même - Envoi par la poste
-        value: '23'
-      - label:
-            en: Self completion - mail-out/pick-up (hard copy)
-            fr: Remplir soi-même-Envoi par la poste et cueillette
-        value: '24'
-      - label:
-            en: Telephone Interview (non computer)
-            fr: Interview téléphonique (sans ordinateur)
-        value: '25'
-
-- preset_name: ndm_admin_notes
-  values:
-    label:
-      en: Admin Notes
-      fr: Notes
-    form_placeholder:
-      en: Admin Notes
-      fr: Notes
-    schema_field_type: fluent
-    schema_multivalue: false
-    schema_extras: true
-    form_snippet: fluent_markdown.html
-    display_snippet: fluent_markdown.html
-    error_snippet: fluent_text.html
-    validators: fluent_text
-    output_validators: fluent_text_output
-    
-- preset_name: ndm_title
-  values:
-    label:
-      en: Title
-      fr: Titre
-    schema_field_type: fluent
-    schema_multivalue: false
-    schema_extras: false
-    form_placeholder:
-      en: Canada Border Wait Times
-      fr: Temps d’attente à la frontière
-    form_snippet: fluent_text.html
-    display_snippet: fluent_text.html
-    error_snippet: fluent_text.html
-    validators: fluent_text
-    output_validators: fluent_text_output
-
-- preset_name: ndm_description
-  values:
-    label:
-      en: Description
-      fr: Description
-    schema_field_type: fluent
-    schema_multivalue: false
-    schema_extras: false
-    form_placeholder:
-      en: A detailed description of the dataset that will allow the user to determine
-        the nature and purpose of the data in the dataset.
-      fr: Une description détaillée de l’ensemble de données qui permettra à l'utilisateur
-        de connaître la nature et le but des données comprises dans l’ensemble de données.
-    form_snippet: fluent_markdown.html
-    display_snippet: fluent_markdown.html
-    error_snippet: fluent_text.html
-    validators: fluent_text
-    output_validators: fluent_text_output
-
-- preset_name: codeset_select
-  values:
-    schema_field_type: code
-    schema_multivalued: false
-    form_snippet: codeset_select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
-    lookup: codeset
-
-- preset_name: codeset_multiple_select
-  values:
-    schema_field_type: code
-    schema_multivalued: true
-    schema_extras: true
-    form_snippet: codeset_multiple_select.html
-    display_snippet: codeset_multiple_choice.html
-    validators: ignore_missing codeset_multiple_choice
-    output_validators: scheming_multiple_choice_output
-    lookup: codeset
-
-- preset_name: ndm_datetime
-  values:
-    schema_field_type: string
-    schema_multivalued: false
-    schema_extras: true
-    form_snippet: datetime.html
-    display_snippet: datetime.html
-    validators: scheming_required isodate

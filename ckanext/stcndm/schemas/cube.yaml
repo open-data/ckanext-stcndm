@@ -244,10 +244,10 @@ dataset_fields:
 #    fr: Date du système antérieur
 #  preset: date
 
-- field_name: parent_product
+- field_name: top_parent_id
   label:
-    en: Hierarchy
-    fr: Hiérarchie
+    en: Top Parent ID
+    fr: ID du parent du plus haut niveau
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -320,8 +320,34 @@ dataset_fields:
   schema_field_type: string
   schema_extras: true
 
-- field_name: status_codes
+- field_name: status_code
   preset: ndm_status
+
+- field_name: discontinued_code
+  label:
+    en: Discontinued/Not Available
+    fr: Discontinué/Non Disponible
+  preset: ndm_boolean
+  schema_extras: true
+
+- field_name: discontinued_date
+  label:
+    en: Discontinued Date
+    fr: Date discontinué
+  preset: date
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: census_grouping_code
+  preset: ndm_census_grouping
+
+- field_name: load_to_olc_code
+  label:
+    en: Load to OLC
+    fr: Charger au OLC
+  preset: ndm_boolean
+  schema_extras: true
 
 #- field_name: subjectold_code
 #  label:
