@@ -187,12 +187,12 @@ def do_product(data_set):
     if in_and_def('hierarchyid_bi_strm', data_set):
         result = listify(data_set[u'hierarchyid_bi_strm'])
         if result:
-            product_out[u'parent_product'] = result[0]
+            product_out[u'top_parent_id'] = result[0]
 
     if in_and_def('hierarchyid_bi_strs', data_set):
         result = listify(data_set[u'hierarchyid_bi_strs'])
         if result:
-            product_out[u'parent_product'] = result[0]
+            product_out[u'top_parent_id'] = result[0]
 
     temp = {}
     if in_and_def('histnotes_en_txts', data_set):
@@ -358,6 +358,54 @@ def do_product(data_set):
     return product_out
 
 
+def do_release(data_set):
+
+    release_out = {
+        u'owner_org': u'statcan',
+        u'private': False,
+        u'type': u'release',
+        u'is_correction': '0',
+        u'parent_id': data_set[u'productidnew_bi_strs'],
+    }
+
+    if in_and_def('release_id', data_set):
+        release_out[u'release_id'] = data_set['release_id']
+        release_out[u'name'] = (u'release-{product_id}_{year}_{release_id}'.format(
+            product_id=data_set['productidnew_bi_strs'],
+            year=datetime.date.today().year,
+            release_id=data_set['release_id'].zfill(3)
+        )).lower()
+        release_out[u'title'] = release_out[u'name']
+
+    if in_and_def('releasedate_bi_strs', data_set):
+        release_out[u'release_date'] = data_set[u'releasedate_bi_strs']
+
+    temp = {}
+    if in_and_def('refperiod_en_txtm', data_set):
+        temp[u'en'] = data_set['refperiod_en_txtm']
+    if in_and_def('refperiod_fr_txtm', data_set):
+        temp[u'fr'] = data_set['refperiod_fr_txtm']
+    if temp:
+        release_out[u'reference_period'] = temp
+
+    if in_and_def('lastpublishstatuscode_bi_strs', data_set):
+        release_out[u'publish_status_code'] = data_set[u'lastpublishstatuscode_bi_strs']
+
+    if in_and_def('issueno_bi_strs', data_set):
+        release_out[u'issue_number'] = data_set[u'issueno_bi_strs']
+
+    if in_and_def('hierarchyid_bi_strm', data_set):
+        release_out[u'top_parent_id'] = data_set['hierarchyid_bi_strm']
+
+    if in_and_def('hierarchyid_bi_strs', data_set):
+        release_out[u'top_parent_id'] = data_set['hierarchyid_bi_strs']
+
+    if u'top_parent_id' not in release_out:
+        release_out[u'top_parent_id'] = data_set[u'productidnew_bi_strs']
+
+    return release_out
+
+
 def do_format(data_set):
     format_out = {
         u'owner_org': u'statcan',
@@ -368,7 +416,8 @@ def do_format(data_set):
             data_set[u'formatcode_bi_txtm'])).lower(),
         u'title': (u'format-{0}_{1}'.format(
             data_set[u'productidnew_bi_strs'],
-            data_set[u'formatcode_bi_txtm'])).lower()
+            data_set[u'formatcode_bi_txtm'])).lower(),
+        u'parent_id': data_set[u'productidnew_bi_strs'],
     }
 
     if in_and_def('display_bi_txtm', data_set):
@@ -407,62 +456,16 @@ def do_format(data_set):
         format_out[u'url'] = local_temp
 
     if in_and_def('hierarchyid_bi_strm', data_set):
-        format_out[u'parent_product'] = data_set['hierarchyid_bi_strm']
+        format_out[u'top_parent_id'] = data_set['hierarchyid_bi_strm']
 
     if in_and_def('hierarchyid_bi_strs', data_set):
-        format_out[u'parent_product'] = data_set['hierarchyid_bi_strs']
+        format_out[u'top_parent_id'] = data_set['hierarchyid_bi_strs']
 
-    if u'parent_product' not in format_out:
-        format_out[u'parent_product'] = data_set[u'productidnew_bi_strs']
+    if u'top_parent_id' not in format_out:
+        format_out[u'top_parent_id'] = data_set[u'productidnew_bi_strs']
 
     return format_out
 
-
-def do_release(data_set):
-
-    release_out = {
-        u'owner_org': u'statcan',
-        u'private': False,
-        u'type': u'release',
-        u'is_correction': '0',
-    }
-
-    if in_and_def('release_id', data_set):
-        release_out[u'release_id'] = data_set['release_id']
-        release_out[u'name'] = (u'release-{product_id}_{year}_{release_id}'.format(
-            product_id=data_set['productidnew_bi_strs'],
-            year=datetime.date.today().year,
-            release_id=data_set['release_id'].zfill(3)
-        )).lower()
-        release_out[u'title'] = release_out[u'name']
-
-    if in_and_def('releasedate_bi_strs', data_set):
-        release_out[u'release_date'] = data_set[u'releasedate_bi_strs']
-
-    temp = {}
-    if in_and_def('refperiod_en_txtm', data_set):
-        temp[u'en'] = data_set['refperiod_en_txtm']
-    if in_and_def('refperiod_fr_txtm', data_set):
-        temp[u'fr'] = data_set['refperiod_fr_txtm']
-    if temp:
-        release_out[u'reference_period'] = temp
-
-    if in_and_def('lastpublishstatuscode_bi_strs', data_set):
-        release_out[u'publish_status_code'] = data_set[u'lastpublishstatuscode_bi_strs']
-
-    if in_and_def('issueno_bi_strs', data_set):
-        release_out[u'issue_number'] = data_set[u'issueno_bi_strs']
-
-    if in_and_def('hierarchyid_bi_strm', data_set):
-        release_out[u'parent_product'] = data_set['hierarchyid_bi_strm']
-
-    if in_and_def('hierarchyid_bi_strs', data_set):
-        release_out[u'parent_product'] = data_set['hierarchyid_bi_strs']
-
-    if u'parent_product' not in release_out:
-        release_out[u'parent_product'] = data_set[u'productidnew_bi_strs']
-
-    return release_out
 
 f = open('../schemas/presets.yaml')
 presetMap = yaml.safe_load(f)

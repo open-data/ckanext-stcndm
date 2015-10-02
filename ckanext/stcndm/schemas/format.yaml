@@ -34,11 +34,10 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: parent_product
+- field_name: top_parent_id
   label:
-    en: Parent Product
-    fr: Produit parent
-  required: true
+    en: Top Parent ID
+    fr: ID du parent du plus haut niveau
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
