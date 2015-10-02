@@ -13,7 +13,7 @@
                     type: 'ajax-fetch.wb',
                     element: event.delegateTarget,
                     fetch: {
-                        url: '/api/3/action/GetAutocomplete?type=' + type + '&q=' + val,
+                        url: 'http://localhost:5023/api/3/action/GetAutocomplete?type=' + type + '&q=*' + val + '*',
                         dataType: 'jsonp',
                         jsonp: 'callback'
                     }
