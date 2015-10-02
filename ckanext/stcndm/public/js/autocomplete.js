@@ -13,7 +13,7 @@
                     type: 'ajax-fetch.wb',
                     element: event.delegateTarget,
                     fetch: {
-                        url: 'http://localhost:5023/api/3/action/GetAutocomplete?type=' + type + '&q=*' + val + '*',
+                        url: '/api/3/action/GetAutocomplete?type=' + type + '&q=*' + val + '*',
                         dataType: 'jsonp',
                         jsonp: 'callback'
                     }
@@ -35,15 +35,27 @@
         var $select = $(event.delegateTarget).find('select'),
             terms = event.fetch.response.result.results,
             termsLength = terms.length,
-            t, term;
+            t, term, group, $append;
 
         $select.empty();
 
         if (terms.length !== 0) {
             for (t = 0; t < termsLength; t += 1) {
                 term = terms[t];
+                group = term.group;
 
-                $select.append('<option value="' + term.code + '">' + term.title.en + ' | ' + term.title.fr + ' | ' + term.code);
+                if (group) {
+                    group = group[wb.lang];
+                    $append = $select.find('optgroup[label="' + group + '"]');
+
+                    if ($append.length === 0) {
+                        $append = $('<optgroup label="' + group + '"></optgroup>').appendTo($select);
+                    }
+                } else {
+                    $append = $select;
+                }
+
+                $append.append('<option value="' + term.code + '">' + term.title.en + ' | ' + term.title.fr + ' | ' + term.code);
             }
         } else {
             $select.append('<option value="">' + wb.i18n('no-match') + '</option>');
