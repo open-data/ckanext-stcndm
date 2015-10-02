@@ -42,6 +42,14 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
+- field_name: parent_id
+  label:
+    en: Parent ID
+    fr: ID du parent
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
 - field_name: format_code
   label:
     en: Product Format

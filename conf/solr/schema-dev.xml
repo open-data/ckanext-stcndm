@@ -274,7 +274,7 @@
         <field name="display_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="display_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="display_order" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="external_author" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="external_authors" type="text" indexed="true" stored="true" multiValued="true"/>
         <field name="feature_weight" type="int" indexed="true" stored="true" multiValued="false"/>
         <field name="format_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="format_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
@@ -297,7 +297,8 @@
         <field name="imdb_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="imdb_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="imdb_survey_item" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="internal_author" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="internal_authors" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="internal_contacts" type="text" indexed="true" stored="true" multiValued="true"/>
         <field name="isp_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="isp_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="issue_no" type="string" indexed="true" stored="true" multiValued="false"/>
