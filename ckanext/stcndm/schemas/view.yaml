@@ -310,11 +310,7 @@ dataset_fields:
   schema_extras: true
 
 - field_name: census_grouping_code
-  label:
-    en: Census Grouping
-    fr: Regroupement du recensement
-  preset: ndm_boolean
-  schema_extras: true
+  preset: ndm_census_grouping
 
 - field_name: load_to_olc_code
   label:
