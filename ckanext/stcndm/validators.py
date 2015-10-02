@@ -129,7 +129,7 @@ def format_create_name(key, data, errors, context):
     # don't bother with our validation
     parent_id = _data_lookup(('parent_id',), data)
     if not parent_id:
-        errors[key].append(_('could not find product_id_new of parent'))
+        errors[key].append(_('could not find parent_id of parent'))
     format_code = _data_lookup(('format_code',), data)
     if not format_code:
         errors[key].append(_('could not find format_code'))
@@ -259,29 +259,6 @@ def publication_create_name(key, data, errors, context):
         data[key] = u'publication-{0}'.format(product_id_new.lower())
     else:
         errors[key].append(_('could not find product_id_new'))
-
-
-def release_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    if data[('release_id',)] is missing or not data[('release_id',)]:
-        lc = ckanapi.LocalCKAN()
-        query_result = lc.action.package_search(
-            q='name:release-{product_id}_{year}*'.format(
-                product_id=data[('product_id_new',)],
-                year=datetime.date.today().year
-            )
-        )
-        data[('release_id',)] = unicode(query_result['count'] + 1)
-
-    data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
-            product_id=data[('parent_id',)],
-            year=datetime.date.today().year,
-            release_id=data[('release_id',)].zfill(3)
-        )).lower()
 
 
 def article_create_name(key, data, errors, context):
