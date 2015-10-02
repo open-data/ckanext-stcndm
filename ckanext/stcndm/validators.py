@@ -271,17 +271,17 @@ def release_create_name(key, data, errors, context):
         lc = ckanapi.LocalCKAN()
         query_result = lc.action.package_search(
             q='name:release-{product_id}_{year}*'.format(
-                product_id=data[('product_id_new',)],
+                product_id=data[('parent_id',)],
                 year=datetime.date.today().year
             )
         )
         data[('release_id',)] = unicode(query_result['count'] + 1)
 
     data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
-            product_id=data[('parent_id',)],
-            year=datetime.date.today().year,
-            release_id=data[('release_id',)].zfill(3)
-        )).lower()
+        product_id=data[('parent_id',)],
+        year=datetime.date.today().year,
+        release_id=data[('release_id',)].zfill(3)
+    )).lower()
 
 
 def article_create_name(key, data, errors, context):
