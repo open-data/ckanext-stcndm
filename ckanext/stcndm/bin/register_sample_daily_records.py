@@ -7,8 +7,8 @@ import ConfigParser
 parser = ConfigParser.SafeConfigParser()
 parser.read("./ckanparameters.config")
 
-API_KEY = parser.get("ckan", "api_key")
-BASE_URL = parser.get("ckan", "base_url")
+API_KEY = parser.get("ckandev", "api_key")
+BASE_URL = parser.get("ckandev", "base_url")
 
 
 def get_daterange(start_date, end_date):
