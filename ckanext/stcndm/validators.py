@@ -178,6 +178,19 @@ def subject_create_name(key, data, errors, context):
         errors[key].append(_('could not find subject_code'))
 
 
+def province_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    sgc_code = _data_lookup(('sgc_code',), data)
+    if sgc_code:
+        data[key] = u'province-{0}'.format(sgc_code.lower())
+    else:
+        errors[key].append(_('could not find sgc_code'))
+
+
 def survey_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
