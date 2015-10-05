@@ -1,7 +1,6 @@
 __author__ = 'matt'
 
 import ast
-import datetime
 
 import ckanapi
 import ckan.logic as logic
@@ -385,6 +384,8 @@ def ensure_release_exists(product_id, context=None):
         'tableview'
     )
 
+    context['ignore_capacity_check'] = True
+
     lc = ckanapi.LocalCKAN(context=context)
 
     if isinstance(product_id, dict):
@@ -413,7 +414,7 @@ def ensure_release_exists(product_id, context=None):
         ))
 
     release_result = lc.action.package_search(
-        q='dataset_type:release AND parent_product:{pid}'.format(
+        q='dataset_type:release AND parent_id:{pid}'.format(
             pid=result['product_id_new']
         ),
         rows=1
