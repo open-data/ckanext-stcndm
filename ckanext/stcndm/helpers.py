@@ -414,8 +414,8 @@ def ensure_release_exists(product_id, context=None):
         ))
 
     release_result = lc.action.package_search(
-        q='dataset_type:release AND parent_id:{pid}'.format(
-            pid=result['product_id_new']
+        q='name:release-{product_id}_*'.format(
+            product_id=result['product_id_new']
         ),
         rows=1
     )
