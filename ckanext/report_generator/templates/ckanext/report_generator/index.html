@@ -59,6 +59,10 @@
     <table id="results" class="table table-striped table-responsive wb-tables" data-wb-tables='{"data":[["a"]],"columns":[{"title":"a"}]}'></table>
     <a href="{% raw %}{{downloadLink}}{% endraw %}" class="btn btn-default" download>Download CSV</a>
 </div>
+<div class="alert alert-danger" role="alert" ng-show="queryError">
+  <h2>Error:</h2>
+  An error occured while running the query.
+</div>
 
 <script type="text/ng-template" id="templates/advanced-search.html">
 <div class="form-group col-sm-3">
