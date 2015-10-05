@@ -290,9 +290,7 @@ def release_create_name(key, data, errors, context):
     if errors[key]:
         return
 
-    print('*' * 80)
     release_id = _data_lookup(('release_id',), data)
-    print('- ', release_id)
 
     if not release_id:
         # Set a 300000% undocumented flag to prevent package_search from
