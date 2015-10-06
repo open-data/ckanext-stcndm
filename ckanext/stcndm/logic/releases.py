@@ -162,4 +162,4 @@ def ensure_release_exists(context, data_dict):
     :type productId: str
     """
     product_id = _get_or_bust(data_dict, 'productId')
-    stcndm_helpers.ensure_release_exists(product_id)
+    stcndm_helpers.ensure_release_exists(product_id, context=context)

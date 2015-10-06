@@ -384,7 +384,8 @@ def ensure_release_exists(product_id, context=None):
         'tableview'
     )
 
-    context['ignore_capacity_check'] = True
+    if context:
+        context['ignore_capacity_check'] = True
 
     lc = ckanapi.LocalCKAN(context=context)
 
