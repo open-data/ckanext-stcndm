@@ -17,6 +17,10 @@ _NotFound = toolkit.ObjectNotFound
 _NotAuthorized = toolkit.NotAuthorized
 
 
+class NotValidProduct(Exception):
+    pass
+
+
 def dict_list2dict(dict_list):
     d = dict()
 
@@ -356,7 +360,7 @@ def next_correction_id():
         return u'2000'
 
 
-def ensure_release_exists(product_id):
+def ensure_release_exists(product_id, context=None):
     """
     Ensure that a release dataset exists for the given product_id.
 
@@ -367,12 +371,12 @@ def ensure_release_exists(product_id):
         'cube',
         'publication',
         'article',
+        'conference',
         'daily',
         # FIXME: None of the below exist yet. If they're eventually added
         #        with names other than those used below this list must be
         #        updated.
         'video',
-        'conference',
         'microdata',
         'generic',
         'chart',
@@ -380,33 +384,38 @@ def ensure_release_exists(product_id):
         'tableview'
     )
 
-    lc = ckanapi.LocalCKAN()
+    context['ignore_capacity_check'] = True
 
-    result = lc.action.package_search(
-        q='product_id_new:{product_id}'.format(
-            product_id=product_id
-        ),
-        rows=1,
-        fl=[
-            'name',
-            'type',
-            'owner_org'
-        ]
-    )
+    lc = ckanapi.LocalCKAN(context=context)
 
-    if not result['count']:
-        raise ValueError('product_id does not exist')
+    if isinstance(product_id, dict):
+        result = product_id
+    else:
+        result = lc.action.package_search(
+            q='product_id_new:{product_id}'.format(
+                product_id=product_id
+            ),
+            rows=1,
+            fl=[
+                'name',
+                'type',
+                'owner_org'
+            ]
+        )
 
-    result = result['results'][0]
+        if not result['count']:
+            raise ValueError('product_id does not exist')
+
+        result = result['results'][0]
 
     if result['type'] not in allowed_datasets:
-        raise ValueError('{type} is not an allowed dataset type.'.format(
+        raise NotValidProduct('{type} is not an allowed dataset type.'.format(
             type=result['type']
         ))
 
     release_result = lc.action.package_search(
-        q='dataset_type:release AND parent_product:{pid}'.format(
-            pid=result['product_id_new']
+        q='name:release-{product_id}_*'.format(
+            product_id=result['product_id_new']
         ),
         rows=1
     )
@@ -419,7 +428,8 @@ def ensure_release_exists(product_id):
         type=u'release',
         owner_org=result['owner_org'],
         release_id='001',
-        parent_product=result['product_id_new'],
+        parent_id=result['product_id_new'],
+        top_parent_id=result['product_id_new'],
         publish_status_code='02',
         is_correction='0'
     )

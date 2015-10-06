@@ -25,20 +25,14 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
-- field_name: release_id
-  label:
-    en: Release ID
-    fr: ID de diffusion
-  form_snippet: null
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
-
 - field_name: release_date
   label:
     en: Release Date
     fr: Date de diffusion
-  preset: ndm_datetime
+  label_time:
+    en: Release Time
+    fr: Heure de diffusion
+  preset: datetime
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -116,3 +110,14 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: false
+
+- field_name: release_id
+  label:
+    en: Release ID
+    fr: ID de diffusion
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+  form_attrs:
+      disabled: disabled
+

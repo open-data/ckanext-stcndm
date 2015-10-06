@@ -186,6 +186,19 @@ class STCNDMPlugin(p.SingletonPlugin):
 
         return index_data_dict
 
+    def after_create(self, context, data):
+        if 'model' in context:
+            # We need to force a commit to get the metadata_modified
+            # and metadata_created columns. It is *not* enough for us to
+            # simply set these ourselves. This is caused by after_create
+            # being called long before creation is actually complete.
+            context['model'].repo.commit()
+
+        try:
+            helpers.ensure_release_exists(data, context=context)
+        except helpers.NotValidProduct:
+            pass
+
     def get_actions(self):
         # Some Java web clients require the web service to use Pascal Case
         return {

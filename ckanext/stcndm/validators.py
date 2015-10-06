@@ -303,21 +303,47 @@ def release_create_name(key, data, errors, context):
     if errors[key]:
         return
 
-    if data[('release_id',)] is missing or not data[('release_id',)]:
-        lc = ckanapi.LocalCKAN()
+    release_id = _data_lookup(('release_id',), data)
+
+    if not release_id:
+        # Set a 300000% undocumented flag to prevent package_search from
+        # rewriting fq to filter out non-public datasets (ARRRRRRRRGH)
+        context['ignore_capacity_check'] = True
+
+        lc = ckanapi.LocalCKAN(context=context)
+
         query_result = lc.action.package_search(
             q='name:release-{product_id}_{year}*'.format(
                 product_id=data[('parent_id',)],
                 year=datetime.date.today().year
-            )
+            ),
+            sort='release_id desc',
+            rows=1
         )
-        data[('release_id',)] = unicode(query_result['count'] + 1)
 
-    data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
-        product_id=data[('parent_id',)],
-        year=datetime.date.today().year,
-        release_id=data[('release_id',)].zfill(3)
-    )).lower()
+        if not query_result['count']:
+            # There are no existing releases, so we start from 1.
+            new_release_id = '1'
+        else:
+            # We take the highest release and simply add one.
+            last_release_id = query_result['results'][0]['release_id']
+            new_release_id = str(int(last_release_id.split('_')[-1]) + 1)
+
+        new_release_id = new_release_id.zfill(3)
+
+        data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
+            product_id=data[('parent_id',)],
+            year=datetime.date.today().year,
+            release_id=new_release_id
+        )).lower()
+
+        data[('release_id',)] = new_release_id
+    else:
+        data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
+            product_id=data[('parent_id',)],
+            year=datetime.date.today().year,
+            release_id=data[('release_id',)].zfill(3)
+        )).lower()
 
 
 def article_create_name(key, data, errors, context):
