@@ -44,7 +44,7 @@ def get_subject(context, data_dict):
         r = response['results'][0]
         return {
             'title': r['title'],
-            'subject_code': r['codeset_value']
+            'subject_code': r['subject_code']
         }
 
 
