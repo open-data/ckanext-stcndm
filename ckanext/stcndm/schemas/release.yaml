@@ -37,6 +37,14 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
+- field_name: data_reference_period
+  label:
+    en: Data Reference Period
+    fr: Les données Période de référence
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
 - field_name: reference_period
   label:
     en: Reference Period
@@ -67,7 +75,7 @@ dataset_fields:
 - field_name: publish_status_code
   preset: ndm_publish_status
 
-- field_name: issue_no
+- field_name: issue_number
   label:
     en: Issue Number
     fr: Numéro d'émission
