@@ -29,18 +29,6 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
-- field_name: owner_org
-  label:
-    en: Organization
-    fr: Organisation
-  create_validators: default_from_placeholder
-  form_attrs:
-      disabled: disabled
-  form_placeholder: statcan
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
-
 #- field_name: owner_org
 #  label:
 #    en: Organization
