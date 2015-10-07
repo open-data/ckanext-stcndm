@@ -46,43 +46,43 @@ for the primary and format types at:
     git checkout release-v2.3.1
     cd ..
   ```
-  
+
   6. Use the wet4-scheming branch of the Open Data CKAN WET extension.
   ```
     cd ckanext-wet-boew
     git checkout wet4-scheming
     cd ..
   ```
-  
+
   7. Install the requirements for CKAN. Please note, that you may encounter problems installing the 'pbr' package.
      In this case, just install pdr manually from pypi.
   ```
     pip install pbr
   ```
-  
+
   8. Install the requirements and other projects.
   ```
     cd ckan
     python setup.py develop
     cd ..
-    
+
     cd ckanapi
     python setup.py develop
     cd ..
-    
+
     cd ckanext-wet-boew
     pip install -r requirements.txt
     python setup.py develop
     cd ..
-    
+
     cd ckanext-scheming
     python setup.py develop
     cd ..
-    
+
     cd ckanext-fluent
     python setup.py develop
     cd ..
-    
+
     cd ckanext-repeating
     python setup.py develop
     cd ..
@@ -96,14 +96,9 @@ for the primary and format types at:
   9. Install the libgeos library required by ckanext-wet-beow (`brew install geos` on OS X or `apt-get install libgeos-dev` on Debian/Ubuntu)
 
   10. Create the .ini file as per the normal CKAN installation instructions and modify as noted above.
-  
+
   11. Configure the WET extension for use as per https://github.com/open-data/ckanext-wet-boew/tree/wet4-scheming
-      Download the WET intranet theme production ZIP file from 
-      http://wet-boew.github.io/wet-boew/docs/versions/dwnld-en.html and extract it into the 'ckanext/stcndm/public'
-      directory in the ckanext-stcndm project. Rename the extracted folder to theme-intranet
-      You may need to copy minified versions of jquery-1.11.1.min.js and jquery-2.1.1.min.js to the theme-intranet
-      directory.
-  
+
   12. Create an organization with the URL statcan and the name Statistics Canada
 
-    
+
