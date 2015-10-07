@@ -29,6 +29,21 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
+#- field_name: owner_org
+#  label:
+#    en: Organization
+#    fr: Organisation
+#  create_validators: default_from_placeholder
+#  form_attrs:
+#      disabled: disabled
+#  form_placeholder: statcan
+#  schema_field_type: string
+#  schema_multivalued: false
+#  schema_extras: false
+
+#- field_name: private
+#  preset: ndm_visibility
+
 - field_name: name
   # follow our custom name generation with default package name validators
   validators: cube_create_name
@@ -284,32 +299,24 @@ dataset_fields:
 #    en: Publication Year
 #    fr: Année de publication
 
-- field_name: reference_periods
-  label:
-    en: Reference Period
-    fr: Période de référence
-  preset: fluent_tags
-  tag_validators: ndm_tag_name_validator tag_length_validator
-  schema_field_type: fluent
-  schema_multivalued: true
-  schema_extras: true
+#- field_name: reference_periods
+#  label:
+#    en: Reference Period
+#    fr: Période de référence
+#  preset: fluent_tags
+#  tag_validators: ndm_tag_name_validator tag_length_validator
+#  schema_field_type: fluent
+#  schema_multivalued: true
+#  schema_extras: true
 
-- field_name: data_reference_period
-  label:
-    en: Data Reference Period
-    fr: Les données Période de référence 
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
-
-- field_name: release_date
-  label:
-    en: Release Date
-    fr: Date de diffusion
-  preset: date
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+#- field_name: release_date
+#  label:
+#    en: Release Date
+#    fr: Date de diffusion
+#  preset: date
+#  schema_field_type: string
+#  schema_multivalued: false
+#  schema_extras: true
 
 - field_name: replaced_product_codes
   label:

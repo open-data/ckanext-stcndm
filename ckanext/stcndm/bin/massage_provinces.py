@@ -19,12 +19,13 @@ def listify(value):
     else:
         return []
 
-rc = ckanapi.RemoteCKAN(BASE_URL) #  'http://ndmckanq1.stcpaz.statcan.gc.ca/zj/'
+
+rc = ckanapi.RemoteCKAN(BASE_URL)  # 'http://ndmckanq1.stcpaz.statcan.gc.ca/zj/'
 i = 0
 n = 1
 while i < n:
     query_results = rc.action.package_search(
-        q='organization:tmsgccode',
+        q='organization:ndprovsgc',
         rows=1000,
         start=i*1000)
     i += 1
@@ -36,28 +37,22 @@ while i < n:
         line_out = {
             u'owner_org': u'statcan',
             u'private': False,
-            u'type': u'geodescriptor',
-            u'product_id_old': line.get('10uid_bi_strs', ''),
+            u'type': u'province',
+            u'geolevel': line.get('tmprovgeolevel_bi_tmtxtm', ''),
             u'title': {
-                u'en': line.get('tmsgcname_en_tmtxtm', ''),
-                u'fr': line.get('tmsgcname_fr_tmtxtm', ''),
+                u'en': line.get('tmprovgeoname_en_tmtxtm', ''),
+                u'fr': line.get('tmprovgeoname_fr_tmtxtm', '')
             },
-            u'geolevel_codes': line.get('tmsgccode_bi_tmtxtm', ''),
+            u'geotype': line.get('tmprovgeotype_bi_tmtxtm', ''),
+            u'sgc_code': line.get('tmprovsgccode_bi_tmtxtm', ''),
+            u'name': u'province-{sgc_code}'.format(
+                sgc_code=line.get('tmprovsgccode_bi_tmtxtm', '')
+            ),
+            u'sort_order': line.get('tmprovsortorder_bi_tmints', ''),
+
             u'license_title': line.get('license_title', ''),
             u'license_url': line.get('license_url', ''),
             u'license_id': line.get('license_id', ''),
         }
-        geodescriptor_code = line.get('tmsgcspecificcode_bi_tmtxtm', '')
-        if ';' in geodescriptor_code:
-            line_out[u'aliased_codes'] = listify(geodescriptor_code)
-            line_out[u'geodescriptor_code'] = line_out[u'geolevel_codes']
-            line_out[u'name'] = u'geodescriptor-{geolevel_code}'.format(
-                geolevel_code=line_out[u'geolevel_codes'].lower()
-            )
-        else:
-            line_out[u'geodescriptor_code'] = line.get('tmsgcspecificcode_bi_tmtxtm', '')
-            line_out['name'] = u'geodescriptor-{geodescriptor_code}'.format(
-                geodescriptor_code=geodescriptor_code.lower()
-            )
 
         print json.dumps(line_out)
