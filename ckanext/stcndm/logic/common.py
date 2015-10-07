@@ -25,36 +25,57 @@ autocomplete = {
     }
 }
 
+
+def _get_group(result):
+    if result['type'] != 'subject':
+        return
+
+    type_schema = scheming_helpers.scheming_get_dataset_schema(result['type'])
+
+    for field in type_schema['dataset_fields']:
+        if field['field_name'] == 'subject_display_code':
+            for choice in field['choices']:
+                if choice['value'] == result.get('subject_display_code', '-1'):
+                    return choice['label']
+
+
 @logic.side_effect_free
 def get_autocomplete(context, data_dict):
-    type = _get_or_bust(data_dict, 'type')
+    """
+    Return autocomplete results given a product type and a query string.
+
+    :param type: The type of dataset being searched (Ex: "subject")
+    :type type: str
+    :param q: Search term to query.
+    :type q: str
+    """
+    type_ = _get_or_bust(data_dict, 'type')
     q = _get_or_bust(data_dict, 'q')
 
-    lc = ckanapi.LocalCKAN()
+    lc = ckanapi.LocalCKAN(context=context)
     query_result = lc.action.package_search(
-        q = 'dataset_type:' + type + ' AND (title_en:' + q + ' OR title_en:' + q + ' OR ' + autocomplete[type]['code'] + ':' + q + ')',
+        q=(
+            'dataset_type:{type_} AND (title_en:{q} OR title_fr:{q} OR'
+            ' {code}:{q})'
+        ).format(
+            type_=type_,
+            q=q,
+            code=autocomplete[type_]['code']
+        ),
         rows = 100
     )
 
-    results = {'count': query_result['count'], 'results': []}
-
-    for r in query_result['results']:
-        result = {
-            'code': r[autocomplete[type]['code']],
-            'title': r['title']
-        }
-
-        if type == 'subject':
-            type_schema = scheming_helpers.scheming_get_dataset_schema(type)
-            for field in type_schema['dataset_fields']:
-                if field['field_name'] == 'subject_display_code':
-                    for choice in field['choices']:
-                        if choice['value'] == r.get('subject_display_code', '-1'):
-                            result['group'] = choice['label']
-
-        results['results'].append(result)
+    results = {
+        'count': query_result['count'],
+        'results': [{
+            'code': r[autocomplete[type_]['code']],
+            'title': r['title'],
+            'group': _get_group(r)
+        } for r in query_result['results']]
+    }
 
     return results
+
 
 @logic.side_effect_free
 def get_next_product_id(context, data_dict):
@@ -553,9 +574,9 @@ def get_derived_product_list(context, data_dict):
 
 def register_data_product(context, data_dict):
     """
-    Register a new data product based on a given `parentProductId` (the 8-digit ID
-    of a cube) and the desired `productTypeCode`. The new product's fields will
-    be populated based on the cube record.
+    Register a new data product based on a given `parentProductId` (the 8-digit
+    ID of a cube) and the desired `productTypeCode`. The new product's fields
+    will be populated based on the cube record.
 
     .. note::
 
@@ -655,7 +676,8 @@ def register_non_data_product(context, data_dict):
 
     :param productId:
     :type ProductId: str
-    :param productType: one of publication, article, video, conference, service, pumf, prt
+    :param productType: one of publication, article, video, conference,
+                        service, pumf, prt
     :type productType: str
     :param productTitle: EN/FR title dictionary
     :type productTitle: dict
@@ -690,8 +712,8 @@ def register_non_data_product(context, data_dict):
         )
     elif product_type not in VALID_DATA_TYPES:
         raise _ValidationError(
-            'Invalid non data productType, only non data products may be registered '
-            'with this service'
+            'Invalid non data productType, only non data products may be'
+            ' registered with this service'
         )
 
     lc = ckanapi.LocalCKAN(context=context)

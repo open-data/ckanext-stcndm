@@ -332,6 +332,7 @@
         <field name="related_products" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="release_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="release_id" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="data_reference_period" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="replaced_product" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="resource_url" type="text" indexed="true" stored="true" multiValued="false"/>
         <field name="status_code" type="string" indexed="true" stored="true" multiValued="false"/>
