@@ -97,11 +97,14 @@ dataset_fields:
   schema_multivalued: true
   schema_extras: true
 
-- field_name: thesaurus
+- field_name: thesaurus_terms
   label:
-    en: STC Thesaurus
-    fr: STC dictionnaire de synonymes
+    en: STC Thesaurus Terms
+    fr: Dictionnaire de synonymes de STC
   preset: fluent_tags
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true
   tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: feature_weight
@@ -149,6 +152,9 @@ dataset_fields:
     en: Dimension Member
     fr: Membre de dimension
   preset: fluent_tags
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true
   tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: external_authors
@@ -217,6 +223,9 @@ dataset_fields:
     en: Keywords
     fr: Mots clés
   preset: fluent_tags
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true
   tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: last_publish_status_code
@@ -270,10 +279,10 @@ dataset_fields:
   preset: fluent_tags
   tag_validators: ndm_tag_name_validator tag_length_validator
 
-- field_name: replaced_product_codes
+- field_name: replaced_products
   label:
-    en: Replaced Product
-    fr: Produit remplacé
+    en: Replaced Products
+    fr: Produits remplacés
   preset: repeating_text
   form_blanks: 3
   schema_field_type: string

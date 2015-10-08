@@ -191,6 +191,19 @@ def province_create_name(key, data, errors, context):
         errors[key].append(_('could not find sgc_code'))
 
 
+def set_default_value(default_value):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+
+    def validator(key, data, errors, context):
+        if errors[key]:
+            return
+        if isinstance(default_value, basestring):
+            data[key] = default_value
+
+    return validator
+
+
 def survey_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation

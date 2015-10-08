@@ -442,6 +442,42 @@ presets:
         fr: Francais
       value: 'fr'
 
+- preset_name: ndm_owner_org
+  values:
+    label:
+      en: Organization
+      fr: Organisation
+    create_validators: default_value
+    form_attrs:
+        disabled: disabled
+    form_placeholder: statcan
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: false
+
+- preset_name: ndm_visibility
+  values:
+    label:
+      en: Visibility
+      fr: Visibilité
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    required: true
+    schema_field_type: boolean
+    schema_multivalued: false
+    schema_extras: false
+    choices:
+    - label:
+        en: Public
+        fr: Publique
+      value: false
+    - label:
+        en: Private
+        fr: Privé
+      value: true
+
 - preset_name: ndm_product
   values:
     label:
