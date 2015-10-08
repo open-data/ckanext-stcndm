@@ -108,6 +108,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             field_schema[d['field_name']] = d
 
         index_data_dict = {}
+        authors = []
         # drop extras fields
         for dict_key in data_dict:
             if not dict_key.startswith('extras_'):
@@ -178,11 +179,22 @@ class STCNDMPlugin(p.SingletonPlugin):
                             index_data_dict[item] = date.isoformat() + 'Z'
                     except ValueError:
                         continue
+            elif item.endswith('_authors'):
+                index_data_dict[str(item)] = value
+                authors.extend(value)
             else:  # all other field types
                 if multivalued:
                     index_data_dict[str(item)] = value
                 else:
                     index_data_dict[str(item)] = value
+
+            if authors:
+                index_data_dict['authors'] = authors
+                index_data_dict['authors_initials'] = list(
+                    set(
+                        [i[0].upper() for i in authors]
+                    )
+                )
 
         return index_data_dict
 
@@ -253,6 +265,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "correction_create_name": validators.correction_create_name,
             "cube_create_name": validators.cube_create_name,
             "daily_create_name": validators.daily_create_name,
+            "set_default_value": validators.set_default_value,
             "format_create_name": validators.format_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
             "indicator_create_name": validators.indicator_create_name,

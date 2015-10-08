@@ -171,11 +171,14 @@ dataset_fields:
 #  preset: repeating_text
 #  form_blanks: 3
 
-#- field_name: thesaurus
+#- field_name: thesaurus_terms
 #  label:
-#    en: STC Thesaurus
-#    fr: STC dictionnaire de synonymes
+#    en: STC Thesaurus Terms
+#    fr: Dictionnaire de synonymes de STC
 #  preset: fluent_tags
+#  schema_field_type: fluent
+#  schema_multivalued: true
+#  schema_extras: true
 #  tag_validators: ndm_tag_name_validator tag_length_validator
 
 #- field_name: archive_status
@@ -323,12 +326,15 @@ dataset_fields:
 #    fr: Date de diffusion (YYYY-MM-DD)
 #  preset: date
 
-#- field_name: replaced_product_codes
+#- field_name: replaced_products
 #  label:
-#    en: Replaced Product
-#    fr: Produit remplacé
+#    en: Replaced Products
+#    fr: Produits remplacés
 #  preset: repeating_text
 #  form_blanks: 3
+#  schema_field_type: string
+#  schema_multivalued: true
+#  schema_extras: true
 
 #- field_name: status_code
 #  preset: ndm_status

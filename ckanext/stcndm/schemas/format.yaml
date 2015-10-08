@@ -97,3 +97,10 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
+
+- field_name: bogon
+  label:
+    en: Bogon
+    fr: Bogon
+  create_validators: set_default_value(statcan)
+  default_value: statcan

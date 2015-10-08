@@ -146,10 +146,10 @@ dataset_fields:
     en: Keywords
     fr: Mots clés
   preset: fluent_tags
-  tag_validators: ndm_tag_name_validator tag_length_validator
   schema_field_type: fluent
   schema_multivalued: true
   schema_extras: true
+  tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: question_url
   label:
@@ -161,24 +161,24 @@ dataset_fields:
   schema_extras: true
   display_snippet: url.html
 
-- field_name: reference_periods
-  label:
-    en: Reference Period
-    fr: Période visée
-  preset: fluent_tags
-  tag_validators: ndm_tag_name_validator tag_length_validator
-  schema_field_type: fluent
-  schema_multivalued: true
-  schema_extras: true
-
-- field_name: release_date
-  label:
-    en: Release Date
-    fr: Date de diffusion
-  preset: date
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+#- field_name: reference_periods
+#  label:
+#    en: Reference Period
+#    fr: Période visée
+#  preset: fluent_tags
+#  tag_validators: ndm_tag_name_validator tag_length_validator
+#  schema_field_type: fluent
+#  schema_multivalued: true
+#  schema_extras: true
+#
+#- field_name: release_date
+#  label:
+#    en: Release Date
+#    fr: Date de diffusion
+#  preset: date
+#  schema_field_type: string
+#  schema_multivalued: false
+#  schema_extras: true
 
 #- field_name: format_code
 #  preset: ndm_format
@@ -195,15 +195,15 @@ dataset_fields:
 - field_name: survey_status_code
   preset: ndm_survey_status
 
-- field_name: thesaurus
+- field_name: thesaurus_terms
   label:
-    en: STC Thesaurus
-    fr: Dictionnaire de synonymes STC
+    en: STC Thesaurus Terms
+    fr: Dictionnaire de synonymes de STC
   preset: fluent_tags
-  tag_validators: ndm_tag_name_validator tag_length_validator
   schema_field_type: fluent
   schema_multivalued: true
   schema_extras: true
+  tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: subject_codes
   label:

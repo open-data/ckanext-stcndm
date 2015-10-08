@@ -241,6 +241,8 @@
         <field name="archive_status_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="archive_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="archive_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="authors" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="authors_initials" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="calculations" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="census_grouping_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="codeset_type" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -262,12 +264,8 @@
         <field name="correction_type_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="corrected_product" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="default_view_id" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="dimension_member_alias_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="dimension_member_alias_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="dimension_member_code" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="dimension_group_codes" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="dimension_group_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
-        <field name="dimension_group_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="dimension_members_en" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="dimension_members_fr" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="discontinued_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="discontinued_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="display_code" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -276,9 +274,9 @@
         <field name="display_order" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="external_authors" type="text" indexed="true" stored="true" multiValued="true"/>
         <field name="feature_weight" type="int" indexed="true" stored="true" multiValued="false"/>
-        <field name="format_codes" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="format_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
-        <field name="format_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="format_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="format_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="format_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="frc" type="text" indexed="true" stored="true" multiValued="false"/>
         <field name="frequency_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="frequency_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
@@ -287,6 +285,7 @@
         <field name="geodescriptor_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="geodescriptor_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
         <field name="geodescriptor_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+        <field name="geolevel" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="geolevel_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="geolevel_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
         <field name="geolevel_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
@@ -301,8 +300,9 @@
         <field name="internal_contacts" type="text" indexed="true" stored="true" multiValued="true"/>
         <field name="isp_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="isp_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="issue_no" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="publish_status_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="issue_number" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="keywords_en" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="keywords_fr" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="last_publish_status_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="last_publish_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="last_publish_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
@@ -316,7 +316,7 @@
         <field name="ndm_states" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="old_title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="old_title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="price" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="price" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="price_note_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="price_note_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="product_id_new" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -325,15 +325,18 @@
         <field name="product_type_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="product_type_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="publication_year" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="publish_status_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="publish_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="publish_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="question_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="question_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="reference_period_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="reference_period_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="reference_period_en" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="reference_period_fr" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="related_products" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="release_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="release_id" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="data_reference_period" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="replaced_product" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="replaced_products" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="resource_url" type="text" indexed="true" stored="true" multiValued="false"/>
         <field name="status_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
@@ -360,9 +363,8 @@
         <field name="survey_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="survey_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="table_ids" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="thesaurus_term_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
-        <field name="thesaurus_term_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
-        <field name="thesaurus_term_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="thesaurus_terms_en" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="thesaurus_terms_fr" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="top_parent_id" type="string" indexed="true" stored="true" multiValued="false" />
         <field name="tracking_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="tracking_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>

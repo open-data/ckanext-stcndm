@@ -327,7 +327,7 @@ def do_product(data_set):
         if result:
             temp[u'fr'] = result
     if temp:
-        product_out[u'thesaurus'] = temp
+        product_out[u'thesaurus_terms'] = temp
 
     if in_and_def('subjnewcode_bi_txtm', data_set):
         result = listify(data_set[u'subjnewcode_bi_txtm'])
