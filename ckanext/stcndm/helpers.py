@@ -425,7 +425,7 @@ def ensure_release_exists(product_id, context=None):
         # Nothing to do, at least one release already exists.
         return
 
-    lc.action.package_create(
+    return lc.action.package_create(
         type=u'release',
         owner_org=result['owner_org'],
         release_id='001',
