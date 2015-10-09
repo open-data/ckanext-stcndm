@@ -273,20 +273,48 @@ angular.module('checklist-model', [])
         this.operator = 'AND';
         this.keyword = '';
 
+        this.onEmptyChanged = function() {
+            if (this.emptyKey) {
+                this.operator = 'AND';
+            }
+        };
+
         this.addField = function() {
-            var actualOperator = '',
+            var getExpression = function() {
+                    var escapeKeyword = function(keyword) {
+                            return keyword.replace(/:/g, '\\:');
+                        },
+                        prefix = this.field + ':',
+                        keyword = this.keyword,
+                        type;
+
+                    if (this.emptyKey) {
+                        return '-' + prefix + '[* TO *]';
+                    } else {
+                        type = $rootScope.fieldsCtrl.fieldsDef[this.field].type;
+                        switch (type) {
+                            case 'date': {
+                                try {
+                                    keyword = new Date(keyword).toISOString();
+                                } catch (e) {}
+                                return prefix + '(' + escapeKeyword(keyword) + ')';
+                            }
+                        }
+                    }
+
+                    return prefix + '(*' + escapeKeyword(keyword) + '*)';
+                },
+                operatorStr = '',
                 expr;
 
             if (this.field && (this.keyword || this.emptyKey)) {
-                expr = this.emptyKey ?
-                    '-' + this.field + ':' + '["" TO *]' :
-                    this.field + ':(*' + this.keyword + '*)';
+                expr = getExpression.apply(this);
 
                 if ($rootScope.query && $rootScope.query.trim() !== '') {
-                    actualOperator = ' ' + (this.emptyKey ? 'AND' : this.operator) + ' ';
+                    operatorStr = ' ' + (this.operator) + ' ';
                 }
 
-                $rootScope.query += actualOperator + expr;
+                $rootScope.query += operatorStr + expr;
 
                 this.keyword = '';
             }
@@ -481,6 +509,8 @@ angular.module('checklist-model', [])
     app.controller('FieldsController', ['$http', '$q', '$rootScope', 'configuration', function($http, $q, $rootScope, configuration) {
         var _this = this;
 
+        $rootScope.fieldsCtrl = this;
+
         this.datasetTypesFields = {};
         this.fields = [];
 
@@ -490,20 +520,21 @@ angular.module('checklist-model', [])
                     var type = data.result.dataset_type,
                         fields = data.result.dataset_fields,
                         fieldsLength = fields.length,
-                        result = [],
+                        result = {},
                         languages = data.result.form_languages,
                         languagesLength = languages.length,
-                        f, field, l;
+                        f, field, l, fieldObj;
 
                     for (f = 0; f < fieldsLength; f += 1) {
                         field = fields[f];
+                        fieldObj = {type: field.schema_field_type};
 
                         if (field.schema_field_type === 'fluent' || (field.preset && field.preset.indexOf('fluent') !== -1)) {
                             for (l = 0; l < languagesLength; l += 1) {
-                                result.push(field.field_name + '_' + languages[l]);
+                                result[field.field_name + '_' + languages[l]] = fieldObj;
                             }
                         } else {
-                            result.push(field.field_name);
+                            result[field.field_name] = fieldObj;
                         }
                     }
 
@@ -511,10 +542,10 @@ angular.module('checklist-model', [])
                     addFields(type);
                 },
                 addFields = function(type) {
-                    newFields = newFields.concat(_this.datasetTypesFields[type]);
+                    $.extend(newFields, _this.datasetTypesFields[type]);
                 },
                 promises = [],
-                newFields = [],
+                newFields = {},
                 o, type, p;
 
             for (o = 0; o < selectedDatasetType.length; o += 1) {
@@ -531,15 +562,8 @@ angular.module('checklist-model', [])
 
             $q.all(promises)
                 .then(function() {
-                    _this.fields = [];
-
-                    newFields.forEach(function(val, index, array) {
-                        if (_this.fields.indexOf(val) === -1) {
-                            _this.fields.push(val);
-                        }
-                    });
-
-                    _this.fields.sort();
+                    _this.fields = Object.keys(newFields);
+                    _this.fieldsDef = newFields;
                 });
         });
     }]);
