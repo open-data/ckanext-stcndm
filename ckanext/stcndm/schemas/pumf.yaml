@@ -118,7 +118,7 @@ dataset_fields:
     en: Archive Date
     fr: Date d'archivage
   preset: date
-  schema_field_type: string
+  schema_field_type: date
   schema_multivalued: false
   schema_extras: true
 
@@ -234,6 +234,7 @@ dataset_fields:
     en: Legacy Date
     fr: Date du système antérieur
   preset: date
+  schema_field_type: date
 
 - field_name: top_parent_id
   label:
@@ -302,7 +303,7 @@ dataset_fields:
     en: Discontinued Date
     fr: Date discontinué
   preset: date
-  schema_field_type: string
+  schema_field_type: date
   schema_multivalued: false
   schema_extras: true
 
