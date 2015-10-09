@@ -1,10 +1,11 @@
-{% extends "page.html" %}
+{% ckan_extends %}
 {% set intro = g.site_intro_text %}
 {% set placeholder = _('E.g. environment') %}
 
 {% block subtitle %}{{ _("Statistics Canada - New Dissemination") }}{% endblock %}
 
 {% block primary_content %}
+<div class="row">
 {% block datast_type_list %}
   <ul class="list-unstyled col-md-6">
     {% set schemas = h.get_dataset_types() %}
@@ -29,4 +30,5 @@
         </section>
     </div>
 {% endblock %}
+</div>
 {% endblock %}
