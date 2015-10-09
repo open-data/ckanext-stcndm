@@ -7,7 +7,6 @@ from ckan.plugins.toolkit import (
     ObjectNotFound,
     ValidationError
 )
-import ckanext.stcndm.helpers as stcndm_helpers
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
