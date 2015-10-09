@@ -33,7 +33,7 @@ dataset_fields:
     en: Release Time
     fr: Heure de diffusion
   preset: datetime
-  schema_field_type: string
+  schema_field_type: date
   schema_multivalued: false
   schema_extras: true
 

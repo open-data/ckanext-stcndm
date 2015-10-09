@@ -89,7 +89,7 @@
 
         <div class="form-group col-sm-12">
             <label for="op" class="control-label">Operator:</label>
-            <select id="op" class="form-control" ng-model="advSrchCtrl.operator" ng-disabled="advSrchCtrl.emptyKey">
+            <select id="op" class="form-control" ng-model="advSrchCtrl.operator" ng-disabled="advSrchCtrl.emptyKey" ng-click="advSrchCtrl.onEmptyChanged()">
                 <option value="OR">OR</option>
                 <option value="AND">AND</option>
                 <option value="OR NOT">OR NOT</option>

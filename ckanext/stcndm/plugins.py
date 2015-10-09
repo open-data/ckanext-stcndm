@@ -171,7 +171,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                         desc = lookup_label(lookup, value, lookup_type)
                         index_data_dict[label_en] = desc['en']
                         index_data_dict[label_fr] = desc['fr']
-            elif item.endswith('_date'):
+            elif field_type == 'date':
                 if value:
                     try:
                         date = parse(value, default=bogus_date)
