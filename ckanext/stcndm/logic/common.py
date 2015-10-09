@@ -658,11 +658,6 @@ def register_data_product(context, data_dict):
     })
 
     lc.action.package_create(**copied_fields)
-    try:
-        stcndm_helpers.ensure_release_exists(str(product_id))
-    except ValueError:
-        # We don't create releases for this type of product
-        pass
 
     if product_type == '11' and product_id.endswith('01'):
         lc.action.UpdateDefaultView(cubeId=cube_id, defaultView=product_id)
@@ -733,12 +728,6 @@ def register_non_data_product(context, data_dict):
     }
 
     lc.action.package_create(**product_dict)
-    try:
-        stcndm_helpers.ensure_release_exists(str(product_id))
-    except ValueError:
-        # We don't create releases for this type of product
-        pass
-
     return lc.action.GetProduct(**{'productId': product_id})
 
 

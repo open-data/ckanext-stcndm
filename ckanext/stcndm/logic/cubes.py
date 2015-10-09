@@ -184,8 +184,6 @@ def register_cube(context, data_dict):
         last_publish_status_code='02'
     )
 
-    stcndm_helpers.ensure_release_exists(str(product_id))
-
     # Return our newly created package.
     return lc.action.GetCube(cubeId=product_id)
 
