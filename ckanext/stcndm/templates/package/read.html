@@ -3,7 +3,7 @@
 {% block actions_content_inner %}
   {{ super() }}
   {% if h.scheming_get_dataset_schema(pkg.type).clonable %}
-    <li>{% link_for _('Clone'), controller='ckanext.stcndm.controllers.clone:CloneDatasetController', action='clone', ds_id=pkg.name, class_='btn btn-default' %}</li>
+    <li>{% link_for _('Clone'), controller='ckanext.stcndm.controllers.clone:CloneDatasetController', action='clone', ds_id=pkg.name, class_='btn btn-default', icon='copy' %}</li>
   {% endif %}
 {% endblock %}
 
