@@ -1,10 +1,10 @@
-__author__ = 'marc'
-
 import sys
 import json
 import yaml
 import datetime
 import ckanapi
+
+__author__ = 'marc'
 
 
 def listify(value):

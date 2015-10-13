@@ -164,8 +164,8 @@ dataset_fields:
   schema_extras: true
   tag_validators: ndm_tag_name_validator tag_length_validator
 
-- field_name: display_code
-  preset: ndm_display
+#- field_name: display_code
+#  preset: ndm_display
 
 - field_name: external_authors
   label:

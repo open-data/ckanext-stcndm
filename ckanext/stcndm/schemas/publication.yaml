@@ -125,8 +125,8 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: display_code
-  preset: ndm_display
+#- field_name: display_code
+#  preset: ndm_display
 
 - field_name: tracking_codes
   preset: ndm_tracking

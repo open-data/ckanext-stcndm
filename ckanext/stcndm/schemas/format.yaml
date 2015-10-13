@@ -51,14 +51,8 @@ dataset_fields:
   schema_extras: true
 
 - field_name: format_code
-  label:
-    en: Product Format
-    fr: Format du produit
   preset: ndm_format
   required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
 
 - field_name: url
   label:

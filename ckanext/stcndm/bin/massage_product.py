@@ -365,43 +365,34 @@ def do_release(data_set):
         u'private': False,
         u'type': u'release',
         u'is_correction': '0',
-        u'parent_id': data_set[u'productidnew_bi_strs'],
+        u'parent_id': data_set.get(u'productidnew_bi_strs', u'product_id'),
+        u'reference_period': {
+            u'en': data_set.get(u'refperiod_en_txtm', u''),
+            u'fr': data_set.get(u'refperiod_fr_txtm', u''),
+        },
+        u'publish_status_code': data_set.get(u'lastpublishstatuscode_bi_strs', u''),
+        u'issue_number': data_set.get(u'issueno_bi_strs', u''),
+        u'release_id': data_set.get(u'release_id'),
+        u'name':
+            u'release-{product_id}_{year}_{release_id}'.format(
+                product_id=data_set.get(u'productidnew_bi_strs', u'product_id'),
+                year=datetime.date.today().year,
+                release_id=data_set.get(u'release_id', u'release_id').zfill(3)
+            ).lower(),
+        u'top_parent_id': data_set.get(u'hierarchyid_bi_strm', u'')
     }
+    if not release_out[u'top_parent_id']:
+        release_out[u'top_parent_id'] = data_set.get(u'hierarchyid_bi_strs', u'')
+    if not release_out[u'top_parent_id']:
+        release_out[u'top_parent_id'] = data_set.get(u'productidnew_bi_strs', u'')
 
-    if in_and_def('release_id', data_set):
-        release_out[u'release_id'] = data_set['release_id']
-        release_out[u'name'] = (u'release-{product_id}_{year}_{release_id}'.format(
-            product_id=data_set['productidnew_bi_strs'],
-            year=datetime.date.today().year,
-            release_id=data_set['release_id'].zfill(3)
-        )).lower()
-        release_out[u'title'] = release_out[u'name']
+    if in_and_def(u'display_bi_txtm', data_set):
+        result = code_lookup(u'display_bi_txtm', data_set, display_list)
+        if result:
+            release_out[u'display_code'] = result[0]
 
-    if in_and_def('releasedate_bi_strs', data_set):
-        release_out[u'release_date'] = data_set[u'releasedate_bi_strs']
-
-    temp = {}
-    if in_and_def('refperiod_en_txtm', data_set):
-        temp[u'en'] = data_set['refperiod_en_txtm']
-    if in_and_def('refperiod_fr_txtm', data_set):
-        temp[u'fr'] = data_set['refperiod_fr_txtm']
-    if temp:
-        release_out[u'reference_period'] = temp
-
-    if in_and_def('lastpublishstatuscode_bi_strs', data_set):
-        release_out[u'publish_status_code'] = data_set[u'lastpublishstatuscode_bi_strs']
-
-    if in_and_def('issueno_bi_strs', data_set):
-        release_out[u'issue_number'] = data_set[u'issueno_bi_strs']
-
-    if in_and_def('hierarchyid_bi_strm', data_set):
-        release_out[u'top_parent_id'] = data_set['hierarchyid_bi_strm']
-
-    if in_and_def('hierarchyid_bi_strs', data_set):
-        release_out[u'top_parent_id'] = data_set['hierarchyid_bi_strs']
-
-    if u'top_parent_id' not in release_out:
-        release_out[u'top_parent_id'] = data_set[u'productidnew_bi_strs']
+    if in_and_def(u'releasedate_bi_strs', data_set):
+        release_out[u'release_date'] = data_set.get(u'releasedate_bi_strs')
 
     return release_out
 
@@ -411,58 +402,31 @@ def do_format(data_set):
         u'owner_org': u'statcan',
         u'private': False,
         u'type': u'format',
-        u'name': (u'format-{0}_{1}'.format(
-            data_set[u'productidnew_bi_strs'],
-            data_set[u'formatcode_bi_txtm'])).lower(),
-        u'title': (u'format-{0}_{1}'.format(
-            data_set[u'productidnew_bi_strs'],
-            data_set[u'formatcode_bi_txtm'])).lower(),
-        u'parent_id': data_set[u'productidnew_bi_strs'],
+        u'name':
+            u'format-{product_id}_{format_code}'.format(
+                product_id=data_set.get(u'productidnew_bi_strs', u'product_id'),
+                format_code=data_set.get(u'formatcode_bi_txtm', u'format_code').zfill(2)
+            ).lower(),
+        u'parent_id': data_set.get(u'productidnew_bi_strs', u'product_id'),
+        u'format_code': data_set.get(u'formatcode_bi_txtm', u'format_code'),
+        u'isbn_number': {
+            u'en': data_set.get(u'isbnnum_en_strs', u''),
+            u'fr': data_set.get(u'isbnnum_fr_strs', u'')
+        },
+        u'issn_number': {
+            u'en': data_set.get(u'issnnum_en_strs', u''),
+            u'fr': data_set.get(u'issnnum_fr_strs', u'')
+        },
+        u'url': {
+            u'en': data_set.get(u'url_en_strs', u''),
+            u'fr': data_set.get(u'url_fr_strs', u'')
+        },
+        u'top_parent_id': data_set.get(u'hierarchyid_bi_strm', u'')
     }
-
-    if in_and_def('display_bi_txtm', data_set):
-        result = code_lookup('display_bi_txtm', data_set, display_list)
-        if result:
-            format_out[u'display_code'] = result[0]
-
-    if in_and_def('formatcode_bi_txtm', data_set):
-        format_out[u'format_code'] = data_set[u'formatcode_bi_txtm']
-    # else:
-    #     sys.stderr.write(u'{0} missing format\n'.format(data_set[u'name']))
-        # return None
-
-    temp = {}
-    if in_and_def('isbnnum_en_strs', data_set):
-        temp[u'en'] = data_set[u'isbnnum_en_strs']
-    if in_and_def('isbnnum_fr_strs', data_set):
-        temp[u'fr'] = data_set[u'isbnnum_fr_strs']
-    if temp:
-        format_out[u'isbn_number'] = temp
-
-    temp = {}
-    if in_and_def('issnnum_en_strs', data_set):
-        temp[u'en'] = data_set[u'issnnum_en_strs']
-    if in_and_def('issnnum_fr_strs', data_set):
-        temp[u'fr'] = data_set[u'issnnum_fr_strs']
-    if temp:
-        format_out[u'issn_number'] = temp
-
-    local_temp = {}
-    if in_and_def('url_en_strs', data_set):
-        local_temp[u'en'] = data_set[u'url_en_strs']
-    if in_and_def('url_fr_strs', data_set):
-        local_temp[u'fr'] = data_set[u'url_fr_strs']
-    if local_temp:
-        format_out[u'url'] = local_temp
-
-    if in_and_def('hierarchyid_bi_strm', data_set):
-        format_out[u'top_parent_id'] = data_set['hierarchyid_bi_strm']
-
-    if in_and_def('hierarchyid_bi_strs', data_set):
-        format_out[u'top_parent_id'] = data_set['hierarchyid_bi_strs']
-
-    if u'top_parent_id' not in format_out:
-        format_out[u'top_parent_id'] = data_set[u'productidnew_bi_strs']
+    if not format_out[u'top_parent_id']:
+        format_out[u'top_parent_id'] = data_set.get(u'hierarchyid_bi_strs', u'')
+    if not format_out[u'top_parent_id']:
+        format_out[u'top_parent_id'] = data_set.get(u'productidnew_bi_strs', u'')
 
     return format_out
 

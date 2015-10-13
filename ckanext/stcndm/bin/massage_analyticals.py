@@ -12,9 +12,10 @@ n = 1
 while i < n:
     query_results = rc.action.package_search(
         q='producttypecode_bi_strs:20',
-        sort='productidnew_bi_strs asc',
+        sort='productidnew_bi_strs ASC',
         rows=1000,
-        start=i*1000)
+        start=i*1000
+    )
     n = query_results['count'] / 1000.0
     i += 1
 

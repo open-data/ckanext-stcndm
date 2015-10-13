@@ -116,31 +116,31 @@ presets:
     - label:
         en: Parent
         fr: Parent
-      value: '01'
+      value: '1'
     - label:
         en: Child
         fr: Enfant
-      value: '02'
+      value: '2'
     - label:
         en: Release 1
         fr: Émission 1
-      value: '03'
+      value: '3'
     - label:
         en: Release 2
         fr: Émission 2
-      value: '04'
+      value: '4'
     - label:
         en: Release 3
         fr: Émission 3
-      value: '05'
+      value: '5'
     - label:
         en: Release 4
         fr: Émission 4
-      value: '06'
+      value: '6'
     - label:
         en: Release 5
         fr: Émission 5
-      value: '07'
+      value: '7'
     form_snippet: select.html
     display_snippet: select.html
     validators: scheming_required scheming_choices
@@ -166,15 +166,15 @@ presets:
       - label:
             en: Computer Assisted Interview
             fr: Interview assistée par ordinateur
-        value: '01'
+        value: '1'
       - label:
             en: Computer-assisted personal interview (CAPI)
             fr: Interview sur place assistée par ordinateur (IPAO)
-        value: '06'
+        value: '6'
       - label:
             en: Computer-assisted telephone interview (CATI)
             fr: Interview téléphonique assistée par ordinateur
-        value: '08'
+        value: '8'
       - label:
             en: Electronic data interchange
             fr: Échange de données informatisées
@@ -300,14 +300,6 @@ presets:
           fr: Autre
         value: '9'
 
-- preset_name: ndm_datetime
-  values:
-    schema_field_type: string
-    schema_multivalued: false
-    form_snippet: datetime.html
-    display_snippet: datetime.html
-    validators: scheming_required isodate
-
 - preset_name: ndm_description
   values:
     label:
@@ -356,12 +348,11 @@ presets:
 - preset_name: ndm_format
   values:
     label:
-      en: Resource Format
-      fr: Format de la ressource
+      en: Product Format
+      fr: Format du produit
     form_snippet: select.html
     display_snippet: select.html
     validators: scheming_required # scheming_multiple_choice
-#    output_validators: shortcode_output
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -370,23 +361,23 @@ presets:
       - label:
             en: Database
             fr: Base de données
-        value: '02'
+        value: '2'
       - label:
             en: CD-ROM
             fr: CD-ROM
-        value: '03'
+        value: '3'
       - label:
             en: Diskette
             fr: Disquette
-        value: '04'
+        value: '4'
       - label:
             en: Fax/email
             fr: Télécopieur
-        value: '05'
+        value: '5'
       - label:
             en: PDF
             fr: PDF
-        value: '08'
+        value: '8'
       - label:
             en: Microfiche
             fr: Microfiche
@@ -556,27 +547,27 @@ presets:
       - label:
           en: None
           fr: Aucune
-        value: '00'
+        value: '0'
       - label:
           en: Draft
           fr: Ébauche
-        value: '02'
+        value: '2'
       - label:
           en: Working Copy
           fr: Copie de travail
-        value: '04'
+        value: '4'
       - label:
           en: Authorized
           fr: Autorisé
-        value: '06'
+        value: '6'
       - label:
           en: Verified
           fr: Vérifié
-        value: '08'
+        value: '8'
       - label:
           en: Loading
           fr: En chargement
-        value: '09'
+        value: '9'
       - label:
           en: Loaded
           fr: Chargé
@@ -748,39 +739,39 @@ presets:
       - label:
           en: Administrative Data Division (ADD)
           fr: Division des données administratives (DDA)
-        value: '01'
+        value: '1'
       - label:
           en: Agriculture (AGRI)
           fr: Agriculture (AGRI)
-        value: '02'
+        value: '2'
       - label:
           en: Business Register (BRD)
           fr: Registre des entreprises (DRE)
-        value: '03'
+        value: '3'
       - label:
           en: Canadian Centre for Justice Statistics (CCJS)
           fr: Centre canadien de la statistique juridique (CCSJ)
-        value: '04'
+        value: '4'
       - label:
           en: Census Management Office (CMO)
           fr: Bureau de gestion du recensement (BGR)
-        value: '05'
+        value: '5'
       - label:
           en: Census Operations (COD)
           fr: Opérations du recensement (DOR)
-        value: '06'
+        value: '6'
       - label:
           en: Centre for Special Business Projects (CSBP)
           fr: Centre des projets spéciaux sur les entreprises (CPSE)
-        value: '07'
+        value: '7'
       - label:
           en: Consumer Prices (CPD)
           fr: Prix à la consommation (DPC)
-        value: '08'
+        value: '8'
       - label:
           en: Demography (DEM)
           fr: Démographie (DEM)
-        value: '09'
+        value: '9'
       - label:
           en: Economic Analysis (EAD)
           fr: Analyse économique (DAE)
@@ -914,39 +905,39 @@ presets:
       - label:
             en: Approved
             fr: Approuvé
-        value: '01'
+        value: '1'
       - label:
             en: Revised
             fr: Modifié
-        value: '02'
+        value: '2'
       - label:
             en: Show in Beta
             fr: Voir en version bêta
-        value: '03'
+        value: '3'
       - label:
             en: Completed
             fr: Complété
-        value: '04'
+        value: '4'
       - label:
             en: Verified
             fr: Vérifié
-        value: '05'
+        value: '5'
       - label:
             en: Reviewed
             fr: Évalué
-        value: '06'
+        value: '6'
       - label:
             en: Tagged
             fr: Étiqueté
-        value: '07'
+        value: '7'
       - label:
             en: Flagged
             fr: Signalé
-        value: '08'
+        value: '8'
       - label:
             en: Waiting - IT
             fr: En attente - TI
-        value: '09'
+        value: '9'
       - label:
             en: Waiting - Business
             fr: En attente - Entreprise

@@ -54,6 +54,9 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
+- field_name: display_code
+  preset: ndm_display
+
 - field_name: parent_id
   label:
     en: Parent Product ID
