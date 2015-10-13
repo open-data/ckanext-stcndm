@@ -8,7 +8,10 @@ import ckan.model as model
 import ckan.plugins.toolkit as toolkit
 from ckan.common import c
 
-from ckanext.scheming.helpers import scheming_get_preset, scheming_dataset_schemas
+from ckanext.scheming.helpers import (
+    scheming_get_preset,
+    scheming_dataset_schemas
+)
 
 
 _get_action = toolkit.get_action
@@ -360,12 +363,16 @@ def next_correction_id():
         return u'2000'
 
 
-def ensure_release_exists(product_id, context=None):
+def ensure_release_exists(product_id, context=None, ref_period=None):
     """
     Ensure that a release dataset exists for the given product_id.
 
     :param product_id: The parent product ID.
     :type product_id: str
+    :param context: The CKAN request context (if it exists)
+    :type context: dict or None
+    :param ref_period: The (data) reference period for the release, if one
+                       exists.
     """
     allowed_datasets = (
         'cube',
@@ -431,6 +438,6 @@ def ensure_release_exists(product_id, context=None):
         release_id='001',
         parent_id=result['product_id_new'],
         top_parent_id=result['product_id_new'],
-        publish_status_code='02',
+        publish_status_code='2',
         is_correction='0'
     )
