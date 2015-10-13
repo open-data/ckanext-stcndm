@@ -235,8 +235,8 @@
         <field name="a_to_z_alias_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
         <field name="a_to_z_alias_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="admin_notes" type="text" indexed="true" stored="true" multiValued="false"/>
-        <field name="admin_notes_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="admin_notes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="admin_notes_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="admin_notes_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="archive_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="archive_status_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="archive_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
@@ -338,6 +338,7 @@
         <field name="data_reference_period" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="replaced_products" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="resource_url" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="sgc_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="status_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>

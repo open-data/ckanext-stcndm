@@ -34,44 +34,41 @@ while i < n:
         for e in line['extras']:
             line[e['key']] = e['value']
 
-        old_content_type = line['tmdroplfld_bi_tmtxtm']
-        if old_content_type in ('extras_archived_bi_strs',
-                                'extras_tmtaxdisp_en_tmtxtm',
-                                'extras_tmregorg_bi_tmtxtm',
-                                'extras_dispandtrack_bi_txtm',
-                                'extras_producttype_en_strs',
-                                'extras_geolevel_en_txtm',
-                                'extras_format_en_txtm',
-                                'extras_statusf_en_strs',
-                                'extras_display_bi_txtm'):
+        old_content_type = line.get('tmdroplfld_bi_tmtxtm')
+        if old_content_type in (
+                'extras_archived_bi_strs',
+                'extras_tmtaxdisp_en_tmtxtm',
+                'extras_tmregorg_bi_tmtxtm',
+                'extras_dispandtrack_bi_txtm',
+                'extras_producttype_en_strs',
+                'extras_geolevel_en_txtm',
+                'extras_format_en_txtm',
+                'extras_statusf_en_strs',
+                'extras_display_bi_txtm'
+        ):
             continue  # skip the tmshorlist that are handled separately
 
-        line_out = {u'owner_org': u'statcan',
-                    u'private': False,
-                    u'type': u'codeset'}
-
-        data = line['tmdroplopt_bi_tmtxtm']
+        data = line.get(u'tmdroplopt_bi_tmtxtm', u'')
         english_value, french_value, code_value, bogon = map(unicode.strip, (data + u'|||').split(u'|', 3))
         if not code_value:
             sys.stderr.write('missing code value for {0} {1}\n'.format(old_content_type, data))
             continue
         else:
-            codeset_type = lookup[line['tmdroplfld_bi_tmtxtm']]
-            line_out['name'] = u'{0}-{1}'.format(codeset_type, code_value)
-            line_out['codeset_type'] = lookup[old_content_type]
-            line_out['codeset_value'] = code_value
-            line_out['title'] = {
-                u'en': english_value,
-                u'fr': french_value
+            codeset_type = lookup.get(line.get('tmdroplfld_bi_tmtxtm'))
+            line_out = {
+                u'owner_org': u'statcan',
+                u'private': False,
+                u'type': u'codeset',
+                u'name': u'{0}-{1}'.format(codeset_type, code_value),
+                u'codeset_type': lookup[old_content_type],
+                u'codeset_value': code_value,
+                u'title': {
+                    u'en': english_value,
+                    u'fr': french_value
+                },
+                u'license_title': line.get(u'license_title', u''),
+                u'license_url': line.get(u'license_url', u''),
+                u'license_id': line.get(u'license_id', u'')
             }
-
-        if 'license_title' in line:
-            line_out['license_title'] = line['license_title']
-
-        if 'license_url' in line:
-            line_out['license_url'] = line['license_url']
-
-        if 'license_id' in line:
-            line_out['license_id'] = line['license_id']
 
         print json.dumps(line_out)
