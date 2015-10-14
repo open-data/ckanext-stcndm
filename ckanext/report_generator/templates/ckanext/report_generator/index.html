@@ -162,7 +162,7 @@
     (function(window, angular) {'use strict';
       angular.module('services.config', [])
           .constant('configuration', {
-              ckanInstance: '',
+              ckanInstance: '{{c.ckan_url}}',
               solrCore: '{{c.solr_url}}'
           });
     })(window, angular);
