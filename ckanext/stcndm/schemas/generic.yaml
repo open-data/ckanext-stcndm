@@ -1,10 +1,11 @@
 scheming_version: 1
-about: 'Statistics Canada Dissemination: Conferences'
+about: 'Statistics Canada Dissemination: Generic Publications'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Conferences
-  fr: Conférences
-dataset_type: conference
+  en: Generic Publications
+  fr: Publications génériques
+clonable: true
+dataset_type: generic
 form_languages:
 - en
 - fr
@@ -43,7 +44,7 @@ dataset_fields:
 - field_name: name
   preset: ndm_name
   # follow our custom name generation with default package name validators
-  validators: conference_create_name
+  validators:  generic_create_name
     not_empty unicode name_validator package_name_validator
 
 - field_name: product_type_code
@@ -53,13 +54,10 @@ dataset_fields:
   preset: select
   choices:
     - label:
-        en: Conference
-        fr: Conférence
-      value: '22'
+        en: Generic Publication
+        fr: Publication générique
+      value: '26'
   required: true
-  schema_field_type: code
-  schema_multivalued: false
-  schema_extras: true
 
 - field_name: related_products
   preset: ndm_related_products
@@ -70,11 +68,14 @@ dataset_fields:
 - field_name: feature_weight
   preset: ndm_feature_weight
 
+- field_name: archive_status_code
+  preset: ndm_archive_status
+
 - field_name: archive_date
   preset: ndm_archive_date
 
-- field_name: archive_status_code
-  preset: ndm_archive_status
+#- field_name: display_code
+#  preset: ndm_display
 
 - field_name: tracking_codes
   preset: ndm_tracking
@@ -82,8 +83,8 @@ dataset_fields:
 - field_name: digital_object_identifier
   preset: ndm_digital_object_identifier
 
-- field_name: array_terminated_code
-  preset: ndm_array_terminated
+#- field_name: array_terminated_code
+#  preset: ndm_array_terminated
 
 #- field_name: default_view_id
 #  label:
@@ -129,17 +130,26 @@ dataset_fields:
     en: Last Release Time
     fr: Heure de dernière diffusion
 
-- field_name: legacy_date
-  preset: ndm_legacy_date
+#- field_name: legacy_date
+#  label:
+#    en: Legacy Date
+#    fr: Date du système antérieur
+#  preset: date
+#  schema_field_type: date
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id
 
-- field_name: price
-  preset: ndm_price
+#- field_name: price
+#  label:
+#    en: Price
+#    fr: Prix
 
-- field_name: price_note
-  preset: ndm_price_note
+#- field_name: price_note
+#  label:
+#    en: Price Note
+#    fr: Note sur le prix
+#  preset: fluent_text
 
 - field_name: product_id_new
   preset: ndm_product_id_new
@@ -177,3 +187,13 @@ dataset_fields:
 
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes
+
+#- field_name: volume_and_number
+#  label:
+#    en: Volume and Number
+#    fr: Volume et nombre
+
+#- field_name: url
+#  label:
+#    en: URL
+#    fr: URL

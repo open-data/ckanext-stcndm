@@ -133,6 +133,15 @@ dataset_fields:
 - field_name: last_publish_status_code
   preset: ndm_publish_status
 
+- field_name: last_release_date
+  preset: ndm_release_date
+  label:
+    en: Last Release Date
+    fr: Date de dernière diffusion
+  label_time:
+    en: Last Release Time
+    fr: Heure de dernière diffusion
+
 #- field_name: legacy_date
 #  label:
 #    en: Legacy Date
