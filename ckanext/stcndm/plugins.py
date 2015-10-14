@@ -60,6 +60,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/service.yaml',
                 'ckanext.stcndm:schemas/subject.yaml',
                 'ckanext.stcndm:schemas/survey.yaml',
+                'ckanext.stcndm:schemas/video.yaml',
                 'ckanext.stcndm:schemas/view.yaml'
             ]),
             'scheming.presets': '\n'.join([
@@ -282,6 +283,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "subject_create_name": validators.subject_create_name,
             "survey_create_name": validators.survey_create_name,
             "valid_parent_slug": validators.valid_parent_slug,
+            "video_create_name": validators.video_create_name,
             "view_create_name": validators.view_create_name,
         }
 

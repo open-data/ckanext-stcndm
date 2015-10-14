@@ -421,7 +421,7 @@ presets:
     form_snippet: date.html
     display_snippet: date.html
     validators: scheming_required isodate
-    schema_field_type: string
+    schema_field_type: date
     schema_multivalued: false
     schema_extras: true
 
@@ -697,7 +697,7 @@ presets:
     form_snippet: date.html
     display_snippet: date.html
     validators: scheming_required isodate
-    schema_field_type: string
+    schema_field_type: date
     schema_multivalued: true
     schema_extras: true
 
@@ -1420,7 +1420,7 @@ presets:
       en: URL
       fr: URL
     form_snippet: fluent_text.html
-    display_snippet: fluent_text.html url.html
+    display_snippet: fluent_text.html
     error_snippet: fluent_text.html
     validators: fluent_text
     output_validators: fluent_text_output
