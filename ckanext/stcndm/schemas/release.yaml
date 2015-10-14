@@ -16,14 +16,7 @@ languages_label:
 dataset_fields:
 
 - field_name: owner_org
-  label:
-    en: Organisation
-    fr: Organisation
-  preset: dataset_organization
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
+  preset: ndm_owner_org
 
 - field_name: release_date
   label:
@@ -67,13 +60,7 @@ dataset_fields:
   schema_extras: true
 
 - field_name: top_parent_id
-  label:
-    en: Top Parent Product ID
-    fr: ID du produit parent de plus haut niveau
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_top_parent_id
 
 - field_name: publish_status_code
   preset: ndm_publish_status
@@ -104,16 +91,10 @@ dataset_fields:
       value: '1'
 
 - field_name: name
+  preset: ndm_name
   # follow our custom name generation validator with default package name validators
   validators: release_create_name
     not_empty unicode package_name_validator
-  label:
-    en: Dataset Slug
-    fr: Slug du dataset
-  form_snippet: null
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
 
 - field_name: title
   validators: release_create_name
@@ -131,4 +112,3 @@ dataset_fields:
   schema_extras: true
   form_attrs:
       disabled: disabled
-

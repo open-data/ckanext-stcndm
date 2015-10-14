@@ -18,41 +18,13 @@ lookup_key: product_id_new
 dataset_fields:
 
 - field_name: owner_org
-  help_text:
-    en: The organization directly responsible for the dataset and for metadata maintenance.
-    fr: Le nom de l’organisation directement responsable des ensembles de donnée et de la maintenance des métadonnées
-  label:
-    en: Publisher
-    fr: Éditeur
-  preset: dataset_organization
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
-
-#- field_name: owner_org
-#  label:
-#    en: Organization
-#    fr: Organisation
-#  create_validators: default_from_placeholder
-#  form_attrs:
-#      disabled: disabled
-#  form_placeholder: statcan
-#  schema_field_type: string
-#  schema_multivalued: false
-#  schema_extras: false
-
-#- field_name: private
-#  preset: ndm_visibility
+  preset: ndm_owner_org
 
 - field_name: name
+  preset: ndm_name
   # follow our custom name generation with default package name validators
   validators: cube_create_name
     not_empty unicode name_validator package_name_validator
-  form_snippet: null
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
 
 - field_name: admin_notes
   preset: ndm_admin_notes
@@ -64,43 +36,19 @@ dataset_fields:
   preset: ndm_description
 
 - field_name: content_type_codes
-  label:
-    en: Content Type
-    fr: Type de contenu
-  preset: codeset_multiple_select
-  codeset_type: content_type
-  schema_extras: true
+  preset: ndm_content_type_codes
 
 - field_name: tracking_codes
   preset: ndm_tracking
 
 - field_name: geolevel_codes
-  label:
-    en: Geolevel
-    fr: Geolevel
-  preset: codeset_multiple_select
-  codeset_type: geolevel
-  schema_extras: true
+  preset: ndm_geolevel_codes
 
 - field_name: geodescriptor_codes
-  label:
-    en: Geodescriptors
-    fr: Géodescriptors
-  preset: shortcode_multivalue
-  lookup: geodescriptor
-  schema_field_type: code
-  schema_multivalued: true
-  schema_extras: true
+  preset: ndm_geodescriptor_codes
 
 - field_name: subject_codes
-  label:
-    en: Subject
-    fr: Sujet
-  preset: shortcode_multivalue
-  lookup: subject
-  schema_field_type: code
-  schema_multivalued: true
-  schema_extras: true
+  preset: ndm_subject_codes
 
 #- field_name: format_code
 #  preset: ndm_format
@@ -121,23 +69,10 @@ dataset_fields:
   schema_extras: true
 
 - field_name: related_products
-  label:
-    en: Related Products
-    fr: Produits reliés
-  preset: repeating_text
-  form_blanks: 3
-  schema_field_type: string
-  schema_extras: true
+  preset: ndm_related_products
 
 - field_name: thesaurus_terms
-  label:
-    en: STC Thesaurus Terms
-    fr: Dictionnaire de synonymes de STC
-  preset: fluent_tags
-  schema_field_type: fluent
-  schema_multivalued: true
-  schema_extras: true
-  tag_validators: ndm_tag_name_validator tag_length_validator
+  preset: ndm_thesaurus_terms
 
 #- field_name: feature_weight
 #  label:
@@ -145,13 +80,7 @@ dataset_fields:
 #    fr: Poids
 
 - field_name: archive_date
-  label:
-    en: Archive Date
-    fr: Date d'archivage
-  preset: date
-  schema_field_type: date
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_archive_date
 
 - field_name: archive_status_code
   preset: ndm_archive_status
@@ -167,22 +96,8 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-#- field_name: dimension_group_codes
-#  label:
-#    en: Dimension Group
-#    fr: Groupe de dimension
-#  preset: codeset_multiple_select
-#  codeset_type: dimension_group
-
 - field_name: dimension_members
-  label:
-    en: Dimension Member
-    fr: Membre de dimension
-  preset: fluent_tags
-  schema_field_type: fluent
-  schema_multivalued: true
-  schema_extras: true
-  tag_validators: ndm_tag_name_validator tag_length_validator
+  preset: ndm_dimension_members
 
 #- field_name: display_code
 #  preset: ndm_display
@@ -193,39 +108,16 @@ dataset_fields:
 #    fr: Auteur externe
 
 - field_name: frc
-  label:
-    en: FRC
-    fr: FRC
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_frc
 
 - field_name: frequency_codes
-  label:
-    en: Frequency
-    fr: Fréquence
-  preset: codeset_multiple_select
-  codeset_type: frequency
-  schema_extras: true
+  preset: ndm_frequency_codes
 
 - field_name: history_notes
-  label:
-    en: History Notes
-    fr: Notes historiques
-  preset: fluent_markdown
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_history_notes
 
 - field_name: survey_source_codes
-  label:
-    en: Survey Source
-    fr: Source de songage
-  preset: shortcode_multivalue
-  lookup: survey
-  schema_field_type: code
-  schema_multivalued: true
-  schema_extras: true
+  preset: ndm_survey_source_codes
 
 #- field_name: internal_author
 #  label:
@@ -233,24 +125,10 @@ dataset_fields:
 #    fr: Auteur interne
 
 - field_name: internal_contacts
-  label:
-    en: Internal Contact Name
-    fr: Nom de personne ressource interne
-  preset: repeating_text
-  form_blanks: 3
-  schema_field_type: string
-  schema_multivalued: true
-  schema_extras: true
+  preset: ndm_internal_contacts
 
 - field_name: keywords
-  label:
-    en: Keywords
-    fr: Mots clés
-  preset: fluent_tags
-  schema_field_type: fluent
-  schema_multivalued: true
-  schema_extras: true
-  tag_validators: ndm_tag_name_validator tag_length_validator
+  preset: ndm_keywords
 
 - field_name: last_publish_status_code
   preset: ndm_publish_status
@@ -263,12 +141,7 @@ dataset_fields:
 #  schema_field_type: date
 
 - field_name: top_parent_id
-  label:
-    en: Top Parent ID
-    fr: ID du parent du plus haut niveau
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_top_parent_id
 
 #- field_name: price
 #  label:
@@ -282,20 +155,10 @@ dataset_fields:
 #  preset: fluent_text
 
 - field_name: product_id_new
-  label:
-    en: Product ID New
-    fr: ID produit nouveau
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_product_id_new
 
 - field_name: product_id_old
-  label:
-    en: Product ID Old
-    fr: ID produit ancien
-  schema_field_type: string
-  schema_multivalued: true
-  schema_extras: true
+  preset: ndm_product_id_old
 
 #- field_name: publication_year
 #  label:
@@ -322,43 +185,22 @@ dataset_fields:
 #  schema_extras: true
 
 - field_name: replaced_products
-  label:
-    en: Replaced Products
-    fr: Produits remplacés
-  preset: repeating_text
-  form_blanks: 3
-  schema_field_type: string
-  schema_multivalued: true
-  schema_extras: true
+  preset: ndm_replaced_products
 
 - field_name: status_code
   preset: ndm_status
 
 - field_name: discontinued_code
-  label:
-    en: Discontinued/Not Available
-    fr: Discontinué/Non Disponible
-  preset: ndm_boolean
-  schema_extras: true
+  preset: ndm_discontinued_code
 
 - field_name: discontinued_date
-  label:
-    en: Discontinued Date
-    fr: Date discontinué
-  preset: date
-  schema_field_type: date
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_discontinued_date
 
 - field_name: census_grouping_code
   preset: ndm_census_grouping
 
 - field_name: load_to_olc_code
-  label:
-    en: Load to OLC
-    fr: Charger au OLC
-  preset: ndm_boolean
-  schema_extras: true
+  preset: ndm_load_to_olc_code
 
 #- field_name: subjectold_code
 #  label:
@@ -367,14 +209,7 @@ dataset_fields:
 #  preset: shortcode_multivalue
 
 - field_name: url
-  label:
-    en: URL
-    fr: URL
-  preset: fluent_text
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: false
-  display_snippet: url.html
+  preset: ndm_url
 
 #- field_name: volume_and_number
 #  label:

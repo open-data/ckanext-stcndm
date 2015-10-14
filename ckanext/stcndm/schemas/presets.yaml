@@ -4,26 +4,6 @@ about_url:
 
 presets:
 
-- preset_name: codeset_multiple_select
-  values:
-    schema_field_type: code
-    schema_multivalued: true
-    schema_extras: true
-    form_snippet: codeset_multiple_select.html
-    display_snippet: codeset_multiple_choice.html
-    validators: ignore_missing codeset_multiple_choice
-    output_validators: scheming_multiple_choice_output
-    lookup: codeset
-
-- preset_name: codeset_select
-  values:
-    schema_field_type: code
-    schema_multivalued: false
-    form_snippet: codeset_select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
-    lookup: codeset
-
 - preset_name: ndm_admin_notes
   values:
     label:
@@ -40,6 +20,18 @@ presets:
     error_snippet: fluent_text.html
     validators: fluent_text
     output_validators: fluent_text_output
+
+- preset_name: ndm_archive_date
+  values:
+    label:
+      en: Archive Date
+      fr: Date d'archivage
+    form_snippet: date.html
+    display_snippet: date.html
+    validators: scheming_required isodate
+    schema_field_type: date
+    schema_multivalued: false
+    schema_extras: true
 
 - preset_name: ndm_archive_status
   values:
@@ -149,6 +141,26 @@ presets:
     schema_multivalued: false
     schema_extras: true
 
+- preset_name: ndm_codeset_multiple_select
+  values:
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+    form_snippet: codeset_multiple_select.html
+    display_snippet: codeset_multiple_choice.html
+    validators: ignore_missing codeset_multiple_choice
+    output_validators: scheming_multiple_choice_output
+    lookup: codeset
+
+- preset_name: ndm_codeset_select
+  values:
+    schema_field_type: code
+    schema_multivalued: false
+    form_snippet: codeset_select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: codeset
+
 - preset_name: ndm_collection_methods
   values:
     label:
@@ -228,6 +240,21 @@ presets:
             fr: Interview téléphonique (sans ordinateur)
         value: '25'
 
+- preset_name: ndm_content_type_codes
+  values:
+    label:
+      en: Content Type
+      fr: Type de contenu
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+    form_snippet: codeset_multiple_select.html
+    display_snippet: codeset_multiple_choice.html
+    validators: ignore_missing codeset_multiple_choice
+    output_validators: scheming_multiple_choice_output
+    lookup: codeset
+    codeset_type: content_type
+
 - preset_name: ndm_correction_impact_level
   values:
     label:
@@ -249,6 +276,19 @@ presets:
           en: High
           fr: Haut
         value: '1'
+
+- preset_name: ndm_correction_id_code
+  values:
+    label:
+      en: Correction ID Code
+      fr: Code ID de correction
+    form_snippet: shortcode_multivalue.html
+    display_snippet: shortcode_multivalue.html
+    validators: shortcode_validate
+    output_validators: shortcode_output
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
 
 - preset_name: ndm_correction_type
   values:
@@ -319,6 +359,72 @@ presets:
     validators: fluent_text
     output_validators: fluent_text_output
 
+- preset_name: ndm_digital_object_identifier
+  values:
+    label:
+      en: Digital Object Identifier
+      fr: Identificateur d'objet numérique
+    form_snippet: fluent_text.html
+    display_snippet: fluent_text.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
+
+- preset_name: ndm_discontinued_code
+  values:
+    label:
+      en: Discontinued/Not Available
+      fr: Discontinué/Non Disponible
+    choices:
+      - label:
+          en: 'False'
+          fr: 'Faux'
+        value: '0'
+      - label:
+          en: 'True'
+          fr: 'Vrai'
+        value: '1'
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalue: false
+    schema_extras: true
+
+- preset_name: ndm_dimension_members
+  values:
+    label:
+      en: Dimension Members
+      fr: Membres de dimension
+    form_snippet: fluent_tags.html
+    display_snippet: fluent_tags.html
+    error_snippet: fluent_text.html
+    validators: fluent_tags
+    output_validators: fluent_tags_output
+    tag_validators: ndm_tag_name_validator tag_length_validator
+    form_attrs:
+      data-module: autocomplete
+      data-module-tags:
+    schema_field_type: fluent
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_discontinued_date
+  values:
+    label:
+      en: Discontinued Date
+      fr: Date discontinué
+    form_snippet: date.html
+    display_snippet: date.html
+    validators: scheming_required isodate
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
+
 - preset_name: ndm_display
   values:
     label:
@@ -344,6 +450,29 @@ presets:
           en: Hide navigation link
           fr: Masquer le lien de navigation
         value: '3'
+
+- preset_name: ndm_external_authors
+  values:
+    label:
+      en: External Authors
+      fr: Auteurs externes
+    form_snippet: repeating_text.html
+    display_snippet: repeating_text.html
+    validators: repeating_text
+    output_validators: repeating_text_output
+    form_blanks: 3
+    schema_field_type: string
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_feature_weight
+  values:
+    label:
+      en: Feature Weight
+      fr: Poids
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
 
 - preset_name: ndm_format
   values:
@@ -411,6 +540,133 @@ presets:
             fr: ETF
         value: '19'
 
+- preset_name: ndm_frc
+  values:
+    label:
+      en: FRC
+      fr: FRC
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
+
+- preset_name: ndm_frequency_codes
+  values:
+    label:
+      en: Frequency
+      fr: Fréquence
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+    form_snippet: codeset_multiple_select.html
+    display_snippet: codeset_multiple_choice.html
+    validators: ignore_missing codeset_multiple_choice
+    output_validators: scheming_multiple_choice_output
+    lookup: codeset
+    codeset_type: frequency
+
+- preset_name: ndm_geodescriptor_codes
+  values:
+    label:
+      en: Geo Specific
+      fr: Géo spécifique
+    form_snippet: shortcode_multivalue.html
+    display_snippet: shortcode_multivalue.html
+    validators: shortcode_validate
+    output_validators: shortcode_output
+    lookup: geodescriptor
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_geolevel_codes
+  values:
+    label:
+      en: Geolevel
+      fr: Geolevel
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+    form_snippet: codeset_multiple_select.html
+    display_snippet: codeset_multiple_choice.html
+    validators: ignore_missing codeset_multiple_choice
+    output_validators: scheming_multiple_choice_output
+    lookup: codeset
+    codeset_type: geolevel
+
+- preset_name: ndm_history_notes
+  values:
+    label:
+      en: History Notes
+      fr: Notes historiques
+    form_snippet: fluent_markdown.html
+    display_snippet: fluent_markdown.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+    schema_field_type: fluent
+    schema_multivalued: false
+    schema_extras: true
+
+- preset_name: ndm_internal_authors
+  values:
+    label:
+      en: Internal Authors
+      fr: Auteurs internes
+    form_snippet: repeating_text.html
+    display_snippet: repeating_text.html
+    validators: repeating_text
+    output_validators: repeating_text_output
+    form_blanks: 3
+    schema_field_type: string
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_internal_contacts
+  values:
+    label:
+      en: Internal Contact Names
+      fr: Nom de personnes ressource internes
+    form_snippet: repeating_text.html
+    display_snippet: repeating_text.html
+    validators: repeating_text
+    output_validators: repeating_text_output
+    form_blanks: 3
+    schema_field_type: string
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_isbn_number
+  values:
+    label:
+      en: ISBN Number
+      fr: Numéro ISBN
+    form_snippet: fluent_text.html
+    display_snippet: fluent_text.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+    schema_field_type: fluent
+    schema_multivalued: false
+    schema_extras: true
+
+- preset_name: ndm_keywords
+  values:
+    label:
+      en: Keywords
+      fr: Mots clés
+    form_snippet: fluent_tags.html
+    display_snippet: fluent_tags.html
+    error_snippet: fluent_text.html
+    validators: fluent_tags
+    output_validators: fluent_tags_output
+    tag_validators: ndm_tag_name_validator tag_length_validator
+    form_attrs:
+      data-module: autocomplete
+      data-module-tags:
+    schema_field_type: fluent
+    schema_multivalued: true
+    schema_extras: true
+
 - preset_name: ndm_language
   values:
     label:
@@ -433,41 +689,87 @@ presets:
         fr: Francais
       value: 'fr'
 
+- preset_name: ndm_legacy_date
+  values:
+    label:
+      en: Legacy Date
+      fr: Date du système antérieur
+    form_snippet: date.html
+    display_snippet: date.html
+    validators: scheming_required isodate
+    schema_field_type: string
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_load_to_olc_code
+  values:
+    label:
+      en: Load to OLC
+      fr: Charger au OLC
+    choices:
+      - label:
+          en: 'False'
+          fr: 'Faux'
+        value: '0'
+      - label:
+          en: 'True'
+          fr: 'Vrai'
+        value: '1'
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+
+- preset_name: ndm_name
+  values:
+    label:
+      en: Internal Unique ID
+      fr: ID interne unique
+    form_snippet: null
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: false
+
 - preset_name: ndm_owner_org
   values:
     label:
       en: Organization
       fr: Organisation
-    create_validators: default_value
+#    create_validators: default_value
     form_attrs:
         disabled: disabled
     form_placeholder: statcan
     schema_field_type: string
     schema_multivalued: false
     schema_extras: false
+    validators: owner_org_validator unicode
+    form_snippet: organization.html
 
-- preset_name: ndm_visibility
+- preset_name: ndm_price
   values:
     label:
-      en: Visibility
-      fr: Visibilité
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
-    lookup: preset
-    required: true
-    schema_field_type: boolean
+      en: Price
+      fr: Prix
+    schema_field_type: string
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_price_note
+  values:
+    label:
+      en: Price Note
+      fr: Note sur le prix
+    form_snippet: fluent_text.html
+    display_snippet: fluent_text.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+    schema_field_type: fluent
     schema_multivalued: false
-    schema_extras: false
-    choices:
-    - label:
-        en: Public
-        fr: Publique
-      value: false
-    - label:
-        en: Private
-        fr: Privé
-      value: true
+    schema_extras: true
 
 - preset_name: ndm_product
   values:
@@ -530,6 +832,34 @@ presets:
           en: Publications with repeating titles (Generic)
           fr: Publications avec des titres répétitifs (générique)
         value: '26'
+
+- preset_name: ndm_product_id_new
+  values:
+    label:
+      en: Product ID New
+      fr: ID produit nouveau
+    required: true
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
+
+- preset_name: ndm_product_id_old
+  values:
+    label:
+      en: Product ID Old
+      fr: ID produit ancien
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
+
+- preset_name: ndm_publication_year
+  values:
+    label:
+      en: Publication Year
+      fr: Année de publication
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
 
 - preset_name: ndm_publish_status
   values:
@@ -597,6 +927,43 @@ presets:
           fr: Figé
         value: '99'
 
+- preset_name: ndm_related_products
+  values:
+    label:
+      en: Related Products
+      fr: Produits reliés
+    form_snippet: repeating_text.html
+    display_snippet: repeating_text.html
+    validators: repeating_text
+    output_validators: repeating_text_output
+    form_blanks: 3
+    schema_field_type: string
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_replaced_products
+  values:
+    label:
+      en: Replaced Products
+      fr: Produits remplacés
+    form_snippet: repeating_text.html
+    display_snippet: repeating_text.html
+    validators: repeating_text
+    output_validators: repeating_text_output
+    form_blanks: 3
+    schema_field_type: string
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_shortcode_multivalue
+  values:
+    form_snippet: shortcode_multivalue.html
+    display_snippet: shortcode_multivalue.html
+    validators: shortcode_validate
+    output_validators: shortcode_output
+    schema_field_type: code
+    schema_multivalued: true
+
 - preset_name: ndm_status
   values:
     label:
@@ -658,6 +1025,33 @@ presets:
           fr: Dernier numéro completé
           en: Last completed issue
         value: '90'
+
+- preset_name: ndm_subject_codes
+  values:
+    label:
+      en: Subject
+      fr: Sujet
+    form_snippet: shortcode_multivalue.html
+    display_snippet: shortcode_multivalue.html
+    validators: shortcode_validate
+    output_validators: shortcode_output
+    lookup: subject
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_subjectold_codes
+  values:
+    label:
+      en: Old subjects
+      fr: Anciens sujets
+    form_snippet: repeating_text.html
+    display_snippet: repeating_text.html
+    validators: repeating_text
+    output_validators: repeating_text_output
+    schema_field_type: string
+    schema_multivalued: true
+    schema_extras: true
 
 - preset_name: ndm_subject_display
   values:
@@ -849,6 +1243,20 @@ presets:
           fr: Tourisme et le Centre de la statistique de l'éducation (DTCSE)
         value: '28'
 
+- preset_name: ndm_survey_source_codes
+  values:
+    label:
+      en: Source
+      fr: Source
+    form_snippet: shortcode_multivalue.html
+    display_snippet: shortcode_multivalue.html
+    validators: shortcode_validate
+    output_validators: shortcode_output
+    lookup: survey
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+
 - preset_name: ndm_survey_status
   values:
     label:
@@ -871,6 +1279,24 @@ presets:
           fr: Inactif
         value: '2'
 
+- preset_name: ndm_thesaurus_terms
+  values:
+    label:
+      en: STC Thesaurus Terms
+      fr: Dictionnaire de synonymes de STC
+    form_snippet: fluent_tags.html
+    display_snippet: fluent_tags.html
+    error_snippet: fluent_text.html
+    validators: fluent_tags
+    output_validators: fluent_tags_output
+    tag_validators: ndm_tag_name_validator tag_length_validator
+    form_attrs:
+      data-module: autocomplete
+      data-module-tags: ""
+    schema_field_type: fluent
+    schema_multivalued: true
+    schema_extras: true
+
 - preset_name: ndm_title
   values:
     label:
@@ -887,6 +1313,15 @@ presets:
     error_snippet: fluent_text.html
     validators: fluent_text
     output_validators: fluent_text_output
+
+- preset_name: ndm_top_parent_id
+  values:
+    label:
+      en: Top Parent ID
+      fr: ID du parent du plus haut niveau
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
 
 - preset_name: ndm_tracking
   values:
@@ -979,11 +1414,48 @@ presets:
             fr: En attente - rgtabv
         value: '19'
 
-- preset_name: shortcode_multivalue
+- preset_name: ndm_url
   values:
-    form_snippet: shortcode_multivalue.html
-    display_snippet: shortcode_multivalue.html
-    validators: shortcode_validate
-    output_validators: shortcode_output
-    schema_field_type: code
-    schema_multivalued: true
+    label:
+      en: URL
+      fr: URL
+    form_snippet: fluent_text.html
+    display_snippet: fluent_text.html url.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+    schema_field_type: fluent
+    schema_multivalued: false
+    schema_extras: false
+
+- preset_name: ndm_visibility
+  values:
+    label:
+      en: Visibility
+      fr: Visibilité
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: scheming_required scheming_choices
+    lookup: preset
+    required: true
+    schema_field_type: boolean
+    schema_multivalued: false
+    schema_extras: false
+    choices:
+    - label:
+        en: Public
+        fr: Publique
+      value: false
+    - label:
+        en: Private
+        fr: Privé
+      value: true
+
+- preset_name: ndm_volume_and_number
+  values:
+    label:
+      en: Volume and Number
+      fr: Volume et nombre
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
