@@ -16,14 +16,7 @@ languages_label:
 dataset_fields:
 
 - field_name: owner_org
-  label:
-    en: Organisation
-    fr: Organisation
-  preset: dataset_organization
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
+  preset: ndm_owner_org
 
 - field_name: release_slug
   label:
@@ -35,12 +28,7 @@ dataset_fields:
   schema_extras: true
 
 - field_name: top_parent_id
-  label:
-    en: Top Parent ID
-    fr: ID du parent du plus haut niveau
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_top_parent_id
 
 - field_name: parent_id
   label:
@@ -55,26 +43,13 @@ dataset_fields:
   required: true
 
 - field_name: url
-  label:
-    en: URL
-    fr: URL
-  preset: fluent_text
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: true
-  display_snippet: url.html
+  preset: ndm_url
 
 - field_name: name
+  preset: ndm_name
   # follow our custom name generation validator with default package name validators
   validators: format_create_name
     not_empty unicode name_validator package_name_validator
-  label:
-    en: Dataset Slug
-    fr: Slug du dataset
-  form_snippet: null
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
 
 - field_name: title
   validators: format_create_name
@@ -91,10 +66,3 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
-
-- field_name: bogon
-  label:
-    en: Bogon
-    fr: Bogon
-  create_validators: set_default_value(statcan)
-  default_value: statcan

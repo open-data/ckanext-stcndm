@@ -46,6 +46,15 @@ while i < n:
             print json.dumps(format_out)
 
         elif len(line['productidnew_bi_strs']) == 15:
+            if line.get('title_en_txts', ''):
+                product_out = do_product(line)
+                product_out['type'] = u'publication'
+                product_out['name'] = u'{type}-{product_id}'.format(
+                        type=product_out['type'],
+                        product_id=product_out['product_id_new']
+                    ).lower()
+                print json.dumps(product_out)
+
             release_out = do_release(line)
             print json.dumps(release_out)
 

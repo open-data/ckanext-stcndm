@@ -138,7 +138,7 @@ def format_create_name(key, data, errors, context):
 
     data[key] = u'format-{0}_{1}'.format(
         parent_id.lower(),
-        format_code.lower()
+        format_code.zfill(2).lower()
     )
 
 

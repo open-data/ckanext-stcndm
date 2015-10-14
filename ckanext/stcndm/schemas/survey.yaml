@@ -19,44 +19,19 @@ lookup_key: product_id_new
 dataset_fields:
 
 - field_name: owner_org
-  label:
-    en: Organisation
-    fr: Organisation
-  preset: dataset_organization
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
+  preset: ndm_owner_org
 
 - field_name: name
+  preset: ndm_name
   # follow our custom name generation validator with default package name validators
   validators: survey_create_name
     not_empty unicode name_validator package_name_validator
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
-  form_snippet: null
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
 
 - field_name: product_id_new
-  label:
-    en: Product ID New
-    fr: ID produit nouveau
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_product_id_new
 
 - field_name: archive_date
-  label:
-    en: Archive Date
-    fr: Date d'archivage
-  preset: date
-  schema_field_type: date
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_archive_date
 
 - field_name: archive_status_code
   preset: ndm_archive_status
@@ -83,38 +58,19 @@ dataset_fields:
   schema_extras: true
 
 - field_name: content_type_codes
-  label:
-    en: Content Type
-    fr: Type de contenu
-  preset: codeset_multiple_select
-  codeset_type: content_type
+  preset: ndm_content_type_codes
 
 - field_name: notes
   preset: ndm_description
 
 - field_name: feature_weight
-  label:
-    en: Feature Weight
-    fr: Poids
-  schema_field_type: int
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_feature_weight
 
 - field_name: frc
-  label:
-    en: FRC
-    fr: FRC
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_frc
 
 - field_name: frequency_codes
-  label:
-    en: Frequency
-    fr: Fréquence
-  preset: codeset_multiple_select
-  codeset_type: frequency
-  schema_extras: true
+  preset: ndm_frequency_codes
 
 - field_name: survey_instance_item
   label:
@@ -142,14 +98,7 @@ dataset_fields:
   schema_extras: true
 
 - field_name: keywords
-  label:
-    en: Keywords
-    fr: Mots clés
-  preset: fluent_tags
-  schema_field_type: fluent
-  schema_multivalued: true
-  schema_extras: true
-  tag_validators: ndm_tag_name_validator tag_length_validator
+  preset: ndm_keywords
 
 - field_name: question_url
   label:
@@ -196,24 +145,10 @@ dataset_fields:
   preset: ndm_survey_status
 
 - field_name: thesaurus_terms
-  label:
-    en: STC Thesaurus Terms
-    fr: Dictionnaire de synonymes de STC
-  preset: fluent_tags
-  schema_field_type: fluent
-  schema_multivalued: true
-  schema_extras: true
-  tag_validators: ndm_tag_name_validator tag_length_validator
+  preset: ndm_thesaurus_terms
 
 - field_name: subject_codes
-  label:
-    en: Subject
-    fr: Sujet
-  preset: shortcode_multivalue
-  lookup: subject
-  schema_field_type: code
-  schema_multivalued: true
-  schema_extras: true
+  preset: ndm_subject_codes
 
 - field_name: survey_url
   label:
@@ -235,11 +170,4 @@ dataset_fields:
   preset: ndm_title
 
 - field_name: url
-  label:
-    en: URL
-    fr: URL
-  preset: fluent_text
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: false
-  display_snippet: url.html
+  preset: ndm_url

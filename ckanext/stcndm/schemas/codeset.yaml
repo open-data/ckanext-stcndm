@@ -18,17 +18,17 @@ lookup_key: codeset_value
 
 dataset_fields:
 
+- field_name: owner_org
+  preset: ndm_owner_org
+
+- field_name: title  # codeset label
+  preset: ndm_title
+
 - field_name: name
+  preset: ndm_name
   # follow our custom name generation validator with default package name validators
   validators: codeset_create_name
     not_empty unicode name_validator package_name_validator
-  label:
-    en: Internal Unique ID
-    fr: ID interne unique
-  form_snippet: null
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
 
 - field_name: codeset_type
   label:
@@ -48,10 +48,6 @@ dataset_fields:
         en: Geolevel
         fr: Geolevel
       value: 'geolevel'
-#    - label:
-#        en: Dimension Group
-#        fr: Groupe de dimension
-#      value: 'dimension_group'
   required: true
   schema_field_type: code
   schema_multivalued: false
@@ -65,23 +61,3 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
-
-- field_name: title  # codeset label
-  label:
-    en: Descriptive label
-    fr: Étiquette descriptive
-  preset: fluent_text
-  required: true
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: false
-
-- field_name: owner_org
-  label:
-    en: Organisation
-    fr: Organisation
-  preset: dataset_organization
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false

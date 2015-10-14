@@ -224,10 +224,8 @@ def do_product(data_set):
     if temp:
         product_out[u'keywords'] = temp
 
-    if in_and_def('lastpublishstatus_en_strs', data_set):
-        result = code_lookup('lastpublishstatus_en_strs', data_set, publish_list)
-        if result:
-            product_out[u'last_publish_status_code'] = result[0]
+    if in_and_def('lastpublishstatuscode_bi_strs', data_set):
+        product_out[u'last_publish_status_code'] = data_set['lastpublishstatuscode_bi_strs']
 
     if in_and_def('legacydate_bi_txts', data_set):
         product_out[u'legacy_date'] = data_set[u'legacydate_bi_txts']
