@@ -312,8 +312,7 @@ dataset_fields:
 #  label:
 #    en: URL
 #    fr: URL
-#  preset: fluent_text
-#  display_snippet: url.html
+#  preset: ndm_fluent_url
 
 #- field_name: volume_and_number
 #  label:

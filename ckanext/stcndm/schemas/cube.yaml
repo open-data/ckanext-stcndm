@@ -209,7 +209,7 @@ dataset_fields:
 #  preset: shortcode_multivalue
 
 - field_name: url
-  preset: ndm_url
+  preset: ndm_fluent_url
 
 #- field_name: volume_and_number
 #  label:

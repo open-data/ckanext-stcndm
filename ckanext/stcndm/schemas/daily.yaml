@@ -198,11 +198,10 @@ dataset_fields:
 #  label:
 #    en: URL
 #    fr: URL
-#  preset: fluent_text
+#  preset: ndm_fluent_url
 #  schema_field_type: fluent
 #  schema_multivalued: false
 #  schema_extras: false
-#  display_snippet: url.html
 
 #- field_name: volume_and_number
 #  label:
