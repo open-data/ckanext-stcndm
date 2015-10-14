@@ -91,11 +91,8 @@ dataset_fields:
 #    en: Default View ID
 #    fr: ID de vue par défaut
 
-#- field_name: dimmember_code
-#  label:
-#    en: Dimension Member
-#    fr: Membre de dimension
-#  preset: shortcode_multivalue
+- field_name: dimension_members
+  preset: ndm_dimension_members
 
 - field_name: external_authors
   preset: ndm_external_authors

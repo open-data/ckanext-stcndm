@@ -3,7 +3,7 @@ about: 'Statistics Canada Dissemination: Video'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
   en: Video
-  fr: Video
+  fr: Vidéo
 clonable: true
 dataset_type: video
 form_languages:
@@ -13,40 +13,173 @@ languages_label:
 - eng; CAN
 - fra; CAN
 
+lookup_key: product_id_new
+
 dataset_fields:
 
 - field_name: owner_org
-  help_text:
-    en: The organization directly responsible for the dataset and for metadata maintenance.
-    fr: Le nom de l’organisation directement responsable des ensembles de donnée et de la maintenance des métadonnées
-  label:
-    en: Publisher
-    fr: Éditeur
-  preset: dataset_organization
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
+  preset: ndm_owner_org
+
+- field_name: admin_notes
+  preset: ndm_admin_notes
+
+- field_name: title
+  preset: ndm_title
+
+- field_name: notes
+  preset: ndm_description
+
+- field_name: content_type_codes
+  preset: ndm_content_type_codes
+
+- field_name: geolevel_codes
+  preset: ndm_geolevel_codes
+
+- field_name: geodescriptor_codes
+  preset: ndm_geodescriptor_codes
+
+- field_name: subject_codes
+  preset: ndm_subject_codes
 
 - field_name: name
+  preset: ndm_name
   # follow our custom name generation with default package name validators
   validators: video_create_name
     not_empty unicode name_validator package_name_validator
-  form_snippet: null
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
-- field_name: archive_date
+
+- field_name: product_type_code
   label:
-    en: Archive Date
-    fr: Date d'archivage
-  preset: date
-  schema_field_type: date
+    en: Product Type
+    fr: Type de produit
+  preset: select
+  choices:
+    - label:
+        en: Video
+        fr: Vidéo
+      value: '18'
+  required: true
+  schema_field_type: code
   schema_multivalued: false
   schema_extras: true
+
+- field_name: related_products
+  preset: ndm_related_products
+
+- field_name: thesaurus_terms
+  preset: ndm_thesaurus_terms
+
+- field_name: feature_weight
+  preset: ndm_feature_weight
 
 - field_name: archive_status_code
   preset: ndm_archive_status
 
-- field_name: product_type_code
-  preset: ndm_product
+- field_name: archive_date
+  preset: ndm_archive_date
+
+- field_name: correction_id_code
+  preset: ndm_correction_id_code
+
+#- field_name: display_code
+#  preset: ndm_display
+
+- field_name: digital_object_identifier
+  preset: ndm_digital_object_identifier
+
+- field_name: external_authors
+  preset: ndm_external_authors
+
+- field_name: frc
+  preset: ndm_frc
+
+- field_name: frequency_codes
+  preset: ndm_frequency_codes
+
+- field_name: history_notes
+  preset: ndm_history_notes
+
+- field_name: internal_authors
+  preset: ndm_internal_authors
+
+#- field_name: isbn_number
+#  preset: ndm_isbn_number
+
+- field_name: keywords
+  preset: ndm_keywords
+
+- field_name: last_publish_status_code
+  preset: ndm_publish_status
+
+#- field_name: legacy_date
+#  label:
+#    en: Legacy Date
+#    fr: Date du système antérieur
+#  preset: date
+#  schema_field_type: date
+
+- field_name: top_parent_id
+  preset: ndm_top_parent_id
+
+#- field_name: price
+#  label:
+#    en: Price
+#    fr: Prix
+
+#- field_name: price_note
+#  label:
+#    en: Price Note
+#    fr: Note sur le prix
+#  preset: fluent_text
+
+- field_name: product_id_new
+  preset: ndm_product_id_new
+
+
+- field_name: product_id_old
+  preset: ndm_product_id_old
+
+- field_name: publication_year
+  preset: ndm_publication_year
+
+#- field_name: reference_periods
+#  label:
+#    en: Reference Period
+#    fr: Période de référence
+#  preset: fluent_tags
+#  tag_validators: ndm_tag_name_validator tag_length_validator
+
+#- field_name: replaced_products
+#  label:
+#    en: Replaced Product
+#    fr: Produit remplacé
+#  preset: shortcode_multivalue
+
+- field_name: status_code
+  preset: ndm_status
+
+- field_name: discontinued_code
+  preset: ndm_discontinued_code
+
+- field_name: discontinued_date
+  preset: ndm_discontinued_date
+
+- field_name: census_grouping_code
+  preset: ndm_census_grouping
+
+- field_name: load_to_olc_code
+  preset: ndm_load_to_olc_code
+
+#- field_name: subjectold_code
+#  label:
+#    en: Old subject
+#    fr: Ancien sujet
+#  preset: shortcode_multivalue
+
+- field_name: url
+  preset: ndm_url
+
+#- field_name: volume_and_number
+#  label:
+#    en: Volume and Number
+#    fr: Volume et nombre
+

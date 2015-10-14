@@ -275,6 +275,19 @@ def pumf_create_name(key, data, errors, context):
         errors[key].append(_('could not find product_id_new'))
 
 
+def video_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        data[key] = u'video-{0}'.format(product_id_new.lower())
+    else:
+        errors[key].append(_('could not find product_id_new'))
+
+
 def view_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
