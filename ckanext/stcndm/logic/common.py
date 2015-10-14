@@ -423,24 +423,47 @@ def get_upcoming_releases(context, data_dict):
     """
     # TODO: date validation? anything else?
 
+    lc = ckanapi.LocalCKAN(context=context)
+
     start_date = _get_or_bust(data_dict, 'startDate')
     end_date = _get_or_bust(data_dict, 'endDate')
 
-    q = {
-        'q': (
+    result = lc.action.package_search(
+        q=(
             'release_date:[{start_date}:00Z TO {end_date}:00Z] '
-            'AND publish_status_code:08'
+            'AND publish_status_code:8'
         ).format(
             start_date=start_date,
             end_date=end_date
         ),
-        'rows': 500
-    }
+        rows=500
+    )
 
-    result = _get_action('package_search')(context, q)
     # Per JIRA #5173, return an empty list instead of the standard
     # NotFound Exception (404).
-    return {'count': result['count'], 'results': result.get('results', [])}
+    results = result.get('results', [])
+
+    # Per JIRA #5206, resolve parent product types and URLs.
+    for release_result in results:
+        if not release_result['parent_id']:
+            continue
+
+        parent_result = lc.action.package_search(
+            q='product_id_new:{pid}'.format(pid=release_result['parent_id']),
+            rows=1
+        )
+
+        if parent_result['results']:
+            parent_result = parent_result['results'][0]
+        else:
+            continue
+
+        release_result.update({
+            'title': parent_result.get('title'),
+            'url': parent_result.get('url')
+        })
+
+    return {'count': result['count'], 'results': results}
 
 
 @logic.side_effect_free
