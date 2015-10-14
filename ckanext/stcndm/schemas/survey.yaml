@@ -92,7 +92,7 @@ dataset_fields:
   label:
     en: ISP URL
     fr: URL d'ISP
-  preset: fluent_text
+  preset: fluent_link
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
@@ -104,11 +104,10 @@ dataset_fields:
   label:
     en: Question URL
     fr: URL de question
-  preset: fluent_text
+  preset: fluent_link
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
-  display_snippet: url.html
 
 #- field_name: reference_periods
 #  label:
@@ -136,10 +135,10 @@ dataset_fields:
 #  label:
 #    en: Resource URL
 #    fr: URL de la ressource
+#  preset: fluent_link
 #  schema_field_type: string
 #  schema_multivalued: false
 #  schema_extras: true
-#  display_snippet: url.html
 
 - field_name: survey_status_code
   preset: ndm_survey_status
@@ -154,11 +153,10 @@ dataset_fields:
   label:
     en: Survey URL
     fr: URL du sondage
-  preset: fluent_text
+  preset: fluent_link
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
-  display_snippet: url.html
 
 - field_name: survey_participation_code
   preset: ndm_survey_participation
@@ -170,4 +168,4 @@ dataset_fields:
   preset: ndm_title
 
 - field_name: url
-  preset: ndm_url
+  preset: ndm_fluent_url

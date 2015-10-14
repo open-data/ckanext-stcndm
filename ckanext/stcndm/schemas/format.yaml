@@ -43,7 +43,7 @@ dataset_fields:
   required: true
 
 - field_name: url
-  preset: ndm_url
+  preset: ndm_fluent_url
 
 - field_name: name
   preset: ndm_name

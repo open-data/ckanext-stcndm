@@ -1419,8 +1419,15 @@ presets:
     label:
       en: URL
       fr: URL
+    display_snippet: link.html
+
+- preset_name: ndm_fluent_url
+  values:
+    label:
+      en: URL
+      fr: URL
     form_snippet: fluent_text.html
-    display_snippet: fluent_text.html
+    display_snippet: fluent_link.html
     error_snippet: fluent_text.html
     validators: fluent_text
     output_validators: fluent_text_output
