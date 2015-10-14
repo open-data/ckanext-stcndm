@@ -689,6 +689,21 @@ presets:
         fr: Francais
       value: 'fr'
 
+- preset_name: ndm_release_date
+  values:
+    label:
+      en: Release Date
+      fr: Date de diffusion
+    label_time:
+      en: Release Time
+      fr: Heure de diffusion
+    form_snippet: datetime.html
+    display_snippet: datetime.html
+    validators: scheming_isodatetime
+    schema_field_type: date
+    schema_multivalued: false
+    schema_extras: true
+
 - preset_name: ndm_legacy_date
   values:
     label:

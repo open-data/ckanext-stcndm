@@ -19,16 +19,7 @@ dataset_fields:
   preset: ndm_owner_org
 
 - field_name: release_date
-  label:
-    en: Release Date
-    fr: Date de diffusion
-  label_time:
-    en: Release Time
-    fr: Heure de diffusion
-  preset: datetime
-  schema_field_type: date
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_release_date
 
 - field_name: data_reference_period
   label:

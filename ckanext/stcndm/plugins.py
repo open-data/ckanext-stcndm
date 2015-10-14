@@ -21,6 +21,12 @@ from ckanext.scheming.helpers import (
     scheming_get_dataset_schema
 )
 from helpers import lookup_label
+import unicodedata
+
+
+def strip_accents(s):
+    return ''.join(c for c in unicodedata.normalize('NFD', s)
+                   if unicodedata.category(c) != 'Mn')
 
 
 class STCNDMPlugin(p.SingletonPlugin):
@@ -51,6 +57,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/cube.yaml',
                 'ckanext.stcndm:schemas/daily.yaml',
                 'ckanext.stcndm:schemas/format.yaml',
+                'ckanext.stcndm:schemas/generic.yaml',
                 'ckanext.stcndm:schemas/geodescriptor.yaml',
                 'ckanext.stcndm:schemas/indicator.yaml',
                 'ckanext.stcndm:schemas/province.yaml',
@@ -193,7 +200,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 index_data_dict['authors'] = authors
                 index_data_dict['authors_initials'] = list(
                     set(
-                        [i[0].upper() for i in authors]
+                        [strip_accents(i[0]).upper() for i in authors]
                     )
                 )
 
@@ -268,6 +275,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "daily_create_name": validators.daily_create_name,
             "set_default_value": validators.set_default_value,
             "format_create_name": validators.format_create_name,
+            "generic_create_name": validators.generic_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
             "indicator_create_name": validators.indicator_create_name,
             "next_correction_id": validators.next_correction_id,
