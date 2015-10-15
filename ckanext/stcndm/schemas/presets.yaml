@@ -607,6 +607,20 @@ presets:
     schema_multivalued: false
     schema_extras: true
 
+- preset_name: ndm_imdb_variable_ids
+  values:
+    label:
+      en: IMDB Variable IDs
+      fr: Identificateurs de variable IMDB
+    form_snippet: repeating_text.html
+    display_snippet: repeating_text.html
+    validators: repeating_text
+    output_validators: repeating_text_output
+    form_blanks: 3
+    schema_field_type: string
+    schema_multivalued: true
+    schema_extras: true
+
 - preset_name: ndm_internal_authors
   values:
     label:
