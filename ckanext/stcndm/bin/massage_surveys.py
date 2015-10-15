@@ -1,8 +1,8 @@
 import sys
 import json
 import yaml
-import datetime
 import ckanapi
+from massage_product import do_release  # do_product, do_format
 
 __author__ = 'marc'
 
@@ -85,6 +85,7 @@ for preset in presetMap['presets']:
 #        if not format_list:
 #            raise ValueError('could not find format preset')
 
+release_dict = {}
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
 i = 0
 n = 1
@@ -96,201 +97,75 @@ while i < n:
     i += 1
     n = query_results['count'] / 1000.0
 
-    for line in query_results['results']:
-        for e in line['extras']:
-            line[e['key']] = e['value']
+    for line in query_results[u'results']:
+        for e in line[u'extras']:
+            line[e[u'key']] = e[u'value']
 
-        line_out = {'owner_org': u'statcan',
-                    'private': False,
-                    'type': u'survey'}
-
-        if 'archived_bi_strs' in line:
-            result = code_lookup('archived_bi_strs', line, archive_status_list)
-            if result:
-                line_out['archive_status_code'] = result[0]
-
-        if 'collenddate_bi_strs' in line and line['collenddate_bi_strs']:
-            line_out['collection_end_date'] = line['collenddate_bi_strs']
-
-        if 'collmethod_en_txtm' in line:
-            result = code_lookup('collmethod_en_txtm', line, collection_method_list)
-            if result:
-                line_out['collection_method_codes'] = result
-
-        if 'collstartdate_bi_strs' in line and line['collstartdate_bi_strs']:
-            line_out['collection_start_date'] = line['collstartdate_bi_strs']
-
-        if 'conttype_en_txtm' in line:
-            line_out['content_type_codes'] = ['2003']
-
-        temp = {}
-        if 'description_en_txts' in line and line['description_en_txts']:
-            temp[u'en'] = line['description_en_txts']
-        if 'description_fr_txts' in line and line['description_fr_txts']:
-            temp[u'fr'] = line['description_fr_txts']
-        if temp:
-            line_out['notes'] = temp
-
-        if 'featureweight_bi_ints' in line:
-            line_out['feature_weight'] = line['featureweight_bi_ints']
-
-        if 'frccode_bi_strs' in line and line['frccode_bi_strs']:
-            line_out['frc'] = line['frccode_bi_strs']
-
-        if 'freqcode_bi_txtm' in line:
-            # line_out['frequency_codes'] = [u'00{0}'.format(i)[-2:] for i in listify(line['freqcode_bi_txtm'])]
-            result = listify(line['freqcode_bi_txtm'])
-            if result:
-                line_out['frequency_codes'] = result
-
-        if 'imdbinstanceitem_bi_ints' in line:
-            line_out['survey_instance_item'] = line['imdbinstanceitem_bi_ints']
-
-        if 'imdbsurveyitem_bi_ints' in line:
-            line_out['survey_item'] = line['imdbsurveyitem_bi_ints']
-
-        temp = {}
-        if 'isplink_en_strs' in line and line['isplink_en_strs']:
-            temp[u'en'] = line['isplink_en_strs']
-        if 'isplink_fr_strs' in line and line['isplink_en_strs']:
-            temp[u'fr'] = line['isplink_fr_strs']
-        if temp:
-            line_out['isp_url'] = temp
-
-        temp = {}
-        if 'keywordsuncon_en_txtm' in line:
-            result = listify(line['keywordsuncon_en_txtm'])
-            if result:
-                temp[u'en'] = []
-                for i in result:
-                    while len(i) > 100:
-                        temp[u'en'].append(i[:100])
-                        i = i[100:]
-        if 'keywordsuncon_fr_txtm' in line:
-            result = listify(line['keywordsuncon_fr_txtm'])
-            if result:
-                temp[u'fr'] = []
-                for i in result:
-                    while len(i) > 100:
-                        temp[u'fr'].append(i[:100])
-                        i = i[100:]
-        if temp:
-            line_out['keywords'] = temp
-
-        if 'extras_levelsubjcode_bi_txtm' in line:
-            result = listify(line['extras_levelsubjcode_bi_txtm'])
-            if result:
-                line_out['level_subject_codes'] = result
-
-        if 'productidnew_bi_strs' in line and line['productidnew_bi_strs']:
-            line_out['product_id_new'] = line['productidnew_bi_strs']
-            line_out['name'] = u'survey-{0}'.format(line['productidnew_bi_strs'])
-
-        temp = {}
-        if 'questlink_en_strs' in line and line['questlink_en_strs']:
-            temp[u'en'] = line['questlink_en_strs']
-        if 'questlink_fr_strs' in line and line['questlink_fr_strs']:
-            temp[u'fr'] = line['questlink_fr_strs']
-        if temp:
-            line_out['question_url'] = temp
-
-        temp = {}
-        if 'refperiod_en_txtm' in line:
-            result = listify(line['refperiod_en_txtm'])
-            if result:
-                temp[u'en'] = []
-                for i in result:
-                    while len(i) > 100:
-                        temp[u'en'].append(i[:100])
-                        i = i[100:]
-        if 'refperiod_fr_txtm' in line:
-            result = listify(line['refperiod_fr_txtm'])
-            if result:
-                temp[u'fr'] = []
-                for i in result:
-                    while len(i) > 100:
-                        temp[u'fr'].append(i[:100])
-                        i = i[100:]
-        if temp:
-            line_out['reference_periods'] = temp
-
-        if 'releasedate_bi_strs' in line:
-            temp = line['releasedate_bi_strs']
-            try:
-                datetime.datetime.strptime(temp, '%Y-%m-%dT%H:%M')
-                line_out['release_date'] = temp
-            except ValueError:
-                sys.stderr.write('survey-{0}: Invalid release date .{1}.\n'.format(line['productidnew_bi_strs'], temp))
-
-        temp = {}
-        if 'stcthesaurus_en_txtm' in line:
-            result = listify(line['stcthesaurus_en_txtm'])
-            if result:
-                temp[u'en'] = result
-        if 'stcthesaurus_fr_txtm' in line:
-            result = listify(line['stcthesaurus_fr_txtm'])
-            if result:
-                temp[u'fr'] = result
-        if temp:
-            line_out['thesaurus'] = temp
-
-        if 'statusf_en_strs' in line:
-            result = code_lookup('statusf_en_strs', line, survey_status_list)
-            if result:
-                line_out['survey_status_code'] = result[0]
-
-        if 'subjnewcode_bi_txtm' in line:
-            result = listify(line['subjnewcode_bi_txtm'])
-            if result:
-                line_out['subject_codes'] = result
-
-        temp = {}
-        if 'surveylink_en_strs' in line and line['surveylink_en_strs']:
-            temp[u'en'] = line['surveylink_en_strs']
-        if 'surveylink_fr_strs' in line and line['surveylink_fr_strs']:
-            temp[u'fr'] = line['surveylink_fr_strs']
-        if temp:
-            line_out['survey_url'] = temp
-
-        if 'surveyparticipation_en_strs' in line:
-            result = code_lookup('surveyparticipation_en_strs', line, survey_participation_list)
-            if result:
-                line_out['survey_participation_code'] = result[0]
-
-        if 'survowner_en_strs' in line:
-            result = code_lookup('survowner_en_strs', line, survey_owner_list)
-            if result:
-                line_out['survey_owner_code'] = result[0]
-
-        temp = {}
-        if 'title_en_txts' in line and line['title_en_txts']:
-            temp[u'en'] = line['title_en_txts']
-        if 'title_fr_txts' in line and line['title_fr_txts']:
-            temp[u'fr'] = line['title_fr_txts']
-        if temp:
-            line_out['title'] = temp
-
-        temp = {}
-        if 'url_en_strs' in line and line['url_en_strs']:
-            temp[u'en'] = line['url_en_strs']
-        if 'url_fr_strs' in line and line['url_fr_strs']:
-            temp[u'fr'] = line['url_fr_strs']
-        if temp:
-            line_out['url'] = temp
-
-        if 'resources' in line:
-            line_out['resources'] = line['resources']
-
-        if 'num_resources' in line:
-            line_out['num_resources'] = line['num_resources']
-
-        if 'license_title' in line:
-            line_out['license_title'] = line['license_title']
-
-        if 'license_url' in line:
-            line_out['license_url'] = line['license_url']
-
-        if 'license_id' in line:
-            line_out['license_id'] = line['license_id']
+        line_out = {
+            u'owner_org': u'statcan',
+            u'private': False,
+            u'type': u'survey',
+            u'archive_status_code': code_lookup(u'archived_bi_strs', line, archive_status_list),
+            u'content_type_codes': u'2003',
+            u'collection_end_date': line.get(u'collenddate_bi_strs', ''),
+            u'collection_start_date': line.get(u'collstartdate_bi_strs', ''),
+            u'collection_method_codes': code_lookup(u'collmethod_en_txtm', line, collection_method_list),
+            u'notes': {
+                u'en': line.get(u'description_en_txts', ''),
+                u'fr': line.get(u'description_fr_txts', '')
+            },
+            u'feature_weight': line.get(u'featureweight_bi_ints', ''),
+            u'frc': line.get(u'frccode_bi_strs', ''),
+            u'frequency_codes': listify(line.get(u'freqcode_bi_txtm', '')),
+            u'keywords': {
+                u'en': listify(line.get(u'keywordsuncon_en_txtm', '')),
+                u'fr': listify(line.get(u'keywordsuncon_fr_txtm', ''))
+            },
+            u'survey_instance_item': line.get(u'imdbinstanceitem_bi_ints', ''),
+            u'survey_item': line.get(u'imdbsurveyitem_bi_ints', ''),
+            u'isp_url': {
+                u'en': line.get(u'isplink_en_strs', ''),
+                u'fr': line.get(u'isplink_fr_strs', '')
+            },
+            u'level_subject_codes': listify(line.get(u'extras_levelsubjcode_bi_txtm', '')),
+            u'product_id_new': line.get(u'productidnew_bi_strs', ''),
+            u'name': u'survey-{0}'.format(line.get(u'productidnew_bi_strs', '')),
+            u'question_url': {
+                u'en': line.get(u'questlink_en_strs', ''),
+                u'fr': line.get(u'questlink_fr_strs', ''),
+            },
+            u'thesaurus_terms': {
+                u'en': listify(line.get(u'stcthesaurus_en_txtm', '')),
+                u'fr': listify(line.get(u'stcthesaurus_fr_txtm', '')),
+            },
+            u'survey_status_code': code_lookup(u'statusf_en_strs', line, survey_status_list),
+            u'subject_codes': listify(line.get(u'subjnewcode_bi_txtm', '')),
+            u'survey_url': {
+                u'en': line.get(u'surveylink_en_strs', ''),
+                u'fr': line.get(u'surveylink_fr_strs', '')
+            },
+            u'survey_participation_code': code_lookup(u'surveyparticipation_en_strs', line, survey_participation_list),
+            u'survey_owner_code': code_lookup(u'survowner_en_strs', line, survey_owner_list),
+            u'title': {
+               u'en': line.get(u'title_en_txts', ''),
+               u'fr': line.get(u'title_fr_txts', '')
+            },
+            u'url': {
+                u'en': line.get(u'url_en_strs', ''),
+                u'fr': line.get(u'url_fr_strs', '')
+            },
+            u'license_title': line.get(u'license_title', ''),
+            u'license_url': line.get(u'license_url', ''),
+            u'license_id': line.get(u'license_id', '')
+        }
 
         print json.dumps(line_out)
+
+        if line_out[u'product_id_new'] in release_dict:
+            release_dict[line_out[u'product_id_new']] += 1
+        else:
+            release_dict[line_out[u'product_id_new']] = 1
+        line[u'release_id'] = unicode(release_dict[line_out[u'product_id_new']])
+
+        release_out = do_release(line)
+        print json.dumps(release_out)
