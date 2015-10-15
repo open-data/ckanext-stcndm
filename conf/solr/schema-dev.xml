@@ -339,6 +339,7 @@
         <field name="replaced_products" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="resource_url" type="text" indexed="true" stored="true" multiValued="false"/>
         <field name="sgc_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="sort_order" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="status_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
