@@ -116,6 +116,9 @@ dataset_fields:
 - field_name: history_notes
   preset: ndm_history_notes
 
+- field_name: imdb_variable_ids
+  preset: ndm_imdb_variable_ids
+
 - field_name: survey_source_codes
   preset: ndm_survey_source_codes
 

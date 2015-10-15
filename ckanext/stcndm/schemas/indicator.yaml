@@ -203,6 +203,9 @@ dataset_fields:
 #    fr: Notes historiques
 #  preset: fluent_markdown
 
+- field_name: imdb_variable_ids
+  preset: ndm_imdb_variable_ids
+
 #- field_name: survey_source_codes
 #  label:
 #    en: Source
