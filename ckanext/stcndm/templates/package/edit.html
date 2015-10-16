@@ -2,5 +2,5 @@
 
 {%- block scripts %}
     {{ super() }}
-    <script src="/js/autocomplete.min.js""></script>
+    <script src="{{ h.url_for_static('/js/autocomplete.min.js') }}"></script>
 {% endblock %}
