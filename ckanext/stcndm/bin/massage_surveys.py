@@ -27,12 +27,22 @@ def code_lookup(old_field_name, data_set, choice_list):
                 if choice['value']:
                     code = choice['value']
         if not code:
-            sys.stderr.write('survey-{0}: weird {1} .{2}.{3}.\n'.format(line['productidnew_bi_strs'], old_field_name,
-                                                                        _temp, field_value))
+            sys.stderr.write(
+                'survey-{product_id}: unrecognized {field_name}: .{field_value}.\n'.format(
+                    product_id=line.get(u'productidnew_bi_strs', u'product_id'),
+                    field_name=old_field_name,
+                    field_value=field_value
+                )
+            )
         else:
             codes.append(code)
     return codes
 
+
+def safe_get(my_list):
+    if len(my_list):
+        return my_list[0]
+    return ''
 
 content_type_list = []
 rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000')
@@ -105,7 +115,7 @@ while i < n:
             u'owner_org': u'statcan',
             u'private': False,
             u'type': u'survey',
-            u'archive_status_code': code_lookup(u'archived_bi_strs', line, archive_status_list),
+            u'archive_status_code': safe_get(code_lookup(u'archived_bi_strs', line, archive_status_list)),
             u'content_type_codes': u'2003',
             u'collection_end_date': line.get(u'collenddate_bi_strs', ''),
             u'collection_start_date': line.get(u'collstartdate_bi_strs', ''),
@@ -138,14 +148,14 @@ while i < n:
                 u'en': listify(line.get(u'stcthesaurus_en_txtm', '')),
                 u'fr': listify(line.get(u'stcthesaurus_fr_txtm', '')),
             },
-            u'survey_status_code': code_lookup(u'statusf_en_strs', line, survey_status_list),
+            u'survey_status_code': safe_get(code_lookup(u'statusf_en_strs', line, survey_status_list)),
             u'subject_codes': listify(line.get(u'subjnewcode_bi_txtm', '')),
             u'survey_url': {
                 u'en': line.get(u'surveylink_en_strs', ''),
                 u'fr': line.get(u'surveylink_fr_strs', '')
             },
-            u'survey_participation_code': code_lookup(u'surveyparticipation_en_strs', line, survey_participation_list),
-            u'survey_owner_code': code_lookup(u'survowner_en_strs', line, survey_owner_list),
+            u'survey_participation_code': safe_get(code_lookup(u'surveyparticipation_en_strs', line, survey_participation_list)),
+            u'survey_owner_code': safe_get(code_lookup(u'survowner_en_strs', line, survey_owner_list)),
             u'title': {
                u'en': line.get(u'title_en_txts', ''),
                u'fr': line.get(u'title_fr_txts', '')

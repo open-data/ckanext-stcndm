@@ -11,6 +11,9 @@ import ckan.lib.navl.dictization_functions as df
 import ckanapi
 
 
+def safe_name(name):
+    return re.sub(r"[^a-zA-Z0-9\-_]", "_", name)
+
 def scheming_validator(fn):
     """
     Decorate a validator that needs to have the scheming fields
@@ -462,7 +465,7 @@ def geodescriptor_create_name(key, data, errors, context):
 
     geodescriptor_code = _data_lookup(('geodescriptor_code',), data)
     if geodescriptor_code:
-        data[key] = u'geodescriptor-{0}'.format(geodescriptor_code.lower())
+        data[key] = safe_name(u'geodescriptor-{0}'.format(geodescriptor_code.lower()))
     else:
         errors[key].append(_('could not find geodescriptor_code'))
 
