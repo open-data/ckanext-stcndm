@@ -102,4 +102,4 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
   form_attrs:
-      disabled: disabled
+      readonly: readonly

@@ -52,7 +52,7 @@ dataset_fields:
   validators: next_correction_id
   default: 2000
   form_attrs:
-      disabled: disabled
+      readonly: readonly
 #      placeholder: 1234
   schema_field_type: string
   schema_multivalued: false
