@@ -784,7 +784,7 @@ presets:
       fr: Organisation
 #    create_validators: default_value
     form_attrs:
-        disabled: disabled
+        readonly: readonly
     form_placeholder: statcan
     schema_field_type: string
     schema_multivalued: false

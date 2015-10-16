@@ -37,10 +37,9 @@ def code_lookup(old_field_name, data_set, choice_list):
                 if choice[u'value']:
                     code = choice[u'value']
         if not code:
-            sys.stderr.write('{product_id}: weird {old_name} .{temp}.{field_value}.\n'.format(
+            sys.stderr.write('{product_id}: unrecognized {old_name}: {field_value}.\n'.format(
                 product_id=data_set[u'productidnew_bi_strs'],
                 old_name=old_field_name,
-                temp=temp, 
                 field_value=field_value))
         else:
             codes.append(code)

@@ -79,6 +79,6 @@ while i < n:
             print json.dumps(format_out)
         else:
             sys.stderr.write(
-                'weird analytical {product_id}\n'
-                .format(product_id=line['productidnew_bi_strs'])
+                'analytical with unexpected product_id: {product_id}\n'
+                .format(product_id=line.get(u'productidnew_bi_strs', u'product_id'))
             )

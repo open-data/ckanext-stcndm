@@ -1,6 +1,7 @@
 import json
 import ckanapi
 import ConfigParser
+import re
 
 __author__ = 'marc'
 
@@ -19,7 +20,7 @@ def listify(value):
     else:
         return []
 
-rc = ckanapi.RemoteCKAN(BASE_URL) #  'http://ndmckanq1.stcpaz.statcan.gc.ca/zj/'
+rc = ckanapi.RemoteCKAN(BASE_URL)  # 'http://ndmckanq1.stcpaz.statcan.gc.ca/zj/'
 i = 0
 n = 1
 while i < n:
@@ -39,15 +40,15 @@ while i < n:
             u'type': u'geodescriptor',
             u'product_id_old': line.get('10uid_bi_strs', ''),
             u'title': {
-                u'en': line.get('tmsgcname_en_tmtxtm', ''),
-                u'fr': line.get('tmsgcname_fr_tmtxtm', ''),
+                u'en': line.get(u'tmsgcname_en_tmtxtm', ''),
+                u'fr': line.get(u'tmsgcname_fr_tmtxtm', ''),
             },
-            u'geolevel_codes': line.get('tmsgccode_bi_tmtxtm', ''),
-            u'license_title': line.get('license_title', ''),
-            u'license_url': line.get('license_url', ''),
-            u'license_id': line.get('license_id', ''),
+            u'geolevel_codes': line.get(u'tmsgccode_bi_tmtxtm', ''),
+            u'license_title': line.get(u'license_title', ''),
+            u'license_url': line.get(u'license_url', ''),
+            u'license_id': line.get(u'license_id', ''),
         }
-        geodescriptor_code = line.get('tmsgcspecificcode_bi_tmtxtm', '')
+        geodescriptor_code = line.get(u'tmsgcspecificcode_bi_tmtxtm', '')
         if ';' in geodescriptor_code:
             line_out[u'aliased_codes'] = listify(geodescriptor_code)
             line_out[u'geodescriptor_code'] = line_out[u'geolevel_codes']
@@ -55,9 +56,9 @@ while i < n:
                 geolevel_code=line_out[u'geolevel_codes'].lower()
             )
         else:
-            line_out[u'geodescriptor_code'] = line.get('tmsgcspecificcode_bi_tmtxtm', '')
-            line_out['name'] = u'geodescriptor-{geodescriptor_code}'.format(
+            line_out[u'geodescriptor_code'] = line.get(u'tmsgcspecificcode_bi_tmtxtm', '')
+            line_out[u'name'] = u'geodescriptor-{geodescriptor_code}'.format(
                 geodescriptor_code=geodescriptor_code.lower()
             )
-
+        line_out[u'name'] = re.sub(r"[^a-zA-Z0-9\-_]", "_", line_out[u'name'])
         print json.dumps(line_out)
