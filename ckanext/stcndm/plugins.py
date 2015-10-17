@@ -5,6 +5,7 @@ import ckan.plugins as p
 import ckanext.stcndm.logic.common as common
 import ckanext.stcndm.logic.cubes as cubes
 import ckanext.stcndm.logic.daily as daily
+import ckanext.stcndm.logic.legacy as legacy
 import ckanext.stcndm.logic.releases as releases
 import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
@@ -229,6 +230,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetFormatDescription": common.get_format_description,
             "GetLastPublishStatus": common.get_last_publish_status,
             "GetNextProductId": common.get_next_product_id,
+            "GetNextLegacyArticleId": legacy.get_next_legacy_article_id,
+            "GetNextLegacyProductId": legacy.get_next_legacy_product_id,
             "GetProduct": common.get_product,
             "GetProductIssueArticles": daily.get_product_issue_articles,
             "GetProductIssues": daily.get_product_issues,
@@ -246,6 +249,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "RegisterDaily": daily.register_daily,
             "RegisterDataProduct": common.register_data_product,
             "RegisterNonDataProduct": common.register_non_data_product,
+            "RegisterLegacyNonDataProduct": legacy.register_legacy_non_data_product,
             "RegisterProduct": common.register_data_product,
             "RegisterRelease": releases.register_release,
             "UpdateDefaultView": views.update_default_view,
