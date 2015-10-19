@@ -1,104 +1,162 @@
-# stcndm example extension
+# Statistics Canada's New New Dissemination CKAN Extension
 
-Requirements:
+## Requirements
+
+* Solr 5.2.1
+* PostgreSQL
 * ckan 2.3
 * ckanext-scheming
 * ckanext-fluent
 * ckanext-repeating
 * ckanext-wet-boew and a copy of the WET production files
 
-required settings in development.ini:
-```
-ckan.plugins =
-    text_view recline_grid_view recline_graph_view
-    stcndm scheming_datasets repeating fluent wet_boew_theme_gc_intranet
-
-wet_boew.url = http://127.0.0.1:5000
-wet_theme.geo_map_type = static
-```
-
-Templates have not been customized, you can find the editing forms
-for the primary and format types at:
-* /primary/new
-* /format/new
-
-
 ## Installation
 
-  1. Create empty Solr and PostgreSQL instances as per the normal CKAN installation process.
-  2. On GitHub, fork your own copy of https://github.com/open-data/ckanext-stcndm.git
-  3. In your project directory, clone the following GitHub projects:
-    *  https://github.com/ckan/ckan.git
-    *  https://github.com/ckan/ckanapi.git
+  1. Install the following package using your OS package manager
+
+  ```
+  python-dev postgresql libpq-dev python-pip python-virtualenv git-core libgeos-dev
+  ```
+
+  2. In your home directory, create a folder for ndm
+
+  ```
+  mkdir stcndm
+  cd stcndm
+  ```
+
+  3. Create a python virtual environment
+
+  ```
+  mkdir venv
+  sudo mkdir /usr/lib/ckan
+  virtualenv --no-site-packages venv
+  sudo ln -s ~/stcndm/venv /usr/lib/ckan/stcndm
+  . /usr/lib/ckan/stcndm/bin/activate
+  ```
+
+  4. Clone CKAN and ckanapi and checkout version 2.3 of ckan
+
+    * https://github.com/ckan/ckan.git
+    * https://github.com/ckan/ckanapi.git
+
+  ```
+  git clone https://github.com/ckan/ckan.git
+  git clone https://github.com/ckan/ckanapi.git
+  cd ckan
+  git checkout release-v2.3.1
+  cd ..
+  ```
+
+  5. Fork the following repos and clone them
     *  https://github.com/open-data/ckanext-scheming.git
     *  https://github.com/open-data/ckanext-fluent.git
     *  https://github.com/open-data/ckanext-repeating.git
     *  https://github.com/open-data/ckanext-wet-boew.git
-    *  https://github.com/<your fork&gt;/ckanext-stcndm.git
-  4. Create and activate a virtual environment for your project:
+    *  https://github.com/open-data/ckanext-stcndm.git
+
   ```
-   virtualenv --no-site-packages stcndm
-   source stcndm/bin/activate
-  ```
-  5. Use version 2.3 of CKAN
-  ```
-    cd ckan
-    git checkout release-v2.3.1
-    cd ..
+  git clone https://github.com/[Your_Fork]/ckanext-scheming.git
+  git clone https://github.com/[Your_Fork]/ckanext-fluent.git
+  git clone https://github.com/[Your_Fork]/ckanext-repeating.git
+  git clone https://github.com/[Your_Fork]/ckanext-wet-boew.git
+  git clone https://github.com/[Your_Fork]/ckanext-stcndm.git
   ```
 
   6. Use the wet4-scheming branch of the Open Data CKAN WET extension.
-  ```
-    cd ckanext-wet-boew
-    git checkout wet4-scheming
-    cd ..
-  ```
 
-  7. Install the requirements for CKAN. Please note, that you may encounter problems installing the 'pbr' package.
-     In this case, just install pdr manually from pypi.
   ```
-    pip install pbr
+  cd ckanext-wet-boew
+  git checkout wet4-scheming
+  cd ..
   ```
 
-  8. Install the requirements and other projects.
+  7. Install the requirements for ckan and each extension.
+
   ```
-    cd ckan
-    python setup.py develop
-    cd ..
+  cd ckan
+  pip install -r requirements.txt
+  python setup.py develop
+  cd ..
 
-    cd ckanapi
-    python setup.py develop
-    cd ..
+  cd ckanapi
+  python setup.py develop
+  cd ..
 
-    cd ckanext-wet-boew
-    pip install -r requirements.txt
-    python setup.py develop
-    cd ..
+  cd ckanext-wet-boew
+  pip install -r requirements.txt
+  python setup.py develop
+  cd ..
 
-    cd ckanext-scheming
-    python setup.py develop
-    cd ..
+  cd ckanext-scheming
+  python setup.py develop
+  cd ..
 
-    cd ckanext-fluent
-    python setup.py develop
-    cd ..
+  cd ckanext-fluent
+  python setup.py develop
+  cd ..
 
-    cd ckanext-repeating
-    python setup.py develop
-    cd ..
+  cd ckanext-repeating
+  python setup.py develop
+  cd ..
 
-    cd ckanext-stcndm
-    pip install -r requirements.txt
-    python setup.py develop
-    cd ..
+  cd ckanext-stcndm
+  pip install -r requirements.txt
+  python setup.py develop
+  cd ..
   ```
 
-  9. Install the libgeos library required by ckanext-wet-beow (`brew install geos` on OS X or `apt-get install libgeos-dev` on Debian/Ubuntu)
+  8. Create a new PostgreSQL database
 
-  10. Create the .ini file as per the normal CKAN installation instructions and modify as noted above.
+  ```
+  sudo -u postgres createuser -S -D -R -P ckan_default
+  sudo -u postgres createdb -O ckan_default stcndm_ckan -E utf-8
+  ```
 
-  11. Configure the WET extension for use as per https://github.com/open-data/ckanext-wet-boew/tree/wet4-scheming
+  9. Create a new Solr collection
 
-  12. Create an organization with the URL statcan and the name Statistics Canada
+  ```
+  sudo su - solr -c "/opt/solr/bin/solr create -c stcndm -n data_driven_schema_configs"
+  sudo -u solr ln -f -s ~/stcndm/ckanext-stcndm/conf/solr/*.txt /var/solr/data/stcndm/conf
+  sudo -u solr ln -f -s ~/stcndm/ckanext-stcndm/conf/solr/solrconfig-dev.xml /var/solr/data/stcndm/conf/solrconfig.xml
+  sudo -u solr ln -f -s ~/stcndm/ckanext-stcndm/conf/solr/schema-dev.xml /var/solr/data/stcndm/conf/schema.xml
+  ```
 
+  10. Create a CKAN config file and link the who.ini
+
+  ```
+  paster make-config ckan development.ini
+  ln -s ~/stcndm/ckan/who.ini who.ini
+  sudo mkdir -p /etc/ckan/stcndm
+  sudo ln -s ~/stcndm/*.ini /etc/ckan/stcndm/
+  ```
+
+  11. Initialize the database
+
+  ```
+  paster --plugin=ckan db init -c development.ini
+  ```
+
+  12. Modify the development.ini file with the following values:
+
+    * `sqlalchemy.url = postgresql://ckan_default:pass@localhost/stcndm_ckan`
+    * `solr_url = http://localhost:8983/solr/stcndm`
+    * `ckan.site_id = stcndm`
+    * `ckan.plugins = stats text_view image_view recline_view
+    stcndm stcndm_report_generator repeating scheming_datasets fluent
+    wet_boew_theme_gc_intranet`
+
+  13. Configure the WET extension for use as per https://github.com/open-data/ckanext-wet-boew/tree/wet4-scheming
+
+  14. Create the Statcan organization
+
+  ```
+  ckanapi action organization_create name=statcan title="Statistics Canada"
+  ```
+
+  15. Launch CKAN
+
+  ```
+  paster serve ~/stcndm/development.ini
+  ```
 
