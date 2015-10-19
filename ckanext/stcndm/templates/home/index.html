@@ -14,8 +14,10 @@
       {% set name = h.scheming_language_text(schema[1]['title']) %}
       {% set count = schema[1].count %}
       <li class="row col-md-4" style="margin:0.5em 0">
-        <a href="/{{ schema_id }}">{{ h.truncate(name, 50) }} ({{ count }}<span class="wb-inv"> {{ _("datasets") }}</span>)</a>&nbsp;&nbsp;
-        <a class="btn btn-default" href="/{{ schema_id }}/new">{{ _("New") }}<span class="wb-inv"> {{ _(" %(type)s dataset")|format(type=name) }}</span> <span class="glyphicon glyphicon-plus"></span></a>
+        <a href="{{ h.url_for(schema_id) }}">{{ h.truncate(name, 50) }} ({{ count }}<span class="wb-inv"> {{ _("datasets") }}</span>)</a>&nbsp;&nbsp;
+        {% if h.check_access('package_create') %}
+          <a class="btn btn-default" href="{{ h.url_for(schema_id + '_new') }}">{{ _("New") }}<span class="wb-inv"> {{ _(" %(type)s dataset")|format(type=name) }}</span> <span class="glyphicon glyphicon-plus"></span></a>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
@@ -23,9 +25,9 @@
 {% block report_generator %}
     <div class="col-md-12">
         <section class="panel panel-primary">
-          <h2 class="panel-heading" style="margin-top:0">Report Generator</h2>
+          <h2 class="panel-heading" style="margin-top:0">{{ _('Report Generator') }}</h2>
           <div class="panel-body">
-            <a href="/report-generator">Report Generator</a>
+            {% link_for _('Report Generator'), controller='ckanext.report_generator.controller:ReportGeneratorController', action='index' %}
           </div>
         </section>
     </div>
