@@ -43,8 +43,8 @@ dataset_fields:
 - field_name: name
   preset: ndm_name
   # follow our custom name generation with default package name validators
-  validators: conference_create_name
-    not_empty unicode name_validator package_name_validator
+  create_validators: product_create_name
+  validators: not_empty unicode name_validator package_name_validator
 
 - field_name: product_type_code
   label:
@@ -137,6 +137,8 @@ dataset_fields:
 
 - field_name: product_id_new
   preset: ndm_product_id_new
+  form_attrs:
+    readonly: readonly
 
 - field_name: product_id_old
   preset: ndm_product_id_old

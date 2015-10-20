@@ -138,7 +138,7 @@ class STCNDMPlugin(p.SingletonPlugin):
 
             if field_type == 'fluent':
                 for key in value.keys():
-                    label = '{item}_{key}'.format(
+                    label = u'{item}_{key}'.format(
                         item=item,
                         key=key
                     )
@@ -155,10 +155,10 @@ class STCNDMPlugin(p.SingletonPlugin):
                 else:
                     lookup = fs.get('lookup', '')
                 if lookup and value:
-                    label_en = '{item}_desc_en'.format(
+                    label_en = u'{item}_desc_en'.format(
                         item=item
                     )
-                    label_fr = '{item}_desc_fr'.format(
+                    label_fr = u'{item}_desc_fr'.format(
                         item=item
                     )
                     if multivalued:
@@ -168,8 +168,8 @@ class STCNDMPlugin(p.SingletonPlugin):
                             if not v:
                                 continue
                             desc = lookup_label(lookup, v, lookup_type)
-                            desc_en.append(desc['en'])
-                            desc_fr.append(desc['fr'])
+                            desc_en.append(desc[u'en'])
+                            desc_fr.append(desc[u'fr'])
 
                         index_data_dict[str(item)] = value
 
@@ -177,8 +177,8 @@ class STCNDMPlugin(p.SingletonPlugin):
                         index_data_dict[label_fr] = desc_fr
                     else:
                         desc = lookup_label(lookup, value, lookup_type)
-                        index_data_dict[label_en] = desc['en']
-                        index_data_dict[label_fr] = desc['fr']
+                        index_data_dict[label_en] = desc[u'en']
+                        index_data_dict[label_fr] = desc[u'fr']
             elif field_type == 'date':
                 if value:
                     try:
@@ -229,6 +229,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetCubeList": cubes.get_cube_list_by_subject,
             "GetCube": cubes.get_cube,
             "GetNextCubeId": cubes.get_next_cube_id,
+            "GetNextNonDataProductId": common.get_next_non_data_product_id,
             "CreateOrUpdateCubeRelease": cubes.create_or_update_cube_release,
             "GetDailyList": daily.get_daily_list,
             "GetDefaultViews": daily.get_default_views,
@@ -269,29 +270,30 @@ class STCNDMPlugin(p.SingletonPlugin):
             "article_create_name": validators.article_create_name,
             "codeset_create_name": validators.codeset_create_name,
             "codeset_multiple_choice": validators.codeset_multiple_choice,
-            "conference_create_name": validators.conference_create_name,
+#            "conference_create_name": validators.conference_create_name,
             "correction_create_name": validators.correction_create_name,
+            "create_product_id": validators.create_product_id,
             "cube_create_name": validators.cube_create_name,
             "daily_create_name": validators.daily_create_name,
             "set_default_value": validators.set_default_value,
             "format_create_name": validators.format_create_name,
-            "generic_create_name": validators.generic_create_name,
+#            "generic_create_name": validators.generic_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
             "indicator_create_name": validators.indicator_create_name,
             "next_correction_id": validators.next_correction_id,
             "ndm_str2boolean": validators.ndm_str2boolean,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
             "province_create_name": validators.province_create_name,
-            "publication_create_name": validators.publication_create_name,
-            "pumf_create_name": validators.pumf_create_name,
+            "product_create_name": validators.product_create_name,
+#            "pumf_create_name": validators.pumf_create_name,
             "release_create_name": validators.release_create_name,
-            "service_create_name": validators.service_create_name,
+#            "service_create_name": validators.service_create_name,
             "shortcode_validate": validators.shortcode_validate,
             "shortcode_output": validators.shortcode_output,
             "subject_create_name": validators.subject_create_name,
             "survey_create_name": validators.survey_create_name,
             "valid_parent_slug": validators.valid_parent_slug,
-            "video_create_name": validators.video_create_name,
+#            "video_create_name": validators.video_create_name,
             "view_create_name": validators.view_create_name,
         }
 

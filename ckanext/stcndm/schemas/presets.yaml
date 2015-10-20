@@ -772,7 +772,8 @@ presets:
     label:
       en: Internal Unique ID
       fr: ID interne unique
-    form_snippet: null
+    form_attrs:
+      readonly: readonly
     schema_field_type: string
     schema_multivalued: false
     schema_extras: false
@@ -784,7 +785,7 @@ presets:
       fr: Organisation
 #    create_validators: default_value
     form_attrs:
-        readonly: readonly
+      readonly: readonly
     form_placeholder: statcan
     schema_field_type: string
     schema_multivalued: false
@@ -883,6 +884,9 @@ presets:
       en: Product ID New
       fr: ID produit nouveau
     required: true
+#    form_attrs:
+#        readonly: readonly
+    validators: create_product_id
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true

@@ -363,6 +363,97 @@ def next_correction_id():
         return u'2000'
 
 
+def next_non_data_product_id(subject_code, product_type_code):
+    """
+    Get next available product ID
+    :param subject_code:
+    :type subject_code: 2 digit str
+    :param product_type_code:
+    :type product_type_code: 2 digit str
+    :return:
+    """
+    if isinstance(subject_code, basestring) and int(subject_code) < 100:
+        pass
+    else:
+        raise _ValidationError('Invalid subject code. Expected 2 digit string')
+    if isinstance(product_type_code, basestring) and product_type_code in ['20', '21', '22', '23', '25', '26']:
+        pass
+    else:
+        raise _ValidationError('Invalid product type code. Expected one of 20, 21, 22, 23, 24, 25, 26')
+
+    i = 0
+    n = 1
+    product_sequence_number = 1
+    while i < n:
+        lc = ckanapi.LocalCKAN()
+        results = lc.action.package_search(
+            q='product_id_new:{subject_code}{product_type_code}????'.format(
+                subject_code=subject_code,
+                product_type_code=product_type_code
+            ),
+            sort='product_id_new ASC',
+            rows=1000,
+            start=i*1000
+        )
+        n = results['count'] / 1000.0
+        i += 1
+        for result in results['results']:
+            if product_sequence_number < int(result['product_id_new'][5:8]):
+                return u'{subject_code}{product_type_code}{sequence_number}'.format(
+                    subject_code=subject_code,
+                    product_type_code=product_type_code,
+                    sequence_number=unicode(product_sequence_number).zfill(4)
+                )
+            else:
+                product_sequence_number += 1
+
+    return u'{subject_code}{product_type_code}{sequence_number}'.format(
+        subject_code=subject_code,
+        product_type_code=product_type_code,
+        sequence_number=unicode(product_sequence_number).zfill(4)
+    )
+
+
+def next_article_id(top_parent_id, issue_number):
+    """
+    Get next available product ID
+    :param top_parent_id:
+    :type top_parent_id: 8 digit str
+    :param issue_number:
+    :type issue_number: 7 digit str
+    :return: 19 or 20 digit str
+    """
+    if not isinstance(top_parent_id, basestring) or len(top_parent_id) != 8:
+        raise _ValidationError('Invalid top parent ID.  Expected 8 digit string')
+    if not isinstance(issue_number, basestring) or len(issue_number) != 7:
+        raise _ValidationError('Invalid issue number. Expected 7 digit string')
+
+    i = 0
+    n = 1
+    article_sequence_number = 1
+    while i < n:
+        lc = ckanapi.LocalCKAN()
+        results = lc.action.package_search(
+            q='product_id_new:{top_parent_id}{issue_number}????*'.format(
+                top_parent_id=top_parent_id,
+                issue_number=issue_number
+            ),
+            sort='product_id_new ASC',
+            rows=1000,
+            start=i*1000
+        )
+        n = results['count'] / 1000.0
+        i += 1
+        for result in results['results']:
+            if article_sequence_number < int(result['product_id_new'][15:]):
+                return u'{top_parent_id}{issue_number}{sequence_number}'.format(
+                    top_parent_id=top_parent_id,
+                    issue_number=issue_number,
+                    sequence_number=unicode(article_sequence_number).zfill(4)
+                )
+            else:
+                article_sequence_number += 1
+
 def ensure_release_exists(product_id, context=None, ref_period=None):
     """
     Ensure that a release dataset exists for the given product_id.
