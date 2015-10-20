@@ -57,12 +57,3 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: false
-
-- field_name: issn_number
-  label:
-    en: ISSN Number
-    fr: Nombre ISSN
-  preset: fluent_text
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: true
