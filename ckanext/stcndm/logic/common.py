@@ -78,6 +78,24 @@ def get_autocomplete(context, data_dict):
 
 
 @logic.side_effect_free
+def get_next_non_data_product_id(context, data_dict):
+    """
+    Returns the next available ProductId (without registering it).
+
+    :param subjectCode:
+    :type subjectCode: str
+    :param productTypeCode:
+    :type productTypeCode: str
+
+    :return: next available ProductId
+    :rtype: str
+    """
+    subject_code = _get_or_bust(data_dict, 'subjectCode')
+    product_type_code = _get_or_bust(data_dict, 'productTypeCode')
+    return stcndm_helpers.next_non_data_product_id(subject_code, product_type_code)
+
+
+@logic.side_effect_free
 def get_next_product_id(context, data_dict):
     """
     Returns the next available ProductId (without registering it).

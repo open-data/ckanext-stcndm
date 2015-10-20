@@ -48,6 +48,11 @@ def shortcode_validate(key, data, errors, context):
     if value is missing:
         data[key] = json.dumps([])
         return
+    try:
+        if isinstance(json.loads(value), list):
+            return value
+    except ValueError:
+        pass  # value wasn't in json format, keep processing
     if isinstance(value, basestring):
         value = value.split(';')
     if not isinstance(value, list):
@@ -130,6 +135,9 @@ def codeset_create_name(key, data, errors, context):
 def format_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
+    if errors[key]:
+        return
+
     parent_id = _data_lookup(('parent_id',), data)
     if not parent_id:
         errors[key].append(_('could not find parent_id of parent'))
@@ -144,6 +152,39 @@ def format_create_name(key, data, errors, context):
         format_code.zfill(2).lower()
     )
 
+
+def create_product_id(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+    if len(_data_lookup(('product_id_new',), data)):
+        return
+    data_set_type = _data_lookup(('type',), data)
+    shortcode_validate(('subject_codes',), data, errors, context)  # make sure subject_codes processed
+    subject_codes = shortcode_output(_data_lookup(('subject_codes',), data))
+    if len(subject_codes) != 1:
+        errors[key].append(_('there must be exactly 1 subject code when creating a new product'))
+        return
+    if data_set_type in ['publication', 'video', 'conference', 'service', 'pumf', 'generic']:
+        product_id_new = h.next_non_data_product_id(
+            subject_code=subject_codes[0],
+            product_type_code=_data_lookup(('product_type_code',),data)
+        )
+        data[key] = product_id_new
+        return product_id_new
+    elif data_set_type in ['article']:
+        product_id_new = h.next_article_id(
+            top_parent_id=_data_lookup(('top_parent_id',), data),
+            issue_number=_data_lookup(('issue_number',), data)
+        )
+        data[key] = product_id_new
+        return product_id_new
+
+    errors[key].append(_('create_product_id not yet implemented for {data_set_type}'.format(
+        data_set_type=data_set_type
+    )))
+    return
 
 # def release_create_name(key, data, errors, context):
 #     # if there was an error before calling our validator
@@ -265,30 +306,30 @@ def indicator_create_name(key, data, errors, context):
         errors[key].append(_('could not find product_id_new'))
 
 
-def pumf_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
+# def pumf_create_name(key, data, errors, context):
+#     # if there was an error before calling our validator
+#     # don't bother with our validation
+#     if errors[key]:
+#         return
+#
+#     product_id_new = _data_lookup(('product_id_new',), data)
+#     if product_id_new:
+#         data[key] = u'pumf-{0}'.format(product_id_new.lower())
+#     else:
+#         errors[key].append(_('could not find product_id_new'))
 
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        data[key] = u'pumf-{0}'.format(product_id_new.lower())
-    else:
-        errors[key].append(_('could not find product_id_new'))
 
-
-def video_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        data[key] = u'video-{0}'.format(product_id_new.lower())
-    else:
-        errors[key].append(_('could not find product_id_new'))
+# def video_create_name(key, data, errors, context):
+#     # if there was an error before calling our validator
+#     # don't bother with our validation
+#     if errors[key]:
+#         return
+#
+#     product_id_new = _data_lookup(('product_id_new',), data)
+#     if product_id_new:
+#         data[key] = u'video-{0}'.format(product_id_new.lower())
+#     else:
+#         errors[key].append(_('could not find product_id_new'))
 
 
 def view_create_name(key, data, errors, context):
@@ -313,28 +354,55 @@ def next_correction_id(key, data, errors, context):
     data[key] = h.next_correction_id()
 
 
-def publication_create_name(key, data, errors, context):
+def product_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
         return
+    # if a name has already been set
+    # we don need to do it again
+    if len(_data_lookup(('name',), data)):
+        return
 
+    data_set_type = _data_lookup(('type',), data)
+    create_product_id(('product_id_new',), data, errors, context)
     product_id_new = _data_lookup(('product_id_new',), data)
     if product_id_new:
-        data[key] = u'publication-{0}'.format(product_id_new.lower())
+        data[key] = u'{data_set_type}-{product_id_new}'.format(
+            data_set_type=data_set_type,
+            product_id_new=product_id_new.lower()
+        )
     else:
         errors[key].append(_('could not find product_id_new'))
 
 
-def generic_create_name(key, data, errors, context):
+# def generic_create_name(key, data, errors, context):
+#     # if there was an error before calling our validator
+#     # don't bother with our validation
+#     if errors[key]:
+#         return
+#
+#     product_id_new = _data_lookup(('product_id_new',), data)
+#     if product_id_new:
+#         data[key] = u'generic-{0}'.format(product_id_new.lower())
+#     else:
+#         errors[key].append(_('could not find product_id_new'))
+
+
+def article_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
         return
+    # if a name has already been set
+    # we don need to do it again
+    if len(_data_lookup(('name',), data)):
+        return
 
+    create_product_id(('product_id_new',), data, errors, context)
     product_id_new = _data_lookup(('product_id_new',), data)
     if product_id_new:
-        data[key] = u'generic-{0}'.format(product_id_new.lower())
+        data[key] = u'article-{0}'.format(product_id_new.lower())
     else:
         errors[key].append(_('could not find product_id_new'))
 
@@ -388,19 +456,6 @@ def release_create_name(key, data, errors, context):
         )).lower()
 
 
-def article_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        data[key] = u'article-{0}'.format(product_id_new.lower())
-    else:
-        errors[key].append(_('could not find product_id_new'))
-
-
 def daily_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
@@ -414,30 +469,30 @@ def daily_create_name(key, data, errors, context):
         errors[key].append(_('could not find product_id_new'))
 
 
-def conference_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
+# def conference_create_name(key, data, errors, context):
+#     # if there was an error before calling our validator
+#     # don't bother with our validation
+#     if errors[key]:
+#         return
+#
+#     product_id_new = _data_lookup(('product_id_new',), data)
+#     if product_id_new:
+#         data[key] = u'conference-{0}'.format(product_id_new.lower())
+#     else:
+#         errors[key].append(_('could not find product_id_new'))
 
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        data[key] = u'conference-{0}'.format(product_id_new.lower())
-    else:
-        errors[key].append(_('could not find product_id_new'))
 
-
-def service_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        data[key] = u'service-{0}'.format(product_id_new.lower())
-    else:
-        errors[key].append(_('could not find product_id_new'))
+# def service_create_name(key, data, errors, context):
+#     # if there was an error before calling our validator
+#     # don't bother with our validation
+#     if errors[key]:
+#         return
+#
+#     product_id_new = _data_lookup(('product_id_new',), data)
+#     if product_id_new:
+#         data[key] = u'service-{0}'.format(product_id_new.lower())
+#     else:
+#         errors[key].append(_('could not find product_id_new'))
 
 
 def ndm_str2boolean(key, data, errors, context):
