@@ -49,7 +49,11 @@ def code_lookup(old_field_name, data_set, choice_list):
 def do_product(data_set):
     product_out = {
         u'owner_org': u'statcan',
-        u'private': False
+        u'private': False,
+        u'issn_number': {
+            u'en': data_set.get(u'issnnum_en_strs', u''),
+            u'fr': data_set.get(u'issnnum_fr_strs', u'')
+            },
     }
 
     temp = {}
@@ -389,7 +393,7 @@ def do_release(data_set):
             release_out[u'display_code'] = result[0]
 
     if in_and_def(u'releasedate_bi_strs', data_set):
-        release_out[u'release_date'] = data_set.get(u'releasedate_bi_strs')
+        release_out[u'release_date'] = data_set.get(u'releasedate_bi_strs').strip()
 
     return release_out
 
@@ -409,15 +413,11 @@ def do_format(data_set):
         u'isbn_number': {
             u'en': data_set.get(u'isbnnum_en_strs', u''),
             u'fr': data_set.get(u'isbnnum_fr_strs', u'')
-        },
-        u'issn_number': {
-            u'en': data_set.get(u'issnnum_en_strs', u''),
-            u'fr': data_set.get(u'issnnum_fr_strs', u'')
-        },
+            },
         u'url': {
             u'en': data_set.get(u'url_en_strs', u''),
             u'fr': data_set.get(u'url_fr_strs', u'')
-        },
+            },
         u'top_parent_id': data_set.get(u'hierarchyid_bi_strm', u'')
     }
     if not format_out[u'top_parent_id']:

@@ -115,6 +115,15 @@ dataset_fields:
 - field_name: internal_contacts
   preset: ndm_internal_contacts
 
+- field_name: issn_number
+  label:
+    en: ISSN Number
+    fr: Nombre ISSN
+  preset: fluent_text
+  schema_field_type: fluent
+  schema_multivalued: false
+  schema_extras: true
+
 - field_name: keywords
   preset: ndm_keywords
 
