@@ -110,9 +110,6 @@ def get_next_legacy_article_id(context, data_dict):
 
     data_dict['product_id'] = product_id
 
-    # testing for existence of parent product id
-    lc.action.GetProduct(productId=product_id)
-
     product_family = '{product_id}'.format(
         product_id=product_id,
     )
