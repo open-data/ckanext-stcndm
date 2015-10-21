@@ -92,7 +92,10 @@ def get_next_non_data_product_id(context, data_dict):
     """
     subject_code = _get_or_bust(data_dict, 'subjectCode')
     product_type_code = _get_or_bust(data_dict, 'productTypeCode')
-    return stcndm_helpers.next_non_data_product_id(subject_code, product_type_code)
+    return stcndm_helpers.next_non_data_product_id(
+        subject_code,
+        product_type_code
+    )
 
 
 @logic.side_effect_free
@@ -441,6 +444,7 @@ def get_upcoming_releases(context, data_dict):
     """
     # TODO: date validation? anything else?
 
+    context['ignore_capacity_check'] = True
     lc = ckanapi.LocalCKAN(context=context)
 
     start_date = _get_or_bust(data_dict, 'startDate')
