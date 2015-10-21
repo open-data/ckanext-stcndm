@@ -525,6 +525,7 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
 
     return lc.action.package_create(
         type=u'release',
+        private=False,
         owner_org=result['owner_org'],
         release_id='001',
         parent_id=result['product_id_new'],
