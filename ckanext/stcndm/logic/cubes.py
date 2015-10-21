@@ -170,6 +170,7 @@ def register_cube(context, data_dict):
         # Old method simply used the product_id, whereas the modern edit
         # form validator uses cube-{product_id}, so lets go with that.
         owner_org='statcan',
+        private=False,
         type=u'cube',
         product_id_new=product_id,
         product_type_code=product_type_dict['product_type_code'],
@@ -178,9 +179,9 @@ def register_cube(context, data_dict):
             'en': title_en,
             'fr': title_fr,
         },
-        # '02' is "Draft" status, according to the ndm_publish_status
+        # '2' is "Draft" status, according to the ndm_publish_status
         # preset.
-        last_publish_status_code='02'
+        last_publish_status_code='2'
     )
 
     # Return our newly created package.
