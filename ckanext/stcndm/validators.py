@@ -53,6 +53,10 @@ def shortcode_validate(key, data, errors, context):
             return value
     except ValueError:
         pass  # value wasn't in json format, keep processing
+    except TypeError:
+        data[key] = json.dumps([])
+        return
+
     if isinstance(value, basestring):
         value = value.split(';')
     if not isinstance(value, list):
