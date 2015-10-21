@@ -205,7 +205,6 @@ def register_legacy_non_data_product(context, data_dict):
     if dataset_type == 'article':
         response = lc.action.GetNextLegacyArticleId(**{'parentProduct': parent_product,
                                                        'productType': product_type})
-        pprint.pprint(response)
         product_id_new = response
         issue_number = product_id_new[:-5]
         parent_product = product_id_new[:8]
