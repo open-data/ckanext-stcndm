@@ -11,7 +11,9 @@ from ckanext.stcndm.logic.common import get_product
 __author__ = 'Statistics Canada'
 
 _get_or_bust = logic.get_or_bust
-_stub_msg = {"result": "This method is just a stub for now. Please do not use."}
+_stub_msg = {
+    'result': 'This method is just a stub for now. Please do not use.'
+}
 # noinspection PyUnresolvedReferences
 _get_action = toolkit.get_action
 # noinspection PyUnresolvedReferences
@@ -45,33 +47,50 @@ def get_daily_list(context, data_dict):
     try:
         start_date = dt.strptime(start_date_str, '%Y-%m-%d')
     except ValueError:
-        raise _ValidationError('startDate \'{0}\' not in YYYY-MM-DD format'.format(start_date_str))
+        raise _ValidationError(
+            'startDate \'{0}\' not in YYYY-MM-DD format'.format(start_date_str)
+        )
 
     if 'endDate' in data_dict:
         end_date_str = data_dict['endDate']
         try:
             end_date = dt.strptime(end_date_str, '%Y-%m-%d')
         except ValueError:
-            raise _ValidationError('endDate \'{0}\' not in YYYY-MM-DD format'.format(end_date_str))
+            raise _ValidationError(
+                'endDate \'{0}\' not in YYYY-MM-DD format'.format(end_date_str)
+            )
         days = (end_date - start_date).days + 1
         if days < 1:
-            raise _ValidationError(
-                _('endDate \'{0}\' must be greater than startDate \'{1}\''.format(end_date_str, start_date_str)))
+            raise _ValidationError(_(
+                'endDate \'{0}\' must be greater '
+                'than startDate \'{1}\''.format(
+                    end_date_str,
+                    start_date_str
+                )
+            ))
     else:
         days = 1
 
     for day in range(days):
         single_date = (start_date + datetime.timedelta(days=day)).date()
         single_date_str = single_date.strftime('%Y-%m-%d')
-        q = {'q': 'product_type_code:24 AND release_date:{0}T08\:30'.format(single_date_str)}
+        q = {
+            'q': 'product_type_code:24 AND release_date:{0}T08\:30'.format(
+                single_date_str
+            )
+        }
 
         result = _get_action('package_search')(context, q)
 
         count = result['count']
         if count == 0:
-            raise _NotFound('Daily not found for date \'{0}\''.format(single_date_str))
+            raise _NotFound('Daily not found for date \'{0}\''.format(
+                single_date_str
+            ))
         elif count > 1:
-            raise _ValidationError('More than one Daily for date \'{0}\''.format(single_date_str))
+            raise _ValidationError(
+                'More than one Daily for date \'{0}\''.format(single_date_str)
+            )
         else:
             daily_output = {}
             extras = result['results'][0]['extras']
@@ -81,7 +100,9 @@ def get_daily_list(context, data_dict):
                     children = []
                     child_ids = extra['value'].split('; ')
                     for child_id in child_ids:
-                        child_result = get_product(context, {'productId': child_id})
+                        child_result = get_product(context, {
+                            'productId': child_id
+                        })
                         for a_child_result in child_result:
                             children.append(a_child_result)
                     daily_output['children'] = children
@@ -122,7 +143,9 @@ def register_daily(context, data_dict):
 
     product_id = _get_or_bust(data_dict, 'productId')
     if not re.match('^00240001[0-9]{3,6}$', product_id):
-        raise _ValidationError(_('Invalid product id for Daily: {0}'.format(product_id)))
+        raise _ValidationError(
+            _('Invalid product id for Daily: {0}'.format(product_id))
+        )
 
     #  check whether the product ID we were given is already in use
     result = lc.action.package_search(
@@ -131,7 +154,9 @@ def register_daily(context, data_dict):
     count = result['count']
     if count:
         lc.action.EnsureReleaseExists(productId=product_id)
-        raise _ValidationError(_("product Id '{0}' already in use".format(product_id)))
+        raise _ValidationError(
+            _("product Id '{0}' already in use".format(product_id))
+        )
 
     product_title = _get_or_bust(data_dict, 'productTitle')
 
@@ -141,7 +166,9 @@ def register_daily(context, data_dict):
 
     child_list = _get_or_bust(data_dict, 'childList')
     if not child_list:
-        raise _ValidationError(_('childList must contain at least one child ID'))
+        raise _ValidationError(
+            _('childList must contain at least one child ID')
+        )
     for child in child_list:
         if not isinstance(child, basestring):
             raise _ValidationError(_('Items in childList must all be strings'))
@@ -165,10 +192,10 @@ def register_daily(context, data_dict):
     new_product = lc.action.package_create(**daily_dict)
 
     release_dict = {
-            'releasedProductId': product_id,
-            'parentProduct': product_id,
-            'releaseDate': release_date_str,
-            'lastPublishStatusCode': last_publish_status_code
+        'releasedProductId': product_id,
+        'parentProduct': product_id,
+        'releaseDate': release_date_str,
+        'lastPublishStatusCode': last_publish_status_code
     }
     if 'referencePeriod' in data_dict and data_dict['referencePeriod']:
         release_dict['referencePeriod'] = data_dict['referencePeriod']
@@ -183,10 +210,11 @@ def register_daily(context, data_dict):
 @logic.side_effect_free
 def get_themes(context, data_dict):
     """
-    Returns a dict of themes (subjects) with ID, English label, French label, code values and
-    hierarchy information for each theme.
+    Returns a dict of themes (subjects) with ID, English label, French label,
+    code values and hierarchy information for each theme.
 
-    :return: A dictionary containing the English, French and code values for given subjectCode for each entry
+    :return: A dictionary containing the English, French and code values for
+             given subjectCode for each entry
     :rtype: dict
     """
 
@@ -198,9 +226,11 @@ def get_themes(context, data_dict):
 @logic.side_effect_free
 def get_surveys(context, data_dict):
     """
-    Returns a list of surveys with ID, English label, and French label for each survey.
+    Returns a list of surveys with ID, English label, and French label for each
+    survey.
 
-    :return: A dictionary containing the ID, English label, and French label for each survey.
+    :return: A dictionary containing the ID, English label, and French label
+             for each survey.
     :rtype: dict
     """
 
@@ -212,9 +242,11 @@ def get_surveys(context, data_dict):
 @logic.side_effect_free
 def get_default_views(context, data_dict):
     """
-    Returns a list of the default views with the Product ID, English label, and French label for each default view.
+    Returns a list of the default views with the Product ID, English label, and
+    French label for each default view.
 
-    :return: A dictionary containing the Product ID, English label, and French label in each default view.
+    :return: A dictionary containing the Product ID, English label, and French
+             label in each default view.
     :rtype: dict
     """
 
@@ -233,7 +265,7 @@ def get_product_issues(context, data_dict):
     :rtype: dict
     """
 
-    product_id = _get_or_bust(data_dict, 'productId')
+    _get_or_bust(data_dict, 'productId')
 
     output = _stub_msg
 
@@ -247,12 +279,13 @@ def get_product_issue_articles(context, data_dict):
     :param: productId: A non-data product ID.
     :param: issueNo: The issue number
 
-    :return: A dictionary containing the articles for the specified product and issue
+    :return: A dictionary containing the articles for the specified product and
+             issue
     :rtype: dict
     """
 
-    product_id = _get_or_bust(data_dict, 'productId')
-    issue_no = _get_or_bust(data_dict, 'issueNo')
+    _get_or_bust(data_dict, 'productId')
+    _get_or_bust(data_dict, 'issueNo')
 
     output = _stub_msg
 
