@@ -75,39 +75,34 @@ def get_daily_list(context, data_dict):
         single_date = (start_date + datetime.timedelta(days=day)).date()
         single_date_str = single_date.strftime('%Y-%m-%d')
         q = {
-            'q': 'product_type_code:24 AND release_date:{0}T08\:30'.format(
-                single_date_str
+            'q': (
+                'product_type_code:24 AND '
+                'release_date:"{0}T08:30:00Z"'.format(
+                    single_date_str
+                )
             )
         }
 
-        result = _get_action('package_search')(context, q)
+        results = _get_action('package_search')(context, q)
 
-        count = result['count']
-        if count == 0:
-            raise _NotFound('Daily not found for date \'{0}\''.format(
-                single_date_str
-            ))
-        elif count > 1:
+        count = results['count']
+        if count > 1:
             raise _ValidationError(
                 'More than one Daily for date \'{0}\''.format(single_date_str)
             )
-        else:
-            daily_output = {}
-            extras = result['results'][0]['extras']
-            for extra in extras:
-                daily_output[extra['key']] = extra['value']
-                if extra['key'] == 'child_list':
-                    children = []
-                    child_ids = extra['value'].split('; ')
-                    for child_id in child_ids:
-                        child_result = get_product(context, {
-                            'productId': child_id
-                        })
-                        for a_child_result in child_result:
-                            children.append(a_child_result)
-                    daily_output['children'] = children
 
-        output.append(daily_output)
+        for result in results['results']:
+            children = []
+
+            for child in result.get('child_list', []):
+                children.append(
+                    get_product(context, {
+                        'productId': child
+                    })
+                )
+
+            result['children'] = children
+            output.append(result)
 
     return output
 
