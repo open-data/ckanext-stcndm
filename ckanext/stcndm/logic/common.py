@@ -482,7 +482,8 @@ def get_upcoming_releases(context, data_dict):
 
         release_result.update({
             'title': parent_result.get('title'),
-            'url': parent_result.get('url')
+            'url': parent_result.get('url'),
+            'product_type': parent_result.get('type')
         })
 
     return {'count': result['count'], 'results': results}
