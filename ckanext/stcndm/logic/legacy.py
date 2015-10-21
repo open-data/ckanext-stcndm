@@ -35,9 +35,9 @@ def get_next_legacy_product_id(context, data_dict):
     :raises: ValidationError, ObjectNotFound
     """
 
-    VALID_LEGACY_PRODUCT_TYPE_CODES =  {'20': 'analytical',
-                                        '25': 'PUMF',  # Public Use Microdata File
-                                        '26': 'Publication with Repeating Title'}
+    VALID_LEGACY_PRODUCT_TYPE_CODES = {'20': 'analytical',
+                                       '25': 'PUMF',  # Public Use Microdata File
+                                       '26': 'Publication with Repeating Title'}
 
     lc = ckanapi.LocalCKAN(context=context)
     product_id = _get_or_bust(data_dict, 'parentProduct')
@@ -118,10 +118,9 @@ def get_next_legacy_article_id(context, data_dict):
     )
 
     query = {
-        'q': 'product_id_new:{product_family}*'
-             ' AND type:article'.format(
+        'q': 'product_id_new:{product_family}* AND type:article'.format(
             product_family=product_family
-        ),
+            ),
         'sort': 'product_id_new desc'
     }
 
