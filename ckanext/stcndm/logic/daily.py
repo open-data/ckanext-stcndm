@@ -148,7 +148,6 @@ def register_daily(context, data_dict):
     )
     count = result['count']
     if count:
-        lc.action.EnsureReleaseExists(productId=product_id)
         raise _ValidationError(
             _("product Id '{0}' already in use".format(product_id))
         )
@@ -168,6 +167,16 @@ def register_daily(context, data_dict):
         if not isinstance(child, basestring):
             raise _ValidationError(_('Items in childList must all be strings'))
 
+    release_dict = {
+        'releasedProductId': product_id,
+        'parentProduct': product_id,
+        'releaseDate': release_date_str,
+        'lastPublishStatusCode': last_publish_status_code
+    }
+    if 'referencePeriod' in data_dict and data_dict['referencePeriod']:
+        release_dict['referencePeriod'] = data_dict['referencePeriod']
+    lc.action.RegisterRelease(**release_dict)
+
     daily_dict = {
         'name': 'daily-{0}'.format(product_id),
         'owner_org': 'statcan',
@@ -185,16 +194,6 @@ def register_daily(context, data_dict):
     if 'geodescriptorCodes' in data_dict and data_dict['geodescriptorCodes']:
         daily_dict['geodescriptor_codes'] = data_dict['geodescriptorCodes']
     new_product = lc.action.package_create(**daily_dict)
-
-    release_dict = {
-        'releasedProductId': product_id,
-        'parentProduct': product_id,
-        'releaseDate': release_date_str,
-        'lastPublishStatusCode': last_publish_status_code
-    }
-    if 'referencePeriod' in data_dict and data_dict['referencePeriod']:
-        release_dict['referencePeriod'] = data_dict['referencePeriod']
-    lc.action.RegisterRelease(**release_dict)
 
     return lc.action.GetProduct(
         productId=new_product['product_id_new'],
