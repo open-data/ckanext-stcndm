@@ -6,9 +6,10 @@ from urlparse import urlparse
 
 import ckan.plugins as p
 import ckan.lib.helpers as h
-from ckan.lib.base import BaseController, config
+from ckan.lib.base import config
+from ckan.controllers.api import ApiController
 
-class SolrProxyController(BaseController):
+class SolrProxyController(ApiController):
 
     solr_url = urlparse(config.get('solr_url',
                 'http://127.0.0.1:8983/solr/ckan'))
@@ -36,7 +37,8 @@ class SolrProxyController(BaseController):
         ckan_response.status = str(response.status) + ' ' + response.reason
         ckan_response.content_type = response.getheader('content-type')
 
-        ckan_response.body = data
-
         conn.close()
 
+        ckan_response.body = data
+
+        return data
