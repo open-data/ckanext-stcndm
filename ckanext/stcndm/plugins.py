@@ -346,6 +346,16 @@ class STCNDMPlugin(p.SingletonPlugin):
             action='list'
         )
 
+        map.connect(
+            'solr_proxy',
+            '/solr/select',
+            controller=(
+                'ckanext.stcndm.controllers.solr_proxy'
+                ':SolrProxyController'
+            ),
+            action='select'
+        )
+
         return map
 
     def after_map(self, map):
