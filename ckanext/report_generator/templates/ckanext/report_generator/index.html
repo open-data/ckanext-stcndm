@@ -62,7 +62,8 @@
 </div>
 <div class="alert alert-danger" role="alert" ng-show="queryError">
   <h2>Error:</h2>
-  An error occured while running the query.
+  <span ng-hide="queryErrorMessage">An error occured while running the query.</span>
+  <span ng-show="queryErrorMessage">{% raw %}{{queryErrorMessage}}{% endraw %}</span>
 </div>
 
 <script type="text/ng-template" id="templates/advanced-search.html">
@@ -163,7 +164,7 @@
       angular.module('services.config', [])
           .constant('configuration', {
               ckanInstance: '{{c.ckan_url}}',
-              solrCore: '{{c.solr_url}}'
+              solrCore: '{{c.ckan_url}}/solr'
           });
     })(window, angular);
     </script>
