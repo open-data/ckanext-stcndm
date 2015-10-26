@@ -48,17 +48,17 @@ def shortcode_validate(key, data, errors, context):
     if value is missing:
         data[key] = json.dumps([])
         return
-    try:
-        if isinstance(json.loads(value), list):
-            return value
-    except ValueError:
-        pass  # value wasn't in json format, keep processing
-    except TypeError:
-        data[key] = json.dumps([])
-        return
 
     if isinstance(value, basestring):
-        value = value.split(';')
+        try:
+            if isinstance(json.loads(value), list):
+                return value
+        except ValueError:
+            value = value.split(';')  # value wasn't in json format, keep processing
+        except TypeError:
+            data[key] = json.dumps([])
+            return
+
     if not isinstance(value, list):
         errors[key].append(_('expecting list of strings'))
         return
@@ -140,6 +140,10 @@ def format_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
+        return
+    # if a name has already been set
+    # we don need to do it again
+    if data.get(key) is not missing and len(data.get(key, '')):
         return
 
     parent_id = _data_lookup(('parent_id',), data)
@@ -415,6 +419,10 @@ def release_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
+        return
+    # if a name has already been set
+    # we don need to do it again
+    if data.get(key) is not missing and len(data.get(key, '')):
         return
 
     release_id = _data_lookup(('release_id',), data)
