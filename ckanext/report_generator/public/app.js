@@ -111,7 +111,7 @@
         $rootScope.sendQuery = function() {
             var url = configuration.solrCore + '/select',
                 params = $.extend(queryDefaults, {
-                    fq: 'dataset_type:' + $rootScope.dataTypeCtrl.selectedDatasetTypes.join(' OR '),
+                    fq: 'dataset_type:(' + $rootScope.dataTypeCtrl.selectedDatasetTypes.join(' OR ') + ')',
                     q: createQuery($rootScope.query),
                     fl: $rootScope.dspFieldCtrl.fields.join(','),
                     rows: parseInt($rootScope.maxResults, 10)
@@ -418,7 +418,7 @@ angular.module('checklist-model', [])
 
         if (configuration.solrCore.indexOf(configuration.ckanInstance) === -1) {
             typesRequest += '&json.wrf=JSON_CALLBACK';
-            httpMethod = $http.jsonp(typesRequest);
+            httpMethod = $http.jsonp;
         }
 
         httpMethod(typesRequest)
