@@ -703,6 +703,12 @@ def register_data_product(context, data_dict):
         'product_type_code': product_type
     })
 
+    if product_type == '11':
+        # Never currently set before this point, but just in case we don't
+        # want to trample it.
+        if not copied_fields.get('content_type_codes'):
+            copied_fields['content_type_codes'] = ['2012']
+
     lc.action.package_create(**copied_fields)
 
     if product_type == '11' and product_id.endswith('01'):
