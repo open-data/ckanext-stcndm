@@ -101,9 +101,6 @@ dataset_fields:
 - field_name: internal_authors
   preset: ndm_internal_authors
 
-- field_name: isbn_number
-  preset: ndm_isbn_number
-
 - field_name: last_release_date
   preset: ndm_last_release_date
 
