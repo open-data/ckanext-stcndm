@@ -111,7 +111,7 @@
         $rootScope.sendQuery = function() {
             var url = configuration.solrCore + '/select',
                 params = $.extend(queryDefaults, {
-                    fq: 'dataset_type:(' + $rootScope.dataTypeCtrl.selectedDatasetTypes.join(' OR ') + ')',
+                    fq: 'site_id:' + configuration.siteID + ' AND dataset_type:(' + $rootScope.dataTypeCtrl.selectedDatasetTypes.join(' OR ') + ')',
                     q: createQuery($rootScope.query),
                     fl: $rootScope.dspFieldCtrl.fields.join(','),
                     rows: parseInt($rootScope.maxResults, 10)
@@ -579,7 +579,7 @@ angular.module('checklist-model', [])
 
             $q.all(promises)
                 .then(function() {
-                    _this.fields = Object.keys(newFields);
+                    _this.fields = Object.keys(newFields).sort();
                     _this.fieldsDef = newFields;
                 });
         });
