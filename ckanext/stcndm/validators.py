@@ -54,11 +54,11 @@ def shortcode_validate(key, data, errors, context):
             if isinstance(json.loads(value), list):
                 return value
         except ValueError:
-            value = value.split(';')  # value wasn't in json format, keep processing
+            pass  # value wasn't in json format, keep processing
         except TypeError:
             data[key] = json.dumps([])
             return
-
+        value = value.split(';')
     if not isinstance(value, list):
         errors[key].append(_('expecting list of strings'))
         return
@@ -76,7 +76,7 @@ def shortcode_validate(key, data, errors, context):
                 continue
         out.append(element)
 
-    # XXX: future: check values against valid choices for this field
+    # TODO: future: check values against valid choices for this field
     # using @scheming_validator decorator to get the form field name
 
     if not errors[key]:
