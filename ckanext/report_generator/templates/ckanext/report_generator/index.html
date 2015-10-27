@@ -164,7 +164,8 @@
       angular.module('services.config', [])
           .constant('configuration', {
               ckanInstance: '{{c.ckan_url}}',
-              solrCore: '{{c.ckan_url}}/solr'
+              solrCore: '{{c.ckan_url}}/solr',
+              siteID: '{{c.site_id}}'
           });
     })(window, angular);
     </script>
