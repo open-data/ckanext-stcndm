@@ -57,3 +57,6 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: false
+
+- field_name: isbn_number
+  preset: ndm_isbn_number
