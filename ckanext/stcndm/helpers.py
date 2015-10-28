@@ -1,18 +1,16 @@
-__author__ = 'matt'
-
 import ast
-
 import ckanapi
 import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as toolkit
 from ckan.common import c
-
+import re
 from ckanext.scheming.helpers import (
     scheming_get_preset,
     scheming_dataset_schemas
 )
 
+__author__ = 'matt'
 
 _get_action = toolkit.get_action
 _ValidationError = toolkit.ValidationError
@@ -277,15 +275,21 @@ def lookup_label(field_name, field_value, lookup_type):
     to perform, resolve the code and return the label.
 
     :param field_name: The name of the field being resolved (ex: format_code).
-    :param field_name: The value of the field being resolved. (ex: '33')
+    :param field_value: The value of the field being resolved. (ex: '33')
     :param lookup_type: The type of field being resolved (ex: codeset)
+
+    :return dict
     """
     lc = ckanapi.LocalCKAN()
 
     if not field_value:
         return {u'en': '', u'fr': ''}
 
-    default = {u'en': 'label for ' + field_value, u'fr': 'description de ' + field_value, u'found': False}
+    default = {
+        u'en': 'label for ' + field_value,
+        u'fr': 'description de ' + field_value,
+        u'found': False
+    }
 
     if not lookup_type:
         return default
@@ -316,7 +320,7 @@ def lookup_label(field_name, field_value, lookup_type):
         if isinstance(result, basestring):
             try:
                 result = ast.literal_eval(result)
-            except:
+            except SyntaxError:
                 pass
 
         return result
@@ -334,7 +338,7 @@ def lookup_label(field_name, field_value, lookup_type):
         if isinstance(result, basestring):
             try:
                 result = ast.literal_eval(result)
-            except:
+            except SyntaxError:
                 pass
 
         return result
@@ -425,7 +429,7 @@ def next_article_id(top_parent_id, issue_number):
     """
     if not isinstance(top_parent_id, basestring) or len(top_parent_id) != 8:
         raise _ValidationError('Invalid top parent ID.  Expected 8 digit string')
-    if not isinstance(issue_number, basestring) or len(issue_number) != 7:
+    if not (isinstance(issue_number, basestring) and re.match('\d{7}', issue_number)):
         raise _ValidationError('Invalid issue number. Expected 7 digit string')
 
     i = 0
@@ -454,6 +458,7 @@ def next_article_id(top_parent_id, issue_number):
             else:
                 article_sequence_number += 1
 
+
 def ensure_release_exists(product_id, context=None, ref_period=None):
     """
     Ensure that a release dataset exists for the given product_id.
@@ -465,21 +470,27 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
     :param ref_period: The (data) reference period for the release, if one
                        exists.
     """
+    # FIXME: the following test is a kludge which exits if loading from ckanapi
+    #        need to at least compare to site_id instead of fixed value stcndm
+    if context['auth_user_obj'].name == u'stcndm':
+        return
+
     allowed_datasets = (
         'cube',
+        'view',
+        'indicator',
         'publication',
         'article',
         'conference',
+        'service',
         'daily',
         # FIXME: None of the below exist yet. If they're eventually added
         #        with names other than those used below this list must be
         #        updated.
         'video',
-        'microdata',
+        'pumf',
         'generic',
-        'chart',
-        'indicator',
-        'tableview'
+        'chart'
     )
 
     if context:

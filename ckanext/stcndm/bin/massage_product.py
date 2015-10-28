@@ -2,6 +2,7 @@ import sys
 import yaml
 import ckanapi
 import datetime
+import re
 
 __author__ = 'marc'
 
@@ -214,6 +215,14 @@ def do_product(data_set):
         result = listify(data_set[u'interncontactname_bi_txts'])
         if result:
             product_out[u'internal_contacts'] = result
+
+    if in_and_def('issueno_bi_strs', data_set):
+        if re.match('\d{7}', data_set[u'issueno_bi_strs']):
+            product_out[u'issue_number'] = data_set.get(u'issueno_bi_strs')
+        else:
+            sys.stderr.write('{product_id}: unrecognized issue_number: {issue_number}.\n'.format(
+                product_id=data_set[u'productidnew_bi_strs'],
+                issue_number=data_set[u'issueno_bi_strs']))
 
     temp = {}
     if in_and_def('keywordsuncon_en_txtm', data_set):

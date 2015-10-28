@@ -17,7 +17,7 @@ rc = ckanapi.RemoteCKAN(
     apikey=API_KEY
 )
 
-with open('ISSNbatch.csv', 'rb') as csv_file:
+with open('jsonl_dumps/ISSNbatch.csv', 'rb') as csv_file:
     spam_reader = csv.reader(csv_file, delimiter=',')
     for row in spam_reader:
         results = rc.action.package_search(
