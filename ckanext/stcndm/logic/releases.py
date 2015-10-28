@@ -67,22 +67,22 @@ def register_release(context, data_dict):
 
     publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
 
-    release_name = 'release-{product_id}_{year}_{release_id}'.format(
+    release_name = u'release-{product_id}_{year}_{release_id}'.format(
         product_id=released_product_id,
         year=datetime.date.today().year,
         release_id=release_id
     )
 
     release_dict = {
-        'owner_org': 'statcan',
+        'owner_org': u'statcan',
         'private': False,
-        'type': 'release',
+        'type': u'release',
         'name': release_name,
         'title': release_name,
         'release_id': release_id,
         'release_date': release_date.isoformat(),
         'publish_status_code': publish_status_code,
-        'parent_product': parent_product,
+        'parent_id': parent_product,
     }
     if 'referencePeriod' in data_dict and data_dict['referencePeriod']:
         release_dict['reference_period'] = data_dict['referencePeriod']
