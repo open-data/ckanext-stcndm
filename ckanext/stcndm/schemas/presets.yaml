@@ -791,7 +791,7 @@ presets:
     schema_multivalued: false
     schema_extras: false
     validators: owner_org_validator unicode
-    form_snippet: organization.html
+    form_snippet: ndm_organization.html
 
 - preset_name: ndm_price
   values:
