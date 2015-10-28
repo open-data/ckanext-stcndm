@@ -2,8 +2,7 @@
     var app = angular.module('reportGenerator', ['dataset-types', 'advanced-search', 'display-fields', 'services.config']),
         $resultsTable = $('#results'),
         queryDefaults = {
-            wt: 'json',
-            otherparams: ''
+            wt: 'json'
         },
         datatableDefaults = {
             columnDefs: [
@@ -552,6 +551,12 @@ angular.module('checklist-model', [])
                             }
                         } else {
                             result[field.field_name] = fieldObj;
+
+                            if (field.lookup) {
+                                for (l = 0; l < languagesLength; l += 1) {
+                                    result[field.field_name + '_desc_' + languages[l]] = fieldObj;
+                                }
+                            }
                         }
                     }
 
