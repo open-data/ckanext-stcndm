@@ -2,9 +2,7 @@
     var app = angular.module('reportGenerator', ['dataset-types', 'advanced-search', 'display-fields', 'services.config']),
         $resultsTable = $('#results'),
         queryDefaults = {
-            wt: 'json',
-            'json.wrf': 'JSON_CALLBACK',
-            otherparams: ''
+            wt: 'json'
         },
         datatableDefaults = {
             columnDefs: [
@@ -112,13 +110,19 @@
         $rootScope.sendQuery = function() {
             var url = configuration.solrCore + '/select',
                 params = $.extend(queryDefaults, {
-                    fq: 'dataset_type:' + $rootScope.dataTypeCtrl.selectedDatasetTypes.join(' OR '),
+                    fq: 'site_id:' + configuration.siteID + ' AND state:active AND dataset_type:(' + $rootScope.dataTypeCtrl.selectedDatasetTypes.join(' OR ') + ')',
                     q: createQuery($rootScope.query),
                     fl: $rootScope.dspFieldCtrl.fields.join(','),
                     rows: parseInt($rootScope.maxResults, 10)
-                });
+                }),
+                httpMethod = $http.get;
 
-            $http.jsonp(url, {params: params})
+            if (configuration.solrCore.indexOf(configuration.ckanInstance) === -1) {
+                httpMethod = $http.jsonp;
+                params['json.wrf'] = 'JSON_CALLBACK';
+            }
+
+            httpMethod(url, {params: params})
                 .then(function(data) {
                     $rootScope.queryError = false;
                     $rootScope.queryResultsCount = data.data.response.numFound;
@@ -139,9 +143,13 @@
                         .removeClass('wb-tables-inited wb-init')
                         .attr('data-wb-tables', JSON.stringify(datatable))
                         .trigger('wb-init.wb-tables');
-                }, function() {
+                }, function(response) {
                     delete $rootScope.queryResults;
                     $rootScope.queryError = true;
+
+                    if (response && response.data && response.data.error && response.data.error.msg) {
+                        $rootScope.queryErrorMessage = response.data.error.msg;
+                    }
                 });
         };
     }]);
@@ -349,8 +357,9 @@ angular.module('checklist-model', [])
     var app = angular.module('dataset-types', ['checklist-model', 'services.config']);
 
     app.controller('DatasetTypesController', ['$http', '$rootScope', 'configuration', function($http, $rootScope, configuration) {
-        var typesRequest = configuration.solrCore + '/select?q=*:*&rows=0&wt=json&json.wrf=JSON_CALLBACK&facet=true&facet.field=dataset_type',
-            _this = this;
+        var typesRequest = configuration.solrCore + '/select?fq=site_id:' + configuration.siteID + '&q=*:*&rows=0&wt=json&facet=true&facet.field=dataset_type',
+            _this = this,
+            httpMethod = $http.get;
 
         function fromDefault(types) {
             var notSelected = [
@@ -388,24 +397,31 @@ angular.module('checklist-model', [])
             return null;
         }
 
+        function querySuccess(data) {
+            var types = data.data.facet_counts.facet_fields.dataset_type.filter(function(value) {
+                if (typeof value == 'string') {
+                    return true;
+                }
+
+                return false;
+            });
+
+            _this.datasetTypes = types;
+            _this.selectedDatasetTypes = fromURL() || fromDefault(types);
+            _this.changed();
+        }
+
         this.changed = function() {
             $rootScope.$emit('datasetType.selected', this.selectedDatasetTypes);
         };
 
-        $http.jsonp(typesRequest)
-            .then(function(data) {
-                var types = data.data.facet_counts.facet_fields.dataset_type.filter(function(value) {
-                    if (typeof value == 'string') {
-                        return true;
-                    }
+        if (configuration.solrCore.indexOf(configuration.ckanInstance) === -1) {
+            typesRequest += '&json.wrf=JSON_CALLBACK';
+            httpMethod = $http.jsonp;
+        }
 
-                    return false;
-                });
-
-                _this.datasetTypes = types;
-                _this.selectedDatasetTypes = fromURL() || fromDefault(types);
-                _this.changed();
-            });
+        httpMethod(typesRequest)
+                .then(querySuccess);
     }]);
 
     app.directive('datasetTypes', function() {
@@ -535,6 +551,12 @@ angular.module('checklist-model', [])
                             }
                         } else {
                             result[field.field_name] = fieldObj;
+
+                            if (field.lookup) {
+                                for (l = 0; l < languagesLength; l += 1) {
+                                    result[field.field_name + '_desc_' + languages[l]] = fieldObj;
+                                }
+                            }
                         }
                     }
 
@@ -562,7 +584,7 @@ angular.module('checklist-model', [])
 
             $q.all(promises)
                 .then(function() {
-                    _this.fields = Object.keys(newFields);
+                    _this.fields = Object.keys(newFields).sort();
                     _this.fieldsDef = newFields;
                 });
         });
