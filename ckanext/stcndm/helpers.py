@@ -81,14 +81,29 @@ def get_dataset_types():
     return sorted(result.iteritems(), key=lambda type: type[1], reverse=True)
 
 
-def get_related_datasets(dataset_id):
+def get_parent_dataset(top_parent_id, dataset_id):
     lc = ckanapi.LocalCKAN()
-    related = lc.action.package_search(
-        q='top_parent_id:{id} AND NOT product_id_new:{id}'.format(id=dataset_id),
-        rows=1000
-    )
 
-    return related['results']
+    q = 'product_id_new:{parent_id}'.format(parent_id=top_parent_id)
+
+    if (dataset_id):
+        q += 'AND NOT product_id_new:{id}'.format(id=dataset_id)
+
+    parents = lc.action.package_search(
+            q=q,
+            sort='metadata_created ASC',
+            rows=1000
+        )['results']
+
+    if len(parents) > 0:
+        return parents[0]
+
+def get_child_datasets(dataset_id):
+    lc = ckanapi.LocalCKAN()
+    return lc.action.package_search(
+            q='top_parent_id:{id} AND NOT product_id_new:{id}'.format(id=dataset_id),
+            rows=1000
+        )['results']
 
 
 def generate_revision_list(data_set):

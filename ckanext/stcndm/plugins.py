@@ -307,7 +307,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "lookup_label": helpers.lookup_label,
             "get_dataset_types": helpers.get_dataset_types,
             'ensure_release_exists': helpers.ensure_release_exists,
-            'get_related_datasets': helpers.get_related_datasets
+            'get_parent_dataset': helpers.get_parent_dataset,
+            'get_child_datasets': helpers.get_child_datasets
 
         }
 

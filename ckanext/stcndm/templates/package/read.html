@@ -14,17 +14,28 @@
 {% endblock %}
 |
 {% block secondary_content %}
+  {% if pkg['top_parent_id'] %}
+    {% set parent = h.get_parent_dataset(pkg['top_parent_id'], pkg['product_id_new'],) %}
+    {% if parent %}
+      <h2>{{ _('Parent Dataset') }}</h2>
+      {% set title = parent.name %}
+      {% if parent.title is mapping  %}
+        {% set title = h.scheming_language_text(parent.title) %}
+       {% endif %}
+      {% link_for title, controller='package', action='read', id=parent.name %}
+    {% endif %}
+  {% endif %}
   {% if pkg['product_id_new'] %}
-    {% set related = h.get_related_datasets(pkg['product_id_new']) %}
-    {% if related %}
-      <h2>{{ _('Related Datasets') }}</h2>
-      <ul>
-        {% for r in related  %}
-          {%  set title = r.name %}
-          {% if r.title is mapping  %}
-            {% set title = h.scheming_language_text(r.title) %}
+    {% set children = h.get_child_datasets(pkg['product_id_new']) %}
+    {% if children %}
+      <h2>{{ _('Child Datasets') }}</h2>
+      <ul class="list-unstyled">
+        {% for child in children  %}
+          {% set title = child.name %}
+          {% if child.title is mapping  %}
+            {% set title = h.scheming_language_text(child.title) %}
            {% endif %}
-          <li>{% link_for title, controller='package', action='read', id=r.name %}</li>
+          <li>{% link_for title, controller='package', action='read', id=child.name %}</li>
         {% endfor %}
       </ul>
     {% endif %}
