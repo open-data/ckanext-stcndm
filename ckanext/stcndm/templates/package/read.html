@@ -12,5 +12,32 @@
     {{ h.render_markdown(h.scheming_language_text(pkg.notes)) }}
   {% endif %}
 {% endblock %}
-
-{% block secondary_content %}{% endblock %}
+|
+{% block secondary_content %}
+  {% if pkg['top_parent_id'] %}
+    {% set parent = h.get_parent_dataset(pkg['top_parent_id'], pkg['product_id_new'],) %}
+    {% if parent %}
+      <h2>{{ _('Parent Dataset') }}</h2>
+      {% set title = parent.name %}
+      {% if parent.title is mapping  %}
+        {% set title = h.scheming_language_text(parent.title) %}
+       {% endif %}
+      {% link_for title, controller='package', action='read', id=parent.name %}
+    {% endif %}
+  {% endif %}
+  {% if pkg['product_id_new'] %}
+    {% set children = h.get_child_datasets(pkg['product_id_new']) %}
+    {% if children %}
+      <h2>{{ _('Child Datasets') }}</h2>
+      <ul class="list-unstyled">
+        {% for child in children  %}
+          {% set title = child.name %}
+          {% if child.title is mapping  %}
+            {% set title = h.scheming_language_text(child.title) %}
+           {% endif %}
+          <li>{% link_for title, controller='package', action='read', id=child.name %}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endif %}
+{% endblock %}
