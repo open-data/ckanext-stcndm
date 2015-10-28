@@ -12,5 +12,21 @@
     {{ h.render_markdown(h.scheming_language_text(pkg.notes)) }}
   {% endif %}
 {% endblock %}
-
-{% block secondary_content %}{% endblock %}
+|
+{% block secondary_content %}
+  {% if pkg['product_id_new'] %}
+    {% set related = h.get_related_datasets(pkg['product_id_new']) %}
+    {% if related %}
+      <h2>{{ _('Related Datasets') }}</h2>
+      <ul>
+        {% for r in related  %}
+          {%  set title = r.name %}
+          {% if r.title is mapping  %}
+            {% set title = h.scheming_language_text(r.title) %}
+           {% endif %}
+          <li>{% link_for title, controller='package', action='read', id=r.name %}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endif %}
+{% endblock %}
