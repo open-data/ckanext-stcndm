@@ -69,7 +69,10 @@ def get_dataset_types():
     result = {}
 
     for schema in schemas:
-        result[schema] = {'title': schemas[schema]['catalog_type_label'], 'count': 0}
+        result[schema] = {
+            'title': schemas[schema]['catalog_type_label'],
+            'count': 0
+        }
 
         for type in types:
             if schema == type['name']:
@@ -88,20 +91,23 @@ def get_parent_dataset(top_parent_id, dataset_id):
         q += 'AND NOT product_id_new:{id}'.format(id=dataset_id)
 
     parents = lc.action.package_search(
-            q=q,
-            sort='metadata_created ASC',
-            rows=1000
-        )['results']
+        q=q,
+        sort='metadata_created ASC',
+        rows=1000
+    )['results']
 
-    if len(parents) > 0:
+    if parents:
         return parents[0]
+
 
 def get_child_datasets(dataset_id):
     lc = ckanapi.LocalCKAN()
     return lc.action.package_search(
-            q='top_parent_id:{id} AND NOT product_id_new:{id}'.format(id=dataset_id),
-            rows=1000
-        )['results']
+        q='top_parent_id:{pid} AND NOT product_id_new:{id}'.format(
+            pid=dataset_id
+        ),
+        rows=1000
+    )['results']
 
 
 def generate_revision_list(data_set):
@@ -332,7 +338,11 @@ def lookup_label(field_name, field_value, lookup_type):
         return default
     elif lookup_type == 'codeset':
         results = lc.action.package_search(
-            q=u'dataset_type:codeset AND codeset_type:{f} AND codeset_value:{v}'.format(
+            q=(
+                u'dataset_type:codeset AND '
+                'codeset_type:{f} AND '
+                'codeset_value:{v}'
+            ).format(
                 f=field_name,
                 v=field_value
             )
@@ -351,7 +361,10 @@ def lookup_label(field_name, field_value, lookup_type):
         return result
     else:
         results = lc.action.package_search(
-            q=u'dataset_type:{lookup_type} AND name:{lookup_type}-{field_value}'.format(
+            q=(
+                u'dataset_type:{lookup_type} AND '
+                'name:{lookup_type}-{field_value}'
+            ).format(
                 lookup_type=lookup_type,
                 field_value=field_value.lower()
             )
@@ -401,14 +414,27 @@ def next_non_data_product_id(subject_code, product_type_code):
     :type product_type_code: 2 digit str
     :return:
     """
+    valid_product_codes = [
+        '20',
+        '21',
+        '22',
+        '23',
+        '25',
+        '26'
+    ]
+
     if isinstance(subject_code, basestring) and int(subject_code) < 100:
         pass
     else:
         raise _ValidationError('Invalid subject code. Expected 2 digit string')
-    if isinstance(product_type_code, basestring) and product_type_code in ['20', '21', '22', '23', '25', '26']:
-        pass
-    else:
-        raise _ValidationError('Invalid product type code. Expected one of 20, 21, 22, 23, 24, 25, 26')
+
+    if isinstance(product_type_code, basestring):
+        if product_type_code not in valid_product_codes:
+            raise _ValidationError(
+                'Invalid product type code. Expected one of {codes!r}'.format(
+                    codes=valid_product_codes
+                )
+            )
 
     i = 0
     n = 1
@@ -428,7 +454,11 @@ def next_non_data_product_id(subject_code, product_type_code):
         i += 1
         for result in results['results']:
             if product_sequence_number < int(result['product_id_new'][5:8]):
-                return u'{subject_code}{product_type_code}{sequence_number}'.format(
+                return (
+                    u'{subject_code}'
+                    '{product_type_code}'
+                    '{sequence_number}'
+                ).format(
                     subject_code=subject_code,
                     product_type_code=product_type_code,
                     sequence_number=unicode(product_sequence_number).zfill(4)
@@ -452,10 +482,22 @@ def next_article_id(top_parent_id, issue_number):
     :type issue_number: 7 digit str
     :return: 19 or 20 digit str
     """
+    ISSUE_NUMBER_R = re.compile('\d{7}')
+
     if not isinstance(top_parent_id, basestring) or len(top_parent_id) != 8:
-        raise _ValidationError('Invalid top parent ID.  Expected 8 digit string')
-    if not (isinstance(issue_number, basestring) and re.match('\d{7}', issue_number)):
-        raise _ValidationError('Invalid issue number. Expected 7 digit string')
+        raise _ValidationError(
+            'Invalid top parent ID. Expected 8 digit string'
+        )
+
+    if not isinstance(issue_number, basestring):
+        raise _ValidationError(
+            'Invalid issue number, expected 7 digit string.'
+        )
+
+    if not ISSUE_NUMBER_R.match(issue_number):
+        raise _ValidationError(
+            'Invalid issue number, expected 7 digit string'
+        )
 
     i = 0
     n = 1
@@ -475,7 +517,11 @@ def next_article_id(top_parent_id, issue_number):
         i += 1
         for result in results['results']:
             if article_sequence_number < int(result['product_id_new'][15:]):
-                return u'{top_parent_id}{issue_number}{sequence_number}'.format(
+                return (
+                    u'{top_parent_id}'
+                    '{issue_number}'
+                    '{sequence_number}'
+                ).format(
                     top_parent_id=top_parent_id,
                     issue_number=issue_number,
                     sequence_number=unicode(article_sequence_number).zfill(4)
