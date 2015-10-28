@@ -306,7 +306,10 @@ class STCNDMPlugin(p.SingletonPlugin):
             "codeset_choices": helpers.codeset_choices,
             "lookup_label": helpers.lookup_label,
             "get_dataset_types": helpers.get_dataset_types,
-            'ensure_release_exists': helpers.ensure_release_exists
+            'ensure_release_exists': helpers.ensure_release_exists,
+            'get_parent_dataset': helpers.get_parent_dataset,
+            'get_child_datasets': helpers.get_child_datasets
+
         }
 
     def before_view(self, pkg_dict):
@@ -344,6 +347,16 @@ class STCNDMPlugin(p.SingletonPlugin):
                 ':APIExtController'
             ),
             action='list'
+        )
+
+        map.connect(
+            'solr_proxy',
+            '/solr/select',
+            controller=(
+                'ckanext.stcndm.controllers.solr_proxy'
+                ':SolrProxyController'
+            ),
+            action='select'
         )
 
         return map

@@ -981,7 +981,8 @@ def update_product_geo(context, data_dict):
 
     pkg_dict = response['results'][0]
     pkg_dict.update({
-        # Why only the first 5? What's the business logic here?
+        # This is the first five digits because the dguid consists of that only.
+        # The geodescriptor is the entire code.
         # Validator *requires* that this be a list.
         'geolevel_codes': list(set(sc[:5] for sc in dguids)),
         'geodescriptor_codes': dguids

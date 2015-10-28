@@ -62,7 +62,8 @@
 </div>
 <div class="alert alert-danger" role="alert" ng-show="queryError">
   <h2>Error:</h2>
-  An error occured while running the query.
+  <span ng-hide="queryErrorMessage">An error occured while running the query.</span>
+  <span ng-show="queryErrorMessage">{% raw %}{{queryErrorMessage}}{% endraw %}</span>
 </div>
 
 <script type="text/ng-template" id="templates/advanced-search.html">
@@ -156,14 +157,15 @@
 
 {%- block scripts %}
     {{ super() }}
-    <script src="lib/angular/angular.min.js"></script>
-    <script src="app.min.js"></script>
+    <script src="{% url_for_static 'lib/angular/angular.min.js' %}"></script>
+    <script src="{% url_for_static 'app.min.js' %}"></script>
     <script>
     (function(window, angular) {'use strict';
       angular.module('services.config', [])
           .constant('configuration', {
               ckanInstance: '{{c.ckan_url}}',
-              solrCore: '{{c.solr_url}}'
+              solrCore: '{{c.ckan_url}}/solr',
+              siteID: '{{c.site_id}}'
           });
     })(window, angular);
     </script>
