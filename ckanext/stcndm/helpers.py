@@ -446,6 +446,13 @@ def next_article_id(top_parent_id, issue_number):
             rows=1000,
             start=i*1000
         )
+        if results['count'] == 0:
+            return u'{top_parent_id}{issue_number}{sequence_number}'.format(
+                top_parent_id=top_parent_id,
+                issue_number=issue_number,
+                sequence_number=unicode(article_sequence_number).zfill(4)
+            )
+
         n = results['count'] / 1000.0
         i += 1
         for result in results['results']:

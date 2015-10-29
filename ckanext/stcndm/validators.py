@@ -166,7 +166,8 @@ def create_product_id(key, data, errors, context):
     # don't bother with our validation
     if errors[key]:
         return
-    if len(_data_lookup(('product_id_new',), data)):
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new and len(product_id_new):
         return
     data_set_type = _data_lookup(('type',), data)
     shortcode_validate(('subject_codes',), data, errors, context)  # make sure subject_codes processed
