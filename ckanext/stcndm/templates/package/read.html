@@ -39,6 +39,7 @@
             {% set scheming_title = h.scheming_language_text(child.title) %}
               {% if scheming_title %}
                 {% set title = scheming_title %}
+              {% endif %}
            {% endif %}
           <li>{% link_for title, controller='package', action='read', id=child.name %}</li>
         {% endfor %}
