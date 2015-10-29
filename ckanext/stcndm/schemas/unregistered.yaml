@@ -14,5 +14,8 @@ languages_label:
 - fra; CAN
 
 dataset_fields:
+- field_name: owner_org
+  preset: ndm_owner_org
+
 - field_name: product_type_code
   preset: ndm_product
