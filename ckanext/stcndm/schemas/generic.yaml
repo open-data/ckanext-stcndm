@@ -74,8 +74,8 @@ dataset_fields:
 - field_name: archive_date
   preset: ndm_archive_date
 
-#- field_name: display_code
-#  preset: ndm_display
+- field_name: display_code
+  preset: ndm_display
 
 - field_name: tracking_codes
   preset: ndm_tracking
@@ -134,6 +134,9 @@ dataset_fields:
 - field_name: top_parent_id
   preset: ndm_top_parent_id
 
+- field_name: issue_number
+  preset: ndm_issue_number
+
 #- field_name: price
 #  label:
 #    en: Price
@@ -156,12 +159,8 @@ dataset_fields:
 - field_name: publication_year
   preset: ndm_publication_year
 
-#- field_name: reference_periods
-#  label:
-#    en: Reference Period
-#    fr: Période de référence
-#  preset: fluent_tags
-#  tag_validators: ndm_tag_name_validator tag_length_validator
+- field_name: reference_period
+  preset: ndm_reference_period
 
 - field_name: replaced_products
   preset: ndm_replaced_products

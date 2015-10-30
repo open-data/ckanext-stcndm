@@ -80,8 +80,8 @@ dataset_fields:
 - field_name: correction_id_code
   preset: ndm_correction_id_code
 
-#- field_name: display_code
-#  preset: ndm_display
+- field_name: display_code
+  preset: ndm_display
 
 - field_name: digital_object_identifier
   preset: ndm_digital_object_identifier

@@ -179,8 +179,8 @@ dataset_fields:
 #  schema_field_type: string
 #  schema_extras: true
 
-#- field_name: display_code
-#  preset: ndm_display
+- field_name: display_code
+  preset: ndm_display
 
 #- field_name: external_authors
 #  label:
@@ -237,8 +237,8 @@ dataset_fields:
 #    fr: Mots clés
 #  preset: fluent_text
 
-#- field_name: last_publish_status_code
-#  preset: ndm_publish_status
+- field_name: last_publish_status_code
+  preset: ndm_publish_status
 
 - field_name: last_release_date
   preset: ndm_last_release_date

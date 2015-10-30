@@ -29,14 +29,14 @@ while i < n:
             ).lower()
         print json.dumps(product_out)
 
-        if product_out['product_id_new'] in release_dict:
-            release_dict[product_out['product_id_new']] += 1
-        else:
-            release_dict[product_out['product_id_new']] = 1
-        line['release_id'] = unicode(release_dict[product_out['product_id_new']])
-
-        release_out = do_release(line)
-        print json.dumps(release_out)
+        # if product_out['product_id_new'] in release_dict:
+        #     release_dict[product_out['product_id_new']] += 1
+        # else:
+        #     release_dict[product_out['product_id_new']] = 1
+        # line['release_id'] = unicode(release_dict[product_out['product_id_new']])
+        #
+        # release_out = do_release(line)
+        # print json.dumps(release_out)
 
         # format_out = do_format(line)
         # format_out['parent_slug'] = product_out['name']
