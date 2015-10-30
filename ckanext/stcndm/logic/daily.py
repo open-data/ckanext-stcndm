@@ -202,38 +202,6 @@ def register_daily(context, data_dict):
 
 
 @logic.side_effect_free
-def get_themes(context, data_dict):
-    """
-    Returns a dict of themes (subjects) with ID, English label, French label,
-    code values and hierarchy information for each theme.
-
-    :return: A dictionary containing the English, French and code values for
-             given subjectCode for each entry
-    :rtype: dict
-    """
-
-    output = _stub_msg
-
-    return output
-
-
-@logic.side_effect_free
-def get_surveys(context, data_dict):
-    """
-    Returns a list of surveys with ID, English label, and French label for each
-    survey.
-
-    :return: A dictionary containing the ID, English label, and French label
-             for each survey.
-    :rtype: dict
-    """
-
-    output = _stub_msg
-
-    return output
-
-
-@logic.side_effect_free
 def get_default_views(context, data_dict):
     """
     Returns a list of the default views with the Product ID, English label, and
