@@ -728,7 +728,7 @@ presets:
     schema_multivalued: false
     schema_extras: true
 
-- preset_name: reference_period
+- preset_name: ndm_reference_period
   values:
     label:
       en: Reference Period
