@@ -112,14 +112,8 @@ dataset_fields:
 - field_name: reference_period
   preset: ndm_reference_period
 
-#- field_name: release_date
-#  label:
-#    en: Release Date
-#    fr: Date de diffusion
-#  preset: date
-#  schema_field_type: date
-#  schema_multivalued: false
-#  schema_extras: true
+- field_name: last_release_date
+  preset: ndm_last_release_date
 
 #- field_name: format_code
 #  preset: ndm_format
