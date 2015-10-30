@@ -27,16 +27,22 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
+- field_name: product_id_new
+  preset: ndm_product_id_new
+
 - field_name: top_parent_id
   preset: ndm_top_parent_id
 
-- field_name: parent_id
+- field_name: format_id
   label:
-    en: Parent ID
-    fr: ID du parent
+    en: Format Product ID
+    fr: ID du format
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
+  validators: format_create_id
+  form_attrs:
+      readonly: readonly
 
 - field_name: format_code
   preset: ndm_format
