@@ -98,6 +98,9 @@ dataset_fields:
 - field_name: history_notes
   preset: ndm_history_notes
 
+- field_name: survey_source_codes
+  preset: ndm_survey_source_codes
+
 - field_name: internal_authors
   preset: ndm_internal_authors
 
