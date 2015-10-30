@@ -79,22 +79,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             ])
         })
 
-    # def _lookup_label(self, lookup_key, value, lookup_type):
-    #
-    #     default = {u'en': u'label for ' + value, u'fr': u'label pour ' + value}
-    #     try:
-    #         label = lookup_label(lookup_key, value, lookup_type)
-    #     except Exception:
-    #         label = default
-    #
-    #     if 'fr' not in label:
-    #         label['fr'] = u'description pour ' + value
-    #
-    #     if 'en' not in label:
-    #         label['en'] = u'label for ' + value
-    #
-    #     return label
-
     def before_index(self, data_dict):
         """
         customize data sent to solr
