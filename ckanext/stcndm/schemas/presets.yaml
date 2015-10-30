@@ -663,6 +663,16 @@ presets:
     schema_multivalued: false
     schema_extras: true
 
+- preset_name: ndm_issue_number
+  values:
+    label:
+      en: Issue Number
+      fr: Numéro d'émission
+    required: true
+    schema_field_type: string
+    schema_multivalued: false
+    schema_extras: true
+
 - preset_name: ndm_keywords
   values:
     label:
@@ -715,6 +725,20 @@ presets:
     display_snippet: datetime.html
     validators: scheming_isodatetime
     schema_field_type: date
+    schema_multivalued: false
+    schema_extras: true
+
+- preset_name: reference_period
+  values:
+    label:
+      en: Reference Period
+      fr: Période de référence
+    form_snippet: fluent_text.html
+    display_snippet: fluent_text.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+    schema_field_type: fluent
     schema_multivalued: false
     schema_extras: true
 
