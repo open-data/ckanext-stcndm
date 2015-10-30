@@ -248,8 +248,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetReleasesForProduct": releases.get_releases_for_product,
             "GetSubject": subjects.get_subject,
             "GetSubjectList": subjects.get_top_level_subject_list,
-            "GetSurveys": daily.get_surveys,
-            "GetThemes": daily.get_themes,
             "GetUpcomingReleases": common.get_upcoming_releases,
             "GetIssuesByPubStatus": common.get_issues_by_pub_status,
             "PurgeDataset": common.purge_dataset,
