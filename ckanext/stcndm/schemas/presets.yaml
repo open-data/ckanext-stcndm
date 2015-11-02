@@ -668,7 +668,6 @@ presets:
     label:
       en: Issue Number
       fr: Numéro d'émission
-    required: true
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true

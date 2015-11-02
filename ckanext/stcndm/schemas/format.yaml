@@ -27,8 +27,8 @@ dataset_fields:
 #  schema_multivalued: false
 #  schema_extras: true
 
-- field_name: product_id_new
-  preset: ndm_product_id_new
+#- field_name: product_id_new
+#  preset: ndm_product_id_new
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id
@@ -57,12 +57,12 @@ dataset_fields:
   validators: format_create_name
     not_empty unicode name_validator package_name_validator
 
-- field_name: title
-  validators: format_create_name
-  form_snippet: null
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: false
+#- field_name: title
+#  validators: format_create_name
+#  form_snippet: null
+#  schema_field_type: string
+#  schema_multivalued: false
+#  schema_extras: false
 
 - field_name: isbn_number
   preset: ndm_isbn_number
