@@ -539,7 +539,7 @@ def next_article_id(top_parent_id, issue_number):
 
 def ensure_release_exists(product_id, context=None, ref_period=None):
     """
-    Ensure that a release dataset exists for the given product_id.
+    Ensure that a release exists for the given product_id.
 
     :param product_id: The parent product ID.
     :type product_id: str
@@ -553,72 +553,4 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
     if context['auth_user_obj'].name == u'stcndm':
         return
 
-    allowed_datasets = (
-        'cube',
-        'view',
-        'indicator',
-        'publication',
-        'article',
-        'conference',
-        'service',
-        'daily',
-        # FIXME: None of the below exist yet. If they're eventually added
-        #        with names other than those used below this list must be
-        #        updated.
-        'video',
-        'pumf',
-        'generic',
-        'chart'
-    )
-
-    if context:
-        context['ignore_capacity_check'] = True
-
-    lc = ckanapi.LocalCKAN(context=context)
-
-    if isinstance(product_id, dict):
-        result = product_id
-    else:
-        result = lc.action.package_search(
-            q='product_id_new:{product_id}'.format(
-                product_id=product_id
-            ),
-            rows=1,
-            fl=[
-                'name',
-                'type',
-                'owner_org'
-            ]
-        )
-
-        if not result['count']:
-            raise ValueError('product_id does not exist')
-
-        result = result['results'][0]
-
-    if result['type'] not in allowed_datasets:
-        raise NotValidProduct('{type} is not an allowed dataset type.'.format(
-            type=result['type']
-        ))
-
-    release_result = lc.action.package_search(
-        q='name:release-{product_id}_*'.format(
-            product_id=result['product_id_new']
-        ),
-        rows=1
-    )
-
-    if release_result['count']:
-        # Nothing to do, at least one release already exists.
-        return
-
-    return lc.action.package_create(
-        type=u'release',
-        private=False,
-        owner_org=result['owner_org'],
-        release_id='001',
-        parent_id=result['product_id_new'],
-        top_parent_id=result['product_id_new'],
-        publish_status_code='2',
-        is_correction='0'
-    )
+    # This is a stub pending the implementation of the external service.
