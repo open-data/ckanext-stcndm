@@ -103,7 +103,7 @@ def get_parent_dataset(top_parent_id, dataset_id):
 def get_child_datasets(dataset_id):
     lc = ckanapi.LocalCKAN()
     return lc.action.package_search(
-        q='top_parent_id:{pid} AND NOT product_id_new:{id}'.format(
+        q='top_parent_id:{pid} AND NOT product_id_new:{pid}'.format(
             pid=dataset_id
         ),
         rows=1000

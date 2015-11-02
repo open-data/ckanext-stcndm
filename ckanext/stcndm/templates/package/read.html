@@ -20,7 +20,10 @@
       <h2>{{ _('Parent Dataset') }}</h2>
       {% set title = parent.name %}
       {% if parent.title is mapping  %}
-        {% set title = h.scheming_language_text(parent.title) %}
+        {% set scheming_title = h.scheming_language_text(parent.title) %}
+        {% if scheming_title %}
+          {% set title = scheming_title %}
+        {% endif %}
        {% endif %}
       {% link_for title, controller='package', action='read', id=parent.name %}
     {% endif %}
@@ -33,7 +36,10 @@
         {% for child in children  %}
           {% set title = child.name %}
           {% if child.title is mapping  %}
-            {% set title = h.scheming_language_text(child.title) %}
+            {% set scheming_title = h.scheming_language_text(child.title) %}
+              {% if scheming_title %}
+                {% set title = scheming_title %}
+              {% endif %}
            {% endif %}
           <li>{% link_for title, controller='package', action='read', id=child.name %}</li>
         {% endfor %}

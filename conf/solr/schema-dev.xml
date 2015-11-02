@@ -41,7 +41,8 @@
             <analyzer type="index">
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
-                        catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"/>
+                    catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
+                    preserveOriginal="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
                 <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
                 <filter class="solr.ASCIIFoldingFilterFactory"/>
@@ -50,7 +51,8 @@
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
                 <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
-                        catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+                    catenateWords="0" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
+                    preserveOriginal="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
                 <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
                 <filter class="solr.ASCIIFoldingFilterFactory"/>
@@ -105,6 +107,48 @@
                 <filter class="solr.SnowballPorterFilterFactory" language="French" protected="protwords_fr.txt"/>
             </analyzer>
         </fieldtype>
+
+        <fieldType name="ensearch" class="solr.TextField" positionIncrementGap="100">
+            <analyzer type="index">
+                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
+                        catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
+                        preserveOriginal="1"/>
+                <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
+                <filter class="solr.ASCIIFoldingFilterFactory"/>
+            </analyzer>
+            <analyzer type="query">
+                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+                <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
+                        catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+                <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
+                <filter class="solr.ASCIIFoldingFilterFactory"/>
+            </analyzer>
+        </fieldType>
+
+        <fieldType name="frsearch" class="solr.TextField" positionIncrementGap="100">
+            <analyzer type="index">
+                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
+                        catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
+                        preserveOriginal="1"/>
+                <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
+                <filter class="solr.ASCIIFoldingFilterFactory"/>
+            </analyzer>
+            <analyzer type="query">
+                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+                <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
+                        catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+                <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
+                <filter class="solr.ASCIIFoldingFilterFactory"/>
+            </analyzer>
+        </fieldType>
 
         <fieldType name="text_general_edge_ngram" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
@@ -204,6 +248,8 @@
         <!-- NDM -->
         <field name="entext" type="text_en" indexed="true" stored="false" multiValued="true"/>
         <field name="frtext" type="text_fr" indexed="true" stored="false" multiValued="true"/>
+        <field name="ensearch" type="ensearch" indexed="true" stored="false" multiValued="true"/>
+        <field name="frsearch" type="frsearch" indexed="true" stored="false" multiValued="true"/>
 
         <field name="urls" type="text" indexed="true" stored="false" multiValued="true"/>
 
@@ -398,11 +444,30 @@
     <!-- Scheming related copy fields -->
     <copyField source="*_codes" dest="text"/>
     <copyField source="*_code" dest="text"/>
-    <copyField source="*_en" dest="entext"/>
-    <copyField source="*_fr" dest="frtext"/>
 
-    <copyField source="frtext" dest="text"/>
-    <copyField source="entext" dest="text"/>
+    <copyField source="*_en" dest="entext"/>
+    <copyField source="*_en" dest="ensearch"/>
+    <copyField source="*_en" dest="text"/>
+
+    <copyField source="*_fr" dest="frtext"/>
+    <copyField source="*_fr" dest="frsearch"/>
+    <copyField source="*_fr" dest="text"/>
+
+    <copyField source="author" dest="text"/>
+    <copyField source="author" dest="entext"/>
+    <copyField source="author" dest="frtext"/>
+
+    <copyField source="product_id_new" dest="text"/>
+    <copyField source="product_id_new" dest="ensearch"/>
+    <copyField source="product_id_new" dest="frsearch"/>
+
+    <copyField source="product_id_old" dest="text"/>
+    <copyField source="product_id_old" dest="ensearch"/>
+    <copyField source="product_id_old" dest="frsearch"/>
+
+    <copyField source="replaced_products" dest="text"/>
+    <copyField source="replaced_products" dest="ensearch"/>
+    <copyField source="replaced_products" dest="frsearch"/>
 
     <copyField source="url" dest="urls"/>
     <copyField source="ckan_url" dest="urls"/>
@@ -419,7 +484,6 @@
     <copyField source="description" dest="text"/>
     <copyField source="res_description" dest="text"/>
     <copyField source="maintainer" dest="text"/>
-    <copyField source="author" dest="text"/>
 
     <!-- copy fields for Navigation -->
     <copyField source="subject_codes" dest="level_subject_codes"/>

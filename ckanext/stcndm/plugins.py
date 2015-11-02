@@ -79,22 +79,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             ])
         })
 
-    # def _lookup_label(self, lookup_key, value, lookup_type):
-    #
-    #     default = {u'en': u'label for ' + value, u'fr': u'label pour ' + value}
-    #     try:
-    #         label = lookup_label(lookup_key, value, lookup_type)
-    #     except Exception:
-    #         label = default
-    #
-    #     if 'fr' not in label:
-    #         label['fr'] = u'description pour ' + value
-    #
-    #     if 'en' not in label:
-    #         label['en'] = u'label for ' + value
-    #
-    #     return label
-
     def before_index(self, data_dict):
         """
         customize data sent to solr
@@ -248,8 +232,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetReleasesForProduct": releases.get_releases_for_product,
             "GetSubject": subjects.get_subject,
             "GetSubjectList": subjects.get_top_level_subject_list,
-            "GetSurveys": daily.get_surveys,
-            "GetThemes": daily.get_themes,
             "GetUpcomingReleases": common.get_upcoming_releases,
             "GetIssuesByPubStatus": common.get_issues_by_pub_status,
             "PurgeDataset": common.purge_dataset,
