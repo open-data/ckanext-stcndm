@@ -16,7 +16,8 @@ def in_and_def(key, a_dict):
 
 def listify(value):
     if isinstance(value, unicode):
-        return filter(None, map(unicode.strip, value.split(';')))  # filter removes empty strings
+        return filter(None, map(unicode.strip, value.split(';')))
+        # filter removes empty strings
     elif isinstance(value, list):
         return filter(None, map(unicode.strip, value[0].split(';')))
     else:
@@ -34,14 +35,16 @@ def code_lookup(old_field_name, data_set, choice_list):
         elif '/' in field_value:
             (field_value, bogon) = field_value.split('/', 1)
         for choice in choice_list:
-            if choice[u'label'][u'en'].lower().strip() == field_value.lower().strip():
+            if choice[u'label'][u'en'].lower().strip() == \
+                    field_value.lower().strip():
                 if choice[u'value']:
                     code = choice[u'value']
         if not code:
-            sys.stderr.write('{product_id}: unrecognized {old_name}: {field_value}.\n'.format(
-                product_id=data_set[u'productidnew_bi_strs'],
-                old_name=old_field_name,
-                field_value=field_value))
+            sys.stderr.write('{product_id}: unrecognized {old_name}: '
+                             '{field_value}.\n'.format(
+                                product_id=data_set[u'productidnew_bi_strs'],
+                                old_name=old_field_name,
+                                field_value=field_value))
         else:
             codes.append(code)
     return codes
@@ -56,9 +59,11 @@ def do_product(data_set):
             u'fr': data_set.get(u'adminnotes_bi_txts', '')
         },
         u'archive_date': data_set.get(u'archivedate_bi_txts', ''),
-        u'array_terminated_code': data_set.get(u'arrayterminatedcode_bi_strs', ''),
+        u'array_terminated_code':
+            data_set.get(u'arrayterminatedcode_bi_strs', ''),
         u'coordinates': data_set.get(u'coordinates_bi_instrs', ''),
-        u'correction_impact_level_code': data_set.get(u'correcimplevelcode_bi_strs', ''),
+        u'correction_impact_level_code':
+            data_set.get(u'correcimplevelcode_bi_strs', ''),
         u'correction_id': data_set.get(u'correctionid_bi_strs', ''),
         u'correction_notes': {
           u'en': data_set.get(u'correctnote_en_txtm', ''),
@@ -83,8 +88,8 @@ def do_product(data_set):
             u'en': data_set.get(u'issnnum_en_strs', u''),
             u'fr': data_set.get(u'issnnum_fr_strs', u'')
         },
-        u'last_publish_status_code': data_set.get(u'lastpublishstatuscode_bi_strs', ''),
-        u'last_release_date': data_set.get(u'releasedate_bi_strs').strip(),
+        u'last_publish_status_code':
+            data_set.get(u'lastpublishstatuscode_bi_strs', ''),
         u'legacy_date': data_set.get(u'legacydate_bi_txts', ''),
         u'license_id': data_set.get(u'license_id', ''),
         u'license_title': data_set.get(u'license_title', ''),
@@ -170,7 +175,8 @@ def do_product(data_set):
         product_out[u'feature_weight'] = int(data_set[u'featureweight_bi_ints'])
 
     if in_and_def('featureweight_bi_inints', data_set):
-        product_out[u'feature_weight'] = int(data_set[u'featureweight_bi_inints'])
+        product_out[u'feature_weight'] = \
+            int(data_set[u'featureweight_bi_inints'])
 
     if in_and_def('freqcode_bi_txtm', data_set):
         result = listify(data_set[u'freqcode_bi_txtm'])
@@ -216,9 +222,10 @@ def do_product(data_set):
         if re.match('\d{7}', data_set[u'issueno_bi_strs']):
             product_out[u'issue_number'] = data_set.get(u'issueno_bi_strs')
         else:
-            sys.stderr.write('{product_id}: unrecognized issue_number: {issue_number}.\n'.format(
-                product_id=data_set[u'productidnew_bi_strs'],
-                issue_number=data_set[u'issueno_bi_strs']))
+            sys.stderr.write('{product_id}: unrecognized issue_number: '
+                             '{issue_number}.\n'.format(
+                                product_id=data_set[u'productidnew_bi_strs'],
+                                issue_number=data_set[u'issueno_bi_strs']))
 
     temp = {}
     if in_and_def('keywordsuncon_en_txtm', data_set):
@@ -231,6 +238,10 @@ def do_product(data_set):
             temp[u'fr'] = result
     if temp:
         product_out[u'keywords'] = temp
+
+    if in_and_def(u'releasedate_bi_strs', data_set):
+        product_out[u'last_release_date'] = \
+            data_set.get(u'releasedate_bi_strs').strip()
 
     if in_and_def('ndmstate_en_intxtm', data_set):
         result = listify(data_set[u'ndmstate_en_intxtm'])
@@ -270,9 +281,11 @@ def do_product(data_set):
             product_out[u'geodescriptor_codes'] = result
 
     if in_and_def(u'statusfcode_bi_strs', data_set):
-        if data_set[u'statusfcode_bi_strs'] == '33':  # tease out discontinued to a new field
+        if data_set[u'statusfcode_bi_strs'] == '33':
+            # tease out discontinued to a new field
             product_out[u'discontinued_code'] = '1'
-        elif data_set[u'statusfcode_bi_strs'] == '36':  # tease out do not load to OLC to a new field
+        elif data_set[u'statusfcode_bi_strs'] == '36':
+            # tease out do not load to OLC to a new field
             product_out[u'load_to_olc_code'] = '0'
         else:
             product_out[u'status_code'] = data_set[u'statusfcode_bi_strs']
@@ -319,7 +332,8 @@ def do_release(data_set):
             u'en': data_set.get(u'refperiod_en_txtm', u''),
             u'fr': data_set.get(u'refperiod_fr_txtm', u''),
         },
-        u'publish_status_code': data_set.get(u'lastpublishstatuscode_bi_strs', u''),
+        u'publish_status_code':
+            data_set.get(u'lastpublishstatuscode_bi_strs', u''),
         u'issue_number': data_set.get(u'issueno_bi_strs', u''),
         u'release_id': data_set.get(u'release_id'),
         u'name':
@@ -331,9 +345,11 @@ def do_release(data_set):
         u'top_parent_id': data_set.get(u'hierarchyid_bi_strm', u'')
     }
     if not release_out[u'top_parent_id']:
-        release_out[u'top_parent_id'] = data_set.get(u'hierarchyid_bi_strs', u'')
+        release_out[u'top_parent_id'] = \
+            data_set.get(u'hierarchyid_bi_strs', u'')
     if not release_out[u'top_parent_id']:
-        release_out[u'top_parent_id'] = data_set.get(u'productidnew_bi_strs', u'')
+        release_out[u'top_parent_id'] = \
+            data_set.get(u'productidnew_bi_strs', u'')
 
     if in_and_def(u'display_bi_txtm', data_set):
         result = code_lookup(u'display_bi_txtm', data_set, display_list)
@@ -341,7 +357,8 @@ def do_release(data_set):
             release_out[u'display_code'] = result[0]
 
     if in_and_def(u'releasedate_bi_strs', data_set):
-        release_out[u'release_date'] = data_set.get(u'releasedate_bi_strs').strip()
+        release_out[u'release_date'] = \
+            data_set.get(u'releasedate_bi_strs').strip()
 
     return release_out
 
@@ -351,17 +368,16 @@ def do_format(data_set):
         u'owner_org': u'statcan',
         u'private': False,
         u'type': u'format',
-        u'name':
-            u'format-{product_id}_{format_code}'.format(
-                product_id=data_set.get(u'productidnew_bi_strs', u'product_id'),
-                format_code=data_set.get(u'formatcode_bi_txtm', u'format_code').zfill(2)
-            ).lower(),
+        u'name': u'format-{product_id}_{format_code}'.format(
+            product_id=data_set.get(u'productidnew_bi_strs', u'product_id'),
+            format_code=data_set.get(u'formatcode_bi_txtm', u'format_code').zfill(2)
+        ).lower(),
         u'parent_id': data_set.get(u'productidnew_bi_strs', u'product_id'),
         u'format_code': data_set.get(u'formatcode_bi_txtm', u'format_code'),
         u'format_id': u'{product_id}_{format_code}'.format(
-                product_id=data_set.get(u'productidnew_bi_strs', u'product_id'),
-                format_code=data_set.get(u'formatcode_bi_txtm', u'format_code').zfill(2)
-            ).lower(),
+            product_id=data_set.get(u'productidnew_bi_strs', u'product_id'),
+            format_code=data_set.get(u'formatcode_bi_txtm', u'format_code').zfill(2)
+        ).lower(),
         u'isbn_number': {
             u'en': data_set.get(u'isbnnum_en_strs', u''),
             u'fr': data_set.get(u'isbnnum_fr_strs', u'')
@@ -375,9 +391,11 @@ def do_format(data_set):
     if not format_out[u'top_parent_id']:
         format_out[u'top_parent_id'] = data_set.get(u'hierarchyid_bi_strs', u'')
     if not format_out[u'top_parent_id']:
-        format_out[u'top_parent_id'] = data_set.get(u'productidnew_bi_strs', u'')
+        format_out[u'top_parent_id'] = \
+            data_set.get(u'productidnew_bi_strs', u'')
     if in_and_def(u'releasedate_bi_strs', data_set):
-        format_out[u'last_release_date'] = data_set.get(u'releasedate_bi_strs').strip()
+        format_out[u'last_release_date'] = \
+            data_set.get(u'releasedate_bi_strs').strip()
 
     return format_out
 

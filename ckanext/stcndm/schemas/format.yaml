@@ -18,14 +18,14 @@ dataset_fields:
 - field_name: owner_org
   preset: ndm_owner_org
 
-- field_name: release_slug
-  label:
-    en: Slug of the related release
-    fr: Slug de l'émission connexe
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+#- field_name: release_slug
+#  label:
+#    en: Slug of the related release
+#    fr: Slug de l'émission connexe
+#  required: true
+#  schema_field_type: string
+#  schema_multivalued: false
+#  schema_extras: true
 
 - field_name: product_id_new
   preset: ndm_product_id_new
