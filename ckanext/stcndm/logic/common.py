@@ -834,32 +834,40 @@ def delete_product(context, data_dict):
     }
 
 
-# noinspection PyUnusedLocal
 def purge_dataset(context, data_dict):
-    # noinspection PyUnresolvedReferences
-    """
-    Purges a dataset from the database.
+    '''Purge a dataset.
 
-    :param productId: Product ID
-    :type productId: str
+    .. warning:: Purging a dataset cannot be undone!
 
-    :return: success or failure
-    :rtype: dict
-    """
-    # TODO: Implement user permission validation before deploying this.
-    product_id = _get_or_bust(data_dict, 'productId')
+    Purging a database completely removes the dataset from the CKAN database,
+    whereas deleting a dataset simply marks the dataset as deleted (it will no
+    longer show up in the front-end, but is still in the db).
 
-    import ckan.model as model
+    You must be authorized to purge the dataset.
 
-    dataset = model.Package.get(unicode(product_id))
+    :param id: the name or id of the dataset to be purged
+    :type id: string
+    '''
+    model = context['model']
+    id = _get_or_bust(data_dict, 'id')
 
-    # rev = model.repo.new_revision()
+    pkg = model.Package.get(id)
+    context['package'] = pkg
+    if pkg is None:
+        raise _NotFound('Dataset was not found')
 
-    model.Package.purge(dataset)
+    members = model.Session.query(model.Member) \
+                   .filter(model.Member.table_id == pkg.id) \
+                   .filter(model.Member.table_name == 'package')
+    if members.count() > 0:
+        for m in members.all():
+            m.purge()
 
-    # dataset.purge()
+    pkg = model.Package.get(id)
+    # no new_revision() needed since there are no object_revisions created
+    # during purge
+    pkg.purge()
     model.repo.commit_and_remove()
-    return {'success': True, 'message': '%s purged' % product_id}
 
 
 # TODO: This is out of scope for FY2014.
@@ -981,9 +989,9 @@ def update_product_geo(context, data_dict):
 
     pkg_dict = response['results'][0]
     pkg_dict.update({
-        # This is the first five digits because the dguid consists of that only.
-        # The geodescriptor is the entire code.
-        # Validator *requires* that this be a list.
+        # This is the first five digits because the dguid consists of that
+        # only.  The geodescriptor is the entire code.  Validator *requires*
+        # that this be a list.
         'geolevel_codes': list(set(sc[:5] for sc in dguids)),
         'geodescriptor_codes': dguids
     })
