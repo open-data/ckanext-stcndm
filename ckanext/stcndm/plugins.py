@@ -263,6 +263,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "daily_create_name": validators.daily_create_name,
             "set_default_value": validators.set_default_value,
             "format_create_name": validators.format_create_name,
+            "format_create_id": validators.format_create_id,
 #            "generic_create_name": validators.generic_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
             "indicator_create_name": validators.indicator_create_name,
