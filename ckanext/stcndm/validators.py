@@ -14,6 +14,7 @@ import ckanapi
 def safe_name(name):
     return re.sub(r"[^a-zA-Z0-9\-_]", "_", name)
 
+
 def scheming_validator(fn):
     """
     Decorate a validator that needs to have the scheming fields
@@ -187,23 +188,38 @@ def format_create_id(key, data, errors, context):
 
 
 def create_product_id(key, data, errors, context):
+    general_types = (
+        'publication',
+        'video',
+        'conference',
+        'service',
+        'pumf',
+        'generic'
+    )
     # if there was an error before calling our validator
     # don't bother with our validation
     if errors[key]:
         return
+
     product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new and len(product_id_new):
+    if product_id_new:
         return
+
     data_set_type = _data_lookup(('type',), data)
-    shortcode_validate(('subject_codes',), data, errors, context)  # make sure subject_codes processed
+    # make sure subject_codes processed
+    shortcode_validate(('subject_codes',), data, errors, context)
     subject_codes = shortcode_output(_data_lookup(('subject_codes',), data))
+
     if len(subject_codes) != 1:
-        errors[key].append(_('there must be exactly 1 subject code when creating a new product'))
+        errors[key].append(_(
+            'there must be exactly 1 subject code when creating a new product'
+        ))
         return
-    if data_set_type in ['publication', 'video', 'conference', 'service', 'pumf', 'generic']:
+
+    if data_set_type in general_types:
         product_id_new = h.next_non_data_product_id(
             subject_code=subject_codes[0],
-            product_type_code=_data_lookup(('product_type_code',),data)
+            product_type_code=_data_lookup(('product_type_code',), data)
         )
         data[key] = product_id_new
         return product_id_new
@@ -215,9 +231,14 @@ def create_product_id(key, data, errors, context):
         data[key] = product_id_new
         return product_id_new
 
-    errors[key].append(_('create_product_id not yet implemented for {data_set_type}'.format(
-        data_set_type=data_set_type
-    )))
+    if 0:
+        # FIXME: Stubbed out to allow UI product creation.
+        errors[key].append(_(
+            'create_product_id not yet implemented for {data_set_type}'.format(
+                data_set_type=data_set_type
+            )
+        ))
+
     return
 
 
@@ -536,7 +557,9 @@ def geodescriptor_create_name(key, data, errors, context):
 
     geodescriptor_code = _data_lookup(('geodescriptor_code',), data)
     if geodescriptor_code:
-        data[key] = safe_name(u'geodescriptor-{0}'.format(geodescriptor_code.lower()))
+        data[key] = safe_name(
+            u'geodescriptor-{0}'.format(geodescriptor_code.lower())
+        )
     else:
         errors[key].append(_('could not find geodescriptor_code'))
 
