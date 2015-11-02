@@ -100,8 +100,8 @@ dataset_fields:
 - field_name: dimension_members
   preset: ndm_dimension_members
 
-#- field_name: display_code
-#  preset: ndm_display
+- field_name: display_code
+  preset: ndm_display
 
 - field_name: external_authors
   preset: ndm_external_authors

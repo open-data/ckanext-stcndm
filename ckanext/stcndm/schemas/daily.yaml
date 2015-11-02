@@ -91,8 +91,8 @@ dataset_fields:
 #  schema_field_type: string
 #  schema_extras: true
 
-#- field_name: display_code
-#  preset: ndm_display
+- field_name: display_code
+  preset: ndm_display
 
 - field_name: external_authors
   preset: ndm_external_authors

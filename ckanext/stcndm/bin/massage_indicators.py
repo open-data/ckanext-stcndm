@@ -51,5 +51,5 @@ while i < n:
             product_out['url'] = url_dict
         print json.dumps(product_out)
 
-        release_out = do_release(line)
-        print json.dumps(release_out)
+        # release_out = do_release(line)
+        # print json.dumps(release_out)
