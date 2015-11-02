@@ -80,8 +80,8 @@ dataset_fields:
 - field_name: correction_id_code
   preset: ndm_correction_id_code
 
-#- field_name: display_code
-#  preset: ndm_display
+- field_name: display_code
+  preset: ndm_display
 
 - field_name: digital_object_identifier
   preset: ndm_digital_object_identifier
@@ -97,6 +97,9 @@ dataset_fields:
 
 - field_name: history_notes
   preset: ndm_history_notes
+
+- field_name: survey_source_codes
+  preset: ndm_survey_source_codes
 
 - field_name: internal_authors
   preset: ndm_internal_authors
@@ -122,13 +125,7 @@ dataset_fields:
   required: true
 
 - field_name: issue_number
-  label:
-    en: Issue Number
-    fr: Numéro d'émission
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
+  preset: ndm_issue_number
 
 #- field_name: price
 #  label:
@@ -152,12 +149,8 @@ dataset_fields:
 - field_name: publication_year
   preset: ndm_publication_year
 
-#- field_name: reference_periods
-#  label:
-#    en: Reference Period
-#    fr: Période de référence
-#  preset: fluent_tags
-#  tag_validators: ndm_tag_name_validator tag_length_validator
+- field_name: reference_period
+  preset: ndm_reference_period
 
 #- field_name: replaced_products
 #  label:

@@ -73,6 +73,9 @@ dataset_fields:
 - field_name: archive_status_code
   preset: ndm_archive_status
 
+- field_name: display_code
+  preset: ndm_display
+
 - field_name: tracking_codes
   preset: ndm_tracking
 

@@ -171,11 +171,11 @@ while i < n:
 
         print json.dumps(line_out)
 
-        if line_out[u'product_id_new'] in release_dict:
-            release_dict[line_out[u'product_id_new']] += 1
-        else:
-            release_dict[line_out[u'product_id_new']] = 1
-        line[u'release_id'] = unicode(release_dict[line_out[u'product_id_new']])
-
-        release_out = do_release(line)
-        print json.dumps(release_out)
+        # if line_out[u'product_id_new'] in release_dict:
+        #     release_dict[line_out[u'product_id_new']] += 1
+        # else:
+        #     release_dict[line_out[u'product_id_new']] = 1
+        # line[u'release_id'] = unicode(release_dict[line_out[u'product_id_new']])
+        #
+        # release_out = do_release(line)
+        # print json.dumps(release_out)
