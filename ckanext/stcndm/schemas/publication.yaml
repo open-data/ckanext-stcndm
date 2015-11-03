@@ -74,6 +74,9 @@ dataset_fields:
 - field_name: archive_date
   preset: ndm_archive_date
 
+- field_name: census_years
+  preset: ndm_census_years
+
 - field_name: display_code
   preset: ndm_display
 
@@ -82,14 +85,6 @@ dataset_fields:
 
 - field_name: digital_object_identifier
   preset: ndm_digital_object_identifier
-
-#- field_name: array_terminated_code
-#  preset: ndm_array_terminated
-
-#- field_name: default_view_id
-#  label:
-#    en: Default View ID
-#    fr: ID de vue par défaut
 
 - field_name: dimension_members
   preset: ndm_dimension_members
@@ -133,29 +128,11 @@ dataset_fields:
 - field_name: last_release_date
   preset: ndm_last_release_date
 
-#- field_name: legacy_date
-#  label:
-#    en: Legacy Date
-#    fr: Date du système antérieur
-#  preset: date
-#  schema_field_type: date
-
 - field_name: top_parent_id
   preset: ndm_top_parent_id
 
 - field_name: issue_number
   preset: ndm_issue_number
-
-#- field_name: price
-#  label:
-#    en: Price
-#    fr: Prix
-
-#- field_name: price_note
-#  label:
-#    en: Price Note
-#    fr: Note sur le prix
-#  preset: fluent_text
 
 - field_name: product_id_new
   preset: ndm_product_id_new
@@ -191,13 +168,3 @@ dataset_fields:
 
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes
-
-#- field_name: volume_and_number
-#  label:
-#    en: Volume and Number
-#    fr: Volume et nombre
-
-#- field_name: url
-#  label:
-#    en: URL
-#    fr: URL

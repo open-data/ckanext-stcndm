@@ -52,3 +52,6 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true
+
+- field_name: census_years
+  preset: ndm_census_years

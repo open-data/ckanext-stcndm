@@ -45,9 +45,6 @@ dataset_fields:
 - field_name: subject_codes
   preset: ndm_subject_codes
 
-#- field_name: format_code
-#  preset: ndm_format
-
 - field_name: product_type_code
   label:
     en: Product Type
@@ -69,27 +66,11 @@ dataset_fields:
 - field_name: thesaurus_terms
   preset: ndm_thesaurus_terms
 
-#- field_name: feature_weight
-#  label:
-#    en: Feature Weight
-#    fr: Poids
-
 - field_name: archive_date
   preset: ndm_archive_date
 
 - field_name: archive_status_code
   preset: ndm_archive_status
-
-#- field_name: array_terminated_code
-#  preset: ndm_array_terminated
-
-#- field_name: dimension_members
-#  label:
-#    en: Dimension Member
-#    fr: Membre de dimension
-#  preset: fluent_tags
-#  schema_field_type: string
-#  schema_extras: true
 
 - field_name: display_code
   preset: ndm_display
@@ -99,14 +80,6 @@ dataset_fields:
 
 - field_name: frc
   preset: ndm_frc
-
-#- field_name: frequency_codes
-#  label:
-#    en: Frequency
-#    fr: Fréquence
-#  preset: codeset_multiple_select
-#  codeset_type: frequency
-#  schema_extras: true
 
 - field_name: history_notes
   preset: ndm_history_notes
@@ -132,46 +105,11 @@ dataset_fields:
 - field_name: top_parent_id
   preset: ndm_top_parent_id
 
-#- field_name: price
-#  label:
-#    en: Price
-#    fr: Prix
-
-#- field_name: price_note
-#  label:
-#    en: Price Note
-#    fr: Note sur le prix
-#  preset: fluent_text
-
 - field_name: product_id_new
   preset: ndm_product_id_new
 
 - field_name: product_id_old
   preset: ndm_product_id_old
-
-#- field_name: publication_year
-#  label:
-#    en: Publication Year
-#    fr: Année de publication
-
-#- field_name: reference_periods
-#  label:
-#    en: Reference Period
-#    fr: Période de référence
-#  preset: fluent_tags
-#  tag_validators: ndm_tag_name_validator tag_length_validator
-#  schema_field_type: fluent
-#  schema_multivalued: true
-#  schema_extras: true
-
-#- field_name: release_date
-#  label:
-#    en: Release Date
-#    fr: Date de diffusion
-#  preset: date
-#  schema_field_type: date
-#  schema_multivalued: false
-#  schema_extras: true
 
 - field_name: replaced_products
   preset: ndm_replaced_products
@@ -190,26 +128,6 @@ dataset_fields:
 
 - field_name: load_to_olc_code
   preset: ndm_load_to_olc_code
-
-#- field_name: subjectold_code
-#  label:
-#    en: Old subject
-#    fr: Ancien sujet
-#  preset: shortcode_multivalue
-
-#- field_name: url
-#  label:
-#    en: URL
-#    fr: URL
-#  preset: ndm_fluent_url
-#  schema_field_type: fluent
-#  schema_multivalued: false
-#  schema_extras: false
-
-#- field_name: volume_and_number
-#  label:
-#    en: Volume and Number
-#    fr: Volume et nombre
 
 - field_name: child_list
   label:
