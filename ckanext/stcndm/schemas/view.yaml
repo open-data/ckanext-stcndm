@@ -50,9 +50,6 @@ dataset_fields:
   validators: view_create_name
     not_empty unicode name_validator package_name_validator
 
-#- field_name: format_code
-#  preset: ndm_format
-
 - field_name: product_type_code
   label:
     en: Product Type
@@ -80,22 +77,8 @@ dataset_fields:
 - field_name: archive_date
   preset: ndm_archive_date
 
-#- field_name: array_terminated
-#  label:
-#    en: Array Terminated Code
-#    fr: Code de terminaison
-
-#- field_name: default_view_id
-#  label:
-#    en: Default View ID
-#    fr: ID de vue par défaut
-
-#- field_name: dimension_group_codes
-#  label:
-#    en: Dimension Group
-#    fr: Groupe de dimension
-#  preset: shortcode_multivalue
-#  lookup: dimension_group
+- field_name: census_years
+  preset: ndm_census_years
 
 - field_name: dimension_members
   preset: ndm_dimension_members
@@ -121,11 +104,6 @@ dataset_fields:
 - field_name: survey_source_codes
   preset: ndm_survey_source_codes
 
-#- field_name: internal_author
-#  label:
-#    en: Internal Author
-#    fr: Auteur interne
-
 - field_name: internal_contacts
   preset: ndm_internal_contacts
 
@@ -138,50 +116,14 @@ dataset_fields:
 - field_name: last_release_date
   preset: ndm_last_release_date
 
-#- field_name: legacy_date
-#  label:
-#    en: Legacy Date
-#    fr: Date du système antérieur
-#  preset: date
-#  schema_field_type: date
-
 - field_name: top_parent_id
   preset: ndm_top_parent_id
-
-#- field_name: price
-#  label:
-#    en: Price
-#    fr: Prix
-
-#- field_name: price_note
-#  label:
-#    en: Price Note
-#    fr: Note sur le prix
-#  preset: fluent_text
 
 - field_name: product_id_new
   preset: ndm_product_id_new
 
 - field_name: product_id_old
   preset: ndm_product_id_old
-
-#- field_name: publication_year
-#  label:
-#    en: Publication Year
-#    fr: Année de publication
-
-#- field_name: reference_periods
-#  label:
-#    en: Reference Period
-#    fr: Période de référence
-#  preset: fluent_tags
-
-#- field_name: release_date
-#  label:
-#    en: Release Date (YYYY-MM-DD)
-#    fr: Date de diffusion (YYYY-MM-DD)
-#  preset: date
-#  schema_field_type: date
 
 - field_name: replaced_products
   preset: ndm_replaced_products
@@ -200,12 +142,6 @@ dataset_fields:
 
 - field_name: load_to_olc_code
   preset: ndm_load_to_olc_code
-
-#- field_name: subjectold_code
-#  label:
-#    en: Old subject
-#    fr: Ancien sujet
-#  preset: shortcode_multivalue
 
 - field_name: url
   preset: ndm_url
