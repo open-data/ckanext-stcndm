@@ -73,6 +73,9 @@ dataset_fields:
 - field_name: archive_status_code
   preset: ndm_archive_status
 
+- field_name: census_years
+  preset: ndm_census_years
+
 - field_name: display_code
   preset: ndm_display
 
@@ -84,11 +87,6 @@ dataset_fields:
 
 - field_name: array_terminated_code
   preset: ndm_array_terminated
-
-#- field_name: default_view_id
-#  label:
-#    en: Default View ID
-#    fr: ID de vue par défaut
 
 - field_name: dimension_members
   preset: ndm_dimension_members
@@ -145,13 +143,6 @@ dataset_fields:
 
 - field_name: publication_year
   preset: ndm_publication_year
-
-#- field_name: reference_periods
-#  label:
-#    en: Reference Period
-#    fr: Période de référence
-#  preset: fluent_tags
-#  tag_validators: ndm_tag_name_validator tag_length_validator
 
 - field_name: replaced_products
   preset: ndm_replaced_products

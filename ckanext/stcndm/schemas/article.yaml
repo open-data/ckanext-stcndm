@@ -77,6 +77,9 @@ dataset_fields:
 - field_name: archive_date
   preset: ndm_archive_date
 
+- field_name: census_years
+  preset: ndm_census_years
+
 - field_name: correction_id_code
   preset: ndm_correction_id_code
 
@@ -113,30 +116,12 @@ dataset_fields:
 - field_name: last_publish_status_code
   preset: ndm_publish_status
 
-#- field_name: legacy_date
-#  label:
-#    en: Legacy Date
-#    fr: Date du système antérieur
-#  preset: date
-#  schema_field_type: date
-
 - field_name: top_parent_id
   preset: ndm_top_parent_id
   required: true
 
 - field_name: issue_number
   preset: ndm_issue_number
-
-#- field_name: price
-#  label:
-#    en: Price
-#    fr: Prix
-
-#- field_name: price_note
-#  label:
-#    en: Price Note
-#    fr: Note sur le prix
-#  preset: fluent_text
 
 - field_name: product_id_new
   preset: ndm_product_id_new
@@ -152,12 +137,6 @@ dataset_fields:
 - field_name: reference_period
   preset: ndm_reference_period
 
-#- field_name: replaced_products
-#  label:
-#    en: Replaced Product
-#    fr: Produit remplacé
-#  preset: shortcode_multivalue
-
 - field_name: status_code
   preset: ndm_status
 
@@ -172,21 +151,3 @@ dataset_fields:
 
 - field_name: load_to_olc_code
   preset: ndm_load_to_olc_code
-
-#- field_name: subjectold_code
-#  label:
-#    en: Old subject
-#    fr: Ancien sujet
-#  preset: shortcode_multivalue
-
-#- field_name: url
-#  label:
-#    en: URL
-#    fr: URL
-#  preset: ndm_fluent_url
-
-#- field_name: volume_and_number
-#  label:
-#    en: Volume and Number
-#    fr: Volume et nombre
-

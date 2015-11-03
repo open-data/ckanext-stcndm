@@ -36,6 +36,9 @@ dataset_fields:
 - field_name: archive_status_code
   preset: ndm_archive_status
 
+- field_name: census_years
+  preset: ndm_census_years
+
 - field_name: collection_end_date
   label:
     en: Collection End Date
@@ -114,18 +117,6 @@ dataset_fields:
 
 - field_name: last_release_date
   preset: ndm_last_release_date
-
-#- field_name: format_code
-#  preset: ndm_format
-
-#- field_name: resource_url
-#  label:
-#    en: Resource URL
-#    fr: URL de la ressource
-#  preset: fluent_link
-#  schema_field_type: string
-#  schema_multivalued: false
-#  schema_extras: true
 
 - field_name: survey_status_code
   preset: ndm_survey_status
