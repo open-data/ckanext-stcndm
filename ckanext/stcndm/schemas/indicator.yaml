@@ -24,6 +24,10 @@ dataset_fields:
   label:
     en: Calculations
     fr: Calculs
+  form_snippet: repeating_text.html
+  display_snippet: repeating_text.html
+  validators: repeating_text
+  output_validators: repeating_text_output
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
@@ -74,6 +78,10 @@ dataset_fields:
   label:
     en: Table IDs
     fr: IDs de tables
+  form_snippet: repeating_text.html
+  display_snippet: repeating_text.html
+  validators: repeating_text
+  output_validators: repeating_text_output
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
