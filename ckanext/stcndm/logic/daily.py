@@ -204,17 +204,52 @@ def register_daily(context, data_dict):
 @logic.side_effect_free
 def get_default_views(context, data_dict):
     """
-    Returns a list of the default views with the Product ID, English label, and
-    French label for each default view.
+    Returns a list of the default views.
 
     :return: A dictionary containing the Product ID, English label, and French
              label in each default view.
     :rtype: dict
     """
+    theme = _get_or_bust(data_dict, 'theme')
 
-    output = _stub_msg
+    lc = ckanapi.LocalCKAN(context=context)
 
-    return output
+    cube_results = lc.action.package_search(
+        q=(
+            'type:cube AND subject_codes:{theme}'
+        ).format(
+            theme=theme
+        ),
+    )
+
+    final_results = []
+
+    for cube_result in cube_results.get('results') or []:
+        if 'default_view_id' not in cube_result:
+            # We don't care about cubes that have no default_view_id,
+            # which may occur.
+            continue
+
+        view_results = lc.action.package_search(
+            q=(
+                'type:view AND product_id_new:{view_id} AND '
+                '-discontinued_code:1'
+            ).format(
+                theme=theme,
+                view_id=cube_result['default_view_id']
+            ),
+            rows=1
+        )
+
+        if not view_results['count']:
+            continue
+
+        final_results.append({
+            u'cube': cube_result,
+            u'view': view_results['results'][0]
+        })
+
+    return final_results
 
 
 @logic.side_effect_free
