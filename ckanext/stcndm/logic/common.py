@@ -728,7 +728,7 @@ def register_non_data_product(context, data_dict):
     :type productType: str
     :param productTitle: EN/FR title dictionary
     :type productTitle: dict
-    :param parentProduct
+    :param parentProduct:
     :type parentProduct: str
 
     :return: newly-registered product id
