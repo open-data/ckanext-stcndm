@@ -1,6 +1,6 @@
 {% import 'macros/form.html' as form %}
 
-{%- set values = data.get(field.field_name, []) -%}
+{%- set values = h.x2list(data.get(field.field_name, [])) -%}
 <div class="row" data-autocomplete='{"type": "{{ field.lookup }}"}'>
 
         {{ form.input(

@@ -52,6 +52,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             #       schemas that should *not* be imported other than presets?
             'scheming.dataset_schemas': '\n'.join([
                 'ckanext.stcndm:schemas/article.yaml',
+                'ckanext.stcndm:schemas/chart.yaml',
                 'ckanext.stcndm:schemas/codeset.yaml',
                 'ckanext.stcndm:schemas/conference.yaml',
                 'ckanext.stcndm:schemas/corrections.yaml',
@@ -256,32 +257,24 @@ class STCNDMPlugin(p.SingletonPlugin):
             "article_create_name": validators.article_create_name,
             "codeset_create_name": validators.codeset_create_name,
             "codeset_multiple_choice": validators.codeset_multiple_choice,
-#            "conference_create_name": validators.conference_create_name,
             "correction_create_name": validators.correction_create_name,
             "create_product_id": validators.create_product_id,
-            "cube_create_name": validators.cube_create_name,
             "daily_create_name": validators.daily_create_name,
             "set_default_value": validators.set_default_value,
             "format_create_name": validators.format_create_name,
             "format_create_id": validators.format_create_id,
-#            "generic_create_name": validators.generic_create_name,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
-            "indicator_create_name": validators.indicator_create_name,
             "next_correction_id": validators.next_correction_id,
             "ndm_str2boolean": validators.ndm_str2boolean,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
             "province_create_name": validators.province_create_name,
             "product_create_name": validators.product_create_name,
-#            "pumf_create_name": validators.pumf_create_name,
             "release_create_name": validators.release_create_name,
-#            "service_create_name": validators.service_create_name,
             "shortcode_validate": validators.shortcode_validate,
             "shortcode_output": validators.shortcode_output,
             "subject_create_name": validators.subject_create_name,
             "survey_create_name": validators.survey_create_name,
             "valid_parent_slug": validators.valid_parent_slug,
-#            "video_create_name": validators.video_create_name,
-            "view_create_name": validators.view_create_name,
         }
 
     def get_helpers(self):
@@ -291,8 +284,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "get_dataset_types": helpers.get_dataset_types,
             'ensure_release_exists': helpers.ensure_release_exists,
             'get_parent_dataset': helpers.get_parent_dataset,
-            'get_child_datasets': helpers.get_child_datasets
-
+            'get_child_datasets': helpers.get_child_datasets,
+            'x2list': helpers.x2list,
         }
 
     def before_view(self, pkg_dict):
