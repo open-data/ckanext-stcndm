@@ -2,10 +2,12 @@ scheming_version: 1
 about: 'Statistics Canada Dissemination: Articles'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Articles
-  fr: Articles
+  en: Article
+  fr: Article
 clonable: true
 dataset_type: article
+child_dataset_types:
+- format
 form_languages:
 - en
 - fr

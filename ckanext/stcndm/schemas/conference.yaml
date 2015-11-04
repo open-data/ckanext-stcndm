@@ -2,8 +2,8 @@ scheming_version: 1
 about: 'Statistics Canada Dissemination: Conferences'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Conferences
-  fr: Conférences
+  en: Conference
+  fr: Conférence
 dataset_type: conference
 form_languages:
 - en
