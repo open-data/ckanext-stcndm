@@ -7,6 +7,7 @@ from ckan.plugins.toolkit import missing, _, ValidationError, ObjectNotFound
 from ckanext.stcndm import helpers as h
 from ckanext.stcndm.logic.cubes import get_next_cube_id
 from ckanext.stcndm.logic.common import get_next_product_id
+from ckanext.scheming.validation import scheming_required
 from ckan.lib.helpers import lang as lang
 import re
 import ckan.lib.navl.dictization_functions as df
@@ -216,28 +217,52 @@ def create_product_id(key, data, errors, context):
     # make sure subject_codes processed
     shortcode_validate(('subject_codes',), data, errors, context)
     subject_codes = shortcode_output(_data_lookup(('subject_codes',), data))
-
-    if len(subject_codes) != 1:
-        errors[key].append(_(
-            'there must be exactly 1 subject code when creating a new product'
-        ))
-        return
+    top_parent_id = _data_lookup(('top_parent_id',), data)
 
     if data_set_type in general_non_data_types:
-        product_id_new = h.next_non_data_product_id(
-            subject_code=subject_codes[0],
-            product_type_code=_data_lookup(('product_type_code',), data)
-        )
-        data[key] = product_id_new
-        return product_id_new
+        if len(subject_codes) != 1 or not re.match('\d\d', subject_codes[0]):
+            errors[key].append(_(
+                'exactly one 2-digit subject code must be provided '
+                'when creating a new product'
+            ))
+            return
+
+        try:
+            product_id_new = h.next_non_data_product_id(
+                subject_code=subject_codes[0],
+                product_type_code=_data_lookup(('product_type_code',), data)
+            )
+            data[key] = product_id_new
+            return product_id_new
+        except ValidationError as ve:
+            errors[key].append(_(ve))
+            return
     elif data_set_type == u'article':
-        product_id_new = h.next_article_id(
-            top_parent_id=_data_lookup(('top_parent_id',), data),
-            issue_number=_data_lookup(('issue_number',), data)
-        )
+        if not top_parent_id or top_parent_id is missing:
+            errors[key].append(_('missing top_parent_id'))
+            return
+        issue_number = _data_lookup(('issue_number',), data)
+        if not issue_number or issue_number is missing:
+            errors[key].append(_('missing issue_number'))
+            return
+        try:
+            product_id_new = h.next_article_id(
+                top_parent_id=top_parent_id,
+                issue_number=issue_number
+            )
+        except ValidationError as ve:
+            errors[key].append(_(ve))
+            return
         data[key] = product_id_new
         return product_id_new
     elif data_set_type == u'cube':
+        if len(subject_codes) != 1 or not re.match('\d\d', subject_codes[0]):
+            errors[key].append(_(
+                'exactly one 2-digit subject code must be provided '
+                'when creating a new product'
+            ))
+            return
+
         try:
             product_id_new = get_next_cube_id(
                 context,
@@ -249,11 +274,14 @@ def create_product_id(key, data, errors, context):
             errors[key].append(ve)
             return
     elif data_set_type in general_data_types:
+        if not top_parent_id or top_parent_id is missing:
+            errors[key].append(_('missing top_parent_id'))
+            return
         try:
             product_id_new = get_next_product_id(
                 context,
                 {
-                    'parentProductId': data.get((u'top_parent_id',)),
+                    'parentProductId': top_parent_id,
                     'productType': data.get((u'product_type_code',))
                 }
             )
