@@ -20,6 +20,10 @@ dataset_fields:
 - field_name: owner_org
   preset: ndm_owner_org
 
+- field_name: top_parent_id
+  preset: ndm_top_parent_id
+  required: true
+
 - field_name: calculations
   label:
     en: Calculations
@@ -73,6 +77,8 @@ dataset_fields:
 
 - field_name: product_id_new
   preset: ndm_product_id_new
+  form_attrs:
+      readonly: readonly
 
 - field_name: subject_codes
   preset: ndm_subject_codes
@@ -95,7 +101,7 @@ dataset_fields:
 - field_name: name
   preset: ndm_name
   # follow our custom name generation with default package name validators
-  validators: indicator_create_name
+  validators: product_create_name
     not_empty unicode name_validator package_name_validator
 
 - field_name: product_type_code

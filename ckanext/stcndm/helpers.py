@@ -31,6 +31,18 @@ def dict_list2dict(dict_list):
     return d
 
 
+def x2list(value):
+    if isinstance(value, list):
+        return value
+    if isinstance(value, str):
+        return map(unicode.strip, unicode(value).split(';'))
+    if isinstance(value, unicode):
+        return map(unicode.strip, value.split(';'))
+    if isinstance(value, dict):
+        return dict2dict_list(value)
+    return []
+
+
 def dict2dict_list(dictionary):
     dl = list()
 

@@ -20,6 +20,8 @@ dataset_fields:
 
 - field_name: name
   preset: ndm_name
+  create_validators: product_create_name
+  validators: not_empty unicode name_validator package_name_validator
 
 - field_name: admin_notes
   preset: ndm_admin_notes
@@ -107,6 +109,7 @@ dataset_fields:
 
 - field_name: product_id_new
   preset: ndm_product_id_new
+  required: true
 
 - field_name: product_id_old
   preset: ndm_product_id_old
