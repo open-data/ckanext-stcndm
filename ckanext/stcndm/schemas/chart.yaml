@@ -121,8 +121,8 @@ dataset_fields:
 
 - field_name: product_id_new
   preset: ndm_product_id_new
-    form_attrs:
-        readonly: readonly
+  form_attrs:
+      readonly: readonly
 
 - field_name: product_id_old
   preset: ndm_product_id_old

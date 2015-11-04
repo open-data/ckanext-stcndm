@@ -49,6 +49,7 @@ dataset_fields:
 
 - field_name: subject_codes
   preset: ndm_subject_codes
+  required: true
 
 - field_name: product_type_code
   label:

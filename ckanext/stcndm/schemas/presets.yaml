@@ -1090,10 +1090,6 @@ presets:
           fr: À venir
           en: Forthcoming
         value: '32'
-#      - label:
-#         fr: Discontinué/Plus disponible
-#         en: Discontinued/Not available
-#        value: '33'
       - label:
           fr: Remplacé par une autre langue
           en: Replaced by other language
@@ -1102,10 +1098,6 @@ presets:
           fr: Annulé
           en: Cancelled
         value: '35'
-#      - label:
-#          fr: Ne pas télécharger au CEL
-#          en: Do not load to OLC
-#        value: '36'
       - label:
           fr: Dernier numéro completé
           en: Last completed issue
@@ -1114,12 +1106,13 @@ presets:
 - preset_name: ndm_subject_codes
   values:
     label:
-      en: Subject
-      fr: Sujet
+      en: Subjects
+      fr: Sujets
     form_snippet: shortcode_multivalue.html
     display_snippet: shortcode_multivalue.html
-    validators: shortcode_validate
-    output_validators: shortcode_output
+    validators: scheming_required shortcode_validate
+    create_validators: scheming_required shortcode_validate
+    output_validators: scheming_required shortcode_output
     lookup: subject
     schema_field_type: code
     schema_multivalued: true
@@ -1404,6 +1397,8 @@ presets:
     label:
       en: Top Parent ID
       fr: ID du parent du plus haut niveau
+    output_validators: scheming_required
+    create_validators: scheming_required
     validators: scheming_required
     schema_field_type: string
     schema_multivalued: false
