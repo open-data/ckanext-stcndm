@@ -283,8 +283,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "get_dataset_types": helpers.get_dataset_types,
             'ensure_release_exists': helpers.ensure_release_exists,
             'get_parent_dataset': helpers.get_parent_dataset,
-            'get_child_datasets': helpers.get_child_datasets
-
+            'get_child_datasets': helpers.get_child_datasets,
+            'x2list': helpers.x2list,
         }
 
     def before_view(self, pkg_dict):
