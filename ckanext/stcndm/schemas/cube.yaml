@@ -23,7 +23,7 @@ dataset_fields:
 - field_name: name
   preset: ndm_name
   # follow our custom name generation with default package name validators
-  validators: cube_create_name
+  validators: product_create_name
     not_empty unicode name_validator package_name_validator
 
 - field_name: admin_notes
@@ -123,6 +123,8 @@ dataset_fields:
 
 - field_name: product_id_new
   preset: ndm_product_id_new
+  form_attrs:
+    readonly: readonly
 
 - field_name: product_id_old
   preset: ndm_product_id_old
