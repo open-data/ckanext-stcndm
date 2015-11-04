@@ -2,8 +2,8 @@ scheming_version: 1
 about: 'Statistics Canada Dissemination: Geodescriptors'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Geodescriptors
-  fr: Geodescriptors
+  en: Geodescriptor
+  fr: Geodescriptor
 clonable: true
 dataset_type: geodescriptor
 form_languages:

@@ -2,8 +2,8 @@ scheming_version: 1
 about: 'Statistics Canada Dissemination: Indicators'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Indicators
-  fr: Indicateurs
+  en: Indicator
+  fr: Indicateur
 clonable: false
 dataset_type: indicator
 form_languages:

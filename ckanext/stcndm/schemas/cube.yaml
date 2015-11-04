@@ -6,6 +6,8 @@ catalog_type_label:
   fr: Cube
 clonable: false
 dataset_type: cube
+child_dataset_types:
+- view
 form_languages:
 - en
 - fr

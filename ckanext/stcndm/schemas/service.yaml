@@ -2,8 +2,8 @@ scheming_version: 1
 about: 'Statistics Canada Dissemination: Services'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Services
-  fr: Services
+  en: Service
+  fr: Service
 dataset_type: service
 form_languages:
 - en
