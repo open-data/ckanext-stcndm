@@ -7,6 +7,7 @@ from ckan.plugins.toolkit import (
     ObjectNotFound,
     ValidationError
 )
+import re
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -30,7 +31,7 @@ def get_next_cube_id(context, data_dict):
     :raises: ValidationError
     """
     subject_code = _get_or_bust(data_dict, 'subjectCode')
-    if not len(str(subject_code)) == 2:
+    if not re.match('\d\d', subject_code):
         raise ValidationError('invalid subject_code')
 
     lc = ckanapi.LocalCKAN(context=context)

@@ -19,6 +19,36 @@ dataset_fields:
 - field_name: owner_org
   preset: ndm_owner_org
 
+- field_name: product_type_code
+  label:
+    en: Product Type
+    fr: Type de produit
+  preset: select
+  choices:
+    - label:
+        en: Conference
+        fr: Conférence
+      value: '22'
+  required: true
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: subject_codes
+  preset: ndm_subject_codes
+  required: true
+
+- field_name: product_id_new
+  preset: ndm_product_id_new
+  form_attrs:
+    readonly: readonly
+
+- field_name: name
+  preset: ndm_name
+  # follow our custom name generation with default package name validators
+  create_validators: product_create_name
+  validators: not_empty unicode name_validator package_name_validator
+
 - field_name: admin_notes
   preset: ndm_admin_notes
 
@@ -36,31 +66,6 @@ dataset_fields:
 
 - field_name: geodescriptor_codes
   preset: ndm_geodescriptor_codes
-
-- field_name: subject_codes
-  preset: ndm_subject_codes
-  required: true
-
-- field_name: name
-  preset: ndm_name
-  # follow our custom name generation with default package name validators
-  create_validators: product_create_name
-  validators: not_empty unicode name_validator package_name_validator
-
-- field_name: product_type_code
-  label:
-    en: Product Type
-    fr: Type de produit
-  preset: select
-  choices:
-    - label:
-        en: Conference
-        fr: Conférence
-      value: '22'
-  required: true
-  schema_field_type: code
-  schema_multivalued: false
-  schema_extras: true
 
 - field_name: related_products
   preset: ndm_related_products
@@ -136,11 +141,6 @@ dataset_fields:
 
 - field_name: price_note
   preset: ndm_price_note
-
-- field_name: product_id_new
-  preset: ndm_product_id_new
-  form_attrs:
-    readonly: readonly
 
 - field_name: product_id_old
   preset: ndm_product_id_old
