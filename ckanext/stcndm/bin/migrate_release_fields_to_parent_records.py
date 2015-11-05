@@ -4,23 +4,22 @@ import ConfigParser
 parser = ConfigParser.SafeConfigParser()
 parser.read("./ckanparameters.config")
 
-API_KEY = parser.get("ckan", "api_key")
-BASE_URL = parser.get("ckan", "base_url")
+API_KEY = parser.get('ckan', 'api_key')
+BASE_URL = parser.get('ckan', 'base_url')
 
+DATASET_TYPES_TO_UPDATE = ['article',
+                           'publication',
+                           'cube',
+                           'view',
+                           'indicator',
+                           'format']
 
 def main():
-    rc = ckanapi.RemoteCKAN(BASE_URL,
-                            apikey=API_KEY)
+    rc = ckanapi.RemoteCKAN(BASE_URL, apikey=API_KEY)
 
-    for dataset_type in ['article',
-                         'publication',
-                         'cube',
-                         'view',
-                         'indicator']:
+    for dataset_type in DATASET_TYPES_TO_UPDATE:
 
         # TODO: all cubes and many articles are missing some of these fields in their releases
-
-        # TODO: Why do formats not have parent_id/release_slug in the schema?
 
         q = u'dataset_type:{dataset_type}'.format(dataset_type=dataset_type)
 
