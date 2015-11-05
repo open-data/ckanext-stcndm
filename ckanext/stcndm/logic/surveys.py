@@ -27,6 +27,7 @@ def get_survey_codesets(context, data_dict):
         q='dataset_type:survey',
         rows=limit,
         start=start,
+        sort='survey_code asc',
         fl=(
             'name',
             'title'
