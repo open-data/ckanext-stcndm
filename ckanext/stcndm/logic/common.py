@@ -698,7 +698,7 @@ def register_data_product(context, data_dict):
         'name': product_id,
         'owner_org': 'statcan',
         'product_id_new': product_id,
-        'parent_product': cube_id,
+        'top_parent_id': cube_id,
         'title': title,
         'product_type_code': product_type
     })
