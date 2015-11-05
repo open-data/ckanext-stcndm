@@ -108,25 +108,26 @@ def get_next_product_id(context, data_dict):
     :param productType:
     :type productType: str
 
-    :return: next available ProductId
+    :return: next available ProductID
     :rtype: str
 
-    :raises: ValidationError, ObjectNotFound
+    :raises: ValidationError
     """
 
     lc = ckanapi.LocalCKAN(context=context)
-    product_id = _get_or_bust(data_dict, 'parentProductId')
+    product_id = _get_or_bust(data_dict, 'parentProductId').strip()
 
     # TODO: we need to standardize these. This is a result of swapping
     # everything to java-style params
     data_dict['productId'] = product_id
 
     if not len(str(product_id)) == 8:
-        raise _ValidationError('invalid ParentProductId length')
+        raise _ValidationError('invalid ParentProductId length, '
+                               'expecting exactly 8 characters')
 
     product_type = _get_or_bust(data_dict, 'productType')
 
-    # testing for existence of cubeid
+    # testing for existence of
     lc.action.GetCube(cubeId=product_id)
 
     subject_code = str(product_id)[:2]

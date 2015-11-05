@@ -53,6 +53,9 @@ def shortcode_validate(key, data, errors, context):
         return
 
     if isinstance(value, basestring):
+        if not value:
+            data[key] = json.dumps([])
+            return
         try:
             if isinstance(json.loads(value), list):
                 return value
@@ -61,7 +64,7 @@ def shortcode_validate(key, data, errors, context):
         except TypeError:
             data[key] = json.dumps([])
             return
-        value = value.split(';')
+        value = map(unicode.strip, value.split(';'))
     if not isinstance(value, list):
         errors[key].append(_('expecting list of strings'))
         return
@@ -115,14 +118,6 @@ def _data_lookup(key, data):
                 value = data[('extras', i, 'value')]
             i += 1
     return value
-
-
-def slug_strip(slug):
-    dash_index = slug.find(u'-')
-    if dash_index >= 0:
-        return slug[dash_index+1:]
-    else:
-        return slug
 
 
 def codeset_create_name(key, data, errors, context):
@@ -205,7 +200,7 @@ def create_product_id(key, data, errors, context):
     )
     # if there was an error before calling our validator
     # don't bother with our validation
-    if errors[key]:
+    if errors[key] or errors[('subject_codes',)] or errors[('top_parent_id',)]:
         return
 
     product_id_new = _data_lookup(('product_id_new',), data)
@@ -216,11 +211,11 @@ def create_product_id(key, data, errors, context):
     # make sure subject_codes processed
     shortcode_validate(('subject_codes',), data, errors, context)
     subject_codes = shortcode_output(_data_lookup(('subject_codes',), data))
-    top_parent_id = _data_lookup(('top_parent_id',), data)
+    top_parent_id = _data_lookup(('top_parent_id',), data).strip()
 
     if data_set_type in general_non_data_types:
-        if len(subject_codes) != 1 or not re.match('\d\d', subject_codes[0]):
-            errors[key].append(_(
+        if len(subject_codes) != 1:
+            errors[('subject_codes',)].append(_(
                 'exactly one 2-digit subject code must be provided '
                 'when creating a new product'
             ))
@@ -234,29 +229,23 @@ def create_product_id(key, data, errors, context):
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
-            errors[key].append(_(ve))
+            errors[key].append(_(ve.error_dict['message']))
             return
     elif data_set_type == u'article':
-        if not top_parent_id or top_parent_id is missing:
-            errors[key].append(_('missing top_parent_id'))
-            return
-        issue_number = _data_lookup(('issue_number',), data)
-        if not issue_number or issue_number is missing:
-            errors[key].append(_('missing issue_number'))
-            return
+        issue_number = _data_lookup(('issue_number',), data).strip()
         try:
             product_id_new = h.next_article_id(
                 top_parent_id=top_parent_id,
                 issue_number=issue_number
             )
+            data[key] = product_id_new
+            return product_id_new
         except ValidationError as ve:
-            errors[key].append(_(ve))
+            errors[key].append(_(ve.error_dict['message']))
             return
-        data[key] = product_id_new
-        return product_id_new
     elif data_set_type == u'cube':
-        if len(subject_codes) != 1 or not re.match('\d\d', subject_codes[0]):
-            errors[key].append(_(
+        if len(subject_codes) != 1:
+            errors[('subject_codes',)].append(_(
                 'exactly one 2-digit subject code must be provided '
                 'when creating a new product'
             ))
@@ -270,7 +259,7 @@ def create_product_id(key, data, errors, context):
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
-            errors[key].append(ve)
+            errors[key].append(_(ve.error_dict['message']))
             return
     elif data_set_type in general_data_types:
         if not top_parent_id or top_parent_id is missing:
@@ -286,8 +275,8 @@ def create_product_id(key, data, errors, context):
             )
             data[key] = product_id_new
             return product_id_new
-        except (ValidationError, ObjectNotFound) as e:
-            errors[key].append(e)
+        except ValidationError as ve:
+            errors[key].append(ve.error_dict['message'])
             return
     else:
         errors[key].append(_(
@@ -399,7 +388,8 @@ def product_create_name(key, data, errors, context):
             product_id_new=product_id_new.lower()
         )
     else:
-        errors[key].append(_('could not find product_id_new'))
+        errors[('product_id_new',)].append(_('PID could not be generated'))
+        errors[key].append(_('Name could not be generated'))
 
 
 def article_create_name(key, data, errors, context):
@@ -516,28 +506,6 @@ def geodescriptor_create_name(key, data, errors, context):
         )
     else:
         errors[key].append(_('could not find geodescriptor_code'))
-
-
-def valid_parent_slug(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return False
-
-    parent_slug = _data_lookup(('parent_slug',), data)
-    if not parent_slug:
-        errors[key].append(_('could not find parent_slug'))
-        return False
-
-    lc = ckanapi.LocalCKAN()
-    query_result = lc.action.package_search(
-        q='name:{0}'.format(parent_slug.lower())
-    )
-    if query_result['count'] < 1:
-        errors[key].append(_('could not find parent_slug'))
-        return False
-
-    return True
 
 
 @scheming_validator

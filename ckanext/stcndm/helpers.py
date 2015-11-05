@@ -435,9 +435,8 @@ def next_non_data_product_id(subject_code, product_type_code):
         '26'
     ]
 
-    if isinstance(subject_code, basestring) and int(subject_code) < 100:
-        pass
-    else:
+    if not isinstance(subject_code, basestring) or \
+            not re.match('\d\d', subject_code):
         raise _ValidationError('Invalid subject code. Expected 2 digit string')
 
     if isinstance(product_type_code, basestring):
