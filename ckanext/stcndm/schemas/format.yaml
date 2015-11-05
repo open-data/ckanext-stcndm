@@ -21,6 +21,17 @@ dataset_fields:
 - field_name: top_parent_id
   preset: ndm_top_parent_id
 
+- field_name: parent_id
+  label:
+    en: Parent ID
+    fr: ID du parent immédiat
+  output_validators: scheming_required
+  create_validators: scheming_required
+  validators: scheming_required
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
 - field_name: format_id
   label:
     en: Format Product ID
