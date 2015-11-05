@@ -18,6 +18,25 @@ dataset_fields:
 - field_name: owner_org
   preset: ndm_owner_org
 
+- field_name: product_type_code
+  label:
+    en: Product Type
+    fr: Type de produit
+  preset: select
+  choices:
+    - label:
+        en: Daily
+        fr: Quotidien
+      value: '24'
+  required: true
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: product_id_new
+  preset: ndm_product_id_new
+  required: true
+
 - field_name: name
   preset: ndm_name
   create_validators: product_create_name
@@ -46,21 +65,6 @@ dataset_fields:
 
 - field_name: subject_codes
   preset: ndm_subject_codes
-
-- field_name: product_type_code
-  label:
-    en: Product Type
-    fr: Type de produit
-  preset: select
-  choices:
-    - label:
-        en: Daily
-        fr: Quotidien
-      value: '24'
-  required: true
-  schema_field_type: code
-  schema_multivalued: false
-  schema_extras: true
 
 - field_name: related_products
   preset: ndm_related_products
@@ -106,10 +110,6 @@ dataset_fields:
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id
-
-- field_name: product_id_new
-  preset: ndm_product_id_new
-  required: true
 
 - field_name: product_id_old
   preset: ndm_product_id_old

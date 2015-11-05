@@ -921,9 +921,7 @@ presets:
       en: Product ID New
       fr: ID produit nouveau
     required: true
-#    form_attrs:
-#        readonly: readonly
-    validators: create_product_id
+    create_validators: create_product_id
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
