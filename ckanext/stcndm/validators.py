@@ -7,7 +7,6 @@ from ckan.plugins.toolkit import missing, _, ValidationError, ObjectNotFound
 from ckanext.stcndm import helpers as h
 from ckanext.stcndm.logic.cubes import get_next_cube_id
 from ckanext.stcndm.logic.common import get_next_product_id
-from ckanext.scheming.validation import scheming_required
 from ckan.lib.helpers import lang as lang
 import re
 import ckan.lib.navl.dictization_functions as df
