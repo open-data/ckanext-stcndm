@@ -2,7 +2,6 @@ import sys
 import json
 import yaml
 import ckanapi
-from massage_product import do_release  # do_product, do_format
 
 __author__ = 'marc'
 
