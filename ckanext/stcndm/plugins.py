@@ -13,8 +13,8 @@ import ckanext.stcndm.logic.surveys as surveys
 import datetime
 from dateutil.parser import parse
 
-from ckan.plugins.toolkit import _
-from ckan.plugins.toolkit import ValidationError
+from ckan.lib.navl.dictization_functions import _
+from ckan.logic import ValidationError
 from ckanext.stcndm import validators
 from ckanext.stcndm import helpers
 from ckanext.scheming.helpers import (
@@ -89,11 +89,11 @@ class STCNDMPlugin(p.SingletonPlugin):
             data_dict.get('type', 'unknown')
         )
         if dataset_schema is None:
-            raise ValidationError(
-                'Found no schema for following dataset :\n{dump}'.format(
+            error_message = 'Found no schema for following dataset :\n{dump}'\
+                .format(
                     dump=json.dumps(data_dict, indent=2)
-                )
-            )
+                    )
+            raise ValidationError((_(error_message),))
 
         # iterate through dataset fields defined in schema
         field_schema = dict()

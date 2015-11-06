@@ -122,8 +122,9 @@ def get_next_product_id(context, data_dict):
     data_dict['productId'] = product_id
 
     if not len(str(product_id)) == 8:
-        raise _ValidationError('invalid ParentProductId length, '
-                               'expecting exactly 8 characters')
+        raise _ValidationError(
+            ('invalid ParentProductId length, expecting exactly 8 characters',)
+        )
 
     product_type = _get_or_bust(data_dict, 'productType')
 
@@ -166,8 +167,8 @@ def get_next_product_id(context, data_dict):
     if view_id == '99':
             # TODO: implement reusing unused IDs
         raise _ValidationError(
-            'All Product IDs have been used. '
-            'Reusing IDs is in development.'
+            ('All Product IDs have been used. '
+             'Reusing IDs is in development.',)
         )
     else:
         try:
@@ -181,9 +182,9 @@ def get_next_product_id(context, data_dict):
             )
         except ValueError:
             raise _ValidationError(
-                'Invalid product_id {0}'.format(
+                ('Invalid product_id {0}'.format(
                     product_id_new
-                )
+                ),)
             )
 
     return product_id_new
@@ -211,9 +212,11 @@ def get_product(context, data_dict):
     )
 
     if not result['count']:
-        raise _NotFound('product {product_id} not found'.format(
-            product_id=product_id
-        ))
+        raise _NotFound(
+            ('product {product_id} not found'.format
+             (product_id=product_id),
+             )
+        )
 
     # If we're getting more than one result for a given product_id
     # something has gone terribly wrong with the database.
@@ -268,9 +271,9 @@ def get_dataset_schema(context, data_dict):
     )
 
     if result is None:
-        raise _NotFound('no schema by the name {name}'.format(
+        raise _NotFound(('no schema by the name {name}'.format(
             name=schema_name
-        ))
+        ),))
 
     return result
 
@@ -297,9 +300,9 @@ def get_group_schema(context, data_dict):
     )
 
     if result is None:
-        raise _NotFound('no schema by the name {name}'.format(
+        raise _NotFound(('no schema by the name {name}'.format(
             name=schema_name
-        ))
+        ),))
 
     return result
 
@@ -357,7 +360,7 @@ def get_product_type(context, data_dict):
                 return massage(pt)
         else:
             raise logic.ValidationError(
-                'productType: \'{0}\' not valid'.format(product_type)
+                ('productType: \'{0}\' not valid'.format(product_type),)
             )
 
 
@@ -391,7 +394,7 @@ def get_last_publish_status(context, data_dict):
             return massage(ps)
     else:
         raise logic.ValidationError(
-            'lastPublishStatusCode: \'{0}\' invalid'.format(publish_status)
+            ('lastPublishStatusCode: \'{0}\' invalid'.format(publish_status),)
         )
 
 
@@ -427,7 +430,7 @@ def get_format_description(context, data_dict):
             return massage(fc)
     else:
         raise logic.ValidationError(
-            'formatCode \'{0}\' invalid'.format(format_code)
+            ('formatCode \'{0}\' invalid'.format(format_code),)
         )
 
 
@@ -662,12 +665,12 @@ def register_data_product(context, data_dict):
 
     if product_type == CUBE_PRODUCT_TYPE:
         raise _ValidationError(
-            'Please use RegisterCube to register a cube'
+            ('Please use RegisterCube to register a cube',)
         )
     elif product_type not in VALID_DATA_TYPES:
         raise _ValidationError(
-            'Invalid data productType, only data products may be registered '
-            'with this service'
+            ('Invalid data productType, only data products may be registered '
+             'with this service',)
         )
 
     lc = ckanapi.LocalCKAN(context=context)
@@ -756,12 +759,12 @@ def register_non_data_product(context, data_dict):
 
     if product_type == u'daily':
         raise _ValidationError(
-            'Please use RegisterDaily to register a Daily'
+            ('Please use RegisterDaily to register a Daily',)
         )
     elif product_type not in VALID_DATA_TYPES:
         raise _ValidationError(
-            'Invalid non data productType, only non data products may be'
-            ' registered with this service'
+            ('Invalid non data productType, only non data products may be'
+             ' registered with this service',)
         )
 
     lc = ckanapi.LocalCKAN(context=context)
@@ -773,6 +776,7 @@ def register_non_data_product(context, data_dict):
         u'product_type_code': VALID_DATA_TYPES[product_type],
         u'product_id_new': product_id,
         u'parent_product': parent_product,
+        u'top_parent_id': parent_product,
         u'title': title,
         u'name': u'{product_type}-{product_id}'.format(
             product_type=product_type,
@@ -855,7 +859,7 @@ def purge_dataset(context, data_dict):
     pkg = model.Package.get(id)
     context['package'] = pkg
     if pkg is None:
-        raise _NotFound('Dataset was not found')
+        raise _NotFound(('Dataset was not found',))
 
     members = model.Session.query(model.Member) \
                    .filter(model.Member.table_id == pkg.id) \
@@ -876,7 +880,7 @@ def update_last_publish_status(context, data_dict):
     """
     Update the publishing status code
 
-    :param productIds: publishing status code
+    :param productIds: list of product IDs
     :type productIds: str
     :param issueNo: publishing status code
     :type issueNo: str
@@ -932,11 +936,11 @@ def _update_single_publish_status(context, data_dict):
     result = _get_action('package_search')(context, q)
 
     if result['count'] == 0:
-        raise _ValidationError('Record not found.')
+        raise _ValidationError(('Record not found.',))
     elif result['count'] > 1:
         raise _ValidationError(
-            'More than one record identified with these values. '
-            'Please contact CKAN IT'
+            ('More than one record identified with these values. '
+             'Please contact CKAN IT',)
         )
 
     pkg_dict = result['results'][0]
@@ -981,11 +985,11 @@ def update_product_geo(context, data_dict):
     )
 
     if response['count'] == 0:
-        raise _ValidationError('Record not found.')
+        raise _ValidationError(('Record not found.',))
     elif response['count'] > 1:
         raise _ValidationError(
-            'More than one record identified with these values. '
-            'Please contact CKAN IT'
+            ('More than one record identified with these values. '
+             'Please contact CKAN IT',)
         )
 
     pkg_dict = response['results'][0]

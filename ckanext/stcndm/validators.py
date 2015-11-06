@@ -2,8 +2,8 @@
 # encoding: utf-8
 import json
 import datetime
-
-from ckan.plugins.toolkit import missing, _, ValidationError, ObjectNotFound
+from ckan.logic import _, ValidationError
+from ckan.lib.navl.dictization_functions import missing
 from ckanext.stcndm import helpers as h
 from ckanext.stcndm.logic.cubes import get_next_cube_id
 from ckanext.stcndm.logic.common import get_next_product_id
@@ -49,22 +49,23 @@ def shortcode_validate(key, data, errors, context):
 
     value = data[key]
     if value is missing:
-        data[key] = json.dumps([])
         return
 
     if isinstance(value, basestring):
         if not value:
-            data[key] = json.dumps([])
+            data[key] = missing
             return
         try:
             if isinstance(json.loads(value), list):
-                return value
+                return
         except ValueError:
             pass  # value wasn't in json format, keep processing
         except TypeError:
+            # FIXME should we return missing instead? or
             data[key] = json.dumps([])
             return
-        value = map(unicode.strip, value.split(';'))
+        value = value.split(';')
+
     if not isinstance(value, list):
         errors[key].append(_('expecting list of strings'))
         return
@@ -80,7 +81,7 @@ def shortcode_validate(key, data, errors, context):
             except UnicodeDecodeError:
                 errors[key].append(_('invalid encoding for "%s" value') % lang)
                 continue
-        out.append(element)
+        out.append(element.strip())
 
     # TODO: future: check values against valid choices for this field
     # using @scheming_validator decorator to get the form field name
@@ -96,7 +97,7 @@ def shortcode_output(value):
     """
     if isinstance(value, list):
         return value
-    if value is None:
+    if value is None or value is missing:
         return []
     try:
         return json.loads(value)
@@ -229,7 +230,7 @@ def create_product_id(key, data, errors, context):
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
-            errors[key].append(_(ve.error_dict['message']))
+            errors[key].append(_(ve))
             return
     elif data_set_type == u'article':
         issue_number = _data_lookup(('issue_number',), data).strip()
@@ -241,7 +242,7 @@ def create_product_id(key, data, errors, context):
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
-            errors[key].append(_(ve.error_dict['message']))
+            errors[key].append(_(ve))
             return
     elif data_set_type == u'cube':
         if len(subject_codes) != 1:
@@ -259,7 +260,7 @@ def create_product_id(key, data, errors, context):
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
-            errors[key].append(_(ve.error_dict['message']))
+            errors[key].append(_(ve))
             return
     elif data_set_type in general_data_types:
         if not top_parent_id or top_parent_id is missing:
@@ -276,7 +277,7 @@ def create_product_id(key, data, errors, context):
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
-            errors[key].append(ve.error_dict['message'])
+            errors[key].append(ve)
             return
     else:
         errors[key].append(_(
@@ -506,6 +507,7 @@ def geodescriptor_create_name(key, data, errors, context):
         )
     else:
         errors[key].append(_('could not find geodescriptor_code'))
+        re.su
 
 
 @scheming_validator
