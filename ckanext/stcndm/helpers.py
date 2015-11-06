@@ -1,8 +1,7 @@
 import ast
 import ckanapi
-import ckan.logic as logic
+from ckan.logic import _, ValidationError, get_action
 import ckan.model as model
-import ckan.plugins.toolkit as toolkit
 from ckan.common import c
 import re
 from ckanext.scheming.helpers import (
@@ -11,11 +10,6 @@ from ckanext.scheming.helpers import (
 )
 
 __author__ = 'matt'
-
-_get_action = toolkit.get_action
-_ValidationError = toolkit.ValidationError
-_NotFound = toolkit.ObjectNotFound
-_NotAuthorized = toolkit.NotAuthorized
 
 
 class NotValidProduct(Exception):
@@ -64,7 +58,7 @@ def get_schema(org, dataset):
 
     data_dict = {'org': org, 'dataset': dataset}
 
-    result = logic.get_action('ndm_get_schema')(context, data_dict)
+    result = get_action('ndm_get_schema')(context, data_dict)
 
     return result
 
@@ -99,7 +93,7 @@ def get_parent_dataset(top_parent_id, dataset_id):
 
     q = 'product_id_new:{parent_id}'.format(parent_id=top_parent_id)
 
-    if (dataset_id):
+    if dataset_id:
         q += 'AND NOT product_id_new:{id}'.format(id=dataset_id)
 
     parents = lc.action.package_search(
@@ -153,7 +147,7 @@ def show_fields_changed_between_revisions(pkg_name, pkg_revisions):
         # data_dict (base CKAN quirk)
         context['revision_id'] = revision['id']
 
-        revision_pkg = _get_action('package_show')(context, {'id': pkg_name})
+        revision_pkg = get_action('package_show')(context, {'id': pkg_name})
 
         revision_extras_dict = {}
 
@@ -217,7 +211,7 @@ class GeoLevel:
 
         data_dict = {'q': q, 'fq': fq, 'rows': '1000'}
 
-        response = _get_action('package_search')(context, data_dict)
+        response = get_action('package_search')(context, data_dict)
 
         for result in response['results']:
             result_dict = {}
@@ -263,10 +257,10 @@ class GeoSpecific:
 
         data_dict = {'q': q, 'rows': '1'}
 
-        response = _get_action('package_search')(self.context, data_dict)
+        response = get_action('package_search')(self.context, data_dict)
 
         if response['count'] == 0:
-            raise _ValidationError('Specific Geo code not found.')
+            raise ValidationError((_('Specific Geo code not found.'),))
 
         # This is very messy but the tmsgccode entries might have multiple
         # codes as in the "all provinces" entry.  If this is the case, iterate
@@ -437,14 +431,18 @@ def next_non_data_product_id(subject_code, product_type_code):
 
     if not isinstance(subject_code, basestring) or \
             not re.match('\d\d', subject_code):
-        raise _ValidationError('Invalid subject code. Expected 2 digit string')
+        raise ValidationError(
+            (_('Invalid subject code. Expected 2 digit string'),)
+        )
 
     if isinstance(product_type_code, basestring):
         if product_type_code not in valid_product_codes:
-            raise _ValidationError(
-                'Invalid product type code. Expected one of {codes!r}'.format(
-                    codes=valid_product_codes
-                )
+            error_message = 'Invalid product type code. ' \
+                            'Expected one of {codes!r}'.format(
+                                codes=valid_product_codes,
+                            )
+            raise ValidationError(
+                (_(error_message),)
             )
 
     i = 0
@@ -496,18 +494,18 @@ def next_article_id(top_parent_id, issue_number):
     ISSUE_NUMBER_R = re.compile('\d{7}')
 
     if not isinstance(top_parent_id, basestring) or len(top_parent_id) != 8:
-        raise _ValidationError(
-            'Invalid top parent ID. Expected 8 digit string'
+        raise ValidationError(
+            (_('Invalid top parent ID. Expected 8 digit string'),)
         )
 
     if not isinstance(issue_number, basestring):
-        raise _ValidationError(
-            'Invalid issue number, expected 7 digit string.'
+        raise ValidationError(
+            (_('Invalid issue number, expected 7 digit string.'),)
         )
 
     if not ISSUE_NUMBER_R.match(issue_number):
-        raise _ValidationError(
-            'Invalid issue number, expected 7 digit string'
+        raise ValidationError(
+            (_('Invalid issue number, expected 7 digit string'),)
         )
 
     i = 0
