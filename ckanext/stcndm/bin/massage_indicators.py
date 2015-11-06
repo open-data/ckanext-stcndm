@@ -1,7 +1,6 @@
-# import sys
 import json
 import ckanapi
-from massage_product import do_release, do_product
+from massage_product import do_product
 
 __author__ = 'marc'
 
