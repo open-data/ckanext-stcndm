@@ -1,6 +1,6 @@
 import json
 import ckanapi
-from massage_product import do_product, do_release  # , do_format
+from massage_product import do_product  # , do_format
 
 __author__ = 'marc'
 
