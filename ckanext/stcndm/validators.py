@@ -49,11 +49,12 @@ def shortcode_validate(key, data, errors, context):
 
     value = data[key]
     if value is missing:
+        data[key] = json.dumps([])
         return
 
     if isinstance(value, basestring):
         if not value:
-            data[key] = missing
+            data[key] = json.dumps([])
             return
         try:
             if isinstance(json.loads(value), list):
