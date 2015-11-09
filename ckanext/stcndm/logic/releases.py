@@ -24,8 +24,8 @@ def register_release(context, data_dict):
 
     :param releasedProductId:
     :type releasedProductId: str
-    :param parentProduct
-    :type str
+    :param parentProduct:
+    :type parentProduct: str
     :param lastPublishStatusCode: 1 or 2 digit number
     :type lastPublishStatusCode: str
     :param releaseDate: e.g. 2015-06-30T09:45
