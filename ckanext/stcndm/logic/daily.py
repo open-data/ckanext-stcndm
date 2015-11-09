@@ -226,7 +226,7 @@ def get_default_views(context, data_dict):
     final_results = []
 
     for cube_result in cube_results.get('results') or []:
-        if 'default_view_id' not in cube_result:
+        if not cube_result.get('default_view_id'):
             # We don't care about cubes that have no default_view_id,
             # which may occur.
             continue
