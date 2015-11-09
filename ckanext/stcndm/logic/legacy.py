@@ -16,6 +16,8 @@ _NotAuthorized = toolkit.NotAuthorized
 # which are all special cases with business logic that completely
 # differs from al new products
 
+def is_legacy_product(product_id):
+    return any(c.isalpha() for c in product_id)
 
 @logic.side_effect_free
 def get_next_legacy_product_id(context, data_dict):
@@ -174,7 +176,7 @@ def register_legacy_non_data_product(context, data_dict):
             ' registered with this service'
         )
 
-    if not any(c.isalpha() for c in parent_product):  # only legacy products have alpha characters in the id
+    if not is_legacy_product(parent_product):  # only legacy products have alpha characters in the id
         raise _ValidationError('This service only applies to legacy products'
                                ' please use RegisterNonDataProduct')
 
