@@ -5,6 +5,8 @@ catalog_type_label:
   en: Conference
   fr: Conférence
 dataset_type: conference
+dataset_type_code: 22
+non_data_product: true
 form_languages:
 - en
 - fr

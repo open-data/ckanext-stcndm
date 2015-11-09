@@ -5,6 +5,7 @@ catalog_type_label:
   en: Chart
   fr: Graphique
 dataset_type: chart
+dataset_type_code: 13
 form_languages:
 - en
 - fr

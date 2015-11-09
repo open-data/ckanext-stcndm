@@ -5,10 +5,13 @@ catalog_type_label:
   en: Publication
   fr: Publication
 clonable: true
+allow_legacy: true
 dataset_type: publication
+dataset_type_code: 20
 child_dataset_types:
 - article
 - format
+non_data_product: true
 form_languages:
 - en
 - fr

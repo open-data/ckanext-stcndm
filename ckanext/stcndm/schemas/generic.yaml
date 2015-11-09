@@ -6,6 +6,8 @@ catalog_type_label:
   fr: Publication générique
 clonable: true
 dataset_type: generic
+dataset_type_code: 26
+non_data_product: true
 form_languages:
 - en
 - fr

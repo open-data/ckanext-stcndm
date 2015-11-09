@@ -186,7 +186,7 @@ def register_legacy_non_data_product(context, data_dict):
         if len(parent_product) > 8:
             dataset_type = 'article'  # everything other than articles only passes in the top parent id
         elif parent_product[2] == 'F' and parent_product[7] == 'G':
-            dataset_type = 'guide'
+            dataset_type = 'publication' #guide
         elif parent_product[2] == 'F':
             dataset_type = 'publication'
         elif parent_product[7] == 'P':

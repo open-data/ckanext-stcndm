@@ -5,6 +5,8 @@ catalog_type_label:
   en: Service
   fr: Service
 dataset_type: service
+dataset_type_code: 23
+non_data_product: true
 form_languages:
 - en
 - fr

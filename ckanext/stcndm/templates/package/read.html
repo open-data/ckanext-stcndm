@@ -5,6 +5,15 @@
   {% if h.scheming_get_dataset_schema(pkg.type).clonable %}
     <li>{% link_for _('Clone'), controller='ckanext.stcndm.controllers.clone:CloneDatasetController', action='clone', ds_id=pkg.name, class_='btn btn-default', icon='copy' %}</li>
   {% endif %}
+
+  {% set child_dataset_types = h.scheming_get_dataset_schema(pkg.type).child_dataset_types %}
+  {% if child_dataset_types %}
+    {% for type in child_dataset_types %}
+      <li>{% link_for _('Create') + ' ' + h.scheming_language_text(
+          h.scheming_get_dataset_schema(type).catalog_type_label
+        ), controller='ckanext.stcndm.controllers.child_dataset:ChildDatasetController', action='new', ds_id=pkg.name, ds_type=type, class_='btn btn-default', icon='' %}</li>
+    {%  endfor %}
+  {% endif %}
 {% endblock %}
 
 {% block package_item_notes %}
