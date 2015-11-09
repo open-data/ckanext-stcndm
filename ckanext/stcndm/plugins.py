@@ -217,6 +217,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetNextCubeId": cubes.get_next_cube_id,
             "GetNextNonDataProductId": common.get_next_non_data_product_id,
             "CreateOrUpdateCubeRelease": cubes.create_or_update_cube_release,
+            "GetThemes": daily.get_themes,
             "GetDailyList": daily.get_daily_list,
             "GetDefaultViews": daily.get_default_views,
             "GetDerivedProductList": common.get_derived_product_list,
