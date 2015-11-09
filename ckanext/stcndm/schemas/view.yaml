@@ -6,6 +6,7 @@ catalog_type_label:
   fr: View
 clonable: false
 dataset_type: view
+dataset_type_code: 11
 form_languages:
 - en
 - fr

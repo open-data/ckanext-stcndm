@@ -6,6 +6,7 @@ catalog_type_label:
   fr: Indicateur
 clonable: false
 dataset_type: indicator
+dataset_type_code: 12
 form_languages:
 - en
 - fr

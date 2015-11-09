@@ -5,9 +5,12 @@ catalog_type_label:
   en: Article
   fr: Article
 clonable: true
+allow_legacy: true
 dataset_type: article
+dataset_type_code: 20
 child_dataset_types:
 - format
+non_data_product: true
 form_languages:
 - en
 - fr

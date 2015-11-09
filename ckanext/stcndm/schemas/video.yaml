@@ -6,6 +6,8 @@ catalog_type_label:
   fr: Vidéo
 clonable: true
 dataset_type: video
+dataset_type_code: 21
+non_data_product: true
 form_languages:
 - en
 - fr
