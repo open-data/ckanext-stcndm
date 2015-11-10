@@ -131,13 +131,7 @@
   sudo ln -s ~/stcndm/*.ini /etc/ckan/stcndm/
   ```
 
-  11. Initialize the database
-
-  ```
-  paster --plugin=ckan db init -c development.ini
-  ```
-
-  12. Modify the development.ini file with the following values:
+  11. Modify the development.ini file with the following values:
 
     * `sqlalchemy.url = postgresql://ckan_default:pass@localhost/stcndm_ckan`
     * `solr_url = http://localhost:8983/solr/stcndm`
@@ -145,6 +139,12 @@
     * `ckan.plugins = stats text_view image_view recline_view
     stcndm stcndm_report_generator repeating scheming_datasets fluent
     wet_boew_theme_gc_intranet`
+
+  12. Initialize the database
+
+  ```
+  paster --plugin=ckan db init -c development.ini
+  ```
 
   13. Configure the WET extension for use as per https://github.com/open-data/ckanext-wet-boew/tree/wet4-scheming
 
