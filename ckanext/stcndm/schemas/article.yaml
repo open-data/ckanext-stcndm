@@ -37,7 +37,6 @@ dataset_fields:
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id
-  required: true
 
 - field_name: issue_number
   preset: ndm_issue_number

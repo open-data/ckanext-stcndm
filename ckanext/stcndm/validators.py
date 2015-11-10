@@ -265,7 +265,9 @@ def create_product_id(key, data, errors, context):
             return
     elif data_set_type in general_data_types:
         if not top_parent_id or top_parent_id is missing:
-            errors[key].append(_('missing top_parent_id'))
+            errors[key].append(_('Unable to generate product_id_new: '
+                                 'missing top_parent_id'))
+            errors[('top_parent_id',)].append(_('Missing value'))
             return
         try:
             product_id_new = get_next_product_id(

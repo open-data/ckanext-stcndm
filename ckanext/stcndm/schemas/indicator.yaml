@@ -27,14 +27,13 @@ dataset_fields:
   preset: select
   choices:
     - label:
-        en: Indicators
-        fr: Indicateurs
+        en: Indicator
+        fr: Indicateur
       value: '12'
   required: true
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id
-  required: true
 
 - field_name: product_id_new
   preset: ndm_product_id_new
