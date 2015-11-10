@@ -1069,10 +1069,6 @@ presets:
           en: In progress
         value: '1'
       - label:
-          fr: Annulé
-          en: Cancelled
-        value: '2'
-      - label:
           fr: Terminé
           en: Completed
         value: '3'
