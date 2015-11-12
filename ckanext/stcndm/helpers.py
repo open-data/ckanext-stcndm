@@ -532,18 +532,21 @@ def next_article_id(top_parent_id, issue_number):
         n = results['count'] / 1000.0
         i += 1
         for result in results['results']:
-            if article_sequence_number < int(result['product_id_new'][15:]):
-                return (
-                    u'{top_parent_id}'
-                    '{issue_number}'
-                    '{sequence_number}'
-                ).format(
-                    top_parent_id=top_parent_id,
-                    issue_number=issue_number,
-                    sequence_number=unicode(article_sequence_number).zfill(4)
-                )
-            else:
-                article_sequence_number += 1
+            old_id = int(result['product_id_new'][-4:])
+            article_sequence_number = max(
+                article_sequence_number,
+                old_id
+            )
+
+    return (
+        u'{top_parent_id}'
+        '{issue_number}'
+        '{sequence_number}'
+    ).format(
+        top_parent_id=top_parent_id,
+        issue_number=issue_number,
+        sequence_number=unicode(article_sequence_number + 1).zfill(4)
+    )
 
 
 def ensure_release_exists(product_id, context=None, ref_period=None):
