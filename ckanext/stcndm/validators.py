@@ -2,12 +2,13 @@
 # encoding: utf-8
 import json
 import datetime
-from ckan.logic import _, ValidationError
+from ckan.logic import _, ValidationError, NotFound
 from ckan.lib.navl.dictization_functions import missing
 from ckanext.stcndm import helpers as h
 from ckanext.stcndm.logic.cubes import get_next_cube_id
 from ckanext.stcndm.logic.common import get_next_product_id
 from ckan.lib.helpers import lang as lang
+from ckanext.stcndm.logic.legacy import is_legacy_id, get_next_legacy_article_id
 import re
 import ckan.lib.navl.dictization_functions as df
 import ckanapi
@@ -119,7 +120,17 @@ def _data_lookup(key, data):
             if data[extra_key] == key:
                 value = data[('extras', i, 'value')]
             i += 1
-    return value
+    if isinstance(value, basestring):
+        return value.strip()
+    else:
+        return value
+
+
+def _data_update(value, key, data):
+    data[key] = value
+    for data_key in data:
+        if data[data_key] == key[0]:
+            data[('extras', data_key[1], 'value')] = value
 
 
 def codeset_create_name(key, data, errors, context):
@@ -143,22 +154,34 @@ def format_create_name(key, data, errors, context):
         return
     # if a name has already been set
     # we don need to do it again
-    if data.get(key) is not missing and len(data.get(key, '')):
+    name = data.get(key, u'')
+    if name.endswith(u'-clone'):
+        format_code = u'0'
+        data[('format_code',)] = u'0'
+        name = u''
+    else:
+        format_code = _data_lookup(('format_code',), data)
+    if not format_code:
+        errors[('format_code',)].append(_('Missing value'))
+        errors[key].append(_('Name could not be generated'))
         return
 
+#    if name is missing or not name:
     parent_id = _data_lookup(('parent_id',), data)
     if not parent_id:
-        errors[key].append(_('could not find parent_id of parent'))
-    format_code = _data_lookup(('format_code',), data)
-    if not format_code:
-        errors[key].append(_('could not find format_code'))
-    if errors[key]:
+        errors[('parent_id',)].append(_('Missing value'))
+        errors[key].append(_('Name could not be generated'))
         return
 
-    data[key] = u'format-{0}_{1}'.format(
-        parent_id.lower(),
-        format_code.zfill(2).lower()
+    format_id = u'{parent_id}_{format_code}'.format(
+        parent_id=parent_id.lower(),
+        format_code=format_code.zfill(2).lower()
     )
+    _data_update(format_id, ('format_id',), data)
+    data[key] = u'format-{format_id}'.format(
+        format_id=format_id
+    )
+    _data_update(data[key], ('title',), data)
 
 
 def format_create_id(key, data, errors, context):
@@ -205,10 +228,9 @@ def create_product_id(key, data, errors, context):
     if errors[key] or errors[('subject_codes',)] or errors[('top_parent_id',)]:
         return
 
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        return
-
+    # product_id_new = _data_lookup(('product_id_new',), data)
+    # if product_id_new:
+    #     return
     data_set_type = _data_lookup(('type',), data)
     # make sure subject_codes processed
     shortcode_validate(('subject_codes',), data, errors, context)
@@ -216,58 +238,73 @@ def create_product_id(key, data, errors, context):
     top_parent_id = _data_lookup(('top_parent_id',), data).strip()
 
     if data_set_type in general_non_data_types:
-        if len(subject_codes) != 1:
-            errors[('subject_codes',)].append(_(
-                'exactly one 2-digit subject code must be provided '
-                'when creating a new product'
-            ))
-            return
-
         try:
             product_id_new = h.next_non_data_product_id(
-                subject_code=subject_codes[0],
+                subject_code=subject_codes[0][:2],
                 product_type_code=_data_lookup(('product_type_code',), data)
             )
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
-            errors[key].append(_(ve))
+            errors[('subject_codes',)].append(_(ve.error_summary[u'Message']))
+            errors[key].append(_('PID could not be generated'))
+            return
+        except IndexError:
+            errors[('subject_codes',)].append(_('Missing value'))
+            errors[key].append(_('PID could not be generated'))
             return
     elif data_set_type == u'article':
-        issue_number = _data_lookup(('issue_number',), data).strip()
+        if not top_parent_id:
+            errors[('top_parent_id',)].append(_('Missing value'))
+            errors[key].append(_('PID could not be generated'))
+            return
+        issue_number = _data_lookup('issue_number', data)
+        if not issue_number:
+            errors[('issue_number',)].append(_('Missing value'))
+            errors[key].append(_('PID could not be generated'))
+            return
         try:
-            product_id_new = h.next_article_id(
-                top_parent_id=top_parent_id,
-                issue_number=issue_number
-            )
+            if is_legacy_id(top_parent_id):
+                product_id_new = get_next_legacy_article_id(
+                    context=context,
+                    data_dict={
+                        'parentProduct': u'{top_parent_id}{issue_number}'
+                                         .format(
+                                            top_parent_id=top_parent_id,
+                                            issue_number=issue_number
+                                         )
+                        }
+                )
+            else:
+                product_id_new = h.next_article_id(
+                    top_parent_id=top_parent_id,
+                    issue_number=issue_number
+                )
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
             errors[key].append(_(ve))
             return
     elif data_set_type == u'cube':
-        if len(subject_codes) != 1:
-            errors[('subject_codes',)].append(_(
-                'exactly one 2-digit subject code must be provided '
-                'when creating a new product'
-            ))
-            return
-
         try:
             product_id_new = get_next_cube_id(
-                context,
-                {'subjectCode': subject_codes[0]}
+                context=context,
+                data_dict={'subjectCode': subject_codes[0][:2]}
             )
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
-            errors[key].append(_(ve))
+            errors[('subject_codes',)].append(_(ve.error_dict['message']))
+            errors[key].append(_('PID could not be generated'))
+            return
+        except IndexError:
+            errors[('subject_codes',)].append(_('Missing value'))
+            errors[key].append(_('PID could not be generated'))
             return
     elif data_set_type in general_data_types:
         if not top_parent_id or top_parent_id is missing:
-            errors[key].append(_('Unable to generate product_id_new: '
-                                 'missing top_parent_id'))
             errors[('top_parent_id',)].append(_('Missing value'))
+            errors[key].append(_('PID could not be generated'))
             return
         try:
             product_id_new = get_next_product_id(
@@ -280,7 +317,12 @@ def create_product_id(key, data, errors, context):
             data[key] = product_id_new
             return product_id_new
         except ValidationError as ve:
-            errors[key].append(ve)
+            errors[('top_parent_id',)].append(ve.error_dict['message'])
+            errors[key].append(_('PID could not be generated'))
+            return
+        except NotFound as e:
+            errors[('top_parent_id',)].append(e[0])
+            errors[key].append(_('PID could not be generated'))
             return
     else:
         errors[key].append(_(
@@ -377,94 +419,24 @@ def product_create_name(key, data, errors, context):
     # don't bother with our validation
     if errors[key]:
         return
-    # if a name has already been set
-    # we don need to do it again
+
     existing_name = _data_lookup(('name',), data)
-    if existing_name is not missing and existing_name:
-        return
-
-    data_set_type = _data_lookup(('type',), data)
-    create_product_id(('product_id_new',), data, errors, context)
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        data[key] = u'{data_set_type}-{product_id_new}'.format(
-            data_set_type=data_set_type,
-            product_id_new=product_id_new.lower()
-        )
-    else:
-        errors[('product_id_new',)].append(_('PID could not be generated'))
-        errors[key].append(_('Name could not be generated'))
-
-
-def article_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-    # if a name has already been set
-    # we don need to do it again
-    if len(_data_lookup(('name',), data)):
-        return
-
-    create_product_id(('product_id_new',), data, errors, context)
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        data[key] = u'article-{0}'.format(product_id_new.lower())
-    else:
-        errors[key].append(_('could not find product_id_new'))
-
-
-def release_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-    # if a name has already been set
-    # we don need to do it again
-    if data.get(key) is not missing and len(data.get(key, '')):
-        return
-
-    release_id = _data_lookup(('release_id',), data)
-
-    if not release_id:
-        # Set a 300000% undocumented flag to prevent package_search from
-        # rewriting fq to filter out non-public datasets (ARRRRRRRRGH)
-        context['ignore_capacity_check'] = True
-
-        lc = ckanapi.LocalCKAN(context=context)
-
-        query_result = lc.action.package_search(
-            q='name:release-{product_id}_{year}*'.format(
-                product_id=data[('parent_id',)],
-                year=datetime.date.today().year
-            ),
-            sort='release_id desc',
-            rows=1
-        )
-
-        if not query_result['count']:
-            # There are no existing releases, so we start from 1.
-            new_release_id = '1'
+    if existing_name is missing or not existing_name or \
+            existing_name.endswith(u'-clone'):
+        data_set_type = _data_lookup(('type',), data)
+        create_product_id(('product_id_new',), data, errors, context)
+        if errors[('product_id_new',)]:
+            errors[key].append(_('Name could not be generated'))
+            return
+        product_id_new = _data_lookup(('product_id_new',), data)
+        if product_id_new:
+            data[key] = u'{data_set_type}-{product_id_new}'.format(
+                data_set_type=data_set_type,
+                product_id_new=product_id_new.lower()
+            )
         else:
-            # We take the highest release and simply add one.
-            last_release_id = query_result['results'][0]['release_id']
-            new_release_id = str(int(last_release_id.split('_')[-1]) + 1)
-
-        new_release_id = new_release_id.zfill(3)
-
-        data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
-            product_id=data[('parent_id',)],
-            year=datetime.date.today().year,
-            release_id=new_release_id
-        )).lower()
-
-        data[('release_id',)] = new_release_id
-    else:
-        data[key] = (u'release-{product_id}_{year}_{release_id}'.format(
-            product_id=data[('parent_id',)],
-            year=datetime.date.today().year,
-            release_id=data[('release_id',)].zfill(3)
-        )).lower()
+            errors[('product_id_new',)].append(_('Missing value'))
+            errors[key].append(_('Name could not be generated'))
 
 
 def daily_create_name(key, data, errors, context):
@@ -509,8 +481,8 @@ def geodescriptor_create_name(key, data, errors, context):
             u'geodescriptor-{0}'.format(geodescriptor_code.lower())
         )
     else:
-        errors[key].append(_('could not find geodescriptor_code'))
-        re.su
+        errors[('geodescriptor_code',)].append(_('Missing value'))
+        errors[key].append(_('Name could not be generated'))
 
 
 @scheming_validator

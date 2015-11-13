@@ -18,6 +18,10 @@ dataset_fields:
 - field_name: owner_org
   preset: ndm_owner_org
 
+- field_name: format_code
+  preset: ndm_format
+  required: true
+
 - field_name: top_parent_id
   preset: ndm_top_parent_id
 
@@ -25,9 +29,9 @@ dataset_fields:
   label:
     en: Parent ID
     fr: ID du parent immédiat
-  output_validators: scheming_required
-  create_validators: scheming_required
-  validators: scheming_required
+#  output_validators: scheming_required
+#  create_validators: scheming_required
+#  validators: scheming_required
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -39,22 +43,20 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
-  validators: format_create_id
   form_attrs:
       readonly: readonly
-
-- field_name: format_code
-  preset: ndm_format
-  required: true
-
-- field_name: url
-  preset: ndm_fluent_url
 
 - field_name: name
   preset: ndm_name
   # follow our custom name generation validator with default package name validators
   validators: format_create_name
     not_empty unicode name_validator package_name_validator
+
+- field_name: notes
+  preset: ndm_description
+
+- field_name: url
+  preset: ndm_fluent_url
 
 - field_name: isbn_number
   preset: ndm_isbn_number
