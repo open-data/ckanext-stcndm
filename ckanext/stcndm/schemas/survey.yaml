@@ -21,14 +21,14 @@ dataset_fields:
 - field_name: owner_org
   preset: ndm_owner_org
 
+- field_name: product_id_new
+  preset: ndm_product_id_new
+
 - field_name: name
   preset: ndm_name
   # follow our custom name generation validator with default package name validators
   validators: survey_create_name
     not_empty unicode name_validator package_name_validator
-
-- field_name: product_id_new
-  preset: ndm_product_id_new
 
 - field_name: archive_date
   preset: ndm_archive_date

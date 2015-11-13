@@ -142,7 +142,11 @@ def codeset_create_name(key, data, errors, context):
     codeset_type = _data_lookup(('codeset_type',), data)
     codeset_value = _data_lookup(('codeset_value',), data).lower()
     if codeset_type and codeset_value:
-        data[key] = u'{0}-{1}'.format(codeset_type, codeset_value.lower())
+        current_name = _data_lookup(('name',), data)
+        new_name = u'{0}-{1}'.format(codeset_type, codeset_value.lower())
+        if current_name.endswith(u'-clone'):
+            if not current_name.startswith(new_name):
+                data[key] = new_name
     else:
         errors[key].append(_('could not find codeset_type or codeset_value'))
 
@@ -342,7 +346,11 @@ def subject_create_name(key, data, errors, context):
 
     subject_code = _data_lookup(('subject_code',), data)
     if subject_code:
-        data[key] = u'subject-{0}'.format(subject_code.lower())
+        current_name = _data_lookup(('name',), data)
+        new_name = u'subject-{0}'.format(subject_code.lower())
+        if current_name.endswith(u'-clone'):
+            if not current_name.startswith(new_name):
+                data[key] = new_name
     else:
         errors[key].append(_('could not find subject_code'))
 
@@ -355,7 +363,11 @@ def province_create_name(key, data, errors, context):
 
     sgc_code = _data_lookup(('sgc_code',), data)
     if sgc_code:
-        data[key] = u'province-{0}'.format(sgc_code.lower())
+        current_name = _data_lookup(('name',), data)
+        new_name = u'province-{0}'.format(sgc_code.lower())
+        if current_name.endswith(u'-clone'):
+            if not current_name.startswith(new_name):
+                data[key] = new_name
     else:
         errors[key].append(_('could not find sgc_code'))
 
@@ -381,7 +393,11 @@ def survey_create_name(key, data, errors, context):
 
     product_id_new = _data_lookup(('product_id_new',), data)
     if product_id_new:
-        data[key] = u'survey-{0}'.format(product_id_new.lower())
+        current_name = _data_lookup(('name',), data)
+        new_name = u'survey-{0}'.format(product_id_new.lower())
+        if current_name.endswith(u'-clone'):
+            if not current_name.startswith(new_name):
+                data[key] = new_name
     else:
         errors[key].append(_('could not find product_id_new'))
 
@@ -447,7 +463,11 @@ def daily_create_name(key, data, errors, context):
 
     product_id_new = _data_lookup(('product_id_new',), data)
     if product_id_new:
-        data[key] = u'daily-{0}'.format(product_id_new.lower())
+        current_name = _data_lookup(('name',), data)
+        new_name = u'daily-{0}'.format(product_id_new.lower())
+        if current_name.endswith(u'-clone'):
+            if not current_name.startswith(new_name):
+                data[key] = new_name
     else:
         errors[key].append(_('could not find product_id_new'))
 
@@ -477,9 +497,13 @@ def geodescriptor_create_name(key, data, errors, context):
 
     geodescriptor_code = _data_lookup(('geodescriptor_code',), data)
     if geodescriptor_code:
-        data[key] = safe_name(
+        current_name = _data_lookup(('name',), data)
+        new_name = safe_name(
             u'geodescriptor-{0}'.format(geodescriptor_code.lower())
         )
+        if current_name.endswith(u'-clone'):
+            if not current_name.startswith(new_name):
+                data[key] = new_name
     else:
         errors[('geodescriptor_code',)].append(_('Missing value'))
         errors[key].append(_('Name could not be generated'))
