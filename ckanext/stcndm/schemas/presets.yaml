@@ -921,7 +921,6 @@ presets:
       en: Product ID New
       fr: ID produit nouveau
     required: true
-    create_validators: create_product_id
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
