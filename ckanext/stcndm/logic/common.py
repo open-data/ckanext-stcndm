@@ -111,7 +111,7 @@ def get_next_product_id(context, data_dict):
     :return: next available ProductID
     :rtype: str
 
-    :raises: ValidationError
+    :raises: ValidationError, NotFound
     """
 
     lc = ckanapi.LocalCKAN(context=context)

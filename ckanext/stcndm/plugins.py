@@ -255,7 +255,6 @@ class STCNDMPlugin(p.SingletonPlugin):
 
     def get_validators(self):
         return {
-            "article_create_name": validators.article_create_name,
             "codeset_create_name": validators.codeset_create_name,
             "codeset_multiple_choice": validators.codeset_multiple_choice,
             "correction_create_name": validators.correction_create_name,
@@ -270,7 +269,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
             "province_create_name": validators.province_create_name,
             "product_create_name": validators.product_create_name,
-            "release_create_name": validators.release_create_name,
             "shortcode_validate": validators.shortcode_validate,
             "shortcode_output": validators.shortcode_output,
             "subject_create_name": validators.subject_create_name,
