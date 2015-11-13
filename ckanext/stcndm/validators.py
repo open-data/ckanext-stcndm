@@ -380,7 +380,7 @@ def product_create_name(key, data, errors, context):
     # if a name has already been set
     # we don need to do it again
     existing_name = _data_lookup(('name',), data)
-    if existing_name is not missing or existing_name:
+    if existing_name is not missing and existing_name:
         return
 
     data_set_type = _data_lookup(('type',), data)

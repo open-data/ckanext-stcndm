@@ -1,4 +1,5 @@
 # --coding: utf-8 --
+import textwrap
 import ckanapi
 import datetime
 from datetime import datetime as dt
@@ -225,7 +226,7 @@ def get_default_views(context, data_dict):
     final_results = []
 
     for cube_result in cube_results.get('results') or []:
-        if 'default_view_id' not in cube_result:
+        if not cube_result.get('default_view_id'):
             # We don't care about cubes that have no default_view_id,
             # which may occur.
             continue
@@ -305,3 +306,54 @@ def get_bookable_releases(context, data_dict):
     output = _stub_msg
 
     return output
+
+
+@logic.side_effect_free
+def get_themes(context, data_dict):
+    """
+    Returns all subject codesets.
+
+    :param limit: Number of results to return.
+    :type limit: int
+    :param start: Number of results to skip.
+    :type start: int
+
+    :rtype: list of dicts
+    """
+    lc = ckanapi.LocalCKAN(context=context)
+
+    # Sort would perform better, but this will be easier
+    # for client to implement.
+    limit = int(logic.get_or_bust(data_dict, 'limit'))
+    start = int(logic.get_or_bust(data_dict, 'start'))
+
+    results = lc.action.package_search(
+        q='dataset_type:subject',
+        rows=limit,
+        start=start,
+        fl=(
+            'name',
+            'title'
+        )
+    )
+
+    def _massage(s):
+        chunked = textwrap.wrap(s['subject_code'], 2)
+        return (
+            s['subject_code'],
+            chunked[-2] if len(chunked) > 1 else None,
+            s['title'],
+            dict((k, v.split('/')[-1]) for k, v in s['title'].iteritems())
+        )
+
+    return {
+        'count': results['count'],
+        'limit': limit,
+        'start': start,
+        'results': [{
+            'subject_code': rr[0],
+            'parent_subject_code': rr[1],
+            'title': rr[2],
+            'subject_title': rr[3]
+        } for rr in (_massage(r) for r in results['results'])]
+    }

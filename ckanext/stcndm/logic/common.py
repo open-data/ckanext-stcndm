@@ -230,7 +230,8 @@ def get_product(context, data_dict):
         ('frequency_codes', 'frequency', 'codeset'),
         ('geolevel_codes', 'geolevel', 'codeset'),
         ('subject_codes', 'subjects', 'subject'),
-        ('survey_source_codes', 'surveys', 'survey')
+        ('survey_source_codes', 'surveys', 'survey'),
+        ('archive_status_code', 'archive_status', 'preset')
     )
 
     for code_field, code_id, lookup_type in codes_to_lookup:
@@ -702,7 +703,7 @@ def register_data_product(context, data_dict):
         'name': product_id,
         'owner_org': 'statcan',
         'product_id_new': product_id,
-        'parent_product': cube_id,
+        'top_parent_id': cube_id,
         'title': title,
         'product_type_code': product_type
     })
