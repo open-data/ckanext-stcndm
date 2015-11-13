@@ -342,10 +342,48 @@ def get_bookable_releases(context, data_dict):
         product and issue
     :rtype: dict
     """
+    frc = _get_or_bust(data_dict, 'frc')
 
-    output = _stub_msg
+    lc = ckanapi.LocalCKAN(context=context)
 
-    return output
+    results = lc.action.package_search(
+        q='frc:{frc} AND type:publication'.format(
+            frc=frc
+        ),
+        fl=[
+            'product_id_new',
+            'title'
+        ]
+    )
+
+    final_results = []
+    for result in results['results']:
+        article_results = lc.action.package_search(
+            q=(
+                'top_parent_id:{pid} '
+                # Only "Working Copy" results.
+                'AND status_code:31 '
+                # With a release_date set to anything (not blank)
+                'AND last_release_date:[* TO *] '
+                'AND type:article'
+            ).format(
+                pid=result['product_id_new']
+            ),
+            sort='issue_number desc',
+            # FIXME: We need to actually paginate on this, but the daily
+            #        team will not accept it (yet).
+            rows=2000000
+        )
+
+        for art_result in article_results['results']:
+            final_results.append({
+                'productId': result['product_id_new'],
+                'issue': art_result['issue_number'],
+                'title': result['title'],
+                'refper': result['reference_period']
+            })
+
+    return final_results
 
 
 @logic.side_effect_free
