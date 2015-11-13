@@ -305,12 +305,29 @@ def get_product_issue_articles(context, data_dict):
     :rtype: dict
     """
 
-    _get_or_bust(data_dict, 'productId')
-    _get_or_bust(data_dict, 'issueNo')
+    product_id = _get_or_bust(data_dict, 'productId')
+    issue_number = _get_or_bust(data_dict, 'issueNo')
 
-    output = _stub_msg
+    lc = ckanapi.LocalCKAN(context=context)
 
-    return output
+    results = lc.action.package_search(
+        q='top_parent_id:{pid} AND issue_number:{issue_number}'.format(
+            pid=product_id,
+            issue_number=issue_number
+        ),
+        # FIXME: We need to actually paginate on this, but the daily
+        #        team will not accept it (yet).
+        rows='2000000',
+        fl=[
+            'title',
+            'product_id_new'
+        ]
+    )
+
+    return [{
+        'title': result['title'],
+        'article_id': result['product_id_new']
+    } for result in results['results']]
 
 
 @logic.side_effect_free
