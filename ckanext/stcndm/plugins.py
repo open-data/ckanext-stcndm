@@ -211,7 +211,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetAutocomplete": common.get_autocomplete,
             "DeleteProduct": common.delete_product,
             "EnsureReleaseExists": releases.ensure_release_exists,
-            "GetBookableReleases": daily.get_bookable_releases,
+            "GetBookableProducts": daily.get_bookable_releases,
             "GetCubeList": cubes.get_cube_list_by_subject,
             "GetCube": cubes.get_cube,
             "GetNextCubeId": cubes.get_next_cube_id,
