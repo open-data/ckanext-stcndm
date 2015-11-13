@@ -20,6 +20,15 @@ dataset_fields:
 - field_name: owner_org
   preset: ndm_owner_org
 
+- field_name: sgc_code
+  label:
+    en: SGC Code
+    fr: Code SGC
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
 - field_name: name
   preset: ndm_name
   # follow our custom name generation with default package name validators
@@ -47,15 +56,6 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: true
 
-- field_name: sgc_code
-  label:
-    en: SGC Code
-    fr: Code SGC
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
-
 - field_name: sort_order
   label:
     en: Sort Order
@@ -64,3 +64,6 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
+
+- field_name: notes
+  preset: ndm_description

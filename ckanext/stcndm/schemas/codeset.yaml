@@ -21,15 +21,6 @@ dataset_fields:
 - field_name: owner_org
   preset: ndm_owner_org
 
-- field_name: title  # codeset label
-  preset: ndm_title
-
-- field_name: name
-  preset: ndm_name
-  # follow our custom name generation validator with default package name validators
-  validators: codeset_create_name
-    not_empty unicode name_validator package_name_validator
-
 - field_name: codeset_type
   label:
     en: Type of Codeset
@@ -61,3 +52,15 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
+
+- field_name: name
+  preset: ndm_name
+  # follow our custom name generation validator with default package name validators
+  validators: codeset_create_name
+    not_empty unicode name_validator package_name_validator
+
+- field_name: title  # codeset label
+  preset: ndm_title
+
+- field_name: notes
+  preset: ndm_description
