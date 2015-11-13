@@ -430,10 +430,8 @@ def next_non_data_product_id(subject_code, product_type_code):
     ]
 
     if not isinstance(subject_code, basestring) or \
-            not re.match('\d\d', subject_code):
-        raise ValidationError(
-            (_('Invalid subject code. Expected 2 digit string'),)
-        )
+            not re.match('^\d\d$', subject_code):
+        raise ValidationError((_('Invalid subject code.'),))
 
     if isinstance(product_type_code, basestring):
         if product_type_code not in valid_product_codes:
@@ -441,9 +439,7 @@ def next_non_data_product_id(subject_code, product_type_code):
                             'Expected one of {codes!r}'.format(
                                 codes=valid_product_codes,
                             )
-            raise ValidationError(
-                (_(error_message),)
-            )
+            raise ValidationError((_(error_message),))
 
     i = 0
     n = 1
@@ -485,27 +481,20 @@ def next_non_data_product_id(subject_code, product_type_code):
 def next_article_id(top_parent_id, issue_number):
     """
     Get next available product ID
+
     :param top_parent_id:
     :type top_parent_id: 8 digit str
-    :param issue_number:
+    :param issue_number
     :type issue_number: 7 digit str
     :return: 19 or 20 digit str
     """
-    ISSUE_NUMBER_R = re.compile('\d{7}')
-
     if not isinstance(top_parent_id, basestring) or len(top_parent_id) != 8:
         raise ValidationError(
             (_('Invalid top parent ID. Expected 8 digit string'),)
         )
-
-    if not isinstance(issue_number, basestring):
+    if not isinstance(issue_number, basestring) or len(issue_number) != 7:
         raise ValidationError(
-            (_('Invalid issue number, expected 7 digit string.'),)
-        )
-
-    if not ISSUE_NUMBER_R.match(issue_number):
-        raise ValidationError(
-            (_('Invalid issue number, expected 7 digit string'),)
+            (_('Invalid issue number. Expected 7 digit string'),)
         )
 
     i = 0
@@ -514,10 +503,11 @@ def next_article_id(top_parent_id, issue_number):
     while i < n:
         lc = ckanapi.LocalCKAN()
         results = lc.action.package_search(
-            q='product_id_new:{top_parent_id}{issue_number}????*'.format(
+            q='type:article AND '
+              'product_id_new:{top_parent_id}{issue_number}*'.format(
                 top_parent_id=top_parent_id,
                 issue_number=issue_number
-            ),
+              ),
             sort='product_id_new ASC',
             rows=1000,
             start=i*1000
@@ -532,7 +522,7 @@ def next_article_id(top_parent_id, issue_number):
         n = results['count'] / 1000.0
         i += 1
         for result in results['results']:
-            old_id = int(result['product_id_new'][-4:])
+            old_id = int(result['product_id_new'][15:])
             article_sequence_number = max(
                 article_sequence_number,
                 old_id

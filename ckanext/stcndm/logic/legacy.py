@@ -229,3 +229,25 @@ def register_legacy_non_data_product(context, data_dict):
 
     lc.action.package_create(**product_dict)
     return lc.action.GetProduct(**{'productId': product_id_new})
+
+
+def is_legacy_id(product_id):
+    """
+    Test whether passed product_id is in legacy format.
+
+    If it contains anything but digits, it's in legacy format.
+
+    :param product_id: PID
+    :type product_id
+    :return: boolean
+    :raises: ValidationError
+    """
+    if not isinstance(product_id, basestring):
+        raise _ValidationError(('Expecting PID in unicode form',))
+    if len(product_id) < 8:
+        raise _ValidationError(('PID should be at least 8 characters long',))
+    try:
+        int(product_id)
+        return False
+    except ValueError:
+        return True

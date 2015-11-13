@@ -43,8 +43,8 @@ dataset_fields:
 - field_name: name
   preset: ndm_name
   # follow our custom name generation with default package name validators
-  create_validators: product_create_name
-  validators: not_empty unicode name_validator package_name_validator
+  validators: product_create_name
+    not_empty unicode name_validator package_name_validator
 
 - field_name: calculations
   label:
