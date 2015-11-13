@@ -1,12 +1,16 @@
 # --coding: utf-8 --
+import re
+import json
 import textwrap
-import ckanapi
 import datetime
 from datetime import datetime as dt
-import re
+
 from ckan.common import _
+from ckan.lib.search.common import make_connection
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
+
+import ckanapi
 from ckanext.stcndm.logic.common import get_product
 
 __author__ = 'Statistics Canada'
@@ -262,12 +266,31 @@ def get_product_issues(context, data_dict):
     :return: A dictionary containing the issues for the specified product
     :rtype: dict
     """
+    product_id = _get_or_bust(data_dict, 'productId')
 
-    _get_or_bust(data_dict, 'productId')
+    slr = make_connection()
 
-    output = _stub_msg
+    response = json.loads(
+        slr.raw_query(
+            q='top_parent_id:{pid}'.format(
+                pid=product_id
+            ),
+            group='true',
+            group_field='issue_number',
+            wt='json',
+            sort='issue_number desc',
+            # FIXME: We need to actually paginate on this, but the daily
+            #        team will not accept it (yet).
+            rows='2000000'
+        )
+    )
 
-    return output
+    issue_no_group = response['grouped']['issue_number']
+
+    return [{
+        'issue': group['groupValue'],
+        'number_articles': group['doclist']['numFound']
+    } for group in issue_no_group['groups']]
 
 
 @logic.side_effect_free
