@@ -70,7 +70,7 @@ def do_product(data_set):
           u'fr': data_set.get(u'correctnote_fr_txtm', '')
         },
         u'default_view_id': data_set.get(u'defaultviewid_bi_strs', ''),
-        u'notes': {
+        u'notes_translated': {
           u'en': data_set.get(u'description_en_txts', data_set.get(
               u'description_en_intxts', u'')),
           u'fr': data_set.get(u'description_fr_txts', data_set.get(
@@ -114,7 +114,7 @@ def do_product(data_set):
             u'en': data_set.get(u'refperiod_en_txtm', u''),
             u'fr': data_set.get(u'refperiod_fr_txtm', u''),
         },
-        u'title': {
+        u'title_translated': {
             u'en': data_set.get(u'title_en_txts', ''),
             u'fr': data_set.get(u'title_fr_txts', '')
         },
@@ -122,40 +122,32 @@ def do_product(data_set):
 
     }
 
-    if in_and_def('archived_bi_strs', data_set):
-        result = code_lookup('archived_bi_strs', data_set, archive_status_list)
+    if in_and_def(u'archived_bi_strs', data_set):
+        result = code_lookup(u'archived_bi_strs', data_set, archive_status_list)
         if result:
             product_out[u'archive_status_code'] = result[0]
 
-    if in_and_def('calculation_bi_instrm', data_set):
+    if in_and_def(u'calculation_bi_instrm', data_set):
         result = listify(data_set[u'calculation_bi_instrm'])
         if result:
             product_out[u'calculations'] = result
 
-    if in_and_def('conttypecode_bi_txtm', data_set):
+    if in_and_def(u'conttypecode_bi_txtm', data_set):
         result = listify(data_set[u'conttypecode_bi_txtm'])
         if result:
             product_out[u'content_type_codes'] = result
 
-    if in_and_def('correctiontypecode_bi_strm', data_set):
+    if in_and_def(u'correctiontypecode_bi_strm', data_set):
         result = listify(data_set[u'correctiontypecode_bi_strm'])
         if result:
             product_out[u'correction_type_codes'] = result
 
-    # temp = {}
-    # if in_and_def('description_en_intxts', data_set):
-    #     temp[u'en'] = data_set[u'description_en_intxts']
-    # if in_and_def('description_fr_intxts', data_set):
-    #     temp[u'fr'] = data_set[u'description_fr_intxts']
-    # if temp:
-    #     product_out[u'notes'] = temp
-
     temp = {}
-    if in_and_def('dimmembers_en_txtm', data_set):
+    if in_and_def(u'dimmembers_en_txtm', data_set):
         result = listify(data_set[u'dimmembers_en_txtm'])
         if result:
             temp[u'en'] = result
-    if in_and_def('dimmembers_fr_txtm', data_set):
+    if in_and_def(u'dimmembers_fr_txtm', data_set):
         result = listify(data_set[u'dimmembers_fr_txtm'])
         if result:
             temp[u'fr'] = result
@@ -167,64 +159,57 @@ def do_product(data_set):
         if result:
             product_out[u'display_code'] = result[0]
 
-    if in_and_def('dispandtrack_bi_txtm', data_set):
-        result = code_lookup('dispandtrack_bi_txtm', data_set, tracking_list)
+    if in_and_def(u'dispandtrack_bi_txtm', data_set):
+        result = code_lookup(u'dispandtrack_bi_txtm', data_set, tracking_list)
         if result:
             product_out[u'tracking_codes'] = result
 
-    if in_and_def('extauthor_bi_txtm', data_set):
+    if in_and_def(u'extauthor_bi_txtm', data_set):
         result = listify(data_set[u'extauthor_bi_txtm'])
         if result:
             product_out[u'external_authors'] = result
 
-    # if in_and_def('featureweight_bi_ints', data_set):
-    #     product_out[u'feature_weight'] = int(data_set[u'featureweight_bi_ints'])
-    #
-    # if in_and_def('featureweight_bi_inints', data_set):
-    #     product_out[u'feature_weight'] = \
-    #         int(data_set[u'featureweight_bi_inints'])
-
-    if in_and_def('freqcode_bi_txtm', data_set):
+    if in_and_def(u'freqcode_bi_txtm', data_set):
         result = listify(data_set[u'freqcode_bi_txtm'])
         if result:
             product_out[u'frequency_codes'] = result
 
-    if in_and_def('freqcode_bi_intxtm', data_set):
+    if in_and_def(u'freqcode_bi_intxtm', data_set):
         result = listify(data_set[u'freqcode_bi_intxtm'])
         if result:
             product_out[u'frequency_codes'] = result
 
-    if in_and_def('geolevel_en_txtm', data_set):
-        result = code_lookup('geolevel_en_txtm', data_set, geolevel_list)
+    if in_and_def(u'geolevel_en_txtm', data_set):
+        result = code_lookup(u'geolevel_en_txtm', data_set, geolevel_list)
         if result:
             product_out[u'geolevel_codes'] = result
 
-    if in_and_def('geonamecode_bi_intxtm', data_set):
+    if in_and_def(u'geonamecode_bi_intxtm', data_set):
         result = listify(data_set[u'geonamecode_bi_intxtm'])
         if result:
             product_out[u'geodescriptor_codes'] = result
 
-    if in_and_def('hierarchyid_bi_strm', data_set):
+    if in_and_def(u'hierarchyid_bi_strm', data_set):
         result = listify(data_set[u'hierarchyid_bi_strm'])
         if result:
             product_out[u'top_parent_id'] = result[0]
 
-    if in_and_def('hierarchyid_bi_strs', data_set):
+    if in_and_def(u'hierarchyid_bi_strs', data_set):
         result = listify(data_set[u'hierarchyid_bi_strs'])
         if result:
             product_out[u'top_parent_id'] = result[0]
 
-    if in_and_def('intauthor_bi_txtm', data_set):
+    if in_and_def(u'intauthor_bi_txtm', data_set):
         result = listify(data_set[u'intauthor_bi_txtm'])
         if result:
             product_out[u'internal_authors'] = result
 
-    if in_and_def('interncontactname_bi_txts', data_set):
+    if in_and_def(u'interncontactname_bi_txts', data_set):
         result = listify(data_set[u'interncontactname_bi_txts'])
         if result:
             product_out[u'internal_contacts'] = result
 
-    if in_and_def('issueno_bi_strs', data_set):
+    if in_and_def(u'issueno_bi_strs', data_set):
         if re.match('\d{7}', data_set[u'issueno_bi_strs']):
             product_out[u'issue_number'] = data_set.get(u'issueno_bi_strs')
         else:
@@ -234,11 +219,11 @@ def do_product(data_set):
                                 issue_number=data_set[u'issueno_bi_strs']))
 
     temp = {}
-    if in_and_def('keywordsuncon_en_txtm', data_set):
+    if in_and_def(u'keywordsuncon_en_txtm', data_set):
         result = listify(data_set[u'keywordsuncon_en_txtm'])
         if result:
             temp[u'en'] = result
-    if in_and_def('keywordsuncon_fr_txtm', data_set):
+    if in_and_def(u'keywordsuncon_fr_txtm', data_set):
         result = listify(data_set[u'keywordsuncon_fr_txtm'])
         if result:
             temp[u'fr'] = result
@@ -249,39 +234,39 @@ def do_product(data_set):
         product_out[u'last_release_date'] = \
             data_set.get(u'releasedate_bi_strs').strip()
 
-    if in_and_def('ndmstate_en_intxtm', data_set):
+    if in_and_def(u'ndmstate_en_intxtm', data_set):
         result = listify(data_set[u'ndmstate_en_intxtm'])
         if result:
             product_out[u'ndm_states'] = result
 
-    if in_and_def('related_bi_strm', data_set):
+    if in_and_def(u'related_bi_strm', data_set):
         result = listify(data_set[u'related_bi_strm'])
         if result:
             product_out[u'related_products'] = result
 
     temp = {}
-    if in_and_def('relatedcontent_en_txtm', data_set):
+    if in_and_def(u'relatedcontent_en_txtm', data_set):
         result = listify(data_set[u'relatedcontent_en_txtm'])
         if result:
             temp[u'en'] = result
-    if in_and_def('relatedcontent_fr_txtm', data_set):
+    if in_and_def(u'relatedcontent_fr_txtm', data_set):
         result = listify(data_set[u'relatedcontent_fr_txtm'])
         if result:
             temp[u'fr'] = result
     if temp:
         product_out[u'related_content'] = temp
 
-    if in_and_def('replaces_bi_txtm', data_set):
+    if in_and_def(u'replaces_bi_txtm', data_set):
         result = listify(data_set[u'replaces_bi_txtm'])
         if result:
             product_out[u'replaced_products'] = result
 
-    if in_and_def('sourcecode_bi_txtm', data_set):
+    if in_and_def(u'sourcecode_bi_txtm', data_set):
         result = listify(data_set[u'sourcecode_bi_txtm'])
         if result:
             product_out[u'survey_source_codes'] = result
 
-    if in_and_def('specificgeocode_bi_txtm', data_set):
+    if in_and_def(u'specificgeocode_bi_txtm', data_set):
         result = listify(data_set[u'specificgeocode_bi_txtm'])
         if result:
             product_out[u'geodescriptor_codes'] = result
@@ -297,28 +282,28 @@ def do_product(data_set):
             product_out[u'status_code'] = data_set[u'statusfcode_bi_strs']
 
     temp = {}
-    if in_and_def('stcthesaurus_en_txtm', data_set):
+    if in_and_def(u'stcthesaurus_en_txtm', data_set):
         result = listify(data_set[u'stcthesaurus_en_txtm'])
         if result:
             temp[u'en'] = result
-    if in_and_def('stcthesaurus_fr_txtm', data_set):
+    if in_and_def(u'stcthesaurus_fr_txtm', data_set):
         result = listify(data_set[u'stcthesaurus_fr_txtm'])
         if result:
             temp[u'fr'] = result
     if temp:
         product_out[u'thesaurus_terms'] = temp
 
-    if in_and_def('subjnewcode_bi_txtm', data_set):
+    if in_and_def(u'subjnewcode_bi_txtm', data_set):
         result = listify(data_set[u'subjnewcode_bi_txtm'])
         if result:
             product_out[u'subject_codes'] = result
 
-    if in_and_def('subjoldcode_bi_txtm', data_set):
+    if in_and_def(u'subjoldcode_bi_txtm', data_set):
         result = listify(data_set[u'subjoldcode_bi_txtm'])
         if result:
             product_out[u'subjectold_codes'] = result
 
-    if in_and_def('tableid_bi_instrm', data_set):
+    if in_and_def(u'tableid_bi_instrm', data_set):
         result = listify(data_set[u'tableid_bi_instrm'])
         if result:
             product_out[u'table_ids'] = result
@@ -405,11 +390,6 @@ def do_format(data_set):
             )
         )
     }
-    # if not format_out[u'top_parent_id']:
-    #     format_out[u'top_parent_id'] = data_set.get(u'hierarchyid_bi_strs', u'')
-    # if not format_out[u'top_parent_id']:
-    #     format_out[u'top_parent_id'] = \
-    #         data_set.get(u'productidnew_bi_strs', u'')
     if in_and_def(u'releasedate_bi_strs', data_set):
         format_out[u'last_release_date'] = \
             data_set.get(u'releasedate_bi_strs').strip()
