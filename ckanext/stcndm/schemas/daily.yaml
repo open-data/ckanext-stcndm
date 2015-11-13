@@ -38,7 +38,7 @@ dataset_fields:
 
 - field_name: name
   preset: ndm_name
-  validators: product_create_name
+  validators: daily_create_name
     not_empty unicode name_validator package_name_validator
 
 - field_name: admin_notes
