@@ -245,6 +245,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "RegisterProduct": common.register_data_product,
             "RegisterRelease": releases.register_release,
             "UpdateDefaultView": views.update_default_view,
+            "UpdateParentReleaseDateAndStatus": common.update_parent_release_date_and_status,
             "UpdateProductGeo": common.update_product_geo,
             "UpdatePublishingStatus": common.update_last_publish_status,
             "GetDatasetSchema": common.get_dataset_schema,
