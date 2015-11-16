@@ -71,11 +71,17 @@ dataset_fields:
 - field_name: thesaurus_terms
   preset: ndm_thesaurus_terms
 
+- field_name: archive_status_code
+  preset: ndm_archive_status
+
 - field_name: archive_date
   preset: ndm_archive_date
 
-- field_name: archive_status_code
-  preset: ndm_archive_status
+- field_name: legacy_date
+  preset: ndm_legacy_date
+
+- field_name: rot_date
+  preset: ndm_rot_date
 
 - field_name: display_code
   preset: ndm_display
@@ -103,9 +109,6 @@ dataset_fields:
 
 - field_name: last_release_date
   preset: ndm_last_release_date
-
-- field_name: legacy_date
-  preset: ndm_legacy_date
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id
