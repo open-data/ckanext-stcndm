@@ -12,6 +12,9 @@ _get_action = toolkit.get_action
 _ValidationError = toolkit.ValidationError
 _NotFound = toolkit.ObjectNotFound
 _NotAuthorized = toolkit.NotAuthorized
+_stub_msg = {
+    'result': 'This method is just a stub for now. Please do not use.'
+}
 
 autocomplete = {
     'subject': {
@@ -904,6 +907,29 @@ def update_last_publish_status(context, data_dict):
             }
         ) for product_id in _get_or_bust(data_dict, 'productIds')
     ]
+
+
+def update_parent_release_date_and_status(context, data_dict):
+    """
+    Update the release date and publishing status code for the parent
+    record of a given product.
+
+    :param productId: product ID
+    :type productId: str
+    :param productType: product type code
+    :type productType: str
+    :param releaseDate: release date
+    :type releaseDate: str
+    :param publishingStatus: publish status code
+    :type publishingStatus: str
+
+
+    :return: updated package
+    :rtype: dict
+    """
+    # TODO: why is productType being required here? The productId values should be unique.
+
+    return _stub_msg
 
 
 def _update_single_publish_status(context, data_dict):
