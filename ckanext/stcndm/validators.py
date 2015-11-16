@@ -239,7 +239,7 @@ def create_product_id(key, data, errors, context):
     # make sure subject_codes processed
     shortcode_validate(('subject_codes',), data, errors, context)
     subject_codes = shortcode_output(_data_lookup(('subject_codes',), data))
-    top_parent_id = _data_lookup(('top_parent_id',), data).strip()
+    top_parent_id = _data_lookup(('top_parent_id',), data)
 
     if data_set_type in general_non_data_types:
         try:
