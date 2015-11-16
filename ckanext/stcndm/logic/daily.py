@@ -176,7 +176,7 @@ def register_daily(context, data_dict):
     }
     if 'referencePeriod' in data_dict and data_dict['referencePeriod']:
         release_dict['referencePeriod'] = data_dict['referencePeriod']
-    lc.action.RegisterRelease(**release_dict)
+#    lc.action.RegisterRelease(**release_dict)
 
     daily_dict = {
         'name': 'daily-{0}'.format(product_id),
