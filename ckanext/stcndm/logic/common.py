@@ -886,7 +886,7 @@ def update_last_publish_status(context, data_dict):
 
     :param productIds: list of product IDs
     :type productIds: str
-    :param issueNo: publishing status code
+    :param issueNo: issue number
     :type issueNo: str
     :param lastPublishStatusCode: publishing status code
     :type lastPublishStatusCode: str
