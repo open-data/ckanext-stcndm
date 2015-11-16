@@ -58,6 +58,10 @@ presets:
           en: Legacy
           fr: Patrimonial
         value: '3'
+      - label:
+          en: ROT
+          fr: ROT
+        value: '4'
 
 - preset_name: ndm_array_terminated
   values:
@@ -774,12 +778,12 @@ presets:
   values:
     label:
       en: Legacy Date
-      fr: Date du système antérieur
+      fr: Date de statut ancien
     form_snippet: date.html
     display_snippet: date.html
     validators: scheming_required isodate
     schema_field_type: date
-    schema_multivalued: true
+    schema_multivalued: false
     schema_extras: true
 
 - preset_name: ndm_load_to_olc_code
@@ -1035,6 +1039,18 @@ presets:
     form_blanks: 3
     schema_field_type: string
     schema_multivalued: true
+    schema_extras: true
+
+- preset_name: ndm_rot_date
+  values:
+    label:
+      en: ROT Date
+      fr: Date de statut ROT
+    form_snippet: date.html
+    display_snippet: date.html
+    validators: scheming_required isodate
+    schema_field_type: date
+    schema_multivalued: false
     schema_extras: true
 
 - preset_name: ndm_shortcode_multivalue
