@@ -255,6 +255,7 @@ class STCNDMPlugin(p.SingletonPlugin):
 
     def get_validators(self):
         return {
+            "apply_archive_rules": validators.apply_archive_rules,
             "codeset_create_name": validators.codeset_create_name,
             "codeset_multiple_choice": validators.codeset_multiple_choice,
             "correction_create_name": validators.correction_create_name,

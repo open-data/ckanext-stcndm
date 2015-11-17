@@ -746,7 +746,7 @@ presets:
       fr: Heure de dernière diffusion
     form_snippet: datetime.html
     display_snippet: datetime.html
-    validators: scheming_isodatetime
+    validators: scheming_isodatetime apply_archive_rules
     schema_field_type: date
     schema_multivalued: false
     schema_extras: true
