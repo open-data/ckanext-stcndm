@@ -318,7 +318,11 @@ def get_product_issue_articles(context, data_dict):
     lc = ckanapi.LocalCKAN(context=context)
 
     results = lc.action.package_search(
-        q='top_parent_id:{pid} AND issue_number:{issue_number}'.format(
+        q=(
+            'top_parent_id:{pid} AND '
+            'issue_number:{issue_number} AND '
+            'type:article'
+        ).format(
             pid=product_id,
             issue_number=issue_number
         ),
@@ -333,7 +337,8 @@ def get_product_issue_articles(context, data_dict):
 
     return [{
         'title': result['title'],
-        'article_id': result['product_id_new']
+        'article_id': result['product_id_new'],
+        'release_date': result['last_release_date']
     } for result in results['results']]
 
 
