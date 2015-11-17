@@ -418,12 +418,15 @@ presets:
     label:
       en: Dimension Members
       fr: Membres de dimension
+    help_text:
+      en: Please enter comma separated terms
+      fr: Veuillez entrer des mots séparés par des virgules
     form_snippet: fluent_tags.html
     display_snippet: fluent_tags.html
     error_snippet: fluent_text.html
     validators: fluent_tags
     output_validators: fluent_tags_output
-    tag_validators: ndm_tag_name_validator tag_length_validator
+    tag_validators: ndm_tag_name_validator
     form_attrs:
       data-module: autocomplete
       data-module-tags:
@@ -695,12 +698,15 @@ presets:
     label:
       en: Keywords
       fr: Mots clés
+    help_text:
+      en: Please enter comma separated terms
+      fr: Veuillez entrer des mots séparés par des virgules
     form_snippet: fluent_tags.html
     display_snippet: fluent_tags.html
     error_snippet: fluent_text.html
     validators: fluent_tags
     output_validators: fluent_tags_output
-    tag_validators: ndm_tag_name_validator tag_length_validator
+    tag_validators: ndm_tag_name_validator
     form_attrs:
       data-module: autocomplete
       data-module-tags:
@@ -1371,12 +1377,15 @@ presets:
     label:
       en: STC Thesaurus Terms
       fr: Dictionnaire de synonymes de STC
+    help_text:
+      en: Please enter comma separated terms
+      fr: Veuillez entrer des mots séparés par des virgules
     form_snippet: fluent_tags.html
     display_snippet: fluent_tags.html
     error_snippet: fluent_text.html
     validators: fluent_tags
     output_validators: fluent_tags_output
-    tag_validators: ndm_tag_name_validator tag_length_validator
+    tag_validators: ndm_tag_name_validator
     form_attrs:
       data-module: autocomplete
       data-module-tags: ""
