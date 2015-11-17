@@ -369,7 +369,7 @@ def get_bookable_releases(context, data_dict):
             ).format(
                 pid=result['product_id_new']
             ),
-            sort='issue_number desc',
+            sort='issue_number asc',
             # FIXME: We need to actually paginate on this, but the daily
             #        team will not accept it (yet).
             rows=2000000
