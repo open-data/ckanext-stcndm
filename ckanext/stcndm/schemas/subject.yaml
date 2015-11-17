@@ -45,8 +45,11 @@ dataset_fields:
   label:
     en: a to z alias
     fr: alias a à z
+  help_text:
+    en: Please enter comma separated terms
+    fr: Veuillez entrer des mots séparés par des virgules
   preset: fluent_tags
-  tag_validators: ndm_tag_name_validator tag_length_validator
+  tag_validators: ndm_tag_name_validator
   schema_field_type: fluent
   schema_multivalued: true
   schema_extras: true
