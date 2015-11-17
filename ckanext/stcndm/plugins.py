@@ -281,6 +281,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "codeset_choices": helpers.codeset_choices,
             "lookup_label": helpers.lookup_label,
             "get_dataset_types": helpers.get_dataset_types,
+            "get_parent_content_types": helpers.get_parent_content_types,
+            "set_previous_issue_archive_date": helpers.set_previous_issue_archive_date,
             'ensure_release_exists': helpers.ensure_release_exists,
             'get_parent_dataset': helpers.get_parent_dataset,
             'get_child_datasets': helpers.get_child_datasets,

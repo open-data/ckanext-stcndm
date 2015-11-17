@@ -590,9 +590,14 @@ def apply_archive_rules(key, data, errors, context):
                 )
         elif data[(u'product_type_code',)] == u'20':
             if not content_type_codes:
-                errors[(u'content_type_codes',)] = _('Missing value')
-                errors[(u'archive_date',)] = _('Unable to determine')
-                return
+                try:
+                    content_type_codes = h.get_parent_content_types(
+                        _data_lookup(('product_id_new',), data)
+                    )
+                except ValidationError as e:
+                    errors[(u'content_type_codes',)] = _('Missing value')
+                    errors[(u'archive_date',)] = _(e)
+                    return
             # Analysis/Stats in brief
             if u'2016' in content_type_codes:
                 if not archive_date:
@@ -613,5 +618,8 @@ def apply_archive_rules(key, data, errors, context):
             # elif content_type_code in [u'2002', u'2003', u'2023']:
             #     set_archive_date()
             # # Reference/Classification
-            # elif content_type_code == u'2025':
-            #     set_archive_date()
+            elif u'2025' in content_type_codes:
+                 h.set_previous_issue_archive_date(
+                     _data_lookup(('product_id_new',), data),
+                     release_date+datetime.timedelta(days=5*365)
+                 )
