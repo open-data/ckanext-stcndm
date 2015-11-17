@@ -163,3 +163,14 @@ def ensure_release_exists(context, data_dict):
     """
     product_id = _get_or_bust(data_dict, 'productId')
     stcndm_helpers.ensure_release_exists(product_id, context=context)
+
+
+@logic.side_effect_free
+def consume_transaction_file(context, data_dict):
+    """
+    Triggers a background task to start consuming the transaction file.
+
+    .. note::
+
+        Currently just a stub as requested in #5640
+    """
