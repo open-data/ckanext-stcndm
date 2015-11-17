@@ -211,19 +211,20 @@ def get_default_views(context, data_dict):
     """
     Returns a list of the default views.
 
+    :param frc: FRC code to filter on.
     :return: A dictionary containing the Product ID, English label, and French
              label in each default view.
     :rtype: dict
     """
-    theme = _get_or_bust(data_dict, 'theme')
+    frc = _get_or_bust(data_dict, 'frc')
 
     lc = ckanapi.LocalCKAN(context=context)
 
     cube_results = lc.action.package_search(
         q=(
-            'type:cube AND subject_codes:{theme}'
+            'type:cube AND frc:{frc}'
         ).format(
-            theme=theme
+            frc=frc
         ),
     )
 
@@ -240,7 +241,6 @@ def get_default_views(context, data_dict):
                 'type:view AND product_id_new:{view_id} AND '
                 '-discontinued_code:1'
             ).format(
-                theme=theme,
                 view_id=cube_result['default_view_id']
             ),
             rows=1
@@ -249,9 +249,16 @@ def get_default_views(context, data_dict):
         if not view_results['count']:
             continue
 
+        view = view_results['results'][0]
+
         final_results.append({
-            u'cube': cube_result,
-            u'view': view_results['results'][0]
+            u'cube': {
+                u'frequency': cube_result.get('frequency_codes') or []
+            },
+            u'view': {
+                u'title': view['title'],
+                u'id': view['product_id_new']
+            }
         })
 
     return final_results
