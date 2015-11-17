@@ -465,11 +465,14 @@ def daily_create_name(key, data, errors, context):
     if product_id_new:
         current_name = _data_lookup(('name',), data)
         new_name = u'daily-{0}'.format(product_id_new.lower())
-        if current_name.endswith(u'-clone'):
-            if not current_name.startswith(new_name):
+        if (
+                current_name.endswith(u'-clone') and
+                not current_name.startswith(new_name)
+        ) or not current_name:
                 data[key] = new_name
     else:
-        errors[key].append(_('could not find product_id_new'))
+        errors[('product_id_new',)].append(_('Missing value'))
+        errors[key].append(_('Name could not be generated'))
 
 
 def ndm_str2boolean(key, data, errors, context):
@@ -569,3 +572,46 @@ def ndm_tag_name_validator(value, context):
             ' symbols: - _ . , : \' / ( )'
         ) % value)
     return value
+
+
+def apply_archive_rules(key, data, errors, context):
+    if errors[key]:
+        return
+    release_date = _data_lookup(key, data)
+    if release_date:
+        archive_date = _data_lookup((u'archive_date',), data)
+        content_type_codes = _data_lookup((u'content_type_codes',), data)
+        if data[(u'product_type_code',)] == u'24':
+            if not archive_date:
+                _data_update(
+                    release_date+datetime.timedelta(days=2*365),
+                    (u'archive_date',),
+                    data
+                )
+        elif data[(u'product_type_code',)] == u'20':
+            if not content_type_codes:
+                errors[(u'content_type_codes',)] = _('Missing value')
+                errors[(u'archive_date',)] = _('Unable to determine')
+                return
+            # Analysis/Stats in brief
+            if u'2016' in content_type_codes:
+                if not archive_date:
+                    _data_update(
+                        release_date+datetime.timedelta(days=5*365),
+                        (u'archive_date',),
+                        data
+                    )
+            # Analysis/Articles and Reports
+            elif u'2021' in content_type_codes:
+                if not archive_date:
+                    _data_update(
+                        release_date+datetime.timedelta(days=5*365),
+                        (u'archive_date',),
+                        data
+                    )
+            # # Reference
+            # elif content_type_code in [u'2002', u'2003', u'2023']:
+            #     set_archive_date()
+            # # Reference/Classification
+            # elif content_type_code == u'2025':
+            #     set_archive_date()
