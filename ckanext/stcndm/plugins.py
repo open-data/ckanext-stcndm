@@ -236,6 +236,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetSubjectList": subjects.get_top_level_subject_list,
             "GetUpcomingReleases": common.get_upcoming_releases,
             "GetIssuesByPubStatus": common.get_issues_by_pub_status,
+            "GetProductFormats": daily.get_product_formats,
             "PurgeDataset": common.purge_dataset,
             "RegisterCube": cubes.register_cube,
             "RegisterDaily": daily.register_daily,

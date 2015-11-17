@@ -447,3 +447,53 @@ def get_themes(context, data_dict):
             'subject_title': rr[3]
         } for rr in (_massage(r) for r in results['results'])]
     }
+
+
+@logic.side_effect_free
+def get_product_formats(context, data_dict):
+    """
+    Returns a list of bookable formats for the specific product/issue number
+
+    :param: productId: A non-data product ID.
+    :param: issueNo: The issue number
+
+    :return: A dictionary containing the formats for the specified product and
+             issue
+    :rtype: dict
+    """
+    product_id = _get_or_bust(data_dict, 'productId')
+    issue_number = _get_or_bust(data_dict, 'issueNo')
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    art_results = lc.action.package_search(
+        q=(
+            'top_parent_id:{pid} AND '
+            'issue_number:{issue_number} AND '
+            'type:article'
+        ).format(
+            pid=product_id,
+            issue_number=issue_number
+        ),
+        # FIXME: We need to actually paginate on this, but the daily
+        #        team will not accept it (yet).
+        rows=2000000
+    )
+
+    final_results = []
+
+    for art_result in art_results['results']:
+        fmt_results = lc.action.package_search(
+            q=(
+                'parent_id:{pid} AND '
+                # We only want formats that have no release date set.
+                '-last_release_date:[* TO *]'
+            ).format(
+                pid=art_result['product_id_new']
+            ),
+            rows=50
+        )
+
+        final_results.extend(fmt_results['results'])
+
+    return final_results
