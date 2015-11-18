@@ -581,14 +581,15 @@ def apply_archive_rules(key, data, errors, context):
     if release_date:
         archive_date = _data_lookup((u'archive_date',), data)
         content_type_codes = _data_lookup((u'content_type_codes',), data)
-        if data[(u'product_type_code',)] == u'24':
+        product_type_code = _data_lookup((u'product_type_code',), data)
+        if product_type_code == u'24':
             if not archive_date:
                 _data_update(
                     release_date+datetime.timedelta(days=2*365),
                     (u'archive_date',),
                     data
                 )
-        elif data[(u'product_type_code',)] == u'20':
+        elif product_type_code == u'20':
             if not content_type_codes:
                 try:
                     content_type_codes = h.get_parent_content_types(
