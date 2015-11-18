@@ -592,11 +592,11 @@ def apply_archive_rules(key, data, errors, context):
             if not content_type_codes:
                 try:
                     content_type_codes = h.get_parent_content_types(
-                        _data_lookup(('product_id_new',), data)
+                        _data_lookup((u'product_id_new',), data)
                     )
-                except ValidationError as e:
-                    errors[(u'content_type_codes',)] = _('Missing value')
-                    errors[(u'archive_date',)] = _(e)
+                except ValidationError:
+                    errors[(u'content_type_codes',)].append(_('Missing value'))
+                    errors[(u'archive_date',)].append(_('Unable to determine'))
                     return
             # Analysis/Stats in brief
             if u'2016' in content_type_codes:
@@ -619,7 +619,11 @@ def apply_archive_rules(key, data, errors, context):
             #     set_archive_date()
             # # Reference/Classification
             elif u'2025' in content_type_codes:
-                 h.set_previous_issue_archive_date(
-                     _data_lookup(('product_id_new',), data),
-                     release_date+datetime.timedelta(days=5*365)
-                 )
+                try:
+                    h.set_previous_issue_archive_date(
+                        _data_lookup(('product_id_new',), data),
+                        release_date+datetime.timedelta(days=5*365)
+                    )
+                except ValidationError as e:
+                    errors[(u'product_id_new',)].append(_(e))
+                    errors[(u'archive_date',)].append(_('Unable to determine'))
