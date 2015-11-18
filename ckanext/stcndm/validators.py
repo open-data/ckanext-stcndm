@@ -144,7 +144,7 @@ def codeset_create_name(key, data, errors, context):
     if codeset_type and codeset_value:
         current_name = _data_lookup(('name',), data)
         new_name = u'{0}-{1}'.format(codeset_type, codeset_value.lower())
-        if current_name.endswith(u'-clone'):
+        if current_name.endswith(u'-clone') or not current_name:
             if not current_name.startswith(new_name):
                 data[key] = new_name
     else:
@@ -348,7 +348,7 @@ def subject_create_name(key, data, errors, context):
     if subject_code:
         current_name = _data_lookup(('name',), data)
         new_name = u'subject-{0}'.format(subject_code.lower())
-        if current_name.endswith(u'-clone'):
+        if current_name.endswith(u'-clone') or not current_name:
             if not current_name.startswith(new_name):
                 data[key] = new_name
     else:
@@ -365,7 +365,7 @@ def province_create_name(key, data, errors, context):
     if sgc_code:
         current_name = _data_lookup(('name',), data)
         new_name = u'province-{0}'.format(sgc_code.lower())
-        if current_name.endswith(u'-clone'):
+        if current_name.endswith(u'-clone') or not current_name:
             if not current_name.startswith(new_name):
                 data[key] = new_name
     else:
@@ -395,7 +395,7 @@ def survey_create_name(key, data, errors, context):
     if product_id_new:
         current_name = _data_lookup(('name',), data)
         new_name = u'survey-{0}'.format(product_id_new.lower())
-        if current_name.endswith(u'-clone'):
+        if current_name.endswith(u'-clone') or not current_name:
             if not current_name.startswith(new_name):
                 data[key] = new_name
     else:
@@ -504,7 +504,7 @@ def geodescriptor_create_name(key, data, errors, context):
         new_name = safe_name(
             u'geodescriptor-{0}'.format(geodescriptor_code.lower())
         )
-        if current_name.endswith(u'-clone'):
+        if current_name.endswith(u'-clone') or not current_name:
             if not current_name.startswith(new_name):
                 data[key] = new_name
     else:
