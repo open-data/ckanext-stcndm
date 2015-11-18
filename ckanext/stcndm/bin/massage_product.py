@@ -70,7 +70,7 @@ def do_product(data_set):
           u'fr': data_set.get(u'correctnote_fr_txtm', '')
         },
         u'default_view_id': data_set.get(u'defaultviewid_bi_strs', ''),
-        u'notes_translated': {
+        u'notes': {
           u'en': data_set.get(u'description_en_txts', data_set.get(
               u'description_en_intxts', u'')),
           u'fr': data_set.get(u'description_fr_txts', data_set.get(
@@ -114,7 +114,7 @@ def do_product(data_set):
             u'en': data_set.get(u'refperiod_en_txtm', u''),
             u'fr': data_set.get(u'refperiod_fr_txtm', u''),
         },
-        u'title_translated': {
+        u'title': {
             u'en': data_set.get(u'title_en_txts', ''),
             u'fr': data_set.get(u'title_fr_txts', '')
         },
