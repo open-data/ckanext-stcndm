@@ -516,7 +516,7 @@ def next_article_id(top_parent_id, issue_number):
             return u'{top_parent_id}{issue_number}{sequence_number}'.format(
                 top_parent_id=top_parent_id,
                 issue_number=issue_number,
-                sequence_number=unicode(article_sequence_number).zfill(4)
+                sequence_number=unicode(article_sequence_number).zfill(5)
             )
 
         n = results['count'] / 1000.0
@@ -535,7 +535,7 @@ def next_article_id(top_parent_id, issue_number):
     ).format(
         top_parent_id=top_parent_id,
         issue_number=issue_number,
-        sequence_number=unicode(article_sequence_number + 1).zfill(4)
+        sequence_number=unicode(article_sequence_number + 1).zfill(5)
     )
 
 
