@@ -579,18 +579,21 @@ def get_parent_content_types(product_id):
         )),))
     if results['count'] > 1:
         raise ValidationError((_('{parent_id}: Found more than one parent'
-            .format(
-                parent_id=product_id[:8]
-            )
-        ),))
-    if results['results'][0]['content_type_codes']:
-        return results['results'][0]['content_type_codes']
+                                 .format(
+                                    parent_id=product_id[:8]
+                                 )),))
+    if not results['count']:
+        raise ValidationError((_('{product_id}: Parent not found'
+                                 .format(
+                                    parent_id=product_id
+                                 )),))
+    if results['results'][0].get(u'content_type_codes'):
+        return results['results'][0].get(u'content_type_codes')
     else:
         raise ValidationError((_('{parent_id}: no content_type_codes set'
-            .format(
-                parent_id=product_id[:8]
-            )
-        ),))
+                                 .format(
+                                    parent_id=product_id[:8]
+                                 )),))
 
 
 def set_previous_issue_archive_date(product_id, archive_date):

@@ -582,6 +582,7 @@ def apply_archive_rules(key, data, errors, context):
         archive_date = _data_lookup((u'archive_date',), data)
         content_type_codes = _data_lookup((u'content_type_codes',), data)
         product_type_code = _data_lookup((u'product_type_code',), data)
+        product_id_new = _data_lookup((u'product_id_new',), data)
         if product_type_code == u'24':
             if not archive_date:
                 _data_update(
@@ -593,7 +594,7 @@ def apply_archive_rules(key, data, errors, context):
             if not content_type_codes:
                 try:
                     content_type_codes = h.get_parent_content_types(
-                        _data_lookup((u'product_id_new',), data)
+                        product_id_new
                     )
                 except ValidationError:
                     errors[(u'content_type_codes',)].append(_('Missing value'))
@@ -619,12 +620,13 @@ def apply_archive_rules(key, data, errors, context):
             # elif content_type_code in [u'2002', u'2003', u'2023']:
             #     set_archive_date()
             # # Reference/Classification
-            elif u'2025' in content_type_codes:
+            elif u'2025' in content_type_codes and len(product_id_new) >= 15:
                 try:
                     h.set_previous_issue_archive_date(
-                        _data_lookup(('product_id_new',), data),
+                        product_id_new,
                         release_date+datetime.timedelta(days=5*365)
                     )
                 except ValidationError as e:
-                    errors[(u'product_id_new',)].append(_(e))
+                    errors[(u'product_id_new',)].append(
+                        _(e.error_summary[u'Message']))
                     errors[(u'archive_date',)].append(_('Unable to determine'))
