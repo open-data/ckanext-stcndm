@@ -16,7 +16,7 @@ _stub_msg = {
     'result': 'This method is just a stub for now. Please do not use.'
 }
 
-autocomplete = {
+AUTOCOMPLETE = {
     'subject': {
         'code': 'subject_code'
     },
@@ -63,15 +63,18 @@ def get_autocomplete(context, data_dict):
         ).format(
             type_=type_,
             q=q,
-            code=autocomplete[type_]['code']
+            code=AUTOCOMPLETE[type_]['code']
         ),
-        rows = 100
+        rows = 100,
+        sort = '{code} asc'.format(
+            code=AUTOCOMPLETE[type_]['code']
+        )
     )
 
     results = {
         'count': query_result['count'],
         'results': [{
-            'code': r[autocomplete[type_]['code']],
+            'code': r[AUTOCOMPLETE[type_]['code']],
             'title': r['title'],
             'group': _get_group(r)
         } for r in query_result['results']]
