@@ -5,16 +5,17 @@
         root = $('body').data('siteRoot'),
         getAutocomplete = function(event) {
             var val = event.target.value,
-                type;
+                data;
 
             if (val) {
-                type = wb.getData(event.delegateTarget, 'autocomplete').type;
+                data = $.extend({q: '*' + val + '*'}, wb.getData(event.delegateTarget, 'autocomplete'));
 
                 wb.doc.trigger({
                     type: 'ajax-fetch.wb',
                     element: event.delegateTarget,
                     fetch: {
-                        url: root + '/api/3/action/GetAutocomplete?type=' + type + '&q=*' + val + '*',
+                        url: root + '/api/3/action/GetAutocomplete',
+                        data: data,
                         dataType: 'jsonp',
                         jsonp: 'callback'
                     }
@@ -22,7 +23,7 @@
             }
         };
 
-    $('[data-autocomplete]').on('keydown', 'input[type="text"]', function() {
+    $('[data-autocomplete]').on('keydown', 'input[type="text"]:first', function() {
         var _this = this,
             args = arguments;
 
