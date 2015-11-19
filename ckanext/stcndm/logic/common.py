@@ -16,7 +16,7 @@ _stub_msg = {
     'result': 'This method is just a stub for now. Please do not use.'
 }
 
-autocomplete = {
+AUTOCOMPLETE = {
     'subject': {
         'code': 'subject_code'
     },
@@ -53,7 +53,9 @@ def get_autocomplete(context, data_dict):
     :type q: str
     """
     type_ = _get_or_bust(data_dict, 'type')
+    code = AUTOCOMPLETE[type_]['code']
     q = _get_or_bust(data_dict, 'q')
+    max_level = data_dict.get('max_level')
 
     lc = ckanapi.LocalCKAN(context=context)
     query_result = lc.action.package_search(
@@ -63,15 +65,24 @@ def get_autocomplete(context, data_dict):
         ).format(
             type_=type_,
             q=q,
-            code=autocomplete[type_]['code']
+            code=code
         ),
-        rows = 100
+        rows = 100,
+        sort = '{code} asc'.format(
+            code=code
+        ),
+        fq = '{code}:{filter}'.format(
+            code=code,
+            filter='/.{{0,{max}}}/'.format(
+                max=int(max_level) * 2
+            )
+        ) if max_level else ''
     )
 
     results = {
         'count': query_result['count'],
         'results': [{
-            'code': r[autocomplete[type_]['code']],
+            'code': r[code],
             'title': r['title'],
             'group': _get_group(r)
         } for r in query_result['results']]

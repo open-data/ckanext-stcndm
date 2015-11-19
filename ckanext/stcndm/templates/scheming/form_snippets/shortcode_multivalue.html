@@ -1,7 +1,10 @@
 {% import 'macros/form.html' as form %}
 
 {%- set values = h.x2list(data.get(field.field_name, [])) -%}
-<div class="row" data-autocomplete='{"type": "{{ field.lookup }}"}'>
+<div class="row" data-autocomplete='{
+        "type": "{{ field.lookup }}"
+        {% if c.action == "new" and field.lookup == "subject" %}, "max_level": 1{% endif %}
+    }'>
 
         {{ form.input(
                 id=field.field_name + '_search',
