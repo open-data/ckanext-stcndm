@@ -253,6 +253,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetGroupSchema": common.get_group_schema,
             "GetSurveyCodesets": surveys.get_survey_codesets,
             "GetSubjectCodesets": subjects.get_subject_codesets,
+            "GetProductsByFRC": daily.get_products_by_frc,
             "ConsumeTransactionFile": releases.consume_transaction_file
         }
 

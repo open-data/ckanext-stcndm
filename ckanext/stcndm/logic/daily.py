@@ -497,3 +497,20 @@ def get_product_formats(context, data_dict):
         final_results.extend(fmt_results['results'])
 
     return final_results
+
+
+@logic.side_effect_free
+def get_products_by_frc(context, data_dict):
+    frc = _get_or_bust(data_dict, 'frc')
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    results = lc.action.package_search(
+        q='frc:{frc} AND type:publication'.format(frc=frc),
+        rows=2000000
+    )
+
+    return [{
+        'title': r['title'],
+        'productId': r['product_id_new']
+    } for r in results['results']]
