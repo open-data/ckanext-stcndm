@@ -13,7 +13,7 @@ presets:
       en: Admin Notes
       fr: Notes
     schema_field_type: fluent
-    schema_multivalue: false
+    schema_multivalued: false
     schema_extras: true
     form_snippet: fluent_markdown.html
     display_snippet: fluent_markdown.html
@@ -295,7 +295,7 @@ presets:
           fr: Haut
         value: '1'
 
-- preset_name: ndm_correction_id_code
+- preset_name: ndm_correction_id
   values:
     label:
       en: Correction ID Code
@@ -364,7 +364,7 @@ presets:
       en: Description
       fr: Description
     schema_field_type: fluent
-    schema_multivalue: false
+    schema_multivalued: false
     schema_extras: false
     form_placeholder:
       en: A detailed description of the dataset that will allow the user to determine
@@ -410,7 +410,7 @@ presets:
     validators: scheming_required scheming_choices
     lookup: preset
     schema_field_type: code
-    schema_multivalue: false
+    schema_multivalued: false
     schema_extras: true
 
 - preset_name: ndm_dimension_members
@@ -846,7 +846,7 @@ presets:
       en: Price
       fr: Prix
     schema_field_type: string
-    schema_multivalued: true
+    schema_multivalued: false
     schema_extras: true
 
 - preset_name: ndm_price_note
@@ -1399,7 +1399,7 @@ presets:
       en: Title
       fr: Titre
     schema_field_type: fluent
-    schema_multivalue: false
+    schema_multivalued: false
     schema_extras: false
     form_placeholder:
       en: Canada Border Wait Times

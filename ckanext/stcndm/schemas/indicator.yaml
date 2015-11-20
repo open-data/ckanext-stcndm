@@ -31,6 +31,9 @@ dataset_fields:
         fr: Indicateur
       value: '12'
   required: true
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id

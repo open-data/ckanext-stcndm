@@ -31,13 +31,10 @@ dataset_fields:
   preset: ndm_correction_impact_level
 
 - field_name: notes
+  preset: ndm_description
   label:
     en: Correction Note
     fr: Note associée à la correction
-  preset: fluent_text
-  schema_field_type: fluent
-  schema_multivalued: false
-  schema_extras: true
 
 - field_name: correction_id
   label:
@@ -59,9 +56,7 @@ dataset_fields:
   preset: ndm_format
 
 - field_name: product_id_new
-  label:
-    en: Product ID New
-    fr: Nouvel ID du produit
+  preset: ndm_product_id_new
 
 - field_name: corrected_product
   label:
@@ -79,3 +74,7 @@ dataset_fields:
     en: Internal Unique ID
     fr: ID interne unique
   form_snippet: null
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: false
+

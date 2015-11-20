@@ -30,6 +30,9 @@ dataset_fields:
         fr: Service
       value: '23'
   required: true
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: subject_codes
   preset: ndm_subject_codes
