@@ -109,34 +109,34 @@ presets:
       en: Census Grouping
       fr: Regroupement du recensement
     choices:
-    - label:
-        en: Parent
-        fr: Parent
-      value: '1'
-    - label:
-        en: Child
-        fr: Enfant
-      value: '2'
-    - label:
-        en: Release 1
-        fr: Émission 1
-      value: '3'
-    - label:
-        en: Release 2
-        fr: Émission 2
-      value: '4'
-    - label:
-        en: Release 3
-        fr: Émission 3
-      value: '5'
-    - label:
-        en: Release 4
-        fr: Émission 4
-      value: '6'
-    - label:
-        en: Release 5
-        fr: Émission 5
-      value: '7'
+      - label:
+          en: Parent
+          fr: Parent
+        value: '1'
+      - label:
+          en: Child
+          fr: Enfant
+        value: '2'
+      - label:
+          en: Release 1
+          fr: Émission 1
+        value: '3'
+      - label:
+          en: Release 2
+          fr: Émission 2
+        value: '4'
+      - label:
+          en: Release 3
+          fr: Émission 3
+        value: '5'
+      - label:
+          en: Release 4
+          fr: Émission 4
+        value: '6'
+      - label:
+          en: Release 5
+          fr: Émission 5
+        value: '7'
     form_snippet: select.html
     display_snippet: select.html
     validators: scheming_required scheming_choices
