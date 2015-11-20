@@ -2,7 +2,7 @@
 {%- set lang = h.lang() -%}
 {% if values|length > 1 %}
 <ol>
-{%- for element in values -%}
+{%- for element in values[:100] -%}
   {%- set lab = h.lookup_label(
     field.lookup_key|default(field.field_name),
     element,
