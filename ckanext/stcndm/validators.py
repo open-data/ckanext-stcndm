@@ -439,12 +439,12 @@ def product_create_name(key, data, errors, context):
     existing_name = _data_lookup(('name',), data)
     if existing_name is missing or not existing_name or \
             existing_name.endswith(u'-clone'):
-        data_set_type = _data_lookup(('type',), data)
         create_product_id(('product_id_new',), data, errors, context)
         if errors[('product_id_new',)]:
             errors[key].append(_('Name could not be generated'))
             return
         product_id_new = _data_lookup(('product_id_new',), data)
+        data_set_type = _data_lookup(('type',), data)
         if product_id_new:
             data[key] = u'{data_set_type}-{product_id_new}'.format(
                 data_set_type=data_set_type,
