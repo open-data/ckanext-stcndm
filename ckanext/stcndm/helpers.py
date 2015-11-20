@@ -573,20 +573,18 @@ def get_parent_content_types(product_id):
     results = lc.action.package_search(
         q='product_id_new:{parent_id}'.format(parent_id=product_id[:8])
     )
-    if not results['count']:
-        raise ValidationError((_('{parent_id}: Not found'.format(
-            parent_id=product_id[:8]
-        )),))
+    if results['count'] < 1:
+        raise ValidationError(
+            (_('{parent_id}: Not found'
+                .format(
+                    parent_id=product_id[:8]
+                )),))
     if results['count'] > 1:
-        raise ValidationError((_('{parent_id}: Found more than one parent'
-                                 .format(
-                                    parent_id=product_id[:8]
-                                 )),))
-    if not results['count']:
-        raise ValidationError((_('{product_id}: Parent not found'
-                                 .format(
-                                    parent_id=product_id
-                                 )),))
+        raise ValidationError(
+            (_('{parent_id}: Found more than one parent'
+                .format(
+                    parent_id=product_id[:8]
+                )),))
     if results['results'][0].get(u'content_type_codes'):
         return results['results'][0].get(u'content_type_codes')
     else:
