@@ -563,7 +563,7 @@ def get_issues_by_pub_status(context, data_dict):
             'product_type_code',
             'product_id_new',
             'issue_no',
-            'correction_id_code',
+            'correction_id',
             'last_publish_status_code',
             'release_date',
             'reference_period',
