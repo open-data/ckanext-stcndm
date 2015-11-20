@@ -31,6 +31,9 @@ dataset_fields:
         fr: View
       value: '11'
   required: true
+  schema_field_type: code
+  schema_multivalued: false
+  schema_extras: true
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id
@@ -79,7 +82,7 @@ dataset_fields:
 - field_name: feature_weight
   preset: ndm_feature_weight
 
-- field_name: archive_status
+- field_name: archive_status_code
   preset: ndm_archive_status
 
 - field_name: archive_date
@@ -146,7 +149,7 @@ dataset_fields:
   preset: ndm_load_to_olc_code
 
 - field_name: url
-  preset: ndm_url
+  preset: ndm_fluent_url
 
 - field_name: volume_and_number
   preset: ndm_volume_and_number
