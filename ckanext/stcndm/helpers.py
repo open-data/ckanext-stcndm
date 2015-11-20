@@ -565,33 +565,15 @@ def get_parent_content_types(product_id):
     :param product_id:
     :type product_id: str
     :return: list
-    :raises ValidationError
     """
-    if len(product_id) < 8:
-        raise ValidationError((_('Invalid product ID: too short'),))
     lc = ckanapi.LocalCKAN()
     results = lc.action.package_search(
         q='product_id_new:{parent_id}'.format(parent_id=product_id[:8])
     )
-    if results['count'] < 1:
-        raise ValidationError(
-            (_('{parent_id}: Not found'
-                .format(
-                    parent_id=product_id[:8]
-                )),))
-    if results['count'] > 1:
-        raise ValidationError(
-            (_('{parent_id}: Found more than one parent'
-                .format(
-                    parent_id=product_id[:8]
-                )),))
-    if results['results'][0].get(u'content_type_codes'):
-        return results['results'][0].get(u'content_type_codes')
+    if 'results' in results and len(results['results']) == 1:
+        return results['results'][0].get(u'content_type_codes', [])
     else:
-        raise ValidationError((_('{parent_id}: no content_type_codes set'
-                                 .format(
-                                    parent_id=product_id[:8]
-                                 )),))
+        return []
 
 
 def set_previous_issue_archive_date(product_id, archive_date):

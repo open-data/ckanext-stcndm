@@ -592,14 +592,13 @@ def apply_archive_rules(key, data, errors, context):
                 )
         elif product_type_code == u'20':
             if not content_type_codes:
-                try:
-                    content_type_codes = h.get_parent_content_types(
-                        product_id_new
-                    )
-                except ValidationError:
-                    errors[(u'content_type_codes',)].append(_('Missing value'))
-                    errors[(u'archive_date',)].append(_('Unable to determine'))
-                    return
+                content_type_codes = h.get_parent_content_types(
+                    product_id_new
+                )
+            if not content_type_codes:
+                errors[(u'content_type_codes',)].append(_('Missing value'))
+                errors[(u'archive_date',)].append(_('Unable to determine'))
+                return
             # Analysis/Stats in brief
             if u'2016' in content_type_codes:
                 if not archive_date:
