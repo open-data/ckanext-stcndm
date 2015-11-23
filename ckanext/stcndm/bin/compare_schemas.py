@@ -35,23 +35,25 @@ def schema_lookup(find_field, dataset):
     return dataset.get(find_field, a_preset.get(find_field))
 
 
-def compare(a_field_name, field_dict):
-    if a_field_name not in solr_dict:
+def compare(a_ckan_field_name, a_ckan_field_dict):
+    if a_ckan_field_name not in solr_dict:
         sys.stderr.write(
             '{a_file}: {dataset_field} missing from solr\n'.format(
                 a_file=a_file,
-                dataset_field=a_field_name
+                dataset_field=a_ckan_field_name
             )
         )
     else:
-        ckan_multi_valued = schema_lookup('schema_multivalued', field_dict)
-        solr_multi_valued = solr_dict[a_field_name].get('multiValued', '')
+        ckan_multi_valued = schema_lookup(
+            'schema_multivalued',
+            a_ckan_field_dict)
+        solr_multi_valued = solr_dict[a_ckan_field_name].get('multiValued', '')
         if ckan_multi_valued is None or solr_multi_valued is None:
             sys.stderr.write(
                 '{a_file}: {dataset_field} unable to determine multiValue\n'
                 .format(
                     a_file=a_file,
-                    dataset_field=a_field_name
+                    dataset_field=a_ckan_field_name
                 )
             )
         elif (ckan_multi_valued and solr_multi_valued.lower() != 'true') or (
@@ -59,7 +61,7 @@ def compare(a_field_name, field_dict):
                 sys.stderr.write(
                     '{a_file}: {dataset_field} multiValue mismatch\n'.format(
                         a_file=a_file,
-                        dataset_field=a_field_name
+                        dataset_field=a_ckan_field_name
                     )
                 )
 
@@ -69,28 +71,38 @@ for a_file in os.listdir('../schemas/'):
         f = open('../schemas/'+a_file)
         yamlMap = yaml.safe_load(f)
         f.close()
-        dataset_fields = yamlMap.get('dataset_fields', [])
-        for dataset_field in dataset_fields:
-            field_name = dataset_field.get('field_name')
-            if field_name:
-                if field_name == 'owner_org':
+        ckan_fields = yamlMap.get('dataset_fields', [])
+        for ckan_field_dict in ckan_fields:
+            ckan_field_name = ckan_field_dict.get('field_name')
+            if ckan_field_name:
+                if ckan_field_name == 'owner_org':
                     continue
-                field_type = schema_lookup('schema_field_type', dataset_field)
+                field_type = schema_lookup('schema_field_type', ckan_field_dict)
                 if field_type is None:
                     sys.stderr.write(
                         '{a_file}: {dataset_field} '
                         'unable to determine field type\n'
                         .format(
                             a_file=a_file,
-                            dataset_field=field_name
+                            dataset_field=ckan_field_name
                         )
                     )
                     continue
                 elif field_type == 'fluent':
-                    compare(field_name+'_en', dataset_field)
-                    compare(field_name+'_fr', dataset_field)
+                    compare(ckan_field_name + '_en', ckan_field_dict)
+                    compare(ckan_field_name + '_fr', ckan_field_dict)
                 elif field_type == 'code':
-                    compare(field_name+'_desc_en', dataset_field)
-                    compare(field_name+'_desc_fr', dataset_field)
+                    compare(ckan_field_name + '_desc_en', ckan_field_dict)
+                    compare(ckan_field_name + '_desc_fr', ckan_field_dict)
+                elif field_type == 'date':
+                    compare(ckan_field_name, ckan_field_dict)
+                    if not solr_dict.get(ckan_field_name, {}).get('type', '') \
+                       == 'date':
+                        sys.stderr.write(
+                            '{a_file}: {dataset_field} type mismatch\n'.format(
+                                a_file=a_file,
+                                dataset_field=ckan_field_name
+                            )
+                        )
                 else:
-                    compare(field_name, dataset_field)
+                    compare(ckan_field_name, ckan_field_dict)
