@@ -6,6 +6,7 @@ from ckan.lib import base
 from ckan.plugins import toolkit
 from ckanext.stcndm.logic.legacy import is_legacy_product
 from ckanext.scheming.helpers import scheming_get_dataset_schema
+from ckan.controllers.package import PackageController
 
 import ckan.plugins as p
 
@@ -21,6 +22,7 @@ class ChildDatasetController(base.BaseController):
         parent_schema = scheming_get_dataset_schema(pkg['type'])
 
         new_payload = {
+            'type': ds_type,
             'top_parent_id': pkg.get('top_parent_id', pkg_id)
         }
 
@@ -42,6 +44,4 @@ class ChildDatasetController(base.BaseController):
         else:
             new_payload[PRODUCT_ID] = lc.action.GetNextProductId(**id_payload)
 
-        toolkit.redirect_to( '%s_new' % ds_type,
-            **new_payload
-        )
+        return PackageController().new(new_payload)
