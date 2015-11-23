@@ -6,6 +6,7 @@ catalog_type_label:
   fr: The Daily
 clonable: true
 dataset_type: daily
+dataset_type_code: 24
 form_languages:
 - en
 - fr

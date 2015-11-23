@@ -321,6 +321,16 @@ class STCNDMPlugin(p.SingletonPlugin):
         )
 
         map.connect(
+            'child_dataset',
+            '/dataset/new_child/{ds_id}/{ds_type}',
+            controller=(
+                'ckanext.stcndm.controllers.child_dataset'
+                ':ChildDatasetController'
+            ),
+            action='new'
+        )
+
+        map.connect(
             'list',
             '/api/current/list',
             controller=(

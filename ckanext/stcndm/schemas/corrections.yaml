@@ -2,8 +2,8 @@ scheming_version: 1
 about: 'Statistics Canada Dissemination: Corrections'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Corrections
-  fr: Corrections
+  en: Correction
+  fr: Correction
 clonable: true
 dataset_type: correction
 form_languages:

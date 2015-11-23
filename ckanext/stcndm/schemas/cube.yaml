@@ -6,6 +6,11 @@ catalog_type_label:
   fr: Cube
 clonable: false
 dataset_type: cube
+dataset_type_code: 10
+child_dataset_types:
+- chart
+- indicator
+- view
 form_languages:
 - en
 - fr

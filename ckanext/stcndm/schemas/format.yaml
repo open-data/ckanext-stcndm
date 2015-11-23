@@ -2,8 +2,8 @@ scheming_version: 1
 about: 'Statistics Canada Dissemination: Formats'
 about_url: http://github.com/open-data/ckanext-stcndm
 catalog_type_label:
-  en: Formats
-  fr: Formats
+  en: Format
+  fr: Format
 clonable: true
 dataset_type: format
 form_languages:
