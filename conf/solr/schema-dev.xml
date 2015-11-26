@@ -319,7 +319,6 @@
         <field name="correction_type_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="correction_type_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="correction_type_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="corrected_product" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="default_view_id" type="text" indexed="true" stored="true" multiValued="false"/>
         <field name="digital_object_identifier" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="dimension_members_en" type="string" indexed="true" stored="true" multiValued="true"/>
@@ -403,6 +402,7 @@
         <field name="reference_period_en" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="reference_period_fr" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="related_products" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="related_correction_ids" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="last_release_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="release_id" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="replaced_products" type="string" indexed="true" stored="true" multiValued="true"/>
