@@ -18,50 +18,12 @@ dataset_fields:
 - field_name: owner_org
   preset: ndm_owner_org
 
-- field_name: correction_date
-  label:
-    en: Correction Date
-    fr: Date de correction
-  preset: date
-  schema_field_type: date
-  schema_multivalued: false
-  schema_extras: true
-
-- field_name: correction_impact_level_code
-  preset: ndm_correction_impact_level
-
-- field_name: notes
-  preset: ndm_description
-  label:
-    en: Correction Note
-    fr: Note associée à la correction
-
 - field_name: correction_id
   label:
       en: Correction ID
       fr: ID de la correction
-  validators: next_correction_id
-  default: 2000
   form_attrs:
       readonly: readonly
-#      placeholder: 1234
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
-
-- field_name: correction_type_code
-  preset: ndm_correction_type
-
-- field_name: format_code
-  preset: ndm_format
-
-- field_name: product_id_new
-  preset: ndm_product_id_new
-
-- field_name: corrected_product
-  label:
-    en: Product Corrected
-    fr: Produit corrigé
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -78,3 +40,44 @@ dataset_fields:
   schema_multivalued: false
   schema_extras: false
 
+- field_name: product_id_new
+  preset: ndm_product_id_new
+  label:
+    en: ID of Corrected Product
+    fr: ID du produit corrigé
+
+- field_name: format_code
+  preset: ndm_format
+  label:
+    en: Format of Corrected Product (if any)
+    fr: Format du produit corrigé (si applicable)
+
+- field_name: notes
+  preset: ndm_description
+  label:
+    en: Correction Note
+    fr: Note associée à la correction
+
+- field_name: correction_date
+  label:
+    en: Correction Date
+    fr: Date de correction
+  preset: date
+  schema_field_type: date
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: correction_impact_level_code
+  preset: ndm_correction_impact_level
+
+- field_name: correction_type_code
+  preset: ndm_correction_type
+
+- field_name: related_correction_ids
+  label:
+    en: ID of Related Correction
+    fr: ID de correction associée
+  preset: repeating_text
+  schema_field_type: string
+  schema_multivalued: true
+  schema_extras: true
