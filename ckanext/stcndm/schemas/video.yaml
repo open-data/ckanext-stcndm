@@ -127,6 +127,9 @@ dataset_fields:
 - field_name: publication_year
   preset: ndm_publication_year
 
+- field_name: reference_period
+  preset: ndm_reference_period
+
 - field_name: status_code
   preset: ndm_status
 

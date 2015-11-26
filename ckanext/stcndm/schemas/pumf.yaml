@@ -148,6 +148,9 @@ dataset_fields:
 - field_name: publication_year
   preset: ndm_publication_year
 
+- field_name: reference_period
+  preset: ndm_reference_period
+
 - field_name: replaced_products
   preset: ndm_replaced_products
 
