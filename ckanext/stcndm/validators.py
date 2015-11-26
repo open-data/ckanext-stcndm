@@ -213,6 +213,119 @@ def format_create_id(key, data, errors, context):
     )
 
 
+def subject_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    subject_code = _data_lookup(('subject_code',), data)
+    if subject_code:
+        current_name = _data_lookup(('name',), data)
+        new_name = u'subject-{0}'.format(subject_code.lower())
+        if current_name.endswith(u'-clone') or not current_name:
+            if not current_name.startswith(new_name):
+                data[key] = new_name
+    else:
+        errors[key].append(_('could not find subject_code'))
+
+
+def province_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    sgc_code = _data_lookup(('sgc_code',), data)
+    if sgc_code:
+        current_name = _data_lookup(('name',), data)
+        new_name = u'province-{0}'.format(sgc_code.lower())
+        if current_name.endswith(u'-clone') or not current_name:
+            if not current_name.startswith(new_name):
+                data[key] = new_name
+    else:
+        errors[key].append(_('could not find sgc_code'))
+
+
+def set_default_value(default_value):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+
+    def validator(key, data, errors, context):
+        if errors[key]:
+            return
+        if isinstance(default_value, basestring):
+            data[key] = default_value
+
+    return validator
+
+
+def survey_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new:
+        current_name = _data_lookup(('name',), data)
+        new_name = u'survey-{0}'.format(product_id_new.lower())
+        if current_name.endswith(u'-clone') or not current_name:
+            if not current_name.startswith(new_name):
+                data[key] = new_name
+    else:
+        errors[key].append(_('could not find product_id_new'))
+
+
+def correction_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    current_name = data.get(key, '')
+    correction_id = _data_lookup(('correction_id',), data)
+    if not correction_id or \
+       current_name is missing or \
+       current_name.endswith('-clone'):
+        correction_id = h.next_correction_id()
+        _data_update(correction_id, ('correction_id',), data)
+
+    new_name = u'correction-{correction_id}'.format(
+        correction_id=correction_id
+    ).lower()
+    _data_update(new_name, ('name',), data)
+    _data_update(new_name, ('title',), data)
+
+
+def product_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    existing_name = _data_lookup(('name',), data)
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if not product_id_new or product_id_new is missing or\
+       not existing_name or existing_name is missing or\
+       existing_name.endswith(u'-clone'):
+        create_product_id(('product_id_new',), data, errors, context)
+        if errors[('product_id_new',)]:
+            errors[key].append(_('Name could not be generated'))
+            return
+
+    product_id_new = _data_lookup(('product_id_new',), data)
+    data_set_type = _data_lookup(('type',), data)
+    if product_id_new:
+        data[key] = u'{data_set_type}-{product_id_new}'.format(
+            data_set_type=data_set_type,
+            product_id_new=product_id_new.lower()
+        )
+    else:
+        errors[('product_id_new',)].append(_('Missing value'))
+        errors[key].append(_('Name could not be generated'))
+
+
 def create_product_id(key, data, errors, context):
     general_non_data_types = (
         u'publication',
@@ -336,116 +449,6 @@ def create_product_id(key, data, errors, context):
         ))
 
     return
-
-
-def subject_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    subject_code = _data_lookup(('subject_code',), data)
-    if subject_code:
-        current_name = _data_lookup(('name',), data)
-        new_name = u'subject-{0}'.format(subject_code.lower())
-        if current_name.endswith(u'-clone') or not current_name:
-            if not current_name.startswith(new_name):
-                data[key] = new_name
-    else:
-        errors[key].append(_('could not find subject_code'))
-
-
-def province_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    sgc_code = _data_lookup(('sgc_code',), data)
-    if sgc_code:
-        current_name = _data_lookup(('name',), data)
-        new_name = u'province-{0}'.format(sgc_code.lower())
-        if current_name.endswith(u'-clone') or not current_name:
-            if not current_name.startswith(new_name):
-                data[key] = new_name
-    else:
-        errors[key].append(_('could not find sgc_code'))
-
-
-def set_default_value(default_value):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-
-    def validator(key, data, errors, context):
-        if errors[key]:
-            return
-        if isinstance(default_value, basestring):
-            data[key] = default_value
-
-    return validator
-
-
-def survey_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    product_id_new = _data_lookup(('product_id_new',), data)
-    if product_id_new:
-        current_name = _data_lookup(('name',), data)
-        new_name = u'survey-{0}'.format(product_id_new.lower())
-        if current_name.endswith(u'-clone') or not current_name:
-            if not current_name.startswith(new_name):
-                data[key] = new_name
-    else:
-        errors[key].append(_('could not find product_id_new'))
-
-
-def correction_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    current_name = data.get(key, '')
-    correction_id = _data_lookup(('correction_id',), data)
-    if not correction_id or \
-       current_name is missing or \
-       current_name.endswith('-clone'):
-        correction_id = h.next_correction_id()
-        _data_update(correction_id, ('correction_id',), data)
-
-    new_name = u'correction-{correction_id}'.format(
-        correction_id=correction_id
-    ).lower()
-    _data_update(new_name, ('name',), data)
-    _data_update(new_name, ('title',), data)
-
-
-def product_create_name(key, data, errors, context):
-    # if there was an error before calling our validator
-    # don't bother with our validation
-    if errors[key]:
-        return
-
-    existing_name = _data_lookup(('name',), data)
-    if existing_name is missing or not existing_name or \
-            existing_name.endswith(u'-clone'):
-        create_product_id(('product_id_new',), data, errors, context)
-        if errors[('product_id_new',)]:
-            errors[key].append(_('Name could not be generated'))
-            return
-        product_id_new = _data_lookup(('product_id_new',), data)
-        data_set_type = _data_lookup(('type',), data)
-        if product_id_new:
-            data[key] = u'{data_set_type}-{product_id_new}'.format(
-                data_set_type=data_set_type,
-                product_id_new=product_id_new.lower()
-            )
-        else:
-            errors[('product_id_new',)].append(_('Missing value'))
-            errors[key].append(_('Name could not be generated'))
 
 
 def daily_create_name(key, data, errors, context):
