@@ -271,7 +271,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "format_create_name": validators.format_create_name,
             "format_create_id": validators.format_create_id,
             "geodescriptor_create_name": validators.geodescriptor_create_name,
-            "next_correction_id": validators.next_correction_id,
             "ndm_str2boolean": validators.ndm_str2boolean,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
             "province_create_name": validators.province_create_name,
