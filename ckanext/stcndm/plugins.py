@@ -323,7 +323,7 @@ class STCNDMPlugin(p.SingletonPlugin):
 
         map.connect(
             'child_dataset',
-            '/dataset/{ds_id}/new_child/{ds_type}',
+            '/dataset/{ds_id}/child/{ds_type}/new',
             controller=(
                 'ckanext.stcndm.controllers.child_dataset'
                 ':ChildDatasetController'
