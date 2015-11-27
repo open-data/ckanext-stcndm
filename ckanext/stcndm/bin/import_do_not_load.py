@@ -3,6 +3,8 @@ import ConfigParser
 import csv
 import sys
 import yaml
+from time import sleep
+from ckan.logic import ValidationError, _
 
 __author__ = 'marc'
 
@@ -18,8 +20,8 @@ for preset in presets['presets']:
 parser = ConfigParser.SafeConfigParser()
 parser.read("./ckanparameters.config")
 
-API_KEY = parser.get("ckanlocal", "api_key")
-BASE_URL = parser.get("ckanlocal", "base_url")
+API_KEY = parser.get("ckandev", "api_key")
+BASE_URL = parser.get("ckandev", "base_url")
 
 PID_list = []
 
@@ -27,71 +29,64 @@ rc = ckanapi.RemoteCKAN(
     BASE_URL,
     apikey=API_KEY
 )
-i = 0
-n = 1
-while i < n:
-    query_results = rc.action.package_search(
-        q='product_id_new:?*',
-        rows=1000,
-        start=i*1000
-    )
-    n = query_results['count'] / 1000.0
-    i += 1
 
-    for line in query_results['results']:
-
-        PID_list.append(line.get(u'product_id_new'))
-
-missing = 0
 with open('jsonl_dumps/oldprintdonotload.csv', 'rb') as csv_file:
     spam_reader = csv.DictReader(csv_file, delimiter=',')
     for row in spam_reader:
-        if row['extras_productidnew_bi_strs'] not in PID_list:
-            sys.stderr.write('{product_id}: missing from {base_url}\n'.format(
-                product_id=row['extras_productidnew_bi_strs'],
-                base_url=BASE_URL
+        sleep(.1)
+        product_id = row.get('extras_productidnew_bi_strs', 'product_id')
+        query_results = rc.action.package_search(
+            q='product_id_new:{product_id}'.format(product_id=product_id)
+        )
+        if query_results.get('count', 0) < 1:
+            sys.stderr.write('{product_id}: not found\n'.format(
+                product_id=product_id
             ))
-            missing += 1
-
-if not missing:
-    print 'no products missing - proceeding with update'
-    with open('jsonl_dumps/oldprintdonotload.csv', 'rb') as csv_file:
-        spam_reader = csv.DictReader(csv_file, delimiter=',')
-        for row in spam_reader:
-            query_results = rc.action.package_search(
-                q='product_id_new:{product_id}'.format(
+        elif query_results.get('count') > 1:
+            sys.stderr.write(
+                '{product_id}: more than one product with this '
+                'product_id_new\n'.format(
                     product_id=row['extras_productidnew_bi_strs']
+                ))
+        else:
+            update = False
+            result = query_results['results'][0]
+            if result.get(u'load_to_olc_code') is not None:
+                sys.stderr.write(
+                    '{product_id}: load_to_olc already set\n'.format(
+                        product_id=product_id
+                    )
                 )
-            )
-            if not query_results['count']:
-                sys.stderr.write('{product_id}: not found\n'.format(
-                    product_id=row['extras_productidnew_bi_strs']
-                ))
-                continue
-            elif query_results['count'] > 1:
-                sys.stderr.write('{product_id}: more than one product with this product_id_new\n'.format(
-                    product_id=row['extras_productidnew_bi_strs']
-                ))
             else:
-                result = query_results['results'][0]
-                old_status_code = result.get(u'status_code')
-                if row['extras_statusf_en_strs'] in ['',
-                                                     'Discontinued/Not available',
-                                                     'Do not load to OLC']:
-                    new_status_code = None
-                else:
-                    new_status_code = reverse_lookup_dict.get(row['extras_statusf_en_strs'], u'unknown new status')
+                print '{product_id}: set load_to_olc_code'\
+                    .format(product_id=product_id)
+                result[u'load_to_olc_code'] = u'0'
+                update = True
 
-                if old_status_code != new_status_code:
-                    sys.stderr.write(
-                        '{product_id}: status_code is {old_status_code}, should be {new_status_code}\n'.format(
-                            product_id=row['extras_productidnew_bi_strs'],
-                            old_status_code=old_status_code,
-                            new_status_code=new_status_code
-                        )
+            old_status_code = result.get(u'status_code')
+            if old_status_code in [u'33', u'36']:
+                sys.stderr.write('{product_id}: remove deprecated status_code\n'
+                                 .format(product_id=product_id))
+                result[u'status_code'] = None
+                update = True
+            new_status = row.get('extras_statusf_en_strs')
+            new_status_code = reverse_lookup_dict.get(new_status)
+
+            if new_status_code and new_status_code != old_status_code:
+                print '{product_id}: set status_code {status_code} ' \
+                      '{status}'.format(
+                        product_id=product_id,
+                        status_code=new_status_code,
+                        status=new_status
                     )
-                else:
-                    print '{product_id}: status code {status_code} OK'.format(
-                        product_id=row['extras_productidnew_bi_strs'],
-                        status_code=old_status_code
-                    )
+                result[u'status_code'] = new_status_code
+                update = True
+
+            if update:
+                print '{product_id}: update'.format(product_id=product_id)
+                try:
+                    rc.action.package_update(**result)
+                except ValidationError:
+                    sys.stderr.write('{product_id}: Validation Error'.format(
+                        product_id=product_id
+                    ))
