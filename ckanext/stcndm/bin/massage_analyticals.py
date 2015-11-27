@@ -57,7 +57,7 @@ while i < n:
                     product_id=product_id_new
                 ).lower()
         elif len(product_id_new) == 15:
-            product_out[u'type'] = u'publication'
+            product_out[u'type'] = u'article'
             product_out[u'name'] = u'{type}-{product_id}'.format(
                     type=product_out[u'type'],
                     product_id=product_id_new
@@ -114,7 +114,7 @@ while i < n:
                     format_dict[format_code][key] = format_out[key]
         else:
             if current_pid in dnl_list:
-                product_dict[u'load_to_olc'] = u'0'
+                product_dict[u'load_to_olc_code'] = u'0'
             if current_pid in issn_dict:
                 product_dict[u'issn_number'] = issn_dict[current_pid]
             print json.dumps(product_dict)
