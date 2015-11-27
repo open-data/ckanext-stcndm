@@ -1,3 +1,13 @@
 aiki => aikido
 resto => restaurant
 
+ipc => indice des prix à la consommation
+pib => produit intérieur brut
+epa => enquête sur la population active
+rib => revenu intérieur brut
+escc => enquête sur la santé dans les collectivités canadiennes
+sfr => seuil de faible revenu
+ipln => indice des prix des logements neufs
+nor-man => région socio-sanitaire norman
+fmgd => fichier de microdonnées à grande diffusion
+cnps => cnp-s

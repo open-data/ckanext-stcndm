@@ -27,3 +27,16 @@ Television, Televisions, TV, TVs
 # Synonym mappings can be used for spelling correction too
 pixima => pixma
 
+cpi => consumer price index
+gdp => gross domestic product
+lfs => labour force survey
+gdi => gross domestic income
+cchs => canadian community health survey
+lico => low income cut-offs
+nhpi => new housing price index
+nor-man => norman health region
+pumf => public use microdata file
+cenus => census
+census track => census tract
+ycja => youth criminal justice act
+nocs => noc-s
