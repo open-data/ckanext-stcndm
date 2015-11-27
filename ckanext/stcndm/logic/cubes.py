@@ -78,7 +78,7 @@ def get_cube(context, data_dict):
     lc = ckanapi.LocalCKAN(context=context)
     result = lc.action.package_search(
         q=(
-            'dataset_type:cube AND '
+            'type:cube AND '
             'product_id_new:{cube_id}'
         ).format(cube_id=cube_id),
         rows=1
@@ -90,6 +90,32 @@ def get_cube(context, data_dict):
         raise ValidationError('More than one cube with given cubeid found')
     else:
         return result['results'][-1]
+
+
+def update_cube(context, data_dict):
+    cube_id = _get_or_bust(data_dict, 'cubeId')
+    cube_data = _get_or_bust(data_dict, 'cubeData')
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    result = lc.action.package_search(
+        q=(
+            'type:cube AND product_id_new:{cube_id}'.format(
+                cube_id=cube_id
+            )
+        ),
+        rows=1
+    )
+
+    if not result['count']:
+        raise ObjectNotFound('Cube not found')
+    elif result['count'] > 1:
+        raise ValidationError('More than one cube with given cubeid found')
+
+    cube = result['results'][0]
+    cube.update(cube_data)
+
+    return lc.action.package_update(**cube)
 
 
 @logic.side_effect_free

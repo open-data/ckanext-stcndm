@@ -214,6 +214,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetBookableProducts": daily.get_bookable_releases,
             "GetCubeList": cubes.get_cube_list_by_subject,
             "GetCube": cubes.get_cube,
+            "UpdateCube": cubes.update_cube,
             "GetNextCubeId": cubes.get_next_cube_id,
             "GetNextNonDataProductId": common.get_next_non_data_product_id,
             "CreateOrUpdateCubeRelease": cubes.create_or_update_cube_release,
