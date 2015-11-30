@@ -21,6 +21,18 @@
                     }
                 });
             }
+        },
+
+        addItem = function(event){
+            var $codes = $(event.delegateTarget).find('input[name!=""][name], textarea'),
+                codes = $codes.val(),
+                code = $(event.delegateTarget).find('select option:selected').val();
+
+            if (!codes) {
+                $codes.val(code);
+            } else if (codes.split(';').indexOf(code) === -1) {
+                $codes.val(codes + ';' + code);
+            }
         };
 
     $('[data-autocomplete]').on('keydown', 'input[type="text"]:first', function() {
@@ -65,14 +77,12 @@
     });
 
     $('[data-autocomplete]').on('click', 'button', function(event) {
-        var $codes = $(event.delegateTarget).find('input[name!=""][name]'),
-            codes = $codes.val(),
-            code = $(event.delegateTarget).find('select option:selected').val();
+        addItem.apply(this, arguments);
+    });
 
-        if (!codes) {
-            $codes.val(code);
-        } else if (codes.split(';').indexOf(code) === -1) {
-            $codes.val(codes + ';' + code);
+    $('[data-autocomplete]').on('keydown', 'select', function(event) {
+        if ( event.which == 13 ) {
+            addItem.apply(this, arguments);
         }
     });
 

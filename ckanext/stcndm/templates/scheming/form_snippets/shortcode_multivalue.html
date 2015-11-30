@@ -23,15 +23,16 @@
             <button class="btn btn-default" type="button">{{ _('Add') }}  {{ h.scheming_language_text(field.label) }}</button>
         </div>
 
-        {{ form.input(
+        {{ form.textarea(
           field.field_name,
           id='field-' + field.field_name,
           label=h.scheming_language_text(field.label),
           placeholder=h.scheming_language_text(field.form_placeholder),
           value=';'.join(values),
           error=errors[field.field_name],
-          classes=['control-medium', 'col-md-6'],
-          attrs=field.form_attrs if 'form_attrs' in field else {},
+          classes=['control-medium', 'col-md-12'],
+          attrs={'style':'width:100%;'},
+          rows=1,
           is_required=h.scheming_field_required(field)
           ) }}
 
