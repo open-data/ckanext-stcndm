@@ -86,6 +86,7 @@ dataset_fields:
 
 - field_name: archive_status_code
   preset: ndm_archive_status
+  validators: scheming_required scheming_choices archive_children_of_cube
 
 - field_name: default_view_id
   label:

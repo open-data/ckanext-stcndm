@@ -500,8 +500,8 @@ def next_article_id(top_parent_id, issue_number):
     i = 0
     n = 1
     article_sequence_number = 1
+    lc = ckanapi.LocalCKAN()
     while i < n:
-        lc = ckanapi.LocalCKAN()
         results = lc.action.package_search(
             q='type:article AND '
               'product_id_new:{top_parent_id}{issue_number}*'.format(
