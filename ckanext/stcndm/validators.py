@@ -625,3 +625,40 @@ def apply_archive_rules(key, data, errors, context):
                     errors[(u'product_id_new',)].append(
                         _(e.error_summary[u'Message']))
                     errors[(u'archive_date',)].append(_('Unable to determine'))
+
+
+def archive_children_of_cube(key, data, errors, context):
+    """
+    Apply archive date and status to children of the cube for which ID
+    is provided
+
+    """
+    if errors[key]:
+        return
+    if key != (u'archive_status_code',):
+        return
+    dataset_type = _data_lookup((u'type',), data)
+    if dataset_type != 'cube':
+        return
+    cube_archive_status_code = _data_lookup((u'archive_status_code',), data)
+    if cube_archive_status_code is missing or not cube_archive_status_code:
+        return
+
+    cube_id = _data_lookup((u'product_id_new',), data)
+    child_list = h.get_child_datasets(cube_id)
+    lc = ckanapi.LocalCKAN(context=context)
+    for child in child_list:
+        update = False
+        child_archive_status_code = child.get(u'archive_status_code')
+        if child_archive_status_code != cube_archive_status_code:
+            child[u'archive_status_code'] = cube_archive_status_code
+            update = True
+        cube_archive_date = _data_lookup((u'archive_date',), data)
+        if cube_archive_date and cube_archive_date is not missing:
+            child_archive_date = child.get(u'archive_date')
+            if child_archive_date is missing or not child_archive_date:
+                child[u'archive_date'] = cube_archive_date
+                update = True
+
+        if update:
+            lc.action.package_update(**child)
