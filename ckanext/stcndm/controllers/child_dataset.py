@@ -27,7 +27,7 @@ class ChildDatasetController(base.BaseController):
 
             new_payload = {
                 'type': ds_type,
-                'top_parent_id': pkg.get('top_parent_id', pkg_id)
+                'top_parent_id': pkg.get('top_parent_id', pkg_id) or pkg_id
             }
 
             id_payload = {
