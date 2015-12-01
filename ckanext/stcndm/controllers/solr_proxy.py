@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
+import urllib
 import urlparse
 
 import ckan.plugins as p
@@ -17,14 +17,14 @@ CONTENT_TYPES = {
     'xml': 'application/xml;charset=utf-8'
 }
 
-class SolrProxyController(ApiController):
 
+class SolrProxyController(ApiController):
     def select(self):
         self.proxy_solr('select')
 
     def proxy_solr(self, action):
         url = urlparse.urlparse(h.full_current_url())
-        query = urlparse.parse_qs(url.query)
+        query = urlparse.parse_qs(urllib.unquote(url.query).decode('utf-8'))
         content_type = query.get('wt', ['xml'])[0]
         ckan_response = p.toolkit.response
         ckan_response.content_type = CONTENT_TYPES[content_type]
