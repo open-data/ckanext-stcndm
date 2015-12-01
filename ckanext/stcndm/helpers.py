@@ -1,9 +1,15 @@
-import ast
-import ckanapi
-from ckan.logic import _, ValidationError, get_action
-import ckan.model as model
-from ckan.common import c
+#!/usr/bin/env python
+# encoding: utf-8
 import re
+import ast
+import json
+import requests
+
+import ckanapi
+import ckan.model as model
+import pylons.config as config
+from ckan.logic import _, ValidationError, get_action
+from ckan.common import c
 from ckanext.scheming.helpers import (
     scheming_get_preset,
     scheming_dataset_schemas
@@ -503,11 +509,13 @@ def next_article_id(top_parent_id, issue_number):
     lc = ckanapi.LocalCKAN()
     while i < n:
         results = lc.action.package_search(
-            q='type:article AND '
-              'product_id_new:{top_parent_id}{issue_number}*'.format(
+            q=(
+                'type:article AND '
+                'product_id_new:{top_parent_id}{issue_number}*'
+            ).format(
                 top_parent_id=top_parent_id,
                 issue_number=issue_number
-              ),
+            ),
             sort='product_id_new ASC',
             rows=1000,
             start=i*1000
@@ -555,7 +563,61 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
     if context['auth_user_obj'].name == u'stcndm':
         return
 
-    # This is a stub pending the implementation of the external service.
+    rsu = config.get('ckanext.stcndm.release_service_url')
+    if not rsu:
+        # The release service isn't always available depending on where
+        # CKAN is deployed.
+        return
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    response = lc.action.package_search(
+        q='product_id_new:{pid}'.format(pid=product_id),
+        rows=1
+    )
+
+    results = response['results']
+
+    if not results:
+        # API might have deleted the product before we had a chance to push
+        # it out.
+        return
+
+    product = results[0]
+
+    last_release_date = product.get('last_release_date')
+    if last_release_date:
+        release_date = {
+            'year': last_release_date.year,
+            'month': last_release_date.month,
+            'day': last_release_date.day,
+            'hour': last_release_date.hour,
+            'minute': last_release_date.minute
+        }
+    else:
+        release_date = None
+
+    int_or_none = lambda x: int(x) if x else None
+
+    requests.post(rsu, params={
+        'productType': product['type'],
+    }, data=json.dumps({
+        'recordInfo': {
+            'RecordId': None,
+            'ProductId': product['product_id_new'],
+            'ProductCode': int(product['product_type_code']),
+            'PublishStatus': int_or_none(
+                product.get('last_publish_status_code')
+            ),
+            'Issue': product.get('issue_number'),
+            'ReleaseDate': release_date,
+            'DataReferencePeriod': product.get('reference_period'),
+            'Format': int_or_none(
+                product.get('format_code')
+            ),
+            'IsMetadata': True
+        }
+    }))
 
 
 def get_parent_content_types(product_id):

@@ -201,7 +201,10 @@ class STCNDMPlugin(p.SingletonPlugin):
             context['model'].repo.commit()
 
         try:
-            helpers.ensure_release_exists(data, context=context)
+            helpers.ensure_release_exists(
+                data['product_id_new'],
+                context=context
+            )
         except helpers.NotValidProduct:
             pass
 
