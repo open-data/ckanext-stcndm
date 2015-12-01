@@ -35,6 +35,9 @@ class ChildDatasetController(base.BaseController):
                 'parentProduct': pkg['product_id_new'],
                 'productType': str(
                     parent_schema['dataset_type_code']
+                ),
+                'productTypeCode': str(
+                    parent_schema['dataset_type_code']
                 )
             }
 
@@ -47,7 +50,8 @@ class ChildDatasetController(base.BaseController):
                         **id_payload
                     )
                 else:
-                    new_payload[PRODUCT_ID] = lc.action.GetNextNonDataProduct(
+                    id_payload['subjectCode'] = pkg['subject_codes'][0]
+                    new_payload[PRODUCT_ID] = lc.action.GetNextNonDataProductId(
                         **id_payload
                     )
             else:
