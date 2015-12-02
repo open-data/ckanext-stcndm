@@ -64,3 +64,6 @@ dataset_fields:
 
 - field_name: notes
   preset: ndm_description
+
+- field_name: feature_weight
+  preset: ndm_feature_weight
