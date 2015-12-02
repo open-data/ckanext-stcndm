@@ -18,10 +18,10 @@ class ChildDatasetController(base.BaseController):
     def new(self, ds_id, ds_type):
         new_payload = None
 
-        if ('save' not in request.params):
+        if 'save' not in request.params:
             lc = ckanapi.LocalCKAN()
             pkg = lc.action.package_show(id=ds_id)
-            pkg_id = pkg['product_id_new']
+            pkg_id = pkg[PRODUCT_ID]
 
             parent_schema = scheming_get_dataset_schema(pkg['type'])
 
@@ -43,9 +43,11 @@ class ChildDatasetController(base.BaseController):
 
             if ds_type == 'format':
                 new_payload['parent_id'] = pkg_id
+            elif ds_type == 'article':
+                pass
             elif ('non_data_product' in parent_schema and
                     parent_schema['non_data_product'] == True):
-                if is_legacy_product(pkg['product_id_new']):
+                if is_legacy_product(pkg[PRODUCT_ID]):
                     new_payload[PRODUCT_ID] = lc.action.GetNextLegacyProductId(
                         **id_payload
                     )
