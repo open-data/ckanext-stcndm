@@ -43,6 +43,8 @@ class ChildDatasetController(base.BaseController):
 
             if ds_type == 'format':
                 new_payload['parent_id'] = pkg_id
+            elif ds_type == 'article':
+                pass
             elif ('non_data_product' in parent_schema and
                     parent_schema['non_data_product'] == True):
                 if is_legacy_product(pkg[PRODUCT_ID]):
