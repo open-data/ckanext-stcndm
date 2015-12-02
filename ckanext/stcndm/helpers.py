@@ -572,7 +572,9 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
     lc = ckanapi.LocalCKAN(context=context)
 
     response = lc.action.package_search(
-        q='product_id_new:{pid}'.format(pid=product_id),
+        q='product_id_new:{pid} OR format_id:{pid}'.format(
+            pid=product_id
+        ),
         rows=1
     )
 
@@ -603,18 +605,14 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
         'productType': product['type'],
     }, data=json.dumps({
         'recordInfo': {
-            'RecordId': None,
-            'ProductId': product['product_id_new'],
-            'ProductCode': int(product['product_type_code']),
+            'ProductId': product_id,
             'PublishStatus': int_or_none(
                 product.get('last_publish_status_code')
             ),
             'Issue': product.get('issue_number'),
             'ReleaseDate': release_date,
             'DataReferencePeriod': product.get('reference_period'),
-            'Format': int_or_none(
-                product.get('format_code')
-            ),
+            'Format': int_or_none(product.get('format_code')),
             'IsMetadata': True
         }
     }))

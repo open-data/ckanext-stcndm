@@ -200,11 +200,15 @@ class STCNDMPlugin(p.SingletonPlugin):
             # being called long before creation is actually complete.
             context['model'].repo.commit()
 
+        product_id_new = data.get('product_id_new')
+        if data['type'] == 'format':
+            product_id_new = data.get('format_id')
+
+        if not product_id_new:
+            return
+
         try:
-            helpers.ensure_release_exists(
-                data['product_id_new'],
-                context=context
-            )
+            helpers.ensure_release_exists(product_id_new, context=context)
         except helpers.NotValidProduct:
             pass
 
