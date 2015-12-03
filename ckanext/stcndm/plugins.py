@@ -207,11 +207,17 @@ class STCNDMPlugin(p.SingletonPlugin):
         if not product_id_new:
             return
 
+        try:
+            helpers.ensure_release_exists(product_id_new, context=context)
+        except helpers.NotValidProduct:
+            pass
+
     def get_actions(self):
         # Some Java web clients require the web service to use Pascal Case
         return {
             "GetAutocomplete": common.get_autocomplete,
             "DeleteProduct": common.delete_product,
+            "EnsureReleaseExists": releases.ensure_release_exists,
             "GetBookableProducts": daily.get_bookable_releases,
             "GetCubeList": cubes.get_cube_list_by_subject,
             "GetCube": cubes.get_cube,
@@ -291,6 +297,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "get_dataset_types": helpers.get_dataset_types,
             "get_parent_content_types": helpers.get_parent_content_types,
             "set_previous_issue_archive_date": helpers.set_previous_issue_archive_date,
+            'ensure_release_exists': helpers.ensure_release_exists,
             'get_parent_dataset': helpers.get_parent_dataset,
             'get_child_datasets': helpers.get_child_datasets,
             'x2list': helpers.x2list,

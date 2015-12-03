@@ -154,6 +154,17 @@ def get_releases_for_product(context, data_dict):
     }
 
 
+def ensure_release_exists(context, data_dict):
+    """
+    Ensure a release exists for the given `productId`.
+
+    :param productId: The parent product ID.
+    :type productId: str
+    """
+    product_id = _get_or_bust(data_dict, 'productId')
+    stcndm_helpers.ensure_release_exists(product_id, context=context)
+
+
 @logic.side_effect_free
 def consume_transaction_file(context, data_dict):
     """
