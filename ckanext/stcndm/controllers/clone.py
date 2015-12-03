@@ -21,6 +21,7 @@ class CloneDatasetController(base.BaseController):
             'user': base.c.user or base.c.author
         }
 
+        context['__cloning'] = True
         lc = ckanapi.LocalCKAN(context=context)
         pkg = lc.action.package_show(id=ds_id)
 

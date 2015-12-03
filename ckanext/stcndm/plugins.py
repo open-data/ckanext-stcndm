@@ -200,6 +200,11 @@ class STCNDMPlugin(p.SingletonPlugin):
             # being called long before creation is actually complete.
             context['model'].repo.commit()
 
+        if context.get('__cloning'):
+            # We don't want to call this while we're cloning, or we'll
+            # end up with duplicate release records.
+            return
+
         product_id_new = data.get('product_id_new')
         if data['type'] == 'format':
             product_id_new = data.get('format_id')
@@ -207,10 +212,7 @@ class STCNDMPlugin(p.SingletonPlugin):
         if not product_id_new:
             return
 
-        try:
-            helpers.ensure_release_exists(product_id_new, context=context)
-        except helpers.NotValidProduct:
-            pass
+        helpers.ensure_release_exists(product_id_new, context=context)
 
     def get_actions(self):
         # Some Java web clients require the web service to use Pascal Case
