@@ -588,6 +588,10 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
 
     product = results[0]
 
+    record = {
+        'ProductId': product_id,
+    }
+
     last_release_date = product.get('last_release_date')
     if last_release_date:
         # The cloning extension causes this to be a string for some reason,
@@ -598,32 +602,31 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
                 '%Y-%m-%d %H:%M:%S'
             )
 
-        release_date = {
+        record['ReleaseDate'] = {
             'year': last_release_date.year,
             'month': last_release_date.month,
             'day': last_release_date.day,
             'hour': last_release_date.hour,
             'minute': last_release_date.minute
         }
-    else:
-        release_date = None
 
-    int_or_none = lambda x: int(x) if x else None
+    cp_fields = [
+        ('PublishStatus', 'last_publish_status_code', int),
+        ('Format', 'format_code', int),
+        ('Issue', 'issue_number', None),
+        ('DataReferencePeriod', 'reference_period', None)
+    ]
+
+    for field_dst, field_src, cast_to in cp_fields:
+        val = product.get(field_src)
+        if not val:
+            continue
+        record[field_dst] = cast_to(val) if cast_to is not None else val
 
     requests.post(rsu, params={
         'productType': product['type'],
     }, data=json.dumps({
-        'recordInfo': {
-            'ProductId': product_id,
-            'PublishStatus': int_or_none(
-                product.get('last_publish_status_code')
-            ),
-            'Issue': product.get('issue_number'),
-            'ReleaseDate': release_date,
-            'DataReferencePeriod': product.get('reference_period'),
-            'Format': int_or_none(product.get('format_code')),
-            'IsMetadata': True
-        }
+        'recordInfo': record
     }))
 
 
