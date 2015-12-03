@@ -4,6 +4,7 @@ import re
 import ast
 import json
 import requests
+from datetime import datetime
 
 import ckanapi
 import ckan.model as model
@@ -589,6 +590,14 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
 
     last_release_date = product.get('last_release_date')
     if last_release_date:
+        # The cloning extension causes this to be a string for some reason,
+        # possibly a bug in the extension.
+        if isinstance(last_release_date, basestring):
+            last_release_date = datetime.strptime(
+                last_release_date,
+                '%Y-%m-%d %H:%M:%S'
+            )
+
         release_date = {
             'year': last_release_date.year,
             'month': last_release_date.month,
