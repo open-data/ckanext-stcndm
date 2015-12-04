@@ -6,6 +6,7 @@ import ckanext.stcndm.logic.common as common
 import ckanext.stcndm.logic.cubes as cubes
 import ckanext.stcndm.logic.daily as daily
 import ckanext.stcndm.logic.legacy as legacy
+import ckanext.stcndm.logic.releases as releases
 import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
 import ckanext.stcndm.logic.surveys as surveys
@@ -64,6 +65,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/province.yaml',
                 'ckanext.stcndm:schemas/publication.yaml',
                 'ckanext.stcndm:schemas/pumf.yaml',
+                'ckanext.stcndm:schemas/release.yaml',
                 'ckanext.stcndm:schemas/service.yaml',
                 'ckanext.stcndm:schemas/subject.yaml',
                 'ckanext.stcndm:schemas/survey.yaml',
@@ -238,6 +240,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetProductIssueArticles": daily.get_product_issue_articles,
             "GetProductIssues": daily.get_product_issues,
             "GetProductType": common.get_product_type,
+            "GetRelease": releases.get_release,
+            "GetReleasesForProduct": releases.get_releases_for_product,
             "GetSubject": subjects.get_subject,
             "GetSubjectList": subjects.get_top_level_subject_list,
             "GetSurveySubjectCodes": surveys.get_survey_subject_codes,
@@ -251,6 +255,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "RegisterNonDataProduct": common.register_non_data_product,
             "RegisterLegacyNonDataProduct": legacy.register_legacy_non_data_product,
             "RegisterProduct": common.register_data_product,
+            "RegisterRelease": releases.register_release,
             "RegisterSurvey": surveys.register_survey,
             "UpdateDefaultView": views.update_default_view,
             "UpdateParentReleaseDateAndStatus": common.update_parent_release_date_and_status,
@@ -261,6 +266,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetSurveyCodesets": surveys.get_survey_codesets,
             "GetSubjectCodesets": subjects.get_subject_codesets,
             "GetProductsByFRC": daily.get_products_by_frc,
+            "ConsumeTransactionFile": releases.consume_transaction_file
         }
 
     def get_validators(self):
