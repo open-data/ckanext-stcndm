@@ -272,6 +272,7 @@ presets:
     output_validators: scheming_multiple_choice_output
     lookup: codeset
     codeset_type: content_type
+    sorted_choices: true
 
 - preset_name: ndm_correction_impact_level
   values:
@@ -584,6 +585,7 @@ presets:
     output_validators: scheming_multiple_choice_output
     lookup: codeset
     codeset_type: frequency
+    sorted_choices: true
 
 - preset_name: ndm_geodescriptor_codes
   values:
@@ -613,6 +615,7 @@ presets:
     output_validators: scheming_multiple_choice_output
     lookup: codeset
     codeset_type: geolevel
+    sorted_choices: true
 
 - preset_name: ndm_history_notes
   values:
@@ -965,6 +968,7 @@ presets:
     schema_field_type: code
     schema_multivalued: false
     schema_extras: true
+    sorted_choices: true
     choices:
       - label:
           en: None
@@ -1132,6 +1136,7 @@ presets:
     schema_field_type: code
     schema_multivalued: true
     schema_extras: true
+    sorted_choices: true
 
 - preset_name: ndm_subjectold_codes
   values:
@@ -1435,6 +1440,7 @@ presets:
     schema_field_type: code
     schema_multivalued: true
     schema_extras: true
+    sorted_choices: true
     choices:
       - label:
             en: Approved

@@ -304,11 +304,10 @@ def codeset_choices(codeset_type):
     Return a dictionary of {codeset_value: title} for the codeset_type
     passed
     """
-#    rc = ckanapi.RemoteCKAN('http://127.0.0.1:5000/')
     lc = ckanapi.LocalCKAN()
     results = lc.action.package_search(
         q='type:codeset',
-        fq='codeset_type:' + codeset_type,
+        fq='-display_in_form:"0" +codeset_type:' + codeset_type,
         rows=1000)
     return dict((r['codeset_value'], r['title']) for r in results['results'])
 

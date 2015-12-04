@@ -20,6 +20,24 @@ lookup = {
     # 'extras_tmtaxdisp_en_tmtxtm': 'subject_display'
 }
 
+weights = {
+    u'content_type': {
+        u'2012': u'1',  # Data/Tables
+        u'2011': u'2',  # Data/Profiles of a community or region
+        u'2009': u'3',  # Data/Thematic maps
+        u'2010': u'4',  # Data/Public use microdata
+        u'2024': u'5',  # Data/Charts
+        u'2025': u'1',  # Reference/Classifications
+        u'2003': u'2',  # Reference/Surveys and statistical programs - Documentation
+        u'2023': u'3',  # Reference/Geographic files and documentation
+        u'2002': u'4',  # Reference/Notices and consultations
+        u'2016': u'1',  # Analysis/Stats in brief
+        u'2021': u'2',  # Analysis/Articles and reports
+        u'2020': u'3',  # Analysis/Journals and periodicals
+        u'2015': u'10',  # Other
+        u'2014': u'11',  # Archive
+    }
+}
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
 i = 0
 n = 1
@@ -68,7 +86,11 @@ while i < n:
                 },
                 u'license_title': line.get(u'license_title', u''),
                 u'license_url': line.get(u'license_url', u''),
-                u'license_id': line.get(u'license_id', u'')
+                u'license_id': line.get(u'license_id', u''),
+                u'feature_weight': weights.get(
+                    lookup[old_content_type],
+                    {}
+                ).get(code_value, u'')
             }
 
         print json.dumps(line_out)

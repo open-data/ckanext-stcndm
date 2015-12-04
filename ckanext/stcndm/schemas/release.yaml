@@ -21,14 +21,6 @@ dataset_fields:
 - field_name: last_release_date
   preset: ndm_release_date
 
-#- field_name: data_reference_period
-#  label:
-#    en: Data Reference Period
-#    fr: Les données Période de référence
-#  schema_field_type: string
-#  schema_multivalued: false
-#  schema_extras: true
-
 - field_name: reference_period
   label:
     en: Reference Period
@@ -63,23 +55,6 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
-
-#- field_name: is_correction
-#  label:
-#    en: Is a correction
-#    fr: Est une correction
-#  required: true
-#  form_snippet: select.html
-#  display_snippet: select.html
-#  choices:
-#    - label:
-#        en: 'No'
-#        fr: 'Non'
-#      value: '0'
-#    - label:
-#        en: 'Yes'
-#        fr: 'Oui'
-#      value: '1'
 
 - field_name: name
   preset: ndm_name

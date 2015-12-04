@@ -64,3 +64,12 @@ dataset_fields:
 
 - field_name: notes
   preset: ndm_description
+
+- field_name: feature_weight
+  preset: ndm_feature_weight
+
+- field_name: display_in_form
+  label:
+    en: Display this codeset in CKAN create/edit form
+    fr: Afficher ce codeset dans formulaires création/modification de CKAN
+  preset: ndm_boolean
