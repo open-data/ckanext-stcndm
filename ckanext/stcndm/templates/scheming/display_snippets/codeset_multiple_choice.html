@@ -1,8 +1,23 @@
-{%- set values = data[field.field_name] -%}
-<ul>
-{%- for choice, title in h.codeset_choices(field.codeset_type).iteritems() -%}
-    {%- if choice in values -%}
-        <li>{{ h.scheming_language_text(title) }}</li>
+{%- set selected_values = data[field.field_name] -%}
+{% if selected_values %}
+  {%- set codeset_choices=h.codeset_choices(field.codeset_type) -%}
+  {%- set localized_choices = [] -%}
+  {%- for choice in codeset_choices -%}
+    {%- if choice in selected_values -%}
+      {%- do localized_choices.append(
+          h.scheming_language_text(codeset_choices[choice])) -%}
     {%- endif -%}
-{%- endfor -%}
-</ul>
+  {%- endfor -%}
+  {% if selected_values|length > 1 %}
+    {%- if 'sorted_choices' in field -%}
+      {%- set localized_choices = localized_choices|sort -%}
+    {%- endif -%}
+    <ul>
+    {%- for title in localized_choices -%}
+      <li>{{ title }}</li>
+    {%- endfor -%}
+    </ul>
+  {%- else -%}
+    {{ localized_choices[0] }}
+  {%- endif -%}
+{%- endif -%}

@@ -1,21 +1,24 @@
 {%- set values = data[field.field_name] -%}
-{%- set lang = h.lang() -%}
-{% if values|length > 1 %}
-<ol>
-{%- for element in values[:100] -%}
-  {%- set lab = h.lookup_label(
-    field.lookup_key|default(field.field_name),
-    element,
-    field.lookup
-  ) -%}
-  <li>{{ lab.get(lang, lab['en']) }}</li>
-{%- endfor -%}
-</ol>
-{% elif values %}
-{%- set lab = h.lookup_label(
-  field.lookup_key|default(field.field_name),
-  values[-1],
-  field.lookup
-) -%}
-{{ lab.get(lang, lab['en']) }}
+{%- if values -%}
+  {%- set labels = [] -%}
+  {%- for element in values[:100] -%}
+    {%- do labels.append(
+        h.scheming_language_text(
+            h.lookup_label(
+                field.lookup_key|default(field.field_name),
+                element,
+                field.lookup))) -%}
+  {%- endfor -%}
+  {%- if labels|length > 1 %}
+    {%- if 'sorted_choices' in field -%}
+      {%- set labels = labels|sort -%}
+    {%- endif -%}
+    <ul>
+    {%- for label in labels -%}
+      <li>{{ label }}</li>
+    {%- endfor -%}
+    </ul>
+  {%- else -%}
+    {{ labels[0] }}
+  {%- endif -%}
 {% endif %}
