@@ -198,6 +198,11 @@ class STCNDMPlugin(p.SingletonPlugin):
             # being called long before creation is actually complete.
             context['model'].repo.commit()
 
+        if context.get('__cloning'):
+            # We don't want to call this while we're cloning, or we'll
+            # end up with duplicate release records.
+            return
+
         product_id_new = data.get('product_id_new')
         if data['type'] == 'format':
             product_id_new = data.get('format_id')
@@ -205,11 +210,14 @@ class STCNDMPlugin(p.SingletonPlugin):
         if not product_id_new:
             return
 
+        helpers.ensure_release_exists(product_id_new, context=context)
+
     def get_actions(self):
         # Some Java web clients require the web service to use Pascal Case
         return {
             "GetAutocomplete": common.get_autocomplete,
             "DeleteProduct": common.delete_product,
+            "EnsureReleaseExists": releases.ensure_release_exists,
             "GetBookableProducts": daily.get_bookable_releases,
             "GetCubeList": cubes.get_cube_list_by_subject,
             "GetCube": cubes.get_cube,
@@ -285,6 +293,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "get_dataset_types": helpers.get_dataset_types,
             "get_parent_content_types": helpers.get_parent_content_types,
             "set_previous_issue_archive_date": helpers.set_previous_issue_archive_date,
+            'ensure_release_exists': helpers.ensure_release_exists,
             'get_parent_dataset': helpers.get_parent_dataset,
             'get_child_datasets': helpers.get_child_datasets,
             'x2list': helpers.x2list,

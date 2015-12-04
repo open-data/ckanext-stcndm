@@ -4,6 +4,7 @@ import re
 import ast
 import json
 import requests
+from datetime import datetime
 
 import ckanapi
 import ckan.model as model
@@ -544,6 +545,88 @@ def next_article_id(top_parent_id, issue_number):
         issue_number=issue_number,
         sequence_number=unicode(article_sequence_number + 1).zfill(5)
     )
+
+
+def ensure_release_exists(product_id, context=None, ref_period=None):
+    """
+    Ensure that a release exists for the given product_id.
+
+    :param product_id: The parent product ID.
+    :type product_id: str
+    :param context: The CKAN request context (if it exists)
+    :type context: dict or None
+    :param ref_period: The (data) reference period for the release, if one
+                       exists.
+    """
+    # FIXME: the following test is a kludge which exits if loading from ckanapi
+    #        need to at least compare to site_id instead of fixed value stcndm
+    if context['auth_user_obj'].name == u'stcndm':
+        return
+
+    rsu = config.get('ckanext.stcndm.release_service_url')
+    if not rsu:
+        # The release service isn't always available depending on where
+        # CKAN is deployed.
+        return
+
+    lc = ckanapi.LocalCKAN(context=context)
+
+    response = lc.action.package_search(
+        q='product_id_new:{pid} OR format_id:{pid}'.format(
+            pid=product_id
+        ),
+        rows=1
+    )
+
+    results = response['results']
+
+    if not results:
+        # API might have deleted the product before we had a chance to push
+        # it out.
+        return
+
+    product = results[0]
+
+    record = {
+        'ProductId': product_id,
+    }
+
+    last_release_date = product.get('last_release_date')
+    if last_release_date:
+        # The cloning extension causes this to be a string for some reason,
+        # possibly a bug in the extension.
+        if isinstance(last_release_date, basestring):
+            last_release_date = datetime.strptime(
+                last_release_date,
+                '%Y-%m-%d %H:%M:%S'
+            )
+
+        record['ReleaseDate'] = {
+            'year': last_release_date.year,
+            'month': last_release_date.month,
+            'day': last_release_date.day,
+            'hour': last_release_date.hour,
+            'minute': last_release_date.minute
+        }
+
+    cp_fields = [
+        ('PublishStatus', 'last_publish_status_code', int),
+        ('Format', 'format_code', int),
+        ('Issue', 'issue_number', None),
+        ('DataReferencePeriod', 'reference_period', None)
+    ]
+
+    for field_dst, field_src, cast_to in cp_fields:
+        val = product.get(field_src)
+        if not val:
+            continue
+        record[field_dst] = cast_to(val) if cast_to is not None else val
+
+    requests.post(rsu, params={
+        'productType': product['type'],
+    }, data=json.dumps({
+        'recordInfo': record
+    }))
 
 
 def get_parent_content_types(product_id):
