@@ -301,9 +301,9 @@
         <field name="authors" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="authors_initials" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="calculations" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="census_grouping_code" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="census_grouping_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="census_grouping_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="census_grouping_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="census_grouping_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="census_grouping_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="census_years" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="child_list" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="codeset_type" type="string" indexed="true" stored="true" multiValued="false"/>

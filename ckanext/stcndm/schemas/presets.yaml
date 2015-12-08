@@ -137,13 +137,15 @@ presets:
           en: Release 5
           fr: Émission 5
         value: '7'
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
+    form_snippet: multiple_select.html
+    display_snippet: multiple_choice.html
+    validators: scheming_required scheming_multiple_choice
+    output_validators: scheming_multiple_choice_output
     lookup: preset
     schema_field_type: code
-    schema_multivalued: false
+    schema_multivalued: true
     schema_extras: true
+    sorted_choices: true
 
 - preset_name: ndm_census_years
   values:
