@@ -14,7 +14,7 @@
       {% set name = h.scheming_language_text(schema[1]['title']) %}
       {% set count = schema[1].count %}
       <li class="row col-md-4" style="margin:0.5em 0">
-        <a href="{{ h.url_for(schema_id) }}">{{ h.truncate(name, 50) }} ({{ count }}<span class="wb-inv"> {{ _("datasets") }}</span>)</a>&nbsp;&nbsp;
+        <a href="{{ h.url_for(schema_id + '_search') }}">{{ h.truncate(name, 50) }} ({{ count }}<span class="wb-inv"> {{ _("datasets") }}</span>)</a>&nbsp;&nbsp;
         {% if h.check_access('package_create') %}
           <a class="btn btn-default" href="{{ h.url_for(schema_id + '_new') }}">{{ _("New") }}<span class="wb-inv"> {{ _(" %(type)s dataset")|format(type=name) }}</span> <span class="glyphicon glyphicon-plus"></span></a>
         {% endif %}
