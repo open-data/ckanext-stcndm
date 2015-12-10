@@ -997,7 +997,7 @@ presets:
   values:
     label:
       en: Related Products
-      fr: Produits reliés
+      fr: Produits associés
     form_snippet: repeating_text.html
     display_snippet: repeating_text.html
     validators: repeating_text

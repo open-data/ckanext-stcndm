@@ -42,105 +42,32 @@ dataset_fields:
   validators: daily_create_name
     not_empty unicode name_validator package_name_validator
 
+- field_name: content_type_codes
+  preset: ndm_content_type_codes
+
 - field_name: admin_notes
   preset: ndm_admin_notes
 
 - field_name: title
   preset: ndm_title
 
+- field_name: display_code
+  preset: ndm_display
+
 - field_name: notes
   preset: ndm_description
 
-- field_name: content_type_codes
-  preset: ndm_content_type_codes
-
-- field_name: tracking_codes
-  preset: ndm_tracking
-
-- field_name: geolevel_codes
-  preset: ndm_geolevel_codes
-
-- field_name: geodescriptor_codes
-  preset: ndm_geodescriptor_codes
-
-- field_name: subject_codes
-  preset: ndm_subject_codes
+- field_name: reference_period
+  preset: ndm_reference_period
 
 - field_name: related_products
   preset: ndm_related_products
 
-- field_name: thesaurus_terms
-  preset: ndm_thesaurus_terms
-
-- field_name: archive_status_code
-  preset: ndm_archive_status
-
-- field_name: archive_date
-  preset: ndm_archive_date
-
-- field_name: legacy_date
-  preset: ndm_legacy_date
-
-- field_name: rot_date
-  preset: ndm_rot_date
-
-- field_name: display_code
-  preset: ndm_display
-
-- field_name: external_authors
-  preset: ndm_external_authors
-
-- field_name: frc
-  preset: ndm_frc
-
-- field_name: history_notes
-  preset: ndm_history_notes
-
-- field_name: internal_authors
-  preset: ndm_internal_authors
-
-- field_name: internal_contacts
-  preset: ndm_internal_contacts
-
-- field_name: keywords
-  preset: ndm_keywords
-
-- field_name: last_publish_status_code
-  preset: ndm_publish_status
+- field_name: subject_codes
+  preset: ndm_subject_codes
 
 - field_name: last_release_date
   preset: ndm_last_release_date
 
-- field_name: top_parent_id
-  preset: ndm_top_parent_id
-
-- field_name: product_id_old
-  preset: ndm_product_id_old
-
-- field_name: replaced_products
-  preset: ndm_replaced_products
-
-- field_name: status_code
-  preset: ndm_status
-
-- field_name: discontinued_code
-  preset: ndm_discontinued_code
-
-- field_name: discontinued_date
-  preset: ndm_discontinued_date
-
-- field_name: census_grouping_codes
-  preset: ndm_census_grouping
-
-- field_name: load_to_olc_code
-  preset: ndm_load_to_olc_code
-
-- field_name: child_list
-  label:
-    en: Child List
-    fr: Liste d'enfants
-  preset: repeating_text
-  form_blanks: 3
-  schema_field_type: string
-  schema_multivalued: true
-  schema_extras: true
+- field_name: url
+  preset: ndm_fluent_url

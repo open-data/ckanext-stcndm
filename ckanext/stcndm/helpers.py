@@ -673,3 +673,33 @@ def set_previous_issue_archive_date(product_id, archive_date):
                 result['archive_date'] = archive_date
                 lc.action.package_update(**result)
                 return
+
+
+def set_related_id(product_id, related_product_ids):
+    """
+    Add product_id to related_products field for each related_product_id
+
+    :param product_id: ID of product to add
+    :type product_id: str
+    :param related_product_ids: IDs of products to update
+    :type related_product_ids: list
+
+    :return:
+    """
+    if not related_product_ids or not isinstance(related_product_ids, list):
+        return
+    q = u'product_id_new:' + u' OR product_id_new:'.join(related_product_ids)
+    lc = ckanapi.LocalCKAN()
+    search_result = lc.action.package_search(
+        q=q
+    )
+    results = search_result.get('results', [])
+    for result in results:
+        related_products = result.get(u'related_products', [])
+        if product_id not in related_products:
+            related_products.append(product_id)
+            result.update({u'related_products': related_products})
+            try:
+                lc.action.package_update(**result)
+            except ValidationError:
+                pass  # fail quietly if best effort unsuccessful
