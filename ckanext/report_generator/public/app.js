@@ -283,6 +283,10 @@ angular.module('checklist-model', [])
         this.operator = 'AND';
         this.keyword = '';
 
+        this.onFieldChange = function() {
+            this.fieldType = $rootScope.fieldsCtrl.fieldsDef[this.field].type;
+        };
+
         this.onEmptyChanged = function() {
             if (this.emptyKey) {
                 this.operator = 'AND';
@@ -296,20 +300,22 @@ angular.module('checklist-model', [])
                         },
                         prefix = this.field + ':',
                         keyword = this.keyword,
-                        type;
+                        type, startDate, endDate;
 
                     if (this.emptyKey) {
                         return '-' + prefix + '[* TO *]';
-                    } else {
-                        type = $rootScope.fieldsCtrl.fieldsDef[this.field].type;
-                        switch (type) {
-                            case 'date': {
-                                try {
-                                    keyword = new Date(keyword).toISOString();
-                                } catch (e) {}
-                                return prefix + '(' + escapeKeyword(keyword) + ')';
-                            }
-                        }
+                    }
+
+                    type = $rootScope.fieldsCtrl.fieldsDef[this.field].type;
+                    if (type === 'date') {
+                        try {
+                            startDate = new Date(this.startDate).toISOString();
+                            endDate = new Date(this.endDate);
+                            endDate.setDate(1);
+                            endDate.setSeconds(-1);
+                            endDate = endDate.toISOString();
+                        } catch (e) {}
+                        return prefix + '[' + escapeKeyword(startDate) + ' TO ' + escapeKeyword(endDate) + ']';
                     }
 
                     return prefix + '(*' + escapeKeyword(keyword) + '*)';
@@ -317,7 +323,7 @@ angular.module('checklist-model', [])
                 operatorStr = '',
                 expr;
 
-            if (this.field && (this.keyword || this.emptyKey)) {
+            if (this.field && (this.emptyKey || this.keyword || (this.startDate && this.endDate))) {
                 expr = getExpression.apply(this);
 
                 if ($rootScope.query && $rootScope.query.trim() !== '') {
