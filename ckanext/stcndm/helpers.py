@@ -58,6 +58,8 @@ def get_schema(org, dataset):
     Return a dict having fields in a given org for keys and the values stored
     for that field in the tmschema organization as a dict.
 
+    :param org:
+    :param dataset:
     :return: dict of dicts
     """
 
@@ -303,6 +305,9 @@ def codeset_choices(codeset_type):
     """
     Return a dictionary of {codeset_value: title} for the codeset_type
     passed
+    :param codeset_type:
+    :type codeset_type: str
+    :return dict
     """
     lc = ckanapi.LocalCKAN()
     results = lc.action.package_search(

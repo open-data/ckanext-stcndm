@@ -4,6 +4,8 @@ import datetime
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
 import ckanext.stcndm.helpers as stcndm_helpers
+import pylons.config as config
+import json
 
 _get_or_bust = logic.get_or_bust
 _stub_msg = {
@@ -201,6 +203,20 @@ def consume_transaction_file(context, data_dict):
                     value=value,
                     type=expected.__name__)})
         return value
+
+    if u'transactionFile' not in data_dict:
+        transaction_file = config.get('ckanext.stcndm.transaction_file')
+        if not transaction_file:
+            raise _ValidationError({
+                u'transactionFile': u'Path to transactionFile missing from'
+                                    u'CKAN config file'})
+        try:
+            transaction_file = open(transaction_file)
+            data_dict = json.load(transaction_file)
+        except (IOError, ValueError) as e:
+            raise _ValidationError({
+                u'transactionFile': e.message
+            })
 
     transaction_dict = my_get(data_dict, u'transactionFile', dict)
     daily_dict = my_get(transaction_dict, u'daily', dict)
