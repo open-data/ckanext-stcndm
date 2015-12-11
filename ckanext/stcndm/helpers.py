@@ -628,10 +628,12 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
         record[field_dst] = cast_to(val) if cast_to is not None else val
 
     requests.post(rsu, params={
-        'productType': product['type'],
+        'productType':  str(product['type']).capitalize(),
     }, data=json.dumps({
         'recordInfo': record
-    }))
+    }), headers={
+        'Content-Type': 'application/json'
+    })
 
 
 def get_parent_content_types(product_id):
