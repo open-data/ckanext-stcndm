@@ -83,11 +83,11 @@
         <div class="form-group col-sm-5" ng-show="advSrchCtrl.fieldType == 'date'">
             <div class="col-xs-6">
                 <label for="startdate">Start Date</label>
-                <input type="text" id="startdate" class="form-control" ng-model="advSrchCtrl.startDate" />
+                <input type="date" id="startdate" class="form-control" ng-model="advSrchCtrl.startDate" />
             </div>
             <div class="col-xs-6">
                 <label for="enddate">End Date</label>
-                <input type="text" id="enddate" class="form-control" ng-model="advSrchCtrl.endDate" />
+                <input type="date" id="enddate" class="form-control" ng-model="advSrchCtrl.endDate" />
             </div>
         </div>
 
@@ -141,8 +141,10 @@
 
             <table class="table" ng-show="dspFieldCtrl.getVisible()">
                 <thead>
-                    <th>Field</th>
-                    <th>Action</th>
+                    <tr>
+                        <th>Field</th>
+                        <th>Action</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="field in dspFieldCtrl.fields">
@@ -171,13 +173,19 @@
     <script src="{% url_for_static 'lib/angular/angular.min.js' %}"></script>
     <script src="{% url_for_static 'app.min.js' %}"></script>
     <script>
-    (function(window, angular) {'use strict';
+    (function(window, angular, wb) {'use strict';
       angular.module('services.config', [])
           .constant('configuration', {
               ckanInstance: '{{c.ckan_url}}',
               solrCore: '{{c.ckan_url}}/solr',
               siteID: '{{c.site_id}}'
           });
-    })(window, angular);
+
+      var startDate, endDate;
+        wb.doc.on('blur', '#startdate, #enddate', function() {
+          $(this).trigger("change");
+        });
+    })(window, angular, wb);
+
     </script>
 {% endblock %}
