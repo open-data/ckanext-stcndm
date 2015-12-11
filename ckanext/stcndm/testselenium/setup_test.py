@@ -1,0 +1,6 @@
+ckan_base = ''
+ckan_user = ''
+ckan_pass = ''
+ckan_reg_user = ''
+ckan_reg_email = ''
+ckan_reg_pass = ''
