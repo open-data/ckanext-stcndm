@@ -3,6 +3,7 @@
 import ckanapi
 from ckan.logic import get_or_bust, side_effect_free, NotFound, ValidationError
 import json
+from ckanext.stcndm.logic.common import get_product_url
 
 
 # noinspection PyIncorrectDocstring
@@ -146,10 +147,14 @@ def get_products_by_survey(context, data_dict):
     for result in results:
         title = result.get(u'title')
         title = title if title else {u'en': u'', u'fr': u''}
-        url = result.get(u'url')
-        url = url if url else {u'en': u'', u'fr': u''}
+        product_id = result.get(u'product_id_new')
+        try:
+            url = get_product_url(context, {u'productId': product_id})
+        except NotFound:
+            url = {u'en': u'', u'fr': u''}
+
         products.append({
-            u'product_id': result.get(u'product_id_new'),
+            u'product_id': product_id,
             u'title': title,
             u'url': url
         })

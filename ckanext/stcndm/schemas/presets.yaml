@@ -519,10 +519,12 @@ presets:
             en: CD-ROM
             fr: CD-ROM
         value: '3'
+        weight: '6'
       - label:
             en: Diskette
             fr: Disquette
         value: '4'
+        weight: '7'
       - label:
             en: Fax/email
             fr: Télécopieur
@@ -531,14 +533,17 @@ presets:
             en: PDF
             fr: PDF
         value: '8'
+        weight: '2'
       - label:
             en: Microfiche
             fr: Microfiche
         value: '10'
+        weight: '4'
       - label:
             en: Paper
             fr: Imprimé
         value: '12'
+        weight: '3'
       - label:
             en: Symposium/Workshop
             fr: Symposium/Atelier
@@ -547,18 +552,22 @@ presets:
             en: Tape/Cassette
             fr: Bande magnétique/Cassette
         value: '14'
+        weight: '8'
       - label:
             en: DVD
             fr: DVD
         value: '15'
+        weight: '5'
       - label:
             en: HTML
             fr: HTML
         value: '17'
+        weight: '1'
       - label:
             en: Video
             fr: Vidéo
         value: '18'
+        weight: '4'
       - label:
             en: ETF
             fr: ETF
