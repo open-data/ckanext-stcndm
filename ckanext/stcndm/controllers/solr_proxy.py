@@ -2,6 +2,7 @@
 # encoding: utf-8
 import urllib
 import urlparse
+import codecs
 
 import ckan.plugins as p
 import ckan.lib.helpers as h
@@ -28,10 +29,15 @@ class SolrProxyController(ApiController):
         content_type = query.get('wt', ['xml'])[0]
         ckan_response = p.toolkit.response
         ckan_response.content_type = CONTENT_TYPES[content_type]
+        solr_response = ''
+
+        if content_type == 'csv':
+            ckan_response.headers['Content-Disposition'] = 'attachment; filename=query.csv'
+            solr_response = str(codecs.BOM_UTF8)
 
         conn = make_connection()
         try:
-            solr_response = conn.raw_query(**query)
+            solr_response += conn.raw_query(**query)
             ckan_response.body = solr_response
         except SolrException, e:
             ckan_response.status_int = e.httpcode
