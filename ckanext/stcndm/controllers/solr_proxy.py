@@ -3,6 +3,7 @@
 import urllib
 import urlparse
 import codecs
+import ast
 
 import ckan.plugins as p
 import ckan.lib.helpers as h
@@ -25,8 +26,13 @@ class SolrProxyController(ApiController):
 
     def proxy_solr(self, action):
         url = urlparse.urlparse(h.full_current_url())
-        query = urlparse.parse_qs(urllib.unquote(url.query).decode('utf-8'))
-        content_type = query.get('wt', ['xml'])[0]
+        if url.query != '':
+            data = urlparse.parse_qs(urllib.unquote(url.query).decode('utf-8'))
+        else:
+            data = ast.literal_eval(p.toolkit.request.body)
+        content_type = data.get('wt', 'xml')
+        if isinstance(content_type, list):
+            content_type = content_type[0]
         ckan_response = p.toolkit.response
         ckan_response.content_type = CONTENT_TYPES[content_type]
         solr_response = ''
@@ -37,7 +43,7 @@ class SolrProxyController(ApiController):
 
         conn = make_connection()
         try:
-            solr_response += conn.raw_query(**query)
+            solr_response += conn.raw_query(**data)
             ckan_response.body = solr_response
         except SolrException, e:
             ckan_response.status_int = e.httpcode
