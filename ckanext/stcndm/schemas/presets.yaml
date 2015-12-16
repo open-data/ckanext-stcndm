@@ -779,6 +779,15 @@ presets:
     schema_multivalued: false
     schema_extras: true
 
+- preset_name: ndm_pe_code
+  values:
+      label:
+        en: PE Code
+        fr: Code PE
+      schema_field_type: string
+      schema_multivalued: false
+      schema_extras: true
+
 - preset_name: ndm_release_date
   values:
     label:

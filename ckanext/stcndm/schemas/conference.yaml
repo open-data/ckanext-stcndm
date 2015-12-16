@@ -169,3 +169,6 @@ dataset_fields:
 
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes
+
+- field_name: pe_code
+  preset: ndm_pe_code
