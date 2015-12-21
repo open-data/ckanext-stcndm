@@ -2,6 +2,7 @@ import sys
 import json
 import yaml
 import ckanapi
+import datetime
 
 __author__ = 'marc'
 
@@ -138,7 +139,6 @@ while i < n:
                 u'en': line.get(u'isplink_en_strs', ''),
                 u'fr': line.get(u'isplink_fr_strs', '')
             },
-            u'last_release_date': line.get(u'releasedate_bi_strs'),
             u'level_subject_codes': listify(
                 line.get(u'extras_levelsubjcode_bi_txtm', '')),
             u'product_id_new': line.get(u'productidnew_bi_strs', ''),
@@ -178,5 +178,18 @@ while i < n:
             u'license_url': line.get(u'license_url', ''),
             u'license_id': line.get(u'license_id', '')
         }
+
+        if u'releasedate_bi_strs' in line and line[u'releasedate_bi_strs']:
+            release_date = (line.get(u'releasedate_bi_strs').strip()+u'T08:30')[:16]
+            try:
+                datetime.datetime.strptime(release_date, u'%Y-%m-%dT%H:%M')
+                line_out[u'last_release_date'] = release_date
+            except ValueError:
+                sys.stderr.write(
+                    '{product_id}: invalid release date {release_date}\n'.format(
+                        product_id=line[u'productidnew_bi_strs'],
+                        release_date=release_date
+                    )
+                )
 
         print json.dumps(line_out)

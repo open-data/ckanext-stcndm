@@ -560,9 +560,7 @@ def codeset_multiple_choice(field, schema):
 
 
 def ndm_tag_name_validator(value, context):
-
-    tag_name_match = re.compile('[\w \-.,:\'/()]*$', re.UNICODE)
-    if not tag_name_match.match(value):
+    if re.match(ur'[^\w \-_.,:\'/()]+', value, re.UNICODE):
         raise df.Invalid(_(
             'Tag "%s" must be alphanumeric characters or'
             ' symbols: - _ . , : \' / ( )'
@@ -592,8 +590,8 @@ def apply_archive_rules(key, data, errors, context):
                     product_id_new
                 )
             if not content_type_codes:
-                errors[(u'content_type_codes',)].append(_('Missing value'))
-                errors[(u'archive_date',)].append(_('Unable to determine'))
+                # errors[(u'content_type_codes',)].append(_('Missing value'))
+                # errors[(u'archive_date',)].append(_('Unable to determine'))
                 return
             # Analysis/Stats in brief
             if u'2016' in content_type_codes:
@@ -622,9 +620,11 @@ def apply_archive_rules(key, data, errors, context):
                         release_date+datetime.timedelta(days=5*365)
                     )
                 except ValidationError as e:
-                    errors[(u'product_id_new',)].append(
-                        _(e.error_summary[u'Message']))
-                    errors[(u'archive_date',)].append(_('Unable to determine'))
+                    pass
+                    # errors[(u'product_id_new',)].append(
+                    #     _(e.error_summary[u'Message']))
+                    # errors[(u'archive_date',)].append(
+                    #     _('Unable to determine'))
 
 
 def archive_children_of_cube(key, data, errors, context):

@@ -11,8 +11,7 @@ product_id_list = []
 current_pid = u''
 product_dict = {}
 format_dict = {}
-
-dnl_list=[]
+dnl_list = []
 with open('jsonl_dumps/oldprintdonotload.csv', 'rb') as csv_file:
     spam_reader = csv.DictReader(csv_file, delimiter=',')
     for row in spam_reader:
@@ -117,9 +116,10 @@ while i < n:
                 product_dict[u'load_to_olc_code'] = u'0'
             if current_pid in issn_dict:
                 product_dict[u'issn_number'] = issn_dict[current_pid]
-            print json.dumps(product_dict)
-            for a_format in format_dict:
-                print json.dumps(format_dict[a_format])
+            if product_dict:
+                print json.dumps(product_dict)
+                for a_format in format_dict:
+                    print json.dumps(format_dict[a_format])
             current_pid = product_id_new
             product_dict = product_out
             format_dict = {

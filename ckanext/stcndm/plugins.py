@@ -66,7 +66,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/province.yaml',
                 'ckanext.stcndm:schemas/publication.yaml',
                 'ckanext.stcndm:schemas/pumf.yaml',
-                'ckanext.stcndm:schemas/release.yaml',
                 'ckanext.stcndm:schemas/service.yaml',
                 'ckanext.stcndm:schemas/subject.yaml',
                 'ckanext.stcndm:schemas/survey.yaml',

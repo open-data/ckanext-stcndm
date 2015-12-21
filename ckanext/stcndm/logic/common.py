@@ -1194,7 +1194,7 @@ def get_product_url(context, data_dict):
     """
     Return the fluent URL of the given format of the product.
 
-    If no format is specified, return the url of the primary format
+    If no format is specified, return the url of the preferred (primary) format
 
     :param productId:
     :type productId:  str
