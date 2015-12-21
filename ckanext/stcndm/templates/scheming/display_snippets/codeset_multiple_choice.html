@@ -9,7 +9,7 @@
     {%- endif -%}
   {%- endfor -%}
   {% if selected_values|length > 1 %}
-    {%- if 'sorted_choices' in field -%}
+    {%- if field.get('sorted_choices') -%}
       {%- set localized_choices = localized_choices|sort -%}
     {%- endif -%}
     <ul>
