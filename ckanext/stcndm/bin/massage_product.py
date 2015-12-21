@@ -231,8 +231,25 @@ def do_product(data_set):
         product_out[u'keywords'] = temp
 
     if in_and_def(u'releasedate_bi_strs', data_set):
-        product_out[u'last_release_date'] = \
-            data_set.get(u'releasedate_bi_strs').strip()
+        release_date_text = (data_set.get(u'releasedate_bi_strs').strip() +
+                             u'T08:30')[:16]
+        try:
+            datetime.datetime.strptime(release_date_text, u'%Y-%m-%dT%H:%M')
+            product_out[u'last_release_date'] = release_date_text
+        except ValueError:
+            try:
+                release_date = datetime.datetime.strptime(release_date_text,
+                                                          u'%d/%m/%YT%H:%M')
+                product_out[u'last_release_date'] = release_date.strftime(
+                    u'%Y-%m-%dT%H:%M'
+                )
+            except ValueError:
+                sys.stderr.write(
+                    '{product_id}: invalid release date {release_date}\n'.format(
+                        product_id=data_set[u'productidnew_bi_strs'],
+                        release_date=release_date_text
+                    )
+                )
 
     if in_and_def(u'ndmstate_en_intxtm', data_set):
         result = listify(data_set[u'ndmstate_en_intxtm'])
@@ -391,8 +408,25 @@ def do_format(data_set):
         )
     }
     if in_and_def(u'releasedate_bi_strs', data_set):
-        format_out[u'last_release_date'] = \
-            data_set.get(u'releasedate_bi_strs').strip()
+        release_date_text = (data_set.get(u'releasedate_bi_strs').strip() +
+                             u'T08:30')[:16]
+        try:
+            datetime.datetime.strptime(release_date_text, u'%Y-%m-%dT%H:%M')
+            format_out[u'last_release_date'] = release_date_text
+        except ValueError:
+            try:
+                release_date = datetime.datetime.strptime(release_date_text,
+                                                          u'%d/%m/%YT%H:%M')
+                format_out[u'last_release_date'] = release_date.strftime(
+                    u'%Y-%m-%dT%H:%M'
+                )
+            except ValueError:
+                sys.stderr.write(
+                    '{product_id}: invalid release date {release_date}\n'.format(
+                        product_id=data_set[u'productidnew_bi_strs'],
+                        release_date=release_date_text
+                    )
+                )
 
     return format_out
 

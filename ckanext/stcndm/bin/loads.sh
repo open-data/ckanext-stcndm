@@ -24,7 +24,7 @@ ckanapi load datasets -p 3 -I jsonl_dumps/geodescriptors.jsonl 2>&1 >/dev/null |
 
 echo -provinces | tee -a jsonl_dumps/load_errs.txt
 date | tee -a jsonl_dumps/load_errs.txt
-ckanapi load datasets -I jsonl_dumps/provinces.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
+ckanapi load datasets -p 3 -I jsonl_dumps/provinces.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
 
 echo -cubes | tee -a jsonl_dumps/load_errs.txt
 date | tee -a jsonl_dumps/load_errs.txt
@@ -52,7 +52,7 @@ ckanapi load datasets -p 3 -I jsonl_dumps/services.jsonl 2>&1 >/dev/null | tee |
 
 echo -pumfs | tee -a jsonl_dumps/load_errs.txt
 date | tee -a jsonl_dumps/load_errs.txt
-ckanapi load datasets -I jsonl_dumps/pumfs.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
+ckanapi load datasets -p 3-I jsonl_dumps/pumfs.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
 
 echo -analyticals | tee -a jsonl_dumps/load_errs.txt
 date | tee -a jsonl_dumps/load_errs.txt

@@ -26,6 +26,7 @@ n = 1
 while i < n:
     query_results = rc.action.package_search(
         q='organization:tmsgccode',
+        sort='metadata_created ASC',
         rows=1000,
         start=i*1000)
     i += 1
