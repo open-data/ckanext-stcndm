@@ -10,7 +10,7 @@
                 field.lookup))) -%}
   {%- endfor -%}
   {%- if labels|length > 1 %}
-    {%- if 'sorted_choices' in field -%}
+    {%- if field.get('sorted_choices') -%}
       {%- set labels = labels|sort -%}
     {%- endif -%}
     <ul>
