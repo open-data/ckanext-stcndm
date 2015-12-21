@@ -944,9 +944,7 @@ def update_last_publish_status(context, data_dict):
     ]
 
 
-# noinspection PyIncorrectDocstring
-def update_parent_release_date_and_status(context, data_dict):
-    # noinspection PyUnresolvedReferences
+def update_release_date_and_status(context, data_dict):
     """
     Update the release date and publishing status code for the parent
     record of a given product.
@@ -964,11 +962,125 @@ def update_parent_release_date_and_status(context, data_dict):
     :return: updated package
     :rtype: dict
     """
-    # TODO: why is productType being required here?
-    # The productId values should be unique.
+    # the client explicitly asked that we accept product_type as a parameter
+    # even though it can be grabbed from the existing dataset
 
-    return _stub_msg
+    product_id = _get_or_bust(data_dict, 'productId')
+    product_type = _get_or_bust(data_dict, 'productType')
+    release_date = _get_or_bust(data_dict, 'releaseDate')
+    publishing_status = _get_or_bust(data_dict, 'publishingStatus')
 
+    business_logic = {'10': {'type': 'cube',
+                             'update_product': True,
+                             'update_children': True},
+                      '11': {'type': 'view',
+                             'update_product': False,
+                             'update_children': False},
+                      '12': {'type': 'indicator',
+                             'update_product': False,
+                             'update_children': False},
+                      '13': {'type': 'chart',
+                             'update_product': False,
+                             'update_children': False},
+                      '14': {'type': 'map',
+                             'update_product': False,
+                             'update_children': False},
+                      '20': {'type': 'publication',
+                             'update_product': True,
+                             'update_children': False},
+                      '21': {'type': 'video',
+                             'update_product': True,
+                             'update_children': False},
+                      '22': {'type': 'conference',
+                             'update_product': True,
+                             'update_children': False},
+                      '23': {'type': 'service',
+                             'update_product': True,
+                             'update_children': False},
+                      '24': {'type': 'pumf',
+                             'update_product': True,
+                             'update_children': False},
+                      '26': {'type': '????',
+                             'update_product': False,
+                             'update_children': False},
+                      }
+
+    updated_products = []
+
+    def _update_product(product_id,
+                        product_type,
+                        release_date,
+                        publishing_status):
+
+        new_values = {'last_release_date': release_date,
+                      'publishing_status': publishing_status}
+
+        lc = ckanapi.LocalCKAN(context=context)
+        result = lc.action.package_search(
+            q=(
+                'type:{product_type} AND '
+                'product_id_new:{product_id}'
+            ).format(
+                product_type=business_logic[product_type]['type'],
+                product_id=product_id),
+            rows=1
+        )
+
+        if not result['count']:
+            raise _NotFound('Product not found')
+        elif result['count'] > 1:
+            raise _ValidationError('More than one product with given productid found')
+
+        product = result['results'][0]
+
+        product.update(new_values)
+        lc.action.package_update(**product)
+
+        updated_products.append(product['product_id_new'])
+
+    def _update_children(product_id,
+                         release_date,
+                         publishing_status):
+
+        new_values = {'last_release_date': release_date,
+                      'publishing_status': publishing_status,
+                      'url': 'http://google.com'}
+
+        lc = ckanapi.LocalCKAN(context=context)
+        result = lc.action.package_search(
+            q=(
+                '(type:view OR '
+                'type:indicator OR '
+                'type:chart OR '
+                'type:map) AND '
+                'top_parent_id:{top_parent_id}'
+            ).format(top_parent_id=product_id),
+            rows=1000
+        )
+        product = result['results'][0]
+
+        product.update(new_values)
+
+        for product in result['results']:
+
+            product.update(new_values)
+            lc.action.package_update(**product)
+
+            updated_products.append(product['product_id_new'])
+
+
+    if business_logic[product_type]['update_product']:
+        _update_product(product_id,
+                        product_type,
+                        release_date,
+                        publishing_status)
+
+    if business_logic[product_type]['update_children']:
+        _update_children(product_id,
+                         release_date,
+                         publishing_status)
+
+    return {'updated_products': updated_products}
 
 # noinspection PyIncorrectDocstring
 def _update_single_publish_status(context, data_dict):
