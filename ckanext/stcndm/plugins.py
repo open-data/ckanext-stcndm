@@ -261,8 +261,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             "RegisterRelease": releases.register_release,
             "RegisterSurvey": surveys.register_survey,
             "UpdateDefaultView": views.update_default_view,
-            "UpdateParentReleaseDateAndStatus":
-                common.update_parent_release_date_and_status,
+            "UpdateReleaseDateAndStatus":
+                common.update_release_date_and_status,
             "UpdateProductGeo": common.update_product_geo,
             "UpdatePublishingStatus": common.update_last_publish_status,
             "GetDatasetSchema": common.get_dataset_schema,

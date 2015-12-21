@@ -375,6 +375,7 @@
         <field name="issn_number_en" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="issn_number_fr" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="issue_number" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="issue_number_int" type="int" indexed="true" stored="true" multiValued="false"/>
         <field name="keywords_en" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="keywords_fr" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="last_publish_status_code" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -481,6 +482,7 @@
     <solrQueryParser defaultOperator="AND"/>
 
     <!-- Scheming related copy fields -->
+    <copyField source="issue_number" dest="issue_number_int"/>
     <copyField source="*_codes" dest="text"/>
     <copyField source="*_code" dest="text"/>
 

@@ -329,16 +329,16 @@ def get_product_issues(context, data_dict):
                 pid=product_id
             ),
             group='true',
-            group_field='issue_number',
+            group_field='issue_number_int',
             wt='json',
-            sort='issue_number desc',
+            sort='issue_number_int desc',
             # FIXME: We need to actually paginate on this, but the daily
             #        team will not accept it (yet).
             rows='2000000'
         )
     )
 
-    issue_no_group = response['grouped']['issue_number']
+    issue_no_group = response['grouped']['issue_number_int']
 
     return [{
         'issue': group['groupValue'],
@@ -368,7 +368,7 @@ def get_product_issue_articles(context, data_dict):
     results = lc.action.package_search(
         q=(
             'top_parent_id:{pid} AND '
-            'issue_number:{issue_number} AND '
+            'issue_number_int:{issue_number} AND '
             'type:article'
         ).format(
             pid=product_id,
@@ -431,7 +431,7 @@ def get_bookable_releases(context, data_dict):
             ).format(
                 pid=result['product_id_new']
             ),
-            sort='issue_number asc',
+            sort='issue_number_int asc',
             # FIXME: We need to actually paginate on this, but the daily
             #        team will not accept it (yet).
             rows=2000000
@@ -440,7 +440,7 @@ def get_bookable_releases(context, data_dict):
         for art_result in article_results['results']:
             final_results.append({
                 'productId': result['product_id_new'],
-                'issue': art_result['issue_number'],
+                'issue': art_result['issue_number_int'],
                 'title': result['title'],
                 'refper': result['reference_period']
             })
@@ -523,7 +523,7 @@ def get_product_formats(context, data_dict):
     art_results = lc.action.package_search(
         q=(
             'top_parent_id:{pid} AND '
-            'issue_number:{issue_number} AND '
+            'issue_number_int:{issue_number} AND '
             'type:article'
         ).format(
             pid=product_id,

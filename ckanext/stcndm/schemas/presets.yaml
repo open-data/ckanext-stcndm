@@ -364,8 +364,8 @@ presets:
 - preset_name: ndm_description
   values:
     label:
-      en: Notes
-      fr: Notes
+      en: Description (Notes)
+      fr: Description (Notes)
     schema_field_type: fluent
     schema_multivalued: false
     schema_extras: false
