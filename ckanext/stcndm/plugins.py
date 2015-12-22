@@ -59,6 +59,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/corrections.yaml',
                 'ckanext.stcndm:schemas/cube.yaml',
                 'ckanext.stcndm:schemas/daily.yaml',
+                'ckanext.stcndm:schemas/dataset.yaml',
                 'ckanext.stcndm:schemas/format.yaml',
                 'ckanext.stcndm:schemas/generic.yaml',
                 'ckanext.stcndm:schemas/geodescriptor.yaml',
@@ -295,6 +296,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "shortcode_output": validators.shortcode_output,
             "subject_create_name": validators.subject_create_name,
             "survey_create_name": validators.survey_create_name,
+            "repeating_text_delimited": validators.repeating_text_delimited,
         }
 
     def get_helpers(self):
