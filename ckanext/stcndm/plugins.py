@@ -368,6 +368,16 @@ class STCNDMPlugin(p.SingletonPlugin):
             action='select'
         )
 
+        map.connect(
+            'schema_to_xl',
+            '/schema_to_xl/dump',
+            controller=(
+                'ckanext.stcndm.controllers.schema_to_xl'
+                ':SchemaToXlController'
+            ),
+            action='dump'
+        )
+
         return map
 
     def after_map(self, map):
