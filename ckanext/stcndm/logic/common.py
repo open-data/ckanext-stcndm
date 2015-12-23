@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import base64
 import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
@@ -90,6 +91,22 @@ def get_autocomplete(context, data_dict):
     }
 
     return results
+
+# noinspection PyIncorrectDocstring
+@logic.side_effect_free
+def get_internal_authors(context, data_dict):
+    source = "c870d6fc-132c-46ed-aa82-4db2ebee310c"
+    q =  base64.b64encode(_get_or_bust(data_dict, 'q'))
+    query = ("SELECT \"last name\" || ', ' || \"first name\" AS Name "
+        "FROM \"{source}\" "
+        "WHERE LOWER(\"full name\") LIKE "
+            "'%' || "
+            "LOWER(CONVERT_FROM(DECODE('{q}', 'base64'), 'utf-8')) "
+            "|| '%' "
+        "LIMIT 25").format(source=source, q=q)
+
+    lc = ckanapi.LocalCKAN(context=context)
+    return lc.action.datastore_search_sql(sql=query)
 
 
 # noinspection PyIncorrectDocstring

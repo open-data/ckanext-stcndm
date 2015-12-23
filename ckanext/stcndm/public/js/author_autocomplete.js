@@ -5,7 +5,6 @@ var $document = wb.doc,
 	authorSelector = "#field-internal_authors",
 	authorInput = $( authorSelector ),
 	root = $('body').data('siteRoot'),
-	sql = "SELECT \"last name\" || ', ' || \"first name\" AS Name FROM \"c870d6fc-132c-46ed-aa82-4db2ebee310c\" WHERE lower(\"full name\") LIKE lower('%{keyword}%') LIMIT 25",
 	settings = window[ 'wb-multilist' ],
 	timer;
 
@@ -29,12 +28,12 @@ $document.on( "keydown", authorSelector, function( event ) {
                     $this.trigger({
                         type: "ajax-fetch.wb",
                         fetch: {
-                            url: encodeURI( root + "api/3/action/datastore_search_sql?sql=" +  sql.replace('{keyword}', author)),
+                            url: encodeURI( root + "api/3/action/GetInternalAuthors?q=" +  author ),
                             dataType: "json"
                         }
                     });
                 }
-            }, 10 );
+            }, 500 );
         }
     }
 });

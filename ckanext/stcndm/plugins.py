@@ -220,6 +220,7 @@ class STCNDMPlugin(p.SingletonPlugin):
         # Some Java web clients require the web service to use Pascal Case
         return {
             "GetAutocomplete": common.get_autocomplete,
+            "GetInternalAuthors": common.get_internal_authors,
             "DeleteProduct": common.delete_product,
             "EnsureReleaseExists": releases.ensure_release_exists,
             "GetBookableProducts": daily.get_bookable_releases,
