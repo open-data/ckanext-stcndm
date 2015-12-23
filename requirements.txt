@@ -2,3 +2,4 @@ pyyaml
 docutils>=0.9
 pygments
 arrow
+openpyxl
