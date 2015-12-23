@@ -29,6 +29,9 @@
           <div class="panel-body">
             {% link_for _('Report Generator'), controller='ckanext.report_generator.controller:ReportGeneratorController', action='index' %}
           </div>
+          <div class="panel-body">
+            {% link_for _('Product Schemas in Excel format'), controller='ckanext.stcndm.controllers.schema_to_xl:SchemaToXlController', action='dump' %}
+          </div>
         </section>
     </div>
 {% endblock %}
