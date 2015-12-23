@@ -72,10 +72,10 @@ def parse_file(file_path):
         tree = etree.parse(file_in)
 
         for raw_record in tree.xpath('//SurveySummary'):
-            product_id = raw_record.attrib['id']
+            product_id = raw_record.attrib['sdds']
 
             record = {
-                u'product_id_new': raw_record.attrib['id'],
+                u'product_id_new': product_id,
                 u'name': 'survey-{0}'.format(product_id),
                 u'private': False,
                 u'type': 'survey',
@@ -115,7 +115,7 @@ def parse_url(url):
     tree = etree.fromstring(requests.get(url).content)
 
     for raw_record in tree.xpath('//SurveySummary'):
-        product_id = raw_record.attrib['id']
+        product_id = raw_record.attrib['sdss']
 
         detailed_record = etree.fromstring(
             requests.get(
@@ -124,7 +124,7 @@ def parse_url(url):
         )
 
         record = {
-            u'product_id_new': raw_record.attrib['id'],
+            u'product_id_new': product_id,
             u'name': 'survey-{0}'.format(product_id),
             u'private': False,
             u'type': 'survey',
