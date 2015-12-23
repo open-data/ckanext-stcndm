@@ -68,11 +68,11 @@ def get_autocomplete(context, data_dict):
             q=q,
             code=code
         ),
-        rows = 100,
-        sort = '{code} asc'.format(
+        rows=100,
+        sort='{code} asc'.format(
             code=code
         ),
-        fq = '{code}:{filter}'.format(
+        fq='{code}:{filter}'.format(
             code=code,
             filter='/.{{0,{max}}}/'.format(
                 max=int(max_level) * 2
