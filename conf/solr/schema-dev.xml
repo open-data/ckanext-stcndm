@@ -338,6 +338,8 @@
         <field name="display_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="display_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="display_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="display_in_form_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="display_in_form_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="display_order" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="external_authors" type="text" indexed="true" stored="true" multiValued="true"/>
         <field name="feature_weight" type="int" indexed="true" stored="true" multiValued="false"/>
@@ -394,6 +396,7 @@
         <field name="ndm_states" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="old_title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="old_title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="pe_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="price" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="price_note_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="price_note_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
