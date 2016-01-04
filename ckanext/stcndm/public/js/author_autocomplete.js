@@ -40,17 +40,18 @@ $document.on( "keydown", authorSelector, function( event ) {
 
 $document.on( "ajax-fetched.wb", authorSelector, function( event ) {
 	var dataList = $( "#" + authorInput.attr( "data-multilist" ) ),
-		names = event.fetch.response.result.records,
-		lenNames = names.length,
+		authors = event.fetch.response.result,
+		lenAuthors = authors.length,
 		options = "",
-		indName, name;
+		indAuthors, author, name;
 
 	dataList.empty();
 
-	for ( indName = 0; indName !== lenNames; indName += 1 ) {
-		name = names[ indName ];
+	for ( indAuthors = 0; indAuthors !== lenAuthors; indAuthors += 1 ) {
+		author = authors[ indAuthors ];
+		name = author.last_name + ", " + author.first_name;
 
-		options += "<option label=\"" + name.name + "\" value=\"" + name.name + "\"></option>";
+		options += "<option label=\"" + name + "\" value=\"" + name + "\"></option>";
 	}
 
 	if ( wb.ielt10 ) {

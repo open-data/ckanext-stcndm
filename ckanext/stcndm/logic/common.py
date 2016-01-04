@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import base64
 import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
+import ckanext.datastore.db as ds_db
 import ckanext.scheming.helpers as scheming_helpers
 import ckanext.stcndm.helpers as stcndm_helpers
 import arrow
+
+from pylons import config
+from sqlalchemy import orm, types, Column, Table
+from ckan.model.meta import metadata
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -28,6 +32,13 @@ AUTOCOMPLETE = {
         'code': 'product_id_new'
     }
 }
+
+internal_authors = Table(
+    'internal_authors', metadata,
+    Column('full_name', types.UnicodeText, nullable=False),
+    Column('first_name', types.UnicodeText, nullable=False),
+    Column('last_name', types.UnicodeText, nullable=False),
+)
 
 
 def _get_group(result):
@@ -92,21 +103,28 @@ def get_autocomplete(context, data_dict):
 
     return results
 
+
 # noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_internal_authors(context, data_dict):
-    source = "c870d6fc-132c-46ed-aa82-4db2ebee310c"
-    q =  base64.b64encode(_get_or_bust(data_dict, 'q'))
-    query = ("SELECT \"last name\" || ', ' || \"first name\" AS Name "
-        "FROM \"{source}\" "
-        "WHERE LOWER(\"full name\") LIKE "
-            "'%' || "
-            "LOWER(CONVERT_FROM(DECODE('{q}', 'base64'), 'utf-8')) "
-            "|| '%' "
-        "LIMIT 25").format(source=source, q=q)
-
-    lc = ckanapi.LocalCKAN(context=context)
-    return lc.action.datastore_search_sql(sql=query)
+    q = _get_or_bust(data_dict, 'q')
+    engine = ds_db._get_engine({
+        'connection_url': config['ckan.datastore.write_url']
+    })
+    session = orm.scoped_session(orm.sessionmaker(bind=engine))
+    results = (
+        session.query(
+            internal_authors.c.first_name,
+            internal_authors.c.last_name
+        )
+        .filter(
+            internal_authors.c.full_name.ilike('%{q}%'.format(q=q))
+        )
+        .limit(25)
+        .all()
+    )
+    session.remove()
+    return results
 
 
 # noinspection PyIncorrectDocstring
