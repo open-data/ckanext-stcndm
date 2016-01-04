@@ -59,6 +59,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/corrections.yaml',
                 'ckanext.stcndm:schemas/cube.yaml',
                 'ckanext.stcndm:schemas/daily.yaml',
+                'ckanext.stcndm:schemas/dataset.yaml',
                 'ckanext.stcndm:schemas/format.yaml',
                 'ckanext.stcndm:schemas/generic.yaml',
                 'ckanext.stcndm:schemas/geodescriptor.yaml',
@@ -218,6 +219,7 @@ class STCNDMPlugin(p.SingletonPlugin):
         # Some Java web clients require the web service to use Pascal Case
         return {
             "GetAutocomplete": common.get_autocomplete,
+            "GetInternalAuthors": common.get_internal_authors,
             "DeleteProduct": common.delete_product,
             "EnsureReleaseExists": releases.ensure_release_exists,
             "GetBookableProducts": daily.get_bookable_releases,
@@ -294,6 +296,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "shortcode_output": validators.shortcode_output,
             "subject_create_name": validators.subject_create_name,
             "survey_create_name": validators.survey_create_name,
+            "repeating_text_delimited": validators.repeating_text_delimited,
         }
 
     def get_helpers(self):
