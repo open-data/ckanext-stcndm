@@ -352,16 +352,6 @@ class STCNDMPlugin(p.SingletonPlugin):
         )
 
         map.connect(
-            'list',
-            '/api/current/list',
-            controller=(
-                'ckanext.stcndm.controllers.api_ext'
-                ':APIExtController'
-            ),
-            action='list'
-        )
-
-        map.connect(
             'solr_proxy',
             '/solr/select',
             controller=(
