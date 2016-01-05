@@ -54,6 +54,7 @@
     *  https://github.com/open-data/ckanext-repeating.git
     *  https://github.com/open-data/ckanext-wet-boew.git
     *  https://github.com/open-data/ckanext-stcndm.git
+    *  https://github.com/open-data/ckanext-autodoc.git
 
   ```
   git clone https://github.com/[Your_Fork]/ckanext-scheming.git
@@ -61,6 +62,7 @@
   git clone https://github.com/[Your_Fork]/ckanext-repeating.git
   git clone https://github.com/[Your_Fork]/ckanext-wet-boew.git
   git clone https://github.com/[Your_Fork]/ckanext-stcndm.git
+  git clone https://github.com/[Your_Fork]/ckanext-autodoc.git
   ```
 
   6. Use the wet4-scheming branch of the Open Data CKAN WET extension.
@@ -97,6 +99,10 @@
   cd ..
 
   cd ckanext-repeating
+  python setup.py develop
+  cd ..
+
+  cd ckanext-autodoc
   python setup.py develop
   cd ..
 
