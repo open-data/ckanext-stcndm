@@ -8,6 +8,8 @@
 * ckanext-scheming
 * ckanext-fluent
 * ckanext-repeating
+* ckanext-autodoc
+* ckanext-history
 * ckanext-wet-boew and a copy of the WET production files
 
 ## Installation
@@ -55,6 +57,7 @@
     *  https://github.com/open-data/ckanext-wet-boew.git
     *  https://github.com/open-data/ckanext-stcndm.git
     *  https://github.com/open-data/ckanext-autodoc.git
+    *  https://github.com/open-data/ckanext-history.git
 
   ```
   git clone https://github.com/[Your_Fork]/ckanext-scheming.git
@@ -63,6 +66,7 @@
   git clone https://github.com/[Your_Fork]/ckanext-wet-boew.git
   git clone https://github.com/[Your_Fork]/ckanext-stcndm.git
   git clone https://github.com/[Your_Fork]/ckanext-autodoc.git
+  git clone https://github.com/[Your_Fork]/ckanext-history.git
   ```
 
   6. Use the wet4-scheming branch of the Open Data CKAN WET extension.
@@ -106,6 +110,10 @@
   python setup.py develop
   cd ..
 
+  cd ckanext-history
+  python setup.py develop
+  cd ..
+
   cd ckanext-stcndm
   pip install -r requirements.txt
   python setup.py develop
@@ -144,7 +152,7 @@
     * `ckan.site_id = stcndm`
     * `ckan.plugins = stats text_view image_view recline_view
     stcndm stcndm_report_generator repeating scheming_datasets fluent
-    wet_boew_theme_gc_intranet`
+    wet_boew_theme_gc_intranet history autodoc`
 
   12. Initialize the database
 
