@@ -1,162 +1,149 @@
-# Statistics Canada's New New Dissemination CKAN Extension
+# ckanext-stcndm #
 
-## Requirements
 
-* Solr 5.2.1
-* PostgreSQL
-* ckan 2.3
-* ckanext-scheming
-* ckanext-fluent
-* ckanext-repeating
-* ckanext-wet-boew and a copy of the WET production files
+A CKAN Extension used for Statistics Canada's New Dissemination Model project.
 
-## Installation
+## Prerequisites ##
 
-  1. Install the following package using your OS package manager
+ - Python 2.6 or 2.7
+ - pip
+ - virtualenv
+ - Postgres 9.4
+ - Apache Solr 5.3.1
 
-  ```
-  python-dev postgresql libpq-dev python-pip python-virtualenv git-core libgeos-dev
-  ```
+## Requirements ##
 
-  2. In your home directory, create a folder for ndm
+**CKAN Related**
 
-  ```
-  mkdir stcndm
-  cd stcndm
-  ```
+Project | Github group/repo | Branch
+------- | ----------------- | ------
+ckan    | [open-data/cka](open-data/ckan "open-data/ckan") | release-v2.4-ndm
+ckanapi | [ckan/ckanapi](https://github.com/ckan/ckanapi "ckan/ckanapi") | master
+ckanext-scheming | [ckan/ckanext-scheming](https://github.com/ckan/ckanext-scheming "ckan/ckanext-scheming") | master
+ckanext-fluent | [ckan/ckanext-fluent](https://github.com/ckan/ckanext-fluent "ckan/ckanext-fluent") | master
+ckanext-repeating | [open-data/ckanext-repeating](https://github.com/open-data/ckanext-repeating "open-data/ckanext-repeating") | master
+ckanext-autodoc | [open-data/ckanext-autodoc](https://github.com/open-data/ckanext-autodoc "open-data/ckanext-autodoc") | master
+ckanext-wet-boew | [open-data/ckanext-wet-boew](https://github.com/open-data/ckanext-wet-boew "open-data/ckanext-wet-boew") | wet4-scheming
 
-  3. Create a python virtual environment
+**WET-BOEW Related**
 
-  ```
-  mkdir venv
-  sudo mkdir /usr/lib/ckan
-  virtualenv --no-site-packages venv
-  sudo ln -s ~/stcndm/venv /usr/lib/ckan/stcndm
-  . /usr/lib/ckan/stcndm/bin/activate
-  ```
+- [WET-BOEW 4.0.18](https://github.com/wet-boew/wet-boew-cdn/archive/v4.0.18.tar.gz "WET-BOEW 4.0.18")
+- [Theme-GC-Intranet 4.0.18](https://github.com/wet-boew/themes-cdn/archive/v4.0.18-theme-gc-intranet.tar.gz "Theme-GC-Intranet 4.0.18")
 
-  4. Clone CKAN and ckanapi and checkout version 2.3 of ckan
+## Installation ##
 
-    * https://github.com/ckan/ckan.git
-    * https://github.com/ckan/ckanapi.git
+This installation was based on RedHat-based operating system and is for setting up a Development Environment.
 
-  ```
-  git clone https://github.com/ckan/ckan.git
-  git clone https://github.com/ckan/ckanapi.git
-  cd ckan
-  git checkout release-v2.3.1
-  cd ..
-  ```
+1. Create a python virtual environment and activate it.
+2. Create a project directory and change to it.
 
-  5. Fork the following repos and clone them
-    *  https://github.com/open-data/ckanext-scheming.git
-    *  https://github.com/open-data/ckanext-fluent.git
-    *  https://github.com/open-data/ckanext-repeating.git
-    *  https://github.com/open-data/ckanext-wet-boew.git
-    *  https://github.com/open-data/ckanext-stcndm.git
+    *This guide assumes you are always at the root of the project directory.*
+3. Clone ``ckan`` and checkout the required version.
+4. Clone ``ckanpi``.
+5. Fork and clone the following.
 
-  ```
-  git clone https://github.com/[Your_Fork]/ckanext-scheming.git
-  git clone https://github.com/[Your_Fork]/ckanext-fluent.git
-  git clone https://github.com/[Your_Fork]/ckanext-repeating.git
-  git clone https://github.com/[Your_Fork]/ckanext-wet-boew.git
-  git clone https://github.com/[Your_Fork]/ckanext-stcndm.git
-  ```
+    - ``ckanext-scheming``
+    - ``ckanext-fluent``
+    - ``ckanext-repeating``
+    - ``ckanext-autodoc``
 
-  6. Use the wet4-scheming branch of the Open Data CKAN WET extension.
+6. Fork, clone and checkout the required version of ``ckanext-wet-boew``.
+7. Setup CKAN and the extensions.
 
-  ```
-  cd ckanext-wet-boew
-  git checkout wet4-scheming
-  cd ..
-  ```
+    ```
+        cd ckan
+        pip install -r requirements.txt
+        python setup.py develop
+        cd ..
 
-  7. Install the requirements for ckan and each extension.
+        cd ckanapi
+        pip install -r requirements.txt
+        python setup.py develop
+        cd ..
 
-  ```
-  cd ckan
-  pip install -r requirements.txt
-  python setup.py develop
-  cd ..
+        cd ckanext-wet-boew
+        pip install -r requirements.txt
+        python setup.py develop
+        cd ..
 
-  cd ckanapi
-  python setup.py develop
-  cd ..
+        cd ckanext-scheming
+        python setup.py develop
+        cd ..
 
-  cd ckanext-wet-boew
-  pip install -r requirements.txt
-  python setup.py develop
-  cd ..
+        cd ckanext-fluent
+        python setup.py develop
+        cd ..
 
-  cd ckanext-scheming
-  python setup.py develop
-  cd ..
+        cd ckanext-repeating
+        python setup.py develop
+        cd ..
 
-  cd ckanext-fluent
-  python setup.py develop
-  cd ..
+        cd ckanext-autodoc
+        python setup.py develop
+        cd ..
 
-  cd ckanext-repeating
-  python setup.py develop
-  cd ..
+        cd ckanext-stcndm
+        pip install -r requirements.txt
+        python setup.py develop
+        cd ..
+    ```
 
-  cd ckanext-stcndm
-  pip install -r requirements.txt
-  python setup.py develop
-  cd ..
-  ```
+8. Install WET Resources. *Change `PROJECT DIRECTORY` to your working directory.*
 
-  8. Create a new PostgreSQL database
+    ```
+        mkdir -p wet-boew/wet-boew
+        mdkir wet-boew/theme-gc-intranet
+        curl -L https://github.com/wet-boew/wet-boew-cdn/archive/v4.0.18.tar.gz | tar -zx --strip-components 1 --directory=PROJECT DIRECTORY/wet-boew/wet-boew
+        curl -L https://github.com/wet-boew/themes-cdn/archive/v4.0.18-theme-gc-intranet.tar.gz | tar -zx --strip-components 1 --directory=PROJECT DIRECTORY/wet-boew/theme-gc-intranet
+    ```
 
-  ```
-  sudo -u postgres createuser -S -D -R -P ckan_default
-  sudo -u postgres createdb -O ckan_default stcndm_ckan -E utf-8
-  ```
+9. Create a CKAN database.
 
-  9. Create a new Solr collection
+    ```
+        sudo -u postgres createuser -S -D -R -P ckan_default
+        sudo -u postgres createdb -O ckan_default stcndm_ckan -E utf-8
+    ```
 
-  ```
-  sudo su - solr -c "/opt/solr/bin/solr create -c stcndm -n data_driven_schema_configs"
-  sudo -u solr ln -f -s ~/stcndm/ckanext-stcndm/conf/solr/*.txt /var/solr/data/stcndm/conf
-  sudo -u solr ln -f -s ~/stcndm/ckanext-stcndm/conf/solr/solrconfig-dev.xml /var/solr/data/stcndm/conf/solrconfig.xml
-  sudo -u solr ln -f -s ~/stcndm/ckanext-stcndm/conf/solr/schema-dev.xml /var/solr/data/stcndm/conf/schema.xml
-  ```
+10. Create a new Solr collection. *Change `PROJECT DIRECTORY` to your working directory.*
 
-  10. Create a CKAN config file and link the who.ini
+    ```
+        sudo su - solr -c "/opt/solr/bin/solr create -c stcndm -n data_driven_schema_configs"
+        sudo -u solr ln -f -s `PROJECT DIRECTORY`/ckanext-stcndm/conf/solr/*.txt /var/solr/data/stcndm/conf
+        sudo -u solr ln -f -s `PROJECT DIRECTORY`/ckanext-stcndm/conf/solr/solrconfig-dev.xml /var/solr/data/stcndm/conf/solrconfig.xml
+        sudo -u solr ln -f -s `PROJECT DIRECTORY`/ckanext-stcndm/conf/solr/schema-dev.xml /var/solr/data/stcndm/conf/schema.xml
+    ```
 
-  ```
-  paster make-config ckan development.ini
-  ln -s ~/stcndm/ckan/who.ini who.ini
-  sudo mkdir -p /etc/ckan/stcndm
-  sudo ln -s ~/stcndm/*.ini /etc/ckan/stcndm/
-  ```
+11. Create and setup CKAN config file. *Change `PROJECT DIRECTORY` to your working directory.*
 
-  11. Modify the development.ini file with the following values:
+    ```
+        paster make-config ckan development.ini
+        ln -s ckan/who.ini who.ini
+        sudo mkdir -p /etc/ckan/stcndm
+        sudo ln -s `PROJECT DIRECTORY`/*.ini /etc/ckan/stcndm/
+    ```
 
-    * `sqlalchemy.url = postgresql://ckan_default:pass@localhost/stcndm_ckan`
-    * `solr_url = http://localhost:8983/solr/stcndm`
-    * `ckan.site_id = stcndm`
-    * `ckan.plugins = stats text_view image_view recline_view
-    stcndm stcndm_report_generator repeating scheming_datasets fluent
-    wet_boew_theme_gc_intranet`
+12. Modify the development.ini file and update the following values. *Change `PROJECT DIRECTORY` and `PASSWORD`*
 
-  12. Initialize the database
+    ```
+        sqlalchemy.url = postgresql://ckan_default:`PASSWORD`@localhost/stcndm_ckan
+        solr_url = http://localhost:8983/solr/stcndm
+        ckan.site_id = stcndm
+        ckan.plugins = stats text_view image_view recline_view stcndm stcndm_report_generator repeating scheming_datasets fluent wet_boew_theme_gc_intranet autodoc
+        ckan.storage_path = /var/lib/ckan
+        extra_public_paths = `PROJECT DIRECTORY`/wet-boew
+        wet_boew.jquery.offline = true
+        ckan.gravatar_show = false
+    ```
 
-  ```
-  paster --plugin=ckan db init -c development.ini
-  ```
+13. Initialize the Database.
 
-  13. Configure the WET extension for use as per https://github.com/open-data/ckanext-wet-boew/tree/wet4-scheming
+    ```
+        paster --plugin=ckan db init -c /etc/ckan/stcndm/development.ini
+        ckanapi -c /etc/ckan/stcndm/development.ini action organization_create name=statcan title="Statistics Canada"
+    ```
 
-  14. Create the Statcan organization
+14. Launch CKAN.
 
-  ```
-  ckanapi action organization_create name=statcan title="Statistics Canada"
-  ```
-
-  15. Launch CKAN
-
-  ```
-  paster serve ~/stcndm/development.ini
-  ```
-
+    ```
+        paster serve /etc/ckan/stcndm/development.ini
+    ```
