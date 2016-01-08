@@ -38,6 +38,7 @@ Functional tests for the CKANEXT-STCNDM.  It does front-end and api based tests 
 
     ```
     sqlalchemy.url = postgresql://ckan_default:pass@localhost/stcndm_ckan_test
+    solr_url = http://127.0.0.1:8983/solr/stcndm_test
     ```
 
 6. To run the tests.
