@@ -1,7 +1,8 @@
 import unittest
 
 from nose.tools import assert_equals
-from selenium_base import ckan_base, phantom, login_or_pass
+
+from functional_base import ckan_url, phantom, login_or_pass
 
 
 auth_urls = {
@@ -22,7 +23,7 @@ class TestAuthNav(unittest.TestCase):
 
     def test_links(self):
         for text, title in auth_urls.iteritems():
-            phantom.get(ckan_base + '/dashboard')
+            phantom.get(ckan_url + '/dashboard')
             phantom.find_element_by_link_text(text)
             assert_equals(phantom.title, title)
-        phantom.get(ckan_base + '/user/_logout')
+        phantom.get(ckan_url + '/user/_logout')

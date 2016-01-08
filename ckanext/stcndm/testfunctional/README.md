@@ -1,5 +1,7 @@
 # Headless UI Test for STCNDM-CKAN #
 
+Functional tests for the CKANEXT-STCNDM.  It does front-end and api based tests against test data.
+
 ## Requirements ##
 
 - Selenium
@@ -13,31 +15,33 @@
     pip install selenium
 	```
 
-1. Install the following package using your OS package manager
+2. Install the following package using your OS package manager
 
     ```
 	fontconfig freetype freetype-devel fontconfig-devel libstdc++
     ```
 
-1. Install the phantomsjs
+3. Install the phantomsjs
 
     ```
     wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2
     tar -xjvf phantomjs-1.9.8-linux-x86_64.tar.bz2 -C /usr/local/bin/ phantomjs-1.9.8-linux-x86_64/bin/phantomjs --strip-components 2
     ```
 
-1. Setup the test database
+4. Setup the test database
 
     ```
     sudo -u postgres createdb -O ckan_default stcndm_ckan_test -E utf-8
     ```
 
-1. Create /etc/ckan/stcndm/test.ini and add
+5. Copy development.ini to test-core.ini and add symbolyic link to /etc/ckan/stcndm/.  Update sqlalchemy.url.
 
     ```
-    [app:main]
-    use = config:/etc/ckan/stcndm/development.ini
     sqlalchemy.url = postgresql://ckan_default:pass@localhost/stcndm_ckan_test
     ```
 
-1. 
+6. To run the tests.
+
+    ```
+    source functionaltest_runner.sh
+    ```
