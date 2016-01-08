@@ -18,6 +18,8 @@ from ckanext.scheming.helpers import (
 
 __author__ = 'matt'
 
+ndm_audit_log_component_id = 10
+
 
 class NotValidProduct(Exception):
     pass
@@ -58,6 +60,8 @@ def get_schema(org, dataset):
     Return a dict having fields in a given org for keys and the values stored
     for that field in the tmschema organization as a dict.
 
+    :param org:
+    :param dataset:
     :return: dict of dicts
     """
 
@@ -303,6 +307,9 @@ def codeset_choices(codeset_type):
     """
     Return a dictionary of {codeset_value: title} for the codeset_type
     passed
+    :param codeset_type:
+    :type codeset_type: str
+    :return dict
     """
     lc = ckanapi.LocalCKAN()
     results = lc.action.package_search(
@@ -623,10 +630,12 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
         record[field_dst] = cast_to(val) if cast_to is not None else val
 
     requests.post(rsu, params={
-        'productType': product['type'],
+        'productType':  str(product['type']).capitalize(),
     }, data=json.dumps({
         'recordInfo': record
-    }))
+    }), headers={
+        'Content-Type': 'application/json'
+    })
 
 
 def get_parent_content_types(product_id):
@@ -673,3 +682,46 @@ def set_previous_issue_archive_date(product_id, archive_date):
                 result['archive_date'] = archive_date
                 lc.action.package_update(**result)
                 return
+
+
+def set_related_id(product_id, related_product_ids):
+    """
+    Add product_id to related_products field for each related_product_id
+
+    :param product_id: ID of product to add
+    :type product_id: str
+    :param related_product_ids: IDs of products to update
+    :type related_product_ids: list
+
+    :return:
+    """
+    if not related_product_ids or not isinstance(related_product_ids, list):
+        return
+    q = u'product_id_new:' + u' OR product_id_new:'.join(related_product_ids)
+    lc = ckanapi.LocalCKAN()
+    search_result = lc.action.package_search(
+        q=q
+    )
+    results = search_result.get('results', [])
+    for result in results:
+        related_products = result.get(u'related_products', [])
+        if product_id not in related_products:
+            related_products.append(product_id)
+            result.update({u'related_products': related_products})
+            try:
+                lc.action.package_update(**result)
+            except ValidationError:
+                pass  # fail quietly if best effort unsuccessful
+
+def write_audit_log(event, data = None, level = 1):
+    endpoint = config.get('ndm.auditlog.url')
+
+    if endpoint:
+        payload = {'componentId': ndm_audit_log_component_id, 'shortDescription': event, 'auditLevel': level}
+
+        if data and isinstance(data, dict):
+            silly_dict = [{'Key': k, 'Value': json.dumps(v)} for k, v in data.items()]
+            payload['userDefinedFields'] = silly_dict
+
+        headers = {'Content-Type': 'application/json'}
+        requests.post(endpoint, headers = headers, data=json.dumps(payload))

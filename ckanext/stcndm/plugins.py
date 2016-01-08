@@ -30,6 +30,7 @@ def strip_accents(s):
                    if unicodedata.category(c) != 'Mn')
 
 
+# noinspection PyMethodMayBeStatic
 class STCNDMPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IConfigurer)
@@ -58,6 +59,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/corrections.yaml',
                 'ckanext.stcndm:schemas/cube.yaml',
                 'ckanext.stcndm:schemas/daily.yaml',
+                'ckanext.stcndm:schemas/dataset.yaml',
                 'ckanext.stcndm:schemas/format.yaml',
                 'ckanext.stcndm:schemas/generic.yaml',
                 'ckanext.stcndm:schemas/geodescriptor.yaml',
@@ -65,7 +67,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/province.yaml',
                 'ckanext.stcndm:schemas/publication.yaml',
                 'ckanext.stcndm:schemas/pumf.yaml',
-                'ckanext.stcndm:schemas/release.yaml',
                 'ckanext.stcndm:schemas/service.yaml',
                 'ckanext.stcndm:schemas/subject.yaml',
                 'ckanext.stcndm:schemas/survey.yaml',
@@ -218,6 +219,7 @@ class STCNDMPlugin(p.SingletonPlugin):
         # Some Java web clients require the web service to use Pascal Case
         return {
             "GetAutocomplete": common.get_autocomplete,
+            "GetInternalAuthors": common.get_internal_authors,
             "DeleteProduct": common.delete_product,
             "EnsureReleaseExists": releases.ensure_release_exists,
             "GetBookableProducts": daily.get_bookable_releases,
@@ -248,17 +250,21 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetUpcomingReleases": common.get_upcoming_releases,
             "GetIssuesByPubStatus": common.get_issues_by_pub_status,
             "GetProductFormats": daily.get_product_formats,
+            "GetProductUrl": common.get_product_url,
+            "GetProductsBySurvey": surveys.get_products_by_survey,
             "PurgeDataset": common.purge_dataset,
             "RegisterCube": cubes.register_cube,
             "RegisterDaily": daily.register_daily,
             "RegisterDataProduct": common.register_data_product,
             "RegisterNonDataProduct": common.register_non_data_product,
-            "RegisterLegacyNonDataProduct": legacy.register_legacy_non_data_product,
+            "RegisterLegacyNonDataProduct":
+                legacy.register_legacy_non_data_product,
             "RegisterProduct": common.register_data_product,
             "RegisterRelease": releases.register_release,
             "RegisterSurvey": surveys.register_survey,
             "UpdateDefaultView": views.update_default_view,
-            "UpdateParentReleaseDateAndStatus": common.update_parent_release_date_and_status,
+            "UpdateReleaseDateAndStatus":
+                common.update_release_date_and_status,
             "UpdateProductGeo": common.update_product_geo,
             "UpdatePublishingStatus": common.update_last_publish_status,
             "GetDatasetSchema": common.get_dataset_schema,
@@ -290,6 +296,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "shortcode_output": validators.shortcode_output,
             "subject_create_name": validators.subject_create_name,
             "survey_create_name": validators.survey_create_name,
+            "repeating_text_delimited": validators.repeating_text_delimited,
         }
 
     def get_helpers(self):
@@ -298,11 +305,13 @@ class STCNDMPlugin(p.SingletonPlugin):
             "lookup_label": helpers.lookup_label,
             "get_dataset_types": helpers.get_dataset_types,
             "get_parent_content_types": helpers.get_parent_content_types,
-            "set_previous_issue_archive_date": helpers.set_previous_issue_archive_date,
+            "set_previous_issue_archive_date":
+                helpers.set_previous_issue_archive_date,
             'ensure_release_exists': helpers.ensure_release_exists,
             'get_parent_dataset': helpers.get_parent_dataset,
             'get_child_datasets': helpers.get_child_datasets,
             'x2list': helpers.x2list,
+            'set_related_id': helpers.set_related_id
         }
 
     def before_view(self, pkg_dict):
@@ -343,16 +352,6 @@ class STCNDMPlugin(p.SingletonPlugin):
         )
 
         map.connect(
-            'list',
-            '/api/current/list',
-            controller=(
-                'ckanext.stcndm.controllers.api_ext'
-                ':APIExtController'
-            ),
-            action='list'
-        )
-
-        map.connect(
             'solr_proxy',
             '/solr/select',
             controller=(
@@ -360,6 +359,16 @@ class STCNDMPlugin(p.SingletonPlugin):
                 ':SolrProxyController'
             ),
             action='select'
+        )
+
+        map.connect(
+            'schema_to_xl',
+            '/schema_to_xl/dump',
+            controller=(
+                'ckanext.stcndm.controllers.schema_to_xl'
+                ':SchemaToXlController'
+            ),
+            action='dump'
         )
 
         return map

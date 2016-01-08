@@ -2,6 +2,7 @@
 (function(window, angular, wb, $) {'use strict';
     var app = angular.module('reportGenerator', ['dataset-types', 'advanced-search', 'display-fields', 'services.config']),
         $resultsTable = $('#results'),
+        maxFieldItems = 100,
         queryDefaults = {
             wt: 'json'
         },
@@ -46,14 +47,8 @@
 
                     row[field] = cell || '';
 
-                    if (field === 'name') {
-                        row[field] = '' + cell + ' ' +
-                            '<a target="_blank" href="' + configuration.ckanInstance + '/dataset/' + cell + '" class="btn btn-default">' +
-                                '<span class="glyphicon glyphicon-eye-open"><span class="wb-inv">View ' + cell + '</span></a>' +
-                            '<a target="_blank" href="' + configuration.ckanInstance + '/dataset/edit/' + cell + '" class="btn btn-default">' +
-                                '<span class="glyphicon glyphicon-pencil"><span class="wb-inv">Edit ' + cell + '</span></a>';
-                    } else if (typeof cell === 'object') {
-                        row[field] = cell.join(',');
+                    if (typeof cell === 'object') {
+                        row[field] = cell.splice(0, maxFieldItems).join(',');
                     }
                 }
             }
@@ -128,22 +123,31 @@
                     $rootScope.queryError = false;
                     $rootScope.queryResultsCount = data.data.response.numFound;
                     $rootScope.queryResults = data.data.response;
-                    $rootScope.downloadLink = data.config.url + '?' + $.param($.extend({}, data.config.params, {wt: 'csv', rows: 999999999}));
+                    $rootScope.downloadLink = data.config.url + '?' + $.param($.extend({}, data.config.params, {wt: 'csv', 'csv.mv.separator': '·', rows: 999999999}));
 
                     var fields = data.data.responseHeader.params.fl.split(','),
                         datatable = $.extend(datatableDefaults, {
                             data: sanitizeData($rootScope.queryResults.docs, fields),
                             columns: createFieldsMapping(fields),
+                            fnRowCallback: function(row, data) {
+                                var name = data.name,
+                                    $firstCell = $(row.firstChild);
+
+                                if ($firstCell.find('a').length === 0) {
+                                    $firstCell.append(
+                                        '<a target="_blank" href="' + configuration.ckanInstance + '/dataset/' + name + '" class="btn btn-default">' +
+                                            '<span class="glyphicon glyphicon-eye-open"><span class="wb-inv">View ' + name + '</span></a>' +
+                                        '<a target="_blank" href="' + configuration.ckanInstance + '/dataset/edit/' + name + '" class="btn btn-default">' +
+                                            '<span class="glyphicon glyphicon-pencil"><span class="wb-inv">Edit ' + name + '</span></a>'
+                                    );
+                                }
+                            }
                         });
 
-                    $resultsTable
-                        .DataTable().destroy();
+                    $resultsTable.DataTable().destroy();
+                    $resultsTable.empty();
 
-                    $resultsTable
-                        .empty()
-                        .removeClass('wb-tables-inited wb-init')
-                        .attr('data-wb-tables', JSON.stringify(datatable))
-                        .trigger('wb-init.wb-tables');
+                    $resultsTable.dataTable(datatable);
                 }, function(response) {
                     delete $rootScope.queryResults;
                     $rootScope.queryError = true;
@@ -282,6 +286,10 @@ angular.module('checklist-model', [])
         this.operator = 'AND';
         this.keyword = '';
 
+        this.onFieldChange = function() {
+            this.fieldType = $rootScope.fieldsCtrl.fieldsDef[this.field].type;
+        };
+
         this.onEmptyChanged = function() {
             if (this.emptyKey) {
                 this.operator = 'AND';
@@ -295,20 +303,22 @@ angular.module('checklist-model', [])
                         },
                         prefix = this.field + ':',
                         keyword = this.keyword,
-                        type;
+                        type, startDate, endDate;
 
                     if (this.emptyKey) {
                         return '-' + prefix + '[* TO *]';
-                    } else {
-                        type = $rootScope.fieldsCtrl.fieldsDef[this.field].type;
-                        switch (type) {
-                            case 'date': {
-                                try {
-                                    keyword = new Date(keyword).toISOString();
-                                } catch (e) {}
-                                return prefix + '(' + escapeKeyword(keyword) + ')';
-                            }
-                        }
+                    }
+
+                    type = $rootScope.fieldsCtrl.fieldsDef[this.field].type;
+                    if (type === 'date') {
+                        try {
+                            startDate = new Date(this.startDate).toISOString();
+                            endDate = new Date(this.endDate);
+                            endDate.setDate(1);
+                            endDate.setSeconds(-1);
+                            endDate = endDate.toISOString();
+                        } catch (e) {}
+                        return prefix + '[' + escapeKeyword(startDate) + ' TO ' + escapeKeyword(endDate) + ']';
                     }
 
                     return prefix + '(*' + escapeKeyword(keyword) + '*)';
@@ -316,7 +326,7 @@ angular.module('checklist-model', [])
                 operatorStr = '',
                 expr;
 
-            if (this.field && (this.keyword || this.emptyKey)) {
+            if (this.field && (this.emptyKey || this.keyword || (this.startDate && this.endDate))) {
                 expr = getExpression.apply(this);
 
                 if ($rootScope.query && $rootScope.query.trim() !== '') {

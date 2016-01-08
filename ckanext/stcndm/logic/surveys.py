@@ -3,10 +3,13 @@
 import ckanapi
 from ckan.logic import get_or_bust, side_effect_free, NotFound, ValidationError
 import json
+from ckanext.stcndm.logic.common import get_product_url
 
 
+# noinspection PyIncorrectDocstring
 @side_effect_free
 def get_survey_codesets(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Returns all survey codesets.
 
@@ -46,7 +49,9 @@ def get_survey_codesets(context, data_dict):
     }
 
 
+# noinspection PyIncorrectDocstring
 def register_survey(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Registers a new survey, then tags it with given subject codes.
 
@@ -92,7 +97,9 @@ def register_survey(context, data_dict):
     return new_package
 
 
+# noinspection PyIncorrectDocstring
 def get_survey_subject_codes(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Returns the list of subject codes tagged to given survey
 
@@ -113,3 +120,42 @@ def get_survey_subject_codes(context, data_dict):
                         .format(product_id=product_id),))
 
     return json.dumps(results['results'][0].get('subject_codes', []))
+
+
+# noinspection PyIncorrectDocstring
+def get_products_by_survey(context, data_dict):
+    # noinspection PyUnresolvedReferences
+    """
+    Find published products which have the given survey as a source
+
+    :param surveyID: ID of the survey for which to find related products
+    :type surveyID: str
+    :return: list of related products
+    """
+
+    survey_id = get_or_bust(data_dict, 'surveyID')
+    lc = ckanapi.LocalCKAN(context=context)
+    results = lc.action.package_search(
+        q='survey_source_codes:{survey_id} AND '
+          'last_publish_status_code:12'.format(
+            survey_id=survey_id
+          ),
+        rows=1000
+    )
+    products = []
+    results = results.get('results', [])
+    for result in results:
+        title = result.get(u'title')
+        title = title if title else {u'en': u'', u'fr': u''}
+        product_id = result.get(u'product_id_new')
+        try:
+            url = get_product_url(context, {u'productId': product_id})
+        except NotFound:
+            url = {u'en': u'', u'fr': u''}
+
+        products.append({
+            u'product_id': product_id,
+            u'title': title,
+            u'url': url
+        })
+    return products

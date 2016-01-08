@@ -137,13 +137,15 @@ presets:
           en: Release 5
           fr: Émission 5
         value: '7'
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
+    form_snippet: multiple_select.html
+    display_snippet: multiple_choice.html
+    validators: scheming_required scheming_multiple_choice
+    output_validators: scheming_multiple_choice_output
     lookup: preset
     schema_field_type: code
-    schema_multivalued: false
+    schema_multivalued: true
     schema_extras: true
+    sorted_choices: true
 
 - preset_name: ndm_census_years
   values:
@@ -362,8 +364,8 @@ presets:
 - preset_name: ndm_description
   values:
     label:
-      en: Description
-      fr: Description
+      en: Description (Notes)
+      fr: Description (Notes)
     schema_field_type: fluent
     schema_multivalued: false
     schema_extras: false
@@ -517,10 +519,12 @@ presets:
             en: CD-ROM
             fr: CD-ROM
         value: '3'
+        weight: '6'
       - label:
             en: Diskette
             fr: Disquette
         value: '4'
+        weight: '7'
       - label:
             en: Fax/email
             fr: Télécopieur
@@ -529,14 +533,17 @@ presets:
             en: PDF
             fr: PDF
         value: '8'
+        weight: '2'
       - label:
             en: Microfiche
             fr: Microfiche
         value: '10'
+        weight: '4'
       - label:
             en: Paper
             fr: Imprimé
         value: '12'
+        weight: '3'
       - label:
             en: Symposium/Workshop
             fr: Symposium/Atelier
@@ -545,18 +552,22 @@ presets:
             en: Tape/Cassette
             fr: Bande magnétique/Cassette
         value: '14'
+        weight: '8'
       - label:
             en: DVD
             fr: DVD
         value: '15'
+        weight: '5'
       - label:
             en: HTML
             fr: HTML
         value: '17'
+        weight: '1'
       - label:
             en: Video
             fr: Vidéo
         value: '18'
+        weight: '4'
       - label:
             en: ETF
             fr: ETF
@@ -650,9 +661,9 @@ presets:
     label:
       en: Internal Authors
       fr: Auteurs internes
-    form_snippet: repeating_text.html
+    form_snippet: autocomplete.html
     display_snippet: repeating_text.html
-    validators: repeating_text
+    validators: repeating_text_delimited
     output_validators: repeating_text_output
     form_blanks: 3
     schema_field_type: string
@@ -767,6 +778,15 @@ presets:
     schema_field_type: fluent
     schema_multivalued: false
     schema_extras: true
+
+- preset_name: ndm_pe_code
+  values:
+      label:
+        en: PE Code
+        fr: Code PE
+      schema_field_type: string
+      schema_multivalued: false
+      schema_extras: true
 
 - preset_name: ndm_release_date
   values:
@@ -971,10 +991,6 @@ presets:
     sorted_choices: true
     choices:
       - label:
-          en: None
-          fr: Aucune
-        value: '0'
-      - label:
           en: Draft
           fr: Ébauche
         value: '2'
@@ -987,37 +1003,9 @@ presets:
           fr: Autorisé
         value: '6'
       - label:
-          en: Verified
-          fr: Vérifié
-        value: '8'
-      - label:
-          en: Loading
-          fr: En chargement
-        value: '9'
-      - label:
-          en: Loaded
-          fr: Chargé
-        value: '10'
-      - label:
-          en: Error Loading
-          fr: Erreur en chargeant
-        value: '11'
-      - label:
           en: Released
           fr: Diffusé
         value: '12'
-      - label:
-          en: Failure Releasing
-          fr: Erreur en diffusant
-        value: '44'
-      - label:
-          en: Freezing
-          fr: Figeant
-        value: '90'
-      - label:
-          en: Failure Freezing
-          fr: Erreur en figeant
-        value: '90'
       - label:
           en: Frozen
           fr: Figé
@@ -1027,7 +1015,7 @@ presets:
   values:
     label:
       en: Related Products
-      fr: Produits reliés
+      fr: Produits associés
     form_snippet: repeating_text.html
     display_snippet: repeating_text.html
     validators: repeating_text

@@ -161,7 +161,7 @@ dataset_fields:
 - field_name: discontinued_date
   preset: ndm_discontinued_date
 
-- field_name: census_grouping_code
+- field_name: census_grouping_codes
   preset: ndm_census_grouping
 
 - field_name: load_to_olc_code
@@ -169,3 +169,6 @@ dataset_fields:
 
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes
+
+- field_name: pe_code
+  preset: ndm_pe_code

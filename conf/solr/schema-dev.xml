@@ -301,9 +301,9 @@
         <field name="authors" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="authors_initials" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="calculations" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="census_grouping_code" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="census_grouping_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
-        <field name="census_grouping_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="census_grouping_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="census_grouping_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="census_grouping_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="census_years" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="child_list" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="codeset_type" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -338,6 +338,8 @@
         <field name="display_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="display_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="display_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="display_in_form_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="display_in_form_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="display_order" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="external_authors" type="text" indexed="true" stored="true" multiValued="true"/>
         <field name="feature_weight" type="int" indexed="true" stored="true" multiValued="false"/>
@@ -375,6 +377,7 @@
         <field name="issn_number_en" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="issn_number_fr" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="issue_number" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="issue_number_int" type="long" indexed="true" stored="true" multiValued="false"/>
         <field name="keywords_en" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="keywords_fr" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="last_publish_status_code" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -393,6 +396,7 @@
         <field name="ndm_states" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="old_title_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="old_title_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
+        <field name="pe_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="price" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="price_note_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="price_note_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
@@ -409,8 +413,8 @@
         <field name="question_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="reference_period_en" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="reference_period_fr" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="related_products" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="related_correction_ids" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="related_products" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="last_release_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="release_id" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="replaced_products" type="string" indexed="true" stored="true" multiValued="true"/>
@@ -481,6 +485,7 @@
     <solrQueryParser defaultOperator="AND"/>
 
     <!-- Scheming related copy fields -->
+    <copyField source="issue_number" dest="issue_number_int"/>
     <copyField source="*_codes" dest="text"/>
     <copyField source="*_code" dest="text"/>
 

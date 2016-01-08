@@ -115,6 +115,9 @@ dataset_fields:
 - field_name: reference_period
   preset: ndm_reference_period
 
+- field_name: related_products
+  preset: ndm_related_products
+
 - field_name: last_release_date
   preset: ndm_last_release_date
 

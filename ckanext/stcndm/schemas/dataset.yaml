@@ -1,0 +1,14 @@
+scheming_version: 1
+about_url: http://github.com/open-data/ckanext-stcndm
+dataset_type: dataset
+catalog_type_label: Others
+
+dataset_fields:
+
+- field_name: name
+- field_name: title
+
+resource_fields:
+
+- field_name: name
+- field_name: url

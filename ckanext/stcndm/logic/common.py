@@ -3,9 +3,14 @@
 import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
+import ckanext.datastore.db as ds_db
 import ckanext.scheming.helpers as scheming_helpers
 import ckanext.stcndm.helpers as stcndm_helpers
 import arrow
+
+from pylons import config
+from sqlalchemy import orm, types, Column, Table
+from ckan.model.meta import metadata
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -28,6 +33,13 @@ AUTOCOMPLETE = {
     }
 }
 
+internal_authors = Table(
+    'internal_authors', metadata,
+    Column('full_name', types.UnicodeText, nullable=False),
+    Column('first_name', types.UnicodeText, nullable=False),
+    Column('last_name', types.UnicodeText, nullable=False),
+)
+
 
 def _get_group(result):
     if result['type'] != 'subject':
@@ -42,6 +54,7 @@ def _get_group(result):
                     return choice['label']
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_autocomplete(context, data_dict):
     """
@@ -67,11 +80,11 @@ def get_autocomplete(context, data_dict):
             q=q,
             code=code
         ),
-        rows = 100,
-        sort = '{code} asc'.format(
+        rows=100,
+        sort='{code} asc'.format(
             code=code
         ),
-        fq = '{code}:{filter}'.format(
+        fq='{code}:{filter}'.format(
             code=code,
             filter='/.{{0,{max}}}/'.format(
                 max=int(max_level) * 2
@@ -91,6 +104,30 @@ def get_autocomplete(context, data_dict):
     return results
 
 
+# noinspection PyIncorrectDocstring
+@logic.side_effect_free
+def get_internal_authors(context, data_dict):
+    q = _get_or_bust(data_dict, 'q')
+    engine = ds_db._get_engine({
+        'connection_url': config['ckan.datastore.write_url']
+    })
+    session = orm.scoped_session(orm.sessionmaker(bind=engine))
+    results = (
+        session.query(
+            internal_authors.c.first_name,
+            internal_authors.c.last_name
+        )
+        .filter(
+            internal_authors.c.full_name.ilike('%{q}%'.format(q=q))
+        )
+        .limit(25)
+        .all()
+    )
+    session.remove()
+    return results
+
+
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_next_non_data_product_id(context, data_dict):
     """
@@ -112,6 +149,7 @@ def get_next_non_data_product_id(context, data_dict):
     )
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_next_product_id(context, data_dict):
     """
@@ -204,6 +242,7 @@ def get_next_product_id(context, data_dict):
     return product_id_new
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_product(context, data_dict):
     """
@@ -264,6 +303,7 @@ def get_product(context, data_dict):
     return product
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_dataset_schema(context, data_dict):
     """
@@ -293,6 +333,7 @@ def get_dataset_schema(context, data_dict):
     return result
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_group_schema(context, data_dict):
     """
@@ -322,7 +363,7 @@ def get_group_schema(context, data_dict):
     return result
 
 
-# noinspection PyUnusedLocal
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_product_type(context, data_dict):
     # noinspection PyUnresolvedReferences
@@ -379,6 +420,7 @@ def get_product_type(context, data_dict):
             )
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_last_publish_status(context, data_dict):
     """
@@ -413,8 +455,10 @@ def get_last_publish_status(context, data_dict):
         )
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_format_description(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Return the French and English values for the given formatCode.
 
@@ -449,8 +493,10 @@ def get_format_description(context, data_dict):
         )
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_upcoming_releases(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Return all records with a publish_status_code of Verified (08) and a
     release date between the two parameters.
@@ -508,6 +554,7 @@ def get_upcoming_releases(context, data_dict):
     return {'count': result['count'], 'results': results}
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_issues_by_pub_status(context, data_dict):
     # noinspection PyUnresolvedReferences
@@ -593,8 +640,10 @@ def get_issues_by_pub_status(context, data_dict):
         return {'count': count, 'results': output}
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_derived_product_list(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Return a dict with all ProductIDs and French/English titles that are
     associated with a given SubjectCode and ProductType.
@@ -637,7 +686,9 @@ def get_derived_product_list(context, data_dict):
     } for r in response['results']]
 
 
+# noinspection PyIncorrectDocstring
 def register_data_product(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Register a new data product based on a given `parentProductId` (the 8-digit
     ID of a cube) and the desired `productTypeCode`. The new product's fields
@@ -736,7 +787,9 @@ def register_data_product(context, data_dict):
     return {'product_id_new': product_id}
 
 
+# noinspection PyIncorrectDocstring
 def register_non_data_product(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Register a new non data product.
 
@@ -803,7 +856,9 @@ def register_non_data_product(context, data_dict):
     return lc.action.GetProduct(**{'productId': product_id})
 
 
+# noinspection PyIncorrectDocstring
 def delete_product(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Set the status of a record to 'Deleted' and remove all metadata associated
     with that record. This will make the productid available for reuse.
@@ -854,8 +909,10 @@ def delete_product(context, data_dict):
     }
 
 
+# noinspection PyIncorrectDocstring
 def purge_dataset(context, data_dict):
-    '''Purge a dataset.
+    # noinspection PyUnresolvedReferences
+    """Purge a dataset.
 
     .. warning:: Purging a dataset cannot be undone!
 
@@ -867,11 +924,11 @@ def purge_dataset(context, data_dict):
 
     :param id: the name or id of the dataset to be purged
     :type id: string
-    '''
+    """
     model = context['model']
-    id = _get_or_bust(data_dict, 'id')
+    product_id = _get_or_bust(data_dict, 'id')
 
-    pkg = model.Package.get(id)
+    pkg = model.Package.get(product_id)
     context['package'] = pkg
     if pkg is None:
         raise _NotFound(('Dataset was not found',))
@@ -883,7 +940,7 @@ def purge_dataset(context, data_dict):
         for m in members.all():
             m.purge()
 
-    pkg = model.Package.get(id)
+    pkg = model.Package.get(product_id)
     # no new_revision() needed since there are no object_revisions created
     # during purge
     pkg.purge()
@@ -891,7 +948,9 @@ def purge_dataset(context, data_dict):
 
 
 # TODO: This is out of scope for FY2014.
+# noinspection PyIncorrectDocstring
 def update_last_publish_status(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Update the publishing status code
 
@@ -920,7 +979,7 @@ def update_last_publish_status(context, data_dict):
     ]
 
 
-def update_parent_release_date_and_status(context, data_dict):
+def update_release_date_and_status(context, data_dict):
     """
     Update the release date and publishing status code for the parent
     record of a given product.
@@ -938,12 +997,129 @@ def update_parent_release_date_and_status(context, data_dict):
     :return: updated package
     :rtype: dict
     """
-    # TODO: why is productType being required here? The productId values should be unique.
+    # the client explicitly asked that we accept product_type as a parameter
+    # even though it can be grabbed from the existing dataset
 
-    return _stub_msg
+    product_id = _get_or_bust(data_dict, 'productId')
+    product_type = _get_or_bust(data_dict, 'productType')
+    release_date = _get_or_bust(data_dict, 'releaseDate')
+    publishing_status = _get_or_bust(data_dict, 'publishingStatus')
+
+    business_logic = {'10': {'type': 'cube',
+                             'update_product': True,
+                             'update_children': True},
+                      '11': {'type': 'view',
+                             'update_product': False,
+                             'update_children': False},
+                      '12': {'type': 'indicator',
+                             'update_product': False,
+                             'update_children': False},
+                      '13': {'type': 'chart',
+                             'update_product': False,
+                             'update_children': False},
+                      '14': {'type': 'map',
+                             'update_product': False,
+                             'update_children': False},
+                      '20': {'type': 'publication',
+                             'update_product': True,
+                             'update_children': False},
+                      '21': {'type': 'video',
+                             'update_product': True,
+                             'update_children': False},
+                      '22': {'type': 'conference',
+                             'update_product': True,
+                             'update_children': False},
+                      '23': {'type': 'service',
+                             'update_product': True,
+                             'update_children': False},
+                      '24': {'type': 'pumf',
+                             'update_product': True,
+                             'update_children': False},
+                      '26': {'type': '????',
+                             'update_product': False,
+                             'update_children': False},
+                      }
+
+    updated_products = []
+
+    def _update_product(product_id,
+                        product_type,
+                        release_date,
+                        publishing_status):
+
+        new_values = {'last_release_date': release_date,
+                      'publishing_status': publishing_status}
+
+        lc = ckanapi.LocalCKAN(context=context)
+        result = lc.action.package_search(
+            q=(
+                'type:{product_type} AND '
+                'product_id_new:{product_id}'
+            ).format(
+                product_type=business_logic[product_type]['type'],
+                product_id=product_id),
+            rows=1
+        )
+
+        if not result['count']:
+            raise _NotFound('Product not found')
+        elif result['count'] > 1:
+            raise _ValidationError('More than one product with given productid found')
+
+        product = result['results'][0]
+
+        product.update(new_values)
+        lc.action.package_update(**product)
+
+        updated_products.append(product['product_id_new'])
+
+    def _update_children(product_id,
+                         release_date,
+                         publishing_status):
+
+        new_values = {'last_release_date': release_date,
+                      'publishing_status': publishing_status,
+                      'url': 'http://google.com'}
+
+        lc = ckanapi.LocalCKAN(context=context)
+        result = lc.action.package_search(
+            q=(
+                '(type:view OR '
+                'type:indicator OR '
+                'type:chart OR '
+                'type:map) AND '
+                'top_parent_id:{top_parent_id}'
+            ).format(top_parent_id=product_id),
+            rows=1000
+        )
+        product = result['results'][0]
+
+        product.update(new_values)
+
+        for product in result['results']:
+
+            product.update(new_values)
+            lc.action.package_update(**product)
+
+            updated_products.append(product['product_id_new'])
 
 
+    if business_logic[product_type]['update_product']:
+        _update_product(product_id,
+                        product_type,
+                        release_date,
+                        publishing_status)
+
+    if business_logic[product_type]['update_children']:
+        _update_children(product_id,
+                         release_date,
+                         publishing_status)
+
+    return {'updated_products': updated_products}
+
+# noinspection PyIncorrectDocstring
 def _update_single_publish_status(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Update the publishing status code
 
@@ -994,7 +1170,9 @@ def _update_single_publish_status(context, data_dict):
     return result
 
 
+# noinspection PyIncorrectDocstring
 def update_product_geo(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Update the specificgeocode_bi_txtm value and sets the geo level
     (geolevel_*) accordingly.
@@ -1043,3 +1221,62 @@ def update_product_geo(context, data_dict):
     lc.action.package_update(**pkg_dict)
 
     return lc.action.package_show(id=pkg_dict['id'])
+
+
+# noinspection PyIncorrectDocstring
+def get_product_url(context, data_dict):
+    # noinspection PyUnresolvedReferences
+    """
+    Return the fluent URL of the given format of the product.
+
+    If no format is specified, return the url of the preferred (primary) format
+
+    :param productId:
+    :type productId:  str
+    :param formatCode:
+    :type formatCode: str
+
+    :return: dict
+
+    :raises: NotFound
+    """
+    product_id = _get_or_bust(data_dict, 'productId')
+    format_code = data_dict.get('formatCode')
+    lc = ckanapi.LocalCKAN(context=context)
+    if format_code:
+        results = lc.action.package_search(
+            q='name:format-{product_id}_{format_code}'.format(
+                product_id=product_id,
+                format_code=format_code
+            ).lower()
+        ).get('results')
+        if results:
+            return results[0].get(u'url', {u'en': u'', u'fr': u''})
+        else:
+            raise _NotFound('{product_id}: no format {format_code} '
+                            'found for product'.format(
+                                product_id=product_id,
+                                format_code=format_code
+                                ))
+    else:
+        results = lc.action.package_search(
+            q='name:format-{product_id}_*'.format(
+                product_id=product_id
+            ).lower()
+        ).get('results')
+        if not results:
+            raise _NotFound('{product_id}: no formats found for product'.format(
+                product_id=product_id
+            ))
+        choices = scheming_helpers.scheming_get_preset('ndm_format')\
+            .get('choices')
+        for choice in choices:
+            if 'weight' not in choice:
+                choices.remove(choice)
+        sorted_choices = sorted(choices, key=lambda k: k['weight'])
+        for choice in sorted_choices:
+            for result in results:
+                if result.get(u'format_code') == choice['value']:
+                    return result.get(u'url', {u'en': u'', u'fr': u''})
+
+        return {u'en': u'', u'fr': u''}

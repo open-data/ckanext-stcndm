@@ -9,9 +9,11 @@ from ckan.common import _
 from ckan.lib.search.common import make_connection
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
+from ckan.plugins.toolkit import missing
 
 import ckanapi
 from ckanext.stcndm.logic.common import get_product
+from ckanext.stcndm.helpers import set_related_id
 
 __author__ = 'Statistics Canada'
 
@@ -29,6 +31,7 @@ _NotFound = toolkit.ObjectNotFound
 _NotAuthorized = toolkit.NotAuthorized
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_daily_list(context, data_dict):
     # noinspection PyUnresolvedReferences
@@ -112,6 +115,7 @@ def get_daily_list(context, data_dict):
     return output
 
 
+# noinspection PyIncorrectDocstring
 def register_daily(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
@@ -119,19 +123,28 @@ def register_daily(context, data_dict):
 
     Automatically populate fields based on provided parameters.
 
+    :param releaseDate: e.g. 2015-06-30T09:45
+    :type releaseDate: datetime - required
     :param productId: 00240001 followed by 3 - 6 digit
         sequence id (i.e. 00240001654321)
-    :type productId: str
+    :type productId: str - required
+    :param statsInBrief: 0 - do not display in navigation
+                         1 - display in navigation
+    :type statsInBrief: str - required
     :param productTitle: EN/FR title
-    :type productTitle: dict
-    :param lastPublishStatusCode: 1 or 2 digit number
-    :type lastPublishStatusCode: str
-    :param releaseDate: e.g. 2015-06-30T09:45
-    :type releaseDate: str
-    :param uniqueId: e.g. daily3456
-    :type uniqueId: str
-    :param childList: list of IDs of child products
-    :type childList: str
+    :type productTitle: dict - required
+    :param referencePeriod: EN/FR reference period
+    :type referencePeriod: dict - required
+    :param themeList: list of theme IDs
+    :type themeList: list - required
+    :param cubeList: list of related cube IDs
+    :type cubeList: list - optional
+    :param surveyList: list of theme IDs
+    :type surveyList: list - optional
+    :param productList: list of IDs of child products
+    :type productList: list - optional
+    :param url: EN/FR url
+    :type url: dict - required
 
     :return: new package
     :rtype: dict
@@ -139,75 +152,106 @@ def register_daily(context, data_dict):
     :raises: ValidationError
     """
 
-    lc = ckanapi.LocalCKAN(context=context)
+    def my_get(a_data_dict, key, expected, required=True):
+        value = a_data_dict.get(key)
+        if value:
+            if not isinstance(value, expected):
+                raise _ValidationError(
+                    {key: u'Invalid format ({value}), '
+                          u'expecting a {type}'.format(
+                            value=value,
+                            type=expected.__name__)})
+        elif required:
+            raise _ValidationError({key: u'Missing value'})
+        return value
 
-    product_id = _get_or_bust(data_dict, 'productId')
+    release_date_str = my_get(data_dict, u'releaseDate', basestring)
+    try:
+        datetime.datetime.strptime(release_date_str, u'%Y-%m-%dT%H:%M:%S')
+    except ValueError:
+        raise _ValidationError(
+            {u'release_date':
+                u'Invalid ({release_date_str}), '
+                u'expected date in YYYY-MM-DDTHH:MM:SS format'.format(
+                    release_date_str=release_date_str
+                )}
+        )
+    product_id = my_get(data_dict, u'productId', basestring)
     if not re.match('^00240001[0-9]{3,6}$', product_id):
         raise _ValidationError(
-            _('Invalid product id for Daily: {0}'.format(product_id))
-        )
+            {u'product_id':
+                u'Invalid ({product_id}), '
+                u'expected 3 - 6 digit sequence number'.format(
+                    product_id=product_id)})
 
     #  check whether the product ID we were given is already in use
+    lc = ckanapi.LocalCKAN(context=context)
     result = lc.action.package_search(
         q='product_id_new:{0}'.format(product_id)
     )
     count = result['count']
     if count:
         raise _ValidationError(
-            _("product Id '{0}' already in use".format(product_id))
-        )
-
-    product_title = _get_or_bust(data_dict, 'productTitle')
-
-    release_date_str = _get_or_bust(data_dict, 'releaseDate')
-
-    last_publish_status_code = _get_or_bust(data_dict, 'lastPublishStatusCode')
-
-    child_list = _get_or_bust(data_dict, 'childList')
-    if not child_list:
+            {u'productId':
+                u'Already in use ({product_id})'.format(
+                    product_id=product_id)})
+    stats_in_brief = my_get(data_dict, u'statsInBrief', basestring)
+    if stats_in_brief not in [u'0', u'1']:
         raise _ValidationError(
-            _('childList must contain at least one child ID')
-        )
-    for child in child_list:
-        if not isinstance(child, basestring):
-            raise _ValidationError(_('Items in childList must all be strings'))
-
-    release_dict = {
-        'releasedProductId': product_id,
-        'parentProduct': product_id,
-        'releaseDate': release_date_str,
-        'lastPublishStatusCode': last_publish_status_code
-    }
-    if 'referencePeriod' in data_dict and data_dict['referencePeriod']:
-        release_dict['referencePeriod'] = data_dict['referencePeriod']
-#    lc.action.RegisterRelease(**release_dict)
+            {u'stats_in_brief':
+                u'Invalid ({value}), expecting 0 or 1 '.format(
+                    value=stats_in_brief)})
+    if stats_in_brief == u'0':
+        display_code = u'3'  # Hide Product Info page & Navigation Link
+        content_type_codes = [u'2015']  # Other
+    else:
+        display_code = u'1'  # Show Product Info Page
+        content_type_codes = [u'2016']  # Analysis/Stats in brief
+    product_title = my_get(data_dict, u'productTitle', dict)
+    reference_period = my_get(data_dict, u'referencePeriod', dict)
+    theme_list = my_get(data_dict, u'themeList', list)
+    related = []
+    cube_list = my_get(data_dict, u'cubeList', list, required=False)
+    if cube_list:
+        related.extend(cube_list)
+    survey_list = my_get(data_dict, u'surveyList', list, required=False)
+    if survey_list:
+        related.extend(survey_list)
+    product_list = my_get(data_dict, u'productList', list, required=False)
+    if product_list:
+        related.extend(product_list)
+    url = my_get(data_dict, u'url', dict)
 
     daily_dict = {
-        'name': 'daily-{0}'.format(product_id),
-        'owner_org': 'statcan',
-        'private': False,
-        'type': 'daily',
-        'title': product_title,
-        'product_id_new': product_id,
-        'product_type_code': '24',
-        'last_publish_status_code': last_publish_status_code,
-        'parent_product': product_id,
-        'child_list': child_list
+        u'name': u'daily-{0}'.format(product_id),
+        u'owner_org': u'statcan',
+        u'private': False,
+        u'product_type_code': u'24',
+        u'type': u'daily',
+        u'content_type_codes': content_type_codes,
+        u'last_release_date': release_date_str,
+        u'product_id_new': product_id,
+        u'display_code': display_code,
+        u'title': product_title,
+        u'reference_period': reference_period,
+        u'subject_codes': theme_list,
+        u'related_products': related if related else missing,
+        u'url': url
     }
-    if 'geolevelCodes' in data_dict and data_dict['geolevelCodes']:
-        daily_dict['geolevel_codes'] = data_dict['geolevelCodes']
-    if 'geodescriptorCodes' in data_dict and data_dict['geodescriptorCodes']:
-        daily_dict['geodescriptor_codes'] = data_dict['geodescriptorCodes']
     new_product = lc.action.package_create(**daily_dict)
-
-    return lc.action.GetProduct(
+    new_product = lc.action.GetProduct(
         productId=new_product['product_id_new'],
         fl='product_id_new'
     )
+    set_related_id(product_id, related)
+
+    return new_product
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_default_views(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Returns a list of the default views.
 
@@ -264,8 +308,10 @@ def get_default_views(context, data_dict):
     return final_results
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_product_issues(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Returns a list of the issues for the product ID
     :param: productId: A non-data product ID.
@@ -283,16 +329,16 @@ def get_product_issues(context, data_dict):
                 pid=product_id
             ),
             group='true',
-            group_field='issue_number',
+            group_field='issue_number_int',
             wt='json',
-            sort='issue_number desc',
+            sort='issue_number_int desc',
             # FIXME: We need to actually paginate on this, but the daily
             #        team will not accept it (yet).
             rows='2000000'
         )
     )
 
-    issue_no_group = response['grouped']['issue_number']
+    issue_no_group = response['grouped']['issue_number_int']
 
     return [{
         'issue': group['groupValue'],
@@ -300,8 +346,10 @@ def get_product_issues(context, data_dict):
     } for group in issue_no_group['groups']]
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_product_issue_articles(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Returns a list of the articles for the specific product/issue number
     :param: productId: A non-data product ID.
@@ -320,7 +368,7 @@ def get_product_issue_articles(context, data_dict):
     results = lc.action.package_search(
         q=(
             'top_parent_id:{pid} AND '
-            'issue_number:{issue_number} AND '
+            'issue_number_int:{issue_number} AND '
             'type:article'
         ).format(
             pid=product_id,
@@ -342,8 +390,10 @@ def get_product_issue_articles(context, data_dict):
     } for result in results['results']]
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_bookable_releases(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Returns a list of the products, issues and formats that a user
     may edit, based on the provided FRC codes
@@ -381,7 +431,7 @@ def get_bookable_releases(context, data_dict):
             ).format(
                 pid=result['product_id_new']
             ),
-            sort='issue_number asc',
+            sort='issue_number_int asc',
             # FIXME: We need to actually paginate on this, but the daily
             #        team will not accept it (yet).
             rows=2000000
@@ -390,7 +440,7 @@ def get_bookable_releases(context, data_dict):
         for art_result in article_results['results']:
             final_results.append({
                 'productId': result['product_id_new'],
-                'issue': art_result['issue_number'],
+                'issue': art_result['issue_number_int'],
                 'title': result['title'],
                 'refper': result['reference_period']
             })
@@ -398,8 +448,10 @@ def get_bookable_releases(context, data_dict):
     return final_results
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_themes(context, data_dict):
+    # noinspection PyUnresolvedReferences
     """
     Returns all subject codesets.
 
@@ -449,8 +501,10 @@ def get_themes(context, data_dict):
     }
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_product_formats(context, data_dict):
+    # noinspection ,PyUnresolvedReferences
     """
     Returns a list of bookable formats for the specific product/issue number
 
@@ -469,7 +523,7 @@ def get_product_formats(context, data_dict):
     art_results = lc.action.package_search(
         q=(
             'top_parent_id:{pid} AND '
-            'issue_number:{issue_number} AND '
+            'issue_number_int:{issue_number} AND '
             'type:article'
         ).format(
             pid=product_id,
@@ -499,8 +553,18 @@ def get_product_formats(context, data_dict):
     return final_results
 
 
+# noinspection PyIncorrectDocstring
 @logic.side_effect_free
 def get_products_by_frc(context, data_dict):
+    # noinspection PyUnresolvedReferences
+    """
+
+    :param frc:
+    :type frc: str
+    :param data_dict:
+
+    :return: list of dict
+    """
     frc = _get_or_bust(data_dict, 'frc')
 
     lc = ckanapi.LocalCKAN(context=context)
