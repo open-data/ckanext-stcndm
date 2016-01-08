@@ -1,9 +1,7 @@
 import unittest
 
-import setup_test
-
 from nose.tools import assert_equals
-from selenium_base import phantom, login_or_pass
+from selenium_base import phantom, login_or_pass, ckan_base
 from selenium.common.exceptions import NoSuchElementException
 
 
@@ -30,7 +28,7 @@ formatd = {'name': 'Format', 'url': '/format/'}
 
 
 def dataset_read(driver, dataset):
-    driver.get(setup_test.ckan_base + dataset)
+    driver.get(ckan_base + dataset)
     assert_equals(driver.title, 'Datasets - CKAN')
     try:
         driver.find_element_by_class_name('text-warning')

@@ -39,3 +39,5 @@
     use = config:/etc/ckan/stcndm/development.ini
     sqlalchemy.url = postgresql://ckan_default:pass@localhost/stcndm_ckan_test
     ```
+
+1. 
