@@ -61,10 +61,10 @@ SURVEY_PARTICIPATION = {
     'NOT SPECIFIED': 4
 }
 
-DETAILS_BASE_URL_EN = ('http://www23.statcan.gc.ca/imdb/'
-                       'p2SV.pl?Function=getSurvey&SDDS={0}')
-DETAILS_BASE_URL_FR = ('http://www23.statcan.gc.ca/imdb/'
-                       'p2SV_f.pl?Function=getSurvey&SDDS={0}')
+DETAILS_BASE_URL = (
+    'http://lf6eaipap01:7111/IMDB-REST/GetSurvey?content='
+    'LATEST_REGISTERED&updatedAfter=001-01-01&sdss={0}'
+)
 
 
 def parse_file(file_path):
@@ -92,12 +92,12 @@ def parse_file(file_path):
                 ],
                 u'archive_status': raw_record.xpath('string(./status)'),
                 u'url': {
-                    u'en': DETAILS_BASE_URL_EN.format(product_id),
-                    u'fr': DETAILS_BASE_URL_FR.format(product_id)
+                    u'en': DETAILS_BASE_URL.format(product_id),
+                    u'fr': DETAILS_BASE_URL.format(product_id)
                 },
                 u'survey_url': {
-                    u'en': DETAILS_BASE_URL_EN.format(product_id),
-                    u'fr': DETAILS_BASE_URL_FR.format(product_id)
+                    u'en': DETAILS_BASE_URL.format(product_id),
+                    u'fr': DETAILS_BASE_URL.format(product_id)
                 },
                 u'survey_status_code': SURVEY_STATUS[
                     raw_record.xpath('string(./status)')
@@ -119,7 +119,7 @@ def parse_url(url):
 
         detailed_record = etree.fromstring(
             requests.get(
-                DETAILS_BASE_URL_EN.format(product_id)
+                DETAILS_BASE_URL.format(product_id)
             ).content
         )
 
@@ -141,12 +141,12 @@ def parse_url(url):
             ],
             u'archive_status': raw_record.xpath('string(./status)'),
             u'url': {
-                u'en': DETAILS_BASE_URL_EN.format(product_id),
-                u'fr': DETAILS_BASE_URL_FR.format(product_id)
+                u'en': DETAILS_BASE_URL.format(product_id),
+                u'fr': DETAILS_BASE_URL.format(product_id)
             },
             u'survey_url': {
-                u'en': DETAILS_BASE_URL_EN.format(product_id),
-                u'fr': DETAILS_BASE_URL_FR.format(product_id)
+                u'en': DETAILS_BASE_URL.format(product_id),
+                u'fr': DETAILS_BASE_URL.format(product_id)
             },
             u'survey_status_code': SURVEY_STATUS[
                 raw_record.xpath('string(./status)')

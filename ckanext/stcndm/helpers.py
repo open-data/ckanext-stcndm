@@ -18,6 +18,8 @@ from ckanext.scheming.helpers import (
 
 __author__ = 'matt'
 
+ndm_audit_log_component_id = 10
+
 
 class NotValidProduct(Exception):
     pass
@@ -710,3 +712,29 @@ def set_related_id(product_id, related_product_ids):
                 lc.action.package_update(**result)
             except ValidationError:
                 pass  # fail quietly if best effort unsuccessful
+
+
+def write_audit_log(event, data=None, level=1):
+    endpoint = config.get('ndm.auditlog.url')
+    if not endpoint:
+        return
+
+    payload = {
+        'componentId': ndm_audit_log_component_id,
+        'shortDescription': event,
+        'auditLevel': level
+    }
+
+    if data and isinstance(data, dict):
+        payload['userDefinedFields'] = [{
+            'Key': k,
+            'Value': json.dumps(v)
+        } for k, v in data.iteritems()]
+
+    requests.post(
+        endpoint,
+        headers={
+            'Content-Type': 'application/json'
+        },
+        data=json.dumps(payload)
+    )
