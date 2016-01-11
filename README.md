@@ -4,7 +4,7 @@
 
 * Solr 5.2.1
 * PostgreSQL
-* ckan 2.3
+* ckan v2.4-ndm
 * ckanext-scheming
 * ckanext-fluent
 * ckanext-repeating

@@ -3,7 +3,7 @@
 {%- set values = h.x2list(data.get(field.field_name, [])) -%}
 <div class="row" data-autocomplete='{
         "type": "{{ field.lookup }}"
-        {% if c.action == "new" and field.lookup == "subject" and schema.dataset_type == "publication" %}, "max_level": 1{% endif %}
+        {% if c.action == "new" and field.lookup == "subject" and object_type == "publication" %}, "max_level": 1{% endif %}
     }'>
 
         {{ form.input(
