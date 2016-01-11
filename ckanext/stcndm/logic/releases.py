@@ -193,96 +193,104 @@ def consume_transaction_file(context, data_dict):
     :param transactionFile: Daily registration transactions
     :type transactionFile: dict
     """
-    def my_get(a_data_dict, key, expected):
-        value = a_data_dict.get(key)
-        if not value:
-            raise _ValidationError({key: u'Missing value'})
-        if not isinstance(value, expected):
-            raise _ValidationError(
-                {key: u'Invalid format ({value}), expecting a {type}'.format(
-                    value=value,
-                    type=expected.__name__)})
-        return value
-
-    if u'transactionFile' not in data_dict:
-        transaction_file = config.get('ckanext.stcndm.transaction_file')
-        if not transaction_file:
-            raise _ValidationError({
-                u'transactionFile': u'Path to transactionFile missing from'
-                                    u'CKAN config file'})
-        try:
-            transaction_file = open(transaction_file)
-            data_dict = json.load(transaction_file)
-        except (IOError, ValueError) as e:
-            raise _ValidationError({
-                u'transactionFile': e.message
-            })
-
-    transaction_dict = my_get(data_dict, u'transactionFile', dict)
-    daily_dict = my_get(transaction_dict, u'daily', dict)
-    release_date_text = my_get(daily_dict, u'release_date', basestring)
     try:
-        release_date = datetime.datetime.strptime(
-            release_date_text,
-            u'%Y-%m-%dT%H:%M:%S'
-        )
-    except ValueError:
-        raise _ValidationError(
-            {u'release_date':
-                u'Invalid format ({date_text}), '
-                u'expecting YYYY-MM-DDTHH:MM:SS'.format(
-                    date_text=release_date_text)})
-    releases = my_get(daily_dict, u'release', list)
-    lc = ckanapi.LocalCKAN(context=context)
-    results = []
-    for release in releases:
-        if not isinstance(release, dict):
-            raise _ValidationError({u'release': u'Invalid format, '
-                                                u'expecting a list of dict'})
-        product_id = my_get(release, u'id', basestring)
-        letter_id = my_get(release, u'letter_id', basestring)
-        stats_in_brief = my_get(release, u'stats_in_brief', basestring)
-        title = {
-            u'en': my_get(release, u'title_en', basestring),
-            u'fr': my_get(release, u'title_fr', basestring)
-        }
-        reference_period = {
-            u'en': release.get(u'refper_en'),
-            u'fr': release.get(u'refper_fr')
-        }
-        theme_list = my_get(release, u'theme', list)
-        cube_list = release.get(u'cube', [])
-        survey_list = release.get(u'survey', [])
-        product_list = release.get(u'product', [])
-        url = {
-            u'en': u'/daily-quotidien/{release_date}/dq{release_date}'
-                   u'{letter_id}-eng.htm'.format(
-                     release_date=release_date.strftime(u'%y%m%d'),
-                     letter_id=letter_id
-                   ),
-            u'fr': u'/daily-quotidien/{release_date}/dq{release_date}'
-                   u'{letter_id}-fra.htm'.format(
-                     release_date=release_date.strftime(u'%y%m%d'),
-                     letter_id=letter_id
-                   )
-        }
+        def my_get(a_data_dict, key, expected):
+            value = a_data_dict.get(key)
+            if not value:
+                raise _ValidationError({key: u'Missing value'})
+            if not isinstance(value, expected):
+                raise _ValidationError(
+                    {key:
+                        u'Invalid format ({value}), expecting a {type}'.format(
+                        value=value,
+                        type=expected.__name__)})
+            return value
+
+        if u'transactionFile' not in data_dict:
+            transaction_file = config.get('ckanext.stcndm.transaction_file')
+            if not transaction_file:
+                raise _ValidationError({
+                    u'transactionFile': u'Path to transactionFile missing from'
+                                        u'CKAN config file'})
+            try:
+                transaction_file = open(transaction_file)
+                data_dict = json.load(transaction_file)
+            except (IOError, ValueError) as e:
+                raise _ValidationError({
+                    u'transactionFile': e.message
+                })
+
+        transaction_dict = my_get(data_dict, u'transactionFile', dict)
+        daily_dict = my_get(transaction_dict, u'daily', dict)
+        release_date_text = my_get(daily_dict, u'release_date', basestring)
         try:
-            results.append(lc.action.RegisterDaily(
-                ** {
-                    u'releaseDate': release_date_text,
-                    u'productId': u'00240001' + product_id,
-                    u'statsInBrief': stats_in_brief,
-                    u'productTitle': title,
-                    u'referencePeriod': reference_period,
-                    u'themeList': theme_list,
-                    u'cubeList': cube_list,
-                    u'surveyList': survey_list,
-                    u'productList': product_list,
-                    u'url': url
-                }
-            ))
-        except _ValidationError as ve:
-            results.append({
-                u'product_id_new': u'00240001'+product_id,
-                u'error': ve.error_dict})
+            release_date = datetime.datetime.strptime(
+                release_date_text,
+                u'%Y-%m-%dT%H:%M:%S'
+            )
+        except ValueError:
+            raise _ValidationError(
+                {u'release_date':
+                    u'Invalid format ({date_text}), '
+                    u'expecting YYYY-MM-DDTHH:MM:SS'.format(
+                        date_text=release_date_text)})
+        releases = my_get(daily_dict, u'release', list)
+        lc = ckanapi.LocalCKAN(context=context)
+        results = []
+        for release in releases:
+            if not isinstance(release, dict):
+                raise _ValidationError({
+                    u'release': u'Invalid format, '
+                    u'expecting a list of dict'
+                })
+            product_id = my_get(release, u'id', basestring)
+            letter_id = my_get(release, u'letter_id', basestring)
+            stats_in_brief = my_get(release, u'stats_in_brief', basestring)
+            title = {
+                u'en': my_get(release, u'title_en', basestring),
+                u'fr': my_get(release, u'title_fr', basestring)
+            }
+            reference_period = {
+                u'en': release.get(u'refper_en'),
+                u'fr': release.get(u'refper_fr')
+            }
+            theme_list = my_get(release, u'theme', list)
+            cube_list = release.get(u'cube', [])
+            survey_list = release.get(u'survey', [])
+            product_list = release.get(u'product', [])
+            url = {
+                u'en': u'/daily-quotidien/{release_date}/dq{release_date}'
+                       u'{letter_id}-eng.htm'.format(
+                         release_date=release_date.strftime(u'%y%m%d'),
+                         letter_id=letter_id
+                       ),
+                u'fr': u'/daily-quotidien/{release_date}/dq{release_date}'
+                       u'{letter_id}-fra.htm'.format(
+                         release_date=release_date.strftime(u'%y%m%d'),
+                         letter_id=letter_id
+                       )
+            }
+            try:
+                results.append(lc.action.RegisterDaily(
+                    ** {
+                        u'releaseDate': release_date_text,
+                        u'productId': u'00240001' + product_id,
+                        u'statsInBrief': stats_in_brief,
+                        u'productTitle': title,
+                        u'referencePeriod': reference_period,
+                        u'themeList': theme_list,
+                        u'cubeList': cube_list,
+                        u'surveyList': survey_list,
+                        u'productList': product_list,
+                        u'url': url
+                    }
+                ))
+            except _ValidationError as ve:
+                results.append({
+                    u'product_id_new': u'00240001'+product_id,
+                    u'error': ve.error_dict})
+        stcndm_helpers.write_audit_log("consume_transaction_file", results)
+    except _ValidationError as ve:
+        stcndm_helpers.write_audit_log("consume_transaction_file", ve, 3)
+        raise ve
     return results
