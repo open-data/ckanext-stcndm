@@ -29,8 +29,8 @@ ckanext-wet-boew | [open-data/ckanext-wet-boew](https://github.com/open-data/cka
 
 **WET-BOEW Related**
 
-- [WET-BOEW 4.0.18](https://github.com/wet-boew/wet-boew-cdn/archive/v4.0.18.tar.gz "WET-BOEW 4.0.18")
-- [Theme-GC-Intranet 4.0.18](https://github.com/wet-boew/themes-cdn/archive/v4.0.18-theme-gc-intranet.tar.gz "Theme-GC-Intranet 4.0.18")
+- [WET-BOEW 4.0.21](https://github.com/wet-boew/wet-boew-cdn/archive/v4.0.21.tar.gz "WET-BOEW 4.0.21")
+- [Theme-GC-Intranet 4.0.20](https://github.com/wet-boew/themes-cdn/archive/v4.0.21-theme-gc-intranet.tar.gz "Theme-GC-Intranet 4.0.20")
 
 ## Installation ##
 
