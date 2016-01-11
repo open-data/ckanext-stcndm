@@ -10,6 +10,8 @@ A CKAN Extension used for Statistics Canada's New Dissemination Model project.
  - virtualenv
  - Postgres 9.4
  - Apache Solr 5.3.1
+ - libgeos
+ - Git
 
 ## Requirements ##
 
