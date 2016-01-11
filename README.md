@@ -42,14 +42,15 @@ This installation was based on RedHat-based operating system and is for setting 
     *This guide assumes you are always at the root of the project directory.*
 3. Clone ``ckan`` and checkout the required version.
 4. Clone ``ckanpi``.
+6. Fork, clone and checkout the required version of ``ckanext-wet-boew``.
 5. Fork and clone the following.
 
     - ``ckanext-scheming``
     - ``ckanext-fluent``
     - ``ckanext-repeating``
     - ``ckanext-autodoc``
+    - ``ckanext-stcndm``
 
-6. Fork, clone and checkout the required version of ``ckanext-wet-boew``.
 7. Setup CKAN and the extensions.
 
     ```
