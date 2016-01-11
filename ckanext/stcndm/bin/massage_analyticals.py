@@ -44,7 +44,7 @@ while i < n:
         for e in line['extras']:
             line[e['key']] = e['value']
 
-        product_id_new = line.get(u'productidnew_bi_strs')
+        product_id_new = line.get(u'productidnew_bi_strs').upper()
         if product_id_new not in product_id_list:
             product_id_list.append(product_id_new)
         product_out = do_product(line)
@@ -94,9 +94,11 @@ while i < n:
                 )
         else:
             sys.stderr.write(
-                'ignoring analytical with unexpected product_id: {product_id}\n'
+                'ignoring analytical with unexpected product_id: '
+                '{product_id} - name: {name}\n'
                 .format(
-                    product_id=line.get(u'productidnew_bi_strs', u'product_id')
+                    product_id=line.get(u'productidnew_bi_strs', u'product_id'),
+                    name=line.get(u'name', u'name')
                 )
             )
             continue

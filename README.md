@@ -37,16 +37,16 @@
   . /usr/lib/ckan/stcndm/bin/activate
   ```
 
-  4. Clone CKAN and ckanapi and checkout version 2.3 of ckan
+  4. Clone CKAN and ckanapi and checkout version 2.4-ndm of ckan
 
-    * https://github.com/ckan/ckan.git
+    * https://github.com/open-data/ckan.git
     * https://github.com/ckan/ckanapi.git
 
   ```
-  git clone https://github.com/ckan/ckan.git
+  git clone https://github.com/open-data/ckan.git
   git clone https://github.com/ckan/ckanapi.git
   cd ckan
-  git checkout release-v2.3.1
+  git checkout release-v2.4-ndm
   cd ..
   ```
 
