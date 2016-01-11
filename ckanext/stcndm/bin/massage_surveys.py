@@ -96,6 +96,31 @@ for preset in presetMap['presets']:
 #        if not format_list:
 #            raise ValueError('could not find format preset')
 
+deleted_subject_codes = [
+    '130901',
+    '140206',
+    '2101',
+    '26',
+    '2602',
+    '2603',
+    '2606',
+    '2699',
+    '3103',
+    '3404',
+    '3451',
+    '3452',
+    '350301',
+    '3507',
+    '3706',
+    '3710',
+    '380401',
+    '4302',
+    '4304',
+    '4307',
+    '673901',
+    '675178'
+]
+
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj/')
 i = 0
 n = 1
@@ -148,6 +173,10 @@ while i < n:
                 u'en': line.get(u'questlink_en_strs', ''),
                 u'fr': line.get(u'questlink_fr_strs', ''),
             },
+            u'reference_period': {
+                u'en': line.get(u'refperiod_en_txtm', u''),
+                u'fr': line.get(u'refperiod_fr_txtm', u''),
+            },
             u'thesaurus_terms': {
                 u'en': listify(line.get(u'stcthesaurus_en_txtm', '')),
                 u'fr': listify(line.get(u'stcthesaurus_fr_txtm', '')),
@@ -178,6 +207,9 @@ while i < n:
             u'license_url': line.get(u'license_url', ''),
             u'license_id': line.get(u'license_id', '')
         }
+        for code in deleted_subject_codes:
+            if code in line_out[u'subject_codes']:
+                line_out[u'subject_codes'].remove(code)
 
         if u'releasedate_bi_strs' in line and line[u'releasedate_bi_strs']:
             release_date = (line.get(u'releasedate_bi_strs').strip()+u'T08:30')[:16]
