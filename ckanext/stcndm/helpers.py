@@ -713,15 +713,28 @@ def set_related_id(product_id, related_product_ids):
             except ValidationError:
                 pass  # fail quietly if best effort unsuccessful
 
-def write_audit_log(event, data = None, level = 1):
+
+def write_audit_log(event, data=None, level=1):
     endpoint = config.get('ndm.auditlog.url')
+    if not endpoint:
+        return
 
-    if endpoint:
-        payload = {'componentId': ndm_audit_log_component_id, 'shortDescription': event, 'auditLevel': level}
+    payload = {
+        'componentId': ndm_audit_log_component_id,
+        'shortDescription': event,
+        'auditLevel': level
+    }
 
-        if data and isinstance(data, dict):
-            silly_dict = [{'Key': k, 'Value': json.dumps(v)} for k, v in data.items()]
-            payload['userDefinedFields'] = silly_dict
+    if data and isinstance(data, dict):
+        payload['userDefinedFields'] = [{
+            'Key': k,
+            'Value': json.dumps(v)
+        } for k, v in data.iteritems()]
 
-        headers = {'Content-Type': 'application/json'}
-        requests.post(endpoint, headers = headers, data=json.dumps(payload))
+    requests.post(
+        endpoint,
+        headers={
+            'Content-Type': 'application/json'
+        },
+        data=json.dumps(payload)
+    )
