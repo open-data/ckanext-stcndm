@@ -1078,8 +1078,7 @@ def update_release_date_and_status(context, data_dict):
                          publishing_status):
 
         new_values = {'last_release_date': release_date,
-                      'publishing_status': publishing_status,
-                      'url': 'http://google.com'}
+                      'publishing_status': publishing_status,}
 
         lc = ckanapi.LocalCKAN(context=context)
         result = lc.action.package_search(
