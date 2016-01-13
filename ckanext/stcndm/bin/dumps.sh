@@ -19,8 +19,6 @@ echo views | tee -a jsonl_dumps/dump_errs.txt
 python massage_views.py > jsonl_dumps/views.jsonl 2>> jsonl_dumps/dump_errs.txt
 echo indicators | tee -a jsonl_dumps/dump_errs.txt
 python massage_indicators.py > jsonl_dumps/indicators.jsonl 2>> jsonl_dumps/dump_errs.txt
-echo daily | tee -a jsonl_dumps/dump_errs.txt
-python massage_daily.py > jsonl_dumps/daily.jsonl 2>> jsonl_dumps/dump_errs.txt
 echo conferences | tee -a jsonl_dumps/dump_errs.txt
 python massage_conferences.py > jsonl_dumps/conferences.jsonl 2>> jsonl_dumps/dump_errs.txt
 echo services | tee -a jsonl_dumps/dump_errs.txt
