@@ -1082,7 +1082,7 @@ def update_release_date_and_status(context, data_dict):
                       'publishing_status': publishing_status,}
 
         lc = ckanapi.LocalCKAN(context=context)
-        result = lc.action.package_search(
+        response = lc.action.package_search(
             q=(
                 '(type:view OR '
                 'type:indicator OR '
@@ -1092,9 +1092,10 @@ def update_release_date_and_status(context, data_dict):
             ).format(top_parent_id=product_id),
             rows=1000
         )
-        if result['count'] > 0:
 
-            for product in result['results']:
+        if response['count'] > 0:
+
+            for product in response['results']:
 
                 product.update(new_values)
                 lc.action.package_update(**product)
