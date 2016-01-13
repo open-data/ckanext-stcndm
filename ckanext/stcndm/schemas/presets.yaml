@@ -456,8 +456,8 @@ presets:
       fr: Affichage
     form_snippet: select.html
     display_snippet: select.html
-    required: true
     validators: scheming_required scheming_choices
+    create_validators: set_default_value(1)
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
