@@ -1092,16 +1092,14 @@ def update_release_date_and_status(context, data_dict):
             ).format(top_parent_id=product_id),
             rows=1000
         )
-        product = result['results'][0]
+        if result['count'] > 0:
 
-        product.update(new_values)
+            for product in result['results']:
 
-        for product in result['results']:
+                product.update(new_values)
+                lc.action.package_update(**product)
 
-            product.update(new_values)
-            lc.action.package_update(**product)
-
-            updated_products.append(product['product_id_new'])
+                updated_products.append(product['product_id_new'])
 
 
     if business_logic[product_type]['update_product']:
