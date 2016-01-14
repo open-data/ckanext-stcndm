@@ -5,6 +5,7 @@ import ast
 import json
 import requests
 from datetime import datetime
+from functools import wraps
 
 import ckanapi
 import ckan.model as model
@@ -738,3 +739,19 @@ def write_audit_log(event, data=None, level=1):
         },
         data=json.dumps(payload)
     )
+
+
+def audit_log_exception(event):
+    def _logit(f):
+        @wraps(f)
+        def _wrapped(*args, **kwargs):
+            try:
+                results = f(*args, **kwargs)
+            except Exception as ex:
+                write_audit_log(event, data=ex, level=3)
+                raise
+
+            write_audit_log(event, level=1)
+            return results
+        return _wrapped
+    return _logit

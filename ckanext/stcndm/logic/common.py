@@ -979,6 +979,7 @@ def update_last_publish_status(context, data_dict):
     ]
 
 
+@stcndm_helpers.audit_log_exception('update_release_date_and_status')
 def update_release_date_and_status(context, data_dict):
     """
     Update the release date and publishing status code for the parent
