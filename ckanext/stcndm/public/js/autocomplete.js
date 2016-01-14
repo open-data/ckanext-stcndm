@@ -14,7 +14,7 @@
                     type: 'ajax-fetch.wb',
                     element: event.delegateTarget,
                     fetch: {
-                        url: root + '/api/3/action/GetAutocomplete',
+                        url: root + 'api/3/action/GetAutocomplete',
                         data: data,
                         dataType: 'jsonp',
                         jsonp: 'callback'
