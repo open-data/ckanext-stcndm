@@ -11,6 +11,7 @@ import arrow
 from pylons import config
 from sqlalchemy import orm, types, Column, Table
 from ckan.model.meta import metadata
+from ckanext.stcndm.model import geo
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -779,7 +780,19 @@ def register_data_product(context, data_dict):
         if not copied_fields.get('content_type_codes'):
             copied_fields['content_type_codes'] = ['2012']
 
-    lc.action.package_create(**copied_fields)
+    # We don't want to store geodescriptors for data products as part
+    # of the dataset, as there can be tens of thousands of them. The poor
+    # performance of datasets in CKAN means this would criple normal package
+    # creates, updates, and fetches.
+    new_pkg = lc.action.package_create(**copied_fields)
+
+    geo_codes = data_dict.get('geodescriptor_codes')
+    if geo_codes:
+        for geo_code in geo_codes:
+            geo.update_relationship(
+                new_pkg['product_id_new'],
+                geo_code
+            )
 
     if product_type == '11' and product_id.endswith('01'):
         lc.action.UpdateDefaultView(cubeId=cube_id, defaultView=product_id)
