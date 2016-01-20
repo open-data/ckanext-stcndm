@@ -87,9 +87,6 @@ dataset_fields:
 - field_name: census_years
   preset: ndm_census_years
 
-- field_name: correction_id
-  preset: ndm_correction_id
-
 - field_name: display_code
   preset: ndm_display
 

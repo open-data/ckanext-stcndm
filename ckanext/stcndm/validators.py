@@ -311,18 +311,18 @@ def correction_create_name(key, data, errors, context):
         return
 
     current_name = data.get(key, '')
-    correction_id = _data_lookup(('correction_id',), data)
-    if not correction_id or \
-       current_name is missing or \
-       current_name.endswith('-clone'):
-        correction_id = h.next_correction_id()
-        _data_update(correction_id, ('correction_id',), data)
+    if current_name is missing or current_name.endswith('-clone'):
+        correction_id = _data_lookup(('correction_id',), data)
+        if not correction_id or (current_name is not missing and
+                                     current_name.endswith('-clone')):
+            correction_id = h.next_correction_id()
+            _data_update(correction_id, ('correction_id',), data)
 
-    new_name = u'correction-{correction_id}'.format(
-        correction_id=correction_id
-    ).lower()
-    _data_update(new_name, ('name',), data)
-    _data_update(new_name, ('title',), data)
+        new_name = u'correction-{correction_id}'.format(
+            correction_id=correction_id
+        ).lower()
+        _data_update(new_name, ('name',), data)
+        _data_update(new_name, ('title',), data)
 
 
 def product_create_name(key, data, errors, context):
