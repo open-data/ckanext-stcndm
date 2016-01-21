@@ -716,7 +716,7 @@ def set_related_id(product_id, related_product_ids):
 
 
 def write_audit_log(event, data=None, level=1):
-    endpoint = config.get('ndm.auditlog.url')
+    endpoint = config.get('ckanext.stcndm.auditlog_service_url')
     if not endpoint:
         return
 
