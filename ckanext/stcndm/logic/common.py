@@ -41,6 +41,14 @@ internal_authors = Table(
     Column('last_name', types.UnicodeText, nullable=False),
 )
 
+VALID_DATA_TYPES = {
+    u'11': 'view',
+    u'12': 'indicator',
+    u'13': 'chart',
+    u'14': 'map',
+    u'10': 'cube'
+}
+
 
 def _get_group(result):
     if result['type'] != 'subject':
@@ -718,12 +726,6 @@ def register_data_product(context, data_dict):
     # this method as these are the only "data products".
     # TODO: Can we pull this from somewhere? Presets.yaml does not
     #       necessarily have the exact schema name in ndm_product_type.
-    VALID_DATA_TYPES = {
-        u'11': 'view',
-        u'12': 'indicator',
-        u'13': 'chart',
-        u'14': 'map'
-    }
     CUBE_PRODUCT_TYPE = u'10'
 
     cube_id = _get_or_bust(data_dict, 'parentProductId')
@@ -785,6 +787,8 @@ def register_data_product(context, data_dict):
     # performance of datasets in CKAN means this would criple normal package
     # creates, updates, and fetches.
     new_pkg = lc.action.package_create(**copied_fields)
+
+    geo.clear_geodescriptors_for_package(new_pkg['product_id_new'])
 
     geo_codes = data_dict.get('geodescriptor_codes')
     if geo_codes:
@@ -1221,13 +1225,19 @@ def update_product_geo(context, data_dict):
         )
 
     pkg_dict = response['results'][0]
-    pkg_dict.update({
-        # This is the first five digits because the dguid consists of that
-        # only.  The geodescriptor is the entire code.  Validator *requires*
-        # that this be a list.
-        'geolevel_codes': list(set(sc[:5] for sc in dguids)),
-        'geodescriptor_codes': dguids
-    })
+    pkg_dict['geolevel_codes'] = list(set(sc[:5] for sc in dguids))
+
+    if pkg_dict['product_type_code'] in VALID_DATA_TYPES:
+        # Data product geodescriptors (for which there can be tens of
+        # thousands) are stored using the geodescriptor service instead of
+        # directly on the package.
+        geo.clear_geodescriptors_for_package(pkg_dict['product_id_new'])
+        for geo_code in dguids:
+            geo.update_relationship(pkg_dict['product_id_new'], geo_code)
+    else:
+        # Non-data products simply have the geodescriptors assigned to the
+        # package.
+        pkg_dict['geodescriptor_codes'] = dguids
 
     # TODO: Check the results?
     lc.action.package_update(**pkg_dict)
