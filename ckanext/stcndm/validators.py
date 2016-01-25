@@ -311,7 +311,7 @@ def correction_create_name(key, data, errors, context):
         return
 
     current_name = data.get(key, '')
-    if current_name is missing or current_name.endswith('-clone'):
+    if not current_name or current_name is missing or current_name.endswith('-clone'):
         correction_id = _data_lookup(('correction_id',), data)
         if not correction_id or (current_name is not missing and
                                      current_name.endswith('-clone')):
