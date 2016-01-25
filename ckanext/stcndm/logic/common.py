@@ -1082,7 +1082,9 @@ def update_release_date_and_status(context, data_dict):
         if not result['count']:
             raise _NotFound('Product not found')
         elif result['count'] > 1:
-            raise _ValidationError('More than one product with given productid found')
+            raise _ValidationError(
+                'More than one product with given productid found'
+            )
 
         product = result['results'][0]
 
@@ -1095,8 +1097,10 @@ def update_release_date_and_status(context, data_dict):
                          release_date,
                          publishing_status):
 
-        new_values = {'last_release_date': release_date,
-                      'publishing_status': publishing_status,}
+        new_values = {
+            'last_release_date': release_date,
+            'publishing_status': publishing_status
+        }
 
         lc = ckanapi.LocalCKAN(context=context)
         response = lc.action.package_search(
@@ -1119,7 +1123,6 @@ def update_release_date_and_status(context, data_dict):
 
                 updated_products.append(product['product_id_new'])
 
-
     if business_logic[product_type]['update_product']:
         _update_product(product_id,
                         product_type,
@@ -1133,7 +1136,7 @@ def update_release_date_and_status(context, data_dict):
 
     return {'updated_products': updated_products}
 
-# noinspection PyIncorrectDocstring
+
 def _update_single_publish_status(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
@@ -1287,14 +1290,20 @@ def get_product_url(context, data_dict):
             ).lower()
         ).get('results')
         if not results:
-            raise _NotFound('{product_id}: no formats found for product'.format(
-                product_id=product_id
-            ))
-        choices = scheming_helpers.scheming_get_preset('ndm_format')\
-            .get('choices')
+            raise _NotFound(
+                '{product_id}: no formats found for product'.format(
+                    product_id=product_id
+                )
+            )
+
+        choices = scheming_helpers.scheming_get_preset(
+            'ndm_format'
+        ).get('choices')
+
         for choice in choices:
             if 'weight' not in choice:
                 choices.remove(choice)
+
         sorted_choices = sorted(choices, key=lambda k: k['weight'])
         for choice in sorted_choices:
             for result in results:
