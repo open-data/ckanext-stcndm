@@ -101,7 +101,7 @@ def get_geodescriptors_for_package(package_id):
     the ID given in `package_id` (which is a product_id_new).
 
     :param package_id: The product_id_new of the dataset to lookup.
-    :type package_id: uniode
+    :type package_id: unicode
     """
     lc = LocalCKAN()
 
@@ -127,3 +127,32 @@ def get_geodescriptors_for_package(package_id):
 
     for geo_id in s:
         yield geo_id[0]
+
+
+def clear_geodescriptors_for_package(package_id):
+    """
+    Erase all geodescriptor associations from the given `package_id`
+    (which is a package_id_new).
+
+    :param package_id: The product_id_new of the dataset to clear.
+    :type package_id: unicode
+    """
+    lc = LocalCKAN()
+
+    pkg = lc.action.package_search(
+        q='product_id_new:{pid}'.format(
+            pid=package_id
+        ),
+        rows=1
+    )
+
+    if pkg['results']:
+        pkg = pkg['results'][0]
+    else:
+        return 0
+
+    return model.Session.execute(
+        geodescriptor_table.delete().where(
+            geodescriptor_table.c.package_id == pkg['id']
+        )
+    ).rowcount
