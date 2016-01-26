@@ -1,3 +1,4 @@
+# coding=UTF-8
 from ckan.lib.base import response
 from ckan.controllers.package import PackageController
 from ckanext.scheming.logic import (scheming_dataset_schema_list,
@@ -31,12 +32,14 @@ class SchemaToXlController(PackageController):
             for field in schema_dict['dataset_fields']:
                 schema.append({
                     'field_name': field.get('field_name'),
-                    'label_en': field.get('label')['en'],
-                    'label_fr': field.get('label')['fr'],
-                    'multivalued': field.get('schema_multivalued'),
-                    'fluent': field.get('schema_field_type') in [
-                        'code',
-                        'fluent']
+                    'label_en': field.get('label', {}).get('en', u'No label'),
+                    'label_fr': field.get('label', {}).get('fr',
+                                                           u'Pas d\'étiquette'),
+                    'multivalued': field.get('schema_multivalued', False),
+                    'fluent': field.get('schema_field_type',
+                                        u'unspecified') in [
+                                                            u'code',
+                                                            u'fluent']
                 })
             if sheet:
                 sheet = workbook.create_sheet(title=schema_name)

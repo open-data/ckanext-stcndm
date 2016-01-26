@@ -511,7 +511,12 @@ presets:
     schema_field_type: code
     schema_multivalued: false
     schema_extras: true
+    sorted_choices: true
     choices:
+      - label:
+            en: Audio
+            fr: Audio
+        value: '1'
       - label:
             en: Database
             fr: Base de données

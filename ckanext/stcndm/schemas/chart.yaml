@@ -88,6 +88,12 @@ dataset_fields:
 - field_name: archive_date
   preset: ndm_archive_date
 
+- field_name: legacy_date
+  preset: ndm_legacy_date
+
+- field_name: rot_date
+  preset: ndm_rot_date
+
 - field_name: census_years
   preset: ndm_census_years
 
