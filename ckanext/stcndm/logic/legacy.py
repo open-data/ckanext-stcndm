@@ -211,7 +211,7 @@ def register_legacy_non_data_product(context, data_dict):
                                                        'productType': product_type})
 
         product_id_new = response
-        issue_number = product_id_new  # Just for clarity's sake
+        issue_number = product_id_new[-7:]  # Just for clarity's sake
 
     product_dict = {
         u'owner_org': u'statcan',

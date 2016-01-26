@@ -81,6 +81,9 @@ class STCNDMPlugin(p.SingletonPlugin):
             ])
         })
 
+        from ckanext.stcndm.model.geo import setup
+        setup()
+
     def before_index(self, data_dict):
         """
         customize data sent to solr

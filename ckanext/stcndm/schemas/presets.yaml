@@ -457,6 +457,7 @@ presets:
     form_snippet: select.html
     display_snippet: select.html
     validators: scheming_required scheming_choices
+    create_validators: set_default_value(1)
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -530,10 +531,18 @@ presets:
             fr: Télécopieur
         value: '5'
       - label:
+            en: Other
+            fr: Autre
+        value: '7'
+      - label:
             en: PDF
             fr: PDF
         value: '8'
         weight: '2'
+      - label:
+            en: Kit
+            fr: Kit
+        value: '9'
       - label:
             en: Microfiche
             fr: Microfiche
@@ -558,6 +567,10 @@ presets:
             fr: DVD
         value: '15'
         weight: '5'
+      - label:
+            en: Print PDF
+            fr: Service d'impression de PDF
+        value: '16'
       - label:
             en: HTML
             fr: HTML
@@ -1506,6 +1519,10 @@ presets:
             en: Waiting - rgtabv
             fr: En attente - rgtabv
         value: '19'
+      - label:
+            en: TAX - Updated
+            fr: TAX - Corrigé
+        value: '20'
 
 - preset_name: ndm_url
   values:

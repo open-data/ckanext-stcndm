@@ -7,6 +7,20 @@ import csv
 
 __author__ = 'marc'
 
+dropped_products = [  # Jackie says these shouldn't go into refactored
+    '93-317-X',
+    '93-320-X',
+    '93-325-X',
+    '93-326-X',
+    '93-328-X',
+    '93-329-X',
+    '93-330-X',
+    '93-332-X',
+    '93F0032X',
+    '98-107-X',
+    '98-108-X',
+    '98-109-X'
+]
 product_id_list = []
 current_pid = u''
 product_dict = {}
@@ -44,9 +58,9 @@ while i < n:
         for e in line['extras']:
             line[e['key']] = e['value']
 
-        product_id_new = line.get(u'productidnew_bi_strs')
-        if product_id_new not in product_id_list:
-            product_id_list.append(product_id_new)
+        product_id_new = line.get(u'productidnew_bi_strs').upper()
+        if product_id_new[:8] in dropped_products:
+            continue
         product_out = do_product(line)
         format_out = do_format(line)
         if len(product_id_new) == 8:
@@ -55,20 +69,24 @@ while i < n:
                     type=product_out[u'type'],
                     product_id=product_id_new
                 ).lower()
+            if product_id_new not in product_id_list:
+                product_id_list.append(product_id_new)
         elif len(product_id_new) == 15:
             product_out[u'type'] = u'article'
             product_out[u'name'] = u'{type}-{product_id}'.format(
                     type=product_out[u'type'],
                     product_id=product_id_new
                 ).lower()
-            if product_id_new[:8] not in product_id_list:
-                sys.stderr.write(
-                    '{product_id}: missing parent {parent_id}\n'
-                    .format(
-                        product_id=product_id_new,
-                        parent_id=product_id_new[:8]
+            if product_id_new not in product_id_list:
+                product_id_list.append(product_id_new)
+                if product_id_new[:8] not in product_id_list:
+                    sys.stderr.write(
+                        '{product_id}: missing parent {parent_id}\n'
+                        .format(
+                            product_id=product_id_new,
+                            parent_id=product_id_new[:8]
+                        )
                     )
-                )
         elif len(product_id_new) > 15 and not \
                 re.match('\d\d-\d\d-\d\d*', product_id_new):
             product_out[u'type'] = u'article'
@@ -76,27 +94,31 @@ while i < n:
                     type=product_out[u'type'],
                     product_id=product_id_new
                 ).lower()
-            if product_id_new[:8] not in product_id_list:
-                sys.stderr.write(
-                    '{product_id}: missing parent {parent_id}\n'
-                    .format(
-                        product_id=product_id_new,
-                        parent_id=product_id_new[:8]
+            if product_id_new not in product_id_list:
+                product_id_list.append(product_id_new)
+                if product_id_new[:8] not in product_id_list:
+                    sys.stderr.write(
+                        '{product_id}: missing parent {parent_id}\n'
+                        .format(
+                            product_id=product_id_new,
+                            parent_id=product_id_new[:8]
+                        )
                     )
-                )
-            if product_id_new[:15] not in product_id_list:
-                sys.stderr.write(
-                    '{product_id}: missing parent {parent_id}\n'
-                    .format(
-                        product_id=product_id_new,
-                        parent_id=product_id_new[:15]
+                if product_id_new[:15] not in product_id_list:
+                    sys.stderr.write(
+                        '{product_id}: missing parent {parent_id}\n'
+                        .format(
+                            product_id=product_id_new,
+                            parent_id=product_id_new[:15]
+                        )
                     )
-                )
         else:
             sys.stderr.write(
-                'ignoring analytical with unexpected product_id: {product_id}\n'
+                'ignoring analytical with unexpected product_id: '
+                '{product_id} - name: {name}\n'
                 .format(
-                    product_id=line.get(u'productidnew_bi_strs', u'product_id')
+                    product_id=line.get(u'productidnew_bi_strs', u'product_id'),
+                    name=line.get(u'name', u'name')
                 )
             )
             continue

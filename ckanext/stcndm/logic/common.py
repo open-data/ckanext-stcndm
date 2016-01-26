@@ -11,6 +11,7 @@ import arrow
 from pylons import config
 from sqlalchemy import orm, types, Column, Table
 from ckan.model.meta import metadata
+from ckanext.stcndm.model import geo
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -39,6 +40,14 @@ internal_authors = Table(
     Column('first_name', types.UnicodeText, nullable=False),
     Column('last_name', types.UnicodeText, nullable=False),
 )
+
+VALID_DATA_TYPES = {
+    u'11': 'view',
+    u'12': 'indicator',
+    u'13': 'chart',
+    u'14': 'map',
+    u'10': 'cube'
+}
 
 
 def _get_group(result):
@@ -717,12 +726,6 @@ def register_data_product(context, data_dict):
     # this method as these are the only "data products".
     # TODO: Can we pull this from somewhere? Presets.yaml does not
     #       necessarily have the exact schema name in ndm_product_type.
-    VALID_DATA_TYPES = {
-        u'11': 'view',
-        u'12': 'indicator',
-        u'13': 'chart',
-        u'14': 'map'
-    }
     CUBE_PRODUCT_TYPE = u'10'
 
     cube_id = _get_or_bust(data_dict, 'parentProductId')
@@ -779,7 +782,21 @@ def register_data_product(context, data_dict):
         if not copied_fields.get('content_type_codes'):
             copied_fields['content_type_codes'] = ['2012']
 
-    lc.action.package_create(**copied_fields)
+    # We don't want to store geodescriptors for data products as part
+    # of the dataset, as there can be tens of thousands of them. The poor
+    # performance of datasets in CKAN means this would criple normal package
+    # creates, updates, and fetches.
+    new_pkg = lc.action.package_create(**copied_fields)
+
+    geo.clear_geodescriptors_for_package(new_pkg['product_id_new'])
+
+    geo_codes = data_dict.get('geodescriptor_codes')
+    if geo_codes:
+        for geo_code in geo_codes:
+            geo.update_relationship(
+                new_pkg['product_id_new'],
+                geo_code
+            )
 
     if product_type == '11' and product_id.endswith('01'):
         lc.action.UpdateDefaultView(cubeId=cube_id, defaultView=product_id)
@@ -979,6 +996,7 @@ def update_last_publish_status(context, data_dict):
     ]
 
 
+@stcndm_helpers.audit_log_exception('update_release_date_and_status')
 def update_release_date_and_status(context, data_dict):
     """
     Update the release date and publishing status code for the parent
@@ -1064,7 +1082,9 @@ def update_release_date_and_status(context, data_dict):
         if not result['count']:
             raise _NotFound('Product not found')
         elif result['count'] > 1:
-            raise _ValidationError('More than one product with given productid found')
+            raise _ValidationError(
+                'More than one product with given productid found'
+            )
 
         product = result['results'][0]
 
@@ -1077,12 +1097,13 @@ def update_release_date_and_status(context, data_dict):
                          release_date,
                          publishing_status):
 
-        new_values = {'last_release_date': release_date,
-                      'publishing_status': publishing_status,
-                      'url': 'http://google.com'}
+        new_values = {
+            'last_release_date': release_date,
+            'publishing_status': publishing_status
+        }
 
         lc = ckanapi.LocalCKAN(context=context)
-        result = lc.action.package_search(
+        response = lc.action.package_search(
             q=(
                 '(type:view OR '
                 'type:indicator OR '
@@ -1092,17 +1113,15 @@ def update_release_date_and_status(context, data_dict):
             ).format(top_parent_id=product_id),
             rows=1000
         )
-        product = result['results'][0]
 
-        product.update(new_values)
+        if response['count'] > 0:
 
-        for product in result['results']:
+            for product in response['results']:
 
-            product.update(new_values)
-            lc.action.package_update(**product)
+                product.update(new_values)
+                lc.action.package_update(**product)
 
-            updated_products.append(product['product_id_new'])
-
+                updated_products.append(product['product_id_new'])
 
     if business_logic[product_type]['update_product']:
         _update_product(product_id,
@@ -1117,7 +1136,7 @@ def update_release_date_and_status(context, data_dict):
 
     return {'updated_products': updated_products}
 
-# noinspection PyIncorrectDocstring
+
 def _update_single_publish_status(context, data_dict):
     # noinspection PyUnresolvedReferences
     """
@@ -1209,13 +1228,19 @@ def update_product_geo(context, data_dict):
         )
 
     pkg_dict = response['results'][0]
-    pkg_dict.update({
-        # This is the first five digits because the dguid consists of that
-        # only.  The geodescriptor is the entire code.  Validator *requires*
-        # that this be a list.
-        'geolevel_codes': list(set(sc[:5] for sc in dguids)),
-        'geodescriptor_codes': dguids
-    })
+    pkg_dict['geolevel_codes'] = list(set(sc[:5] for sc in dguids))
+
+    if pkg_dict['product_type_code'] in VALID_DATA_TYPES:
+        # Data product geodescriptors (for which there can be tens of
+        # thousands) are stored using the geodescriptor service instead of
+        # directly on the package.
+        geo.clear_geodescriptors_for_package(pkg_dict['product_id_new'])
+        for geo_code in dguids:
+            geo.update_relationship(pkg_dict['product_id_new'], geo_code)
+    else:
+        # Non-data products simply have the geodescriptors assigned to the
+        # package.
+        pkg_dict['geodescriptor_codes'] = dguids
 
     # TODO: Check the results?
     lc.action.package_update(**pkg_dict)
@@ -1265,14 +1290,20 @@ def get_product_url(context, data_dict):
             ).lower()
         ).get('results')
         if not results:
-            raise _NotFound('{product_id}: no formats found for product'.format(
-                product_id=product_id
-            ))
-        choices = scheming_helpers.scheming_get_preset('ndm_format')\
-            .get('choices')
+            raise _NotFound(
+                '{product_id}: no formats found for product'.format(
+                    product_id=product_id
+                )
+            )
+
+        choices = scheming_helpers.scheming_get_preset(
+            'ndm_format'
+        ).get('choices')
+
         for choice in choices:
             if 'weight' not in choice:
                 choices.remove(choice)
+
         sorted_choices = sorted(choices, key=lambda k: k['weight'])
         for choice in sorted_choices:
             for result in results:

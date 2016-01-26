@@ -5,6 +5,7 @@ import ast
 import json
 import requests
 from datetime import datetime
+from functools import wraps
 
 import ckanapi
 import ckan.model as model
@@ -713,15 +714,44 @@ def set_related_id(product_id, related_product_ids):
             except ValidationError:
                 pass  # fail quietly if best effort unsuccessful
 
-def write_audit_log(event, data = None, level = 1):
-    endpoint = config.get('ndm.auditlog.url')
 
-    if endpoint:
-        payload = {'componentId': ndm_audit_log_component_id, 'shortDescription': event, 'auditLevel': level}
+def write_audit_log(event, data=None, level=1):
+    endpoint = config.get('ckanext.stcndm.auditlog_service_url')
+    if not endpoint:
+        return
 
-        if data and isinstance(data, dict):
-            silly_dict = [{'Key': k, 'Value': json.dumps(v)} for k, v in data.items()]
-            payload['userDefinedFields'] = silly_dict
+    payload = {
+        'componentId': ndm_audit_log_component_id,
+        'shortDescription': event,
+        'auditLevel': level
+    }
 
-        headers = {'Content-Type': 'application/json'}
-        requests.post(endpoint, headers = headers, data=json.dumps(payload))
+    if data and isinstance(data, dict):
+        payload['userDefinedFields'] = [{
+            'Key': k,
+            'Value': json.dumps(v)
+        } for k, v in data.iteritems()]
+
+    requests.post(
+        endpoint,
+        headers={
+            'Content-Type': 'application/json'
+        },
+        data=json.dumps(payload)
+    )
+
+
+def audit_log_exception(event):
+    def _logit(f):
+        @wraps(f)
+        def _wrapped(*args, **kwargs):
+            try:
+                results = f(*args, **kwargs)
+            except Exception as ex:
+                write_audit_log(event, data=ex, level=3)
+                raise
+
+            write_audit_log(event, level=1)
+            return results
+        return _wrapped
+    return _logit

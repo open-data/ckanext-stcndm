@@ -28,24 +28,32 @@ def scheming_validator(fn):
     fn.is_a_scheming_validator = True
     return fn
 
+
 def repeating_text_delimited(key, data, errors, context):
     if errors[key]:
         return
 
     value = data[key]
+    if not value:
+        data[key] = json.dumps([])
+        return
     if isinstance(value, list):
         return
-    else:
+    elif isinstance(value, basestring):
         values = value.split(';')
         out = []
 
         for val in values:
             val = val.strip()
 
-            if (val):
+            if val:
                 out.append(val)
 
         data[key] = json.dumps(out)
+    else:
+        errors[key].append(_('expected list of basestring, got: {value}'.format(
+            value=value
+        )))
 
 
 def shortcode_validate(key, data, errors, context):
