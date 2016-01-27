@@ -56,7 +56,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/chart.yaml',
                 'ckanext.stcndm:schemas/codeset.yaml',
                 'ckanext.stcndm:schemas/conference.yaml',
-                'ckanext.stcndm:schemas/corrections.yaml',
+                'ckanext.stcndm:schemas/correction.yaml',
                 'ckanext.stcndm:schemas/cube.yaml',
                 'ckanext.stcndm:schemas/daily.yaml',
                 'ckanext.stcndm:schemas/dataset.yaml',

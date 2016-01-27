@@ -28,9 +28,9 @@ ckanapi load datasets -p 3 -I jsonl_dumps/subjects.jsonl 2>&1 >/dev/null | tee |
 echo done subjects | tee -a jsonl_dumps/load_errs.txt
 
 date | tee -a jsonl_dumps/load_errs.txt
-echo -surveys | tee -a jsonl_dumps/load_errs.txt
-ckanapi load datasets -p 3 -I jsonl_dumps/surveys.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
-echo done surveys | tee -a jsonl_dumps/load_errs.txt
+echo -provinces | tee -a jsonl_dumps/load_errs.txt
+ckanapi load datasets -p 3 -I jsonl_dumps/provinces.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
+echo done provinces | tee -a jsonl_dumps/load_errs.txt
 
 date | tee -a jsonl_dumps/load_errs.txt
 echo -geodescriptors | tee -a jsonl_dumps/load_errs.txt
@@ -38,9 +38,9 @@ ckanapi load datasets -p 3 -I jsonl_dumps/geodescriptors.jsonl 2>&1 >/dev/null |
 echo done geodescriptors | tee -a jsonl_dumps/load_errs.txt
 
 date | tee -a jsonl_dumps/load_errs.txt
-echo -provinces | tee -a jsonl_dumps/load_errs.txt
-ckanapi load datasets -p 3 -I jsonl_dumps/provinces.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
-echo done provinces | tee -a jsonl_dumps/load_errs.txt
+echo -surveys | tee -a jsonl_dumps/load_errs.txt
+ckanapi load datasets -p 3 -I jsonl_dumps/surveys.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
+echo done surveys | tee -a jsonl_dumps/load_errs.txt
 
 date | tee -a jsonl_dumps/load_errs.txt
 echo -cubes | tee -a jsonl_dumps/load_errs.txt
@@ -76,6 +76,11 @@ date | tee -a jsonl_dumps/load_errs.txt
 echo -analyticals | tee -a jsonl_dumps/load_errs.txt
 ckanapi load datasets -p 3 -I jsonl_dumps/analyticals.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
 echo done analyticals | tee -a jsonl_dumps/load_errs.txt
+
+date | tee -a jsonl_dumps/load_errs.txt
+echo -corrections | tee -a jsonl_dumps/load_errs.txt
+ckanapi load datasets -p 3 -I jsonl_dumps/corrections.jsonl 2>&1 >/dev/null | tee | grep -i error >> jsonl_dumps/load_errs.txt
+echo done corrections | tee -a jsonl_dumps/load_errs.txt
 
 date | tee -a jsonl_dumps/load_errs.txt
 echo rebuild search index | tee -a jsonl_dumps/load_errs.txt

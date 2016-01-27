@@ -409,7 +409,8 @@ def next_correction_id():
     lc = ckanapi.LocalCKAN()
     result = lc.action.package_search(
         q='correction_id:*',
-        sort='correction_id DESC',
+        fq='type:correction',
+        sort='correction_id_int DESC',
         rows=1
     )
 

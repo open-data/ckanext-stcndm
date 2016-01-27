@@ -126,7 +126,7 @@
                     $rootScope.downloadLink = data.config.url + '?' + $.param($.extend({}, data.config.params, {wt: 'csv', 'csv.mv.separator': '·', rows: 999999999}));
 
                     var fields = data.data.responseHeader.params.fl.split(','),
-                        datatable = $.extend(datatableDefaults, {
+                        datatable = $.extend({}, datatableDefaults, {
                             data: sanitizeData($rootScope.queryResults.docs, fields),
                             columns: createFieldsMapping(fields),
                             fnRowCallback: function(row, data) {
@@ -543,12 +543,13 @@ angular.module('checklist-model', [])
 
         $rootScope.$on('datasetType.selected', function(event, selectedDatasetType) {
             var fieldsRequest = configuration.ckanInstance + '/api/3/action/scheming_dataset_schema_show?callback=JSON_CALLBACK&type=',
-                fieldsCallback = function(data) {
-                    var type = data.result.dataset_type,
-                        fields = data.result.dataset_fields,
+                fieldsCallback = function(response) {
+                    var result = response.data.result,
+                        type = result.dataset_type,
+                        fields = result.dataset_fields,
                         fieldsLength = fields.length,
-                        result = {},
-                        languages = data.result.form_languages,
+                        fieldsResults = {},
+                        languages = result.form_languages || [],
                         languagesLength = languages.length,
                         f, field, l, fieldObj;
 
@@ -558,21 +559,27 @@ angular.module('checklist-model', [])
 
                         if (field.schema_field_type === 'fluent' || (field.preset && field.preset.indexOf('fluent') !== -1)) {
                             for (l = 0; l < languagesLength; l += 1) {
-                                result[field.field_name + '_' + languages[l]] = fieldObj;
+                                fieldsResults[field.field_name + '_' + languages[l]] = fieldObj;
                             }
                         } else {
-                            result[field.field_name] = fieldObj;
+                            fieldsResults[field.field_name] = fieldObj;
 
                             if (field.lookup) {
                                 for (l = 0; l < languagesLength; l += 1) {
-                                    result[field.field_name + '_desc_' + languages[l]] = fieldObj;
+                                    fieldsResults[field.field_name + '_desc_' + languages[l]] = fieldObj;
                                 }
                             }
                         }
                     }
 
-                    _this.datasetTypesFields[type] = result;
+                    _this.datasetTypesFields[type] = fieldsResults;
                     addFields(type);
+                },
+                fieldErrorCallback = function(response) {
+                    var type = response.config.url.match(/type=([^&]*)/)[1],
+                        types = $rootScope.dataTypeCtrl.datasetTypes;
+
+                    types.splice(types.indexOf(type), 1);
                 },
                 addFields = function(type) {
                     $.extend(newFields, _this.datasetTypesFields[type]);
@@ -585,8 +592,8 @@ angular.module('checklist-model', [])
                 type = selectedDatasetType[o];
 
                 if (!_this.datasetTypesFields[type]) {
-                    p = $http.jsonp(fieldsRequest + type, {cache: true});
-                    p.success(fieldsCallback);
+                    p = $http.jsonp(fieldsRequest + type, {cache: true})
+                        .then(fieldsCallback, fieldErrorCallback);
                     promises.push(p);
                 } else {
                     addFields(type);

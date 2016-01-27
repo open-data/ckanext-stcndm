@@ -81,12 +81,18 @@ dataset_fields:
 - field_name: thesaurus_terms
   preset: ndm_thesaurus_terms
 
-- field_name: archive_date
-  preset: ndm_archive_date
-
 - field_name: archive_status_code
   preset: ndm_archive_status
   validators: scheming_required scheming_choices archive_children_of_cube
+
+- field_name: archive_date
+  preset: ndm_archive_date
+
+- field_name: legacy_date
+  preset: ndm_legacy_date
+
+- field_name: rot_date
+  preset: ndm_rot_date
 
 - field_name: default_view_id
   label:

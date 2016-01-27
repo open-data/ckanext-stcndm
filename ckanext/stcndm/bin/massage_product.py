@@ -6,6 +6,26 @@ import re
 
 __author__ = 'marc'
 
+format_lookup = {
+    'audio': '1',
+    'database': '2',
+    'cd-rom': '3',
+    'diskette': '4',
+    'fax/email': '5',
+    'other': '7',
+    'pdf': '8',
+    'kit': '9',
+    'microfiche': '10',
+    'paper': '12',
+    'symposium/workshop': '13',
+    'tape/cassette': '14',
+    'dvd': '15',
+    'print pdf': '16',
+    'html': '17',
+    'video': '18',
+    'etf': '19'
+}
+
 
 def in_and_def(key, a_dict):
     if key in a_dict and a_dict[key]:
@@ -86,13 +106,6 @@ def do_product(data_set):
         u'array_terminated_code':
             data_set.get(u'arrayterminatedcode_bi_strs', ''),
         u'coordinates': data_set.get(u'coordinates_bi_instrs', ''),
-        u'correction_impact_level_code':
-            data_set.get(u'correcimplevelcode_bi_strs', ''),
-        u'correction_id': data_set.get(u'correctionid_bi_strs', ''),
-        u'correction_notes': {
-          u'en': data_set.get(u'correctnote_en_txtm', ''),
-          u'fr': data_set.get(u'correctnote_fr_txtm', '')
-        },
         u'default_view_id': data_set.get(u'defaultviewid_bi_strs', ''),
         u'notes': {
           u'en': data_set.get(u'description_en_txts', data_set.get(
@@ -160,11 +173,6 @@ def do_product(data_set):
         result = listify(data_set[u'conttypecode_bi_txtm'])
         if result:
             product_out[u'content_type_codes'] = result
-
-    if in_and_def(u'correctiontypecode_bi_strm', data_set):
-        result = listify(data_set[u'correctiontypecode_bi_strm'])
-        if result:
-            product_out[u'correction_type_codes'] = result
 
     temp = {}
     if in_and_def(u'dimmembers_en_txtm', data_set):
@@ -356,6 +364,12 @@ def do_product(data_set):
 
 
 def do_format(data_set):
+    format_code = data_set.get('formatcode_bi_txtm')
+    if not format_code:
+        format_code = format_lookup.get(data_set.get('format_en_txtm').lower())
+    if format_code not in format_lookup.values():
+        return {}
+
     format_out = {
         u'owner_org': u'statcan',
         u'private': False,
@@ -364,19 +378,15 @@ def do_format(data_set):
             product_id=data_set.get(
                 u'productidnew_bi_strs',
                 u'product_id'),
-            format_code=data_set.get(
-                u'formatcode_bi_txtm',
-                u'format_code').zfill(2)
+            format_code=format_code.zfill(2)
         ).lower(),
         u'parent_id': data_set.get(
             u'productidnew_bi_strs',
             u'product_id').upper(),
-        u'format_code': data_set.get(u'formatcode_bi_txtm', u'format_code'),
+        u'format_code': format_code,
         u'format_id': u'{product_id}_{format_code}'.format(
             product_id=data_set.get(u'productidnew_bi_strs', u'product_id'),
-            format_code=data_set.get(
-                u'formatcode_bi_txtm',
-                u'format_code').zfill(2)
+            format_code=format_code.zfill(2)
         ).lower(),
         u'isbn_number': {
             u'en': data_set.get(u'isbnnum_en_strs', u''),
