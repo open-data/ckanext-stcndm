@@ -598,6 +598,7 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
 
     record = {
         'ProductId': product_id,
+        'PublishStatus': 2,
     }
 
     last_release_date = product.get('last_release_date')
