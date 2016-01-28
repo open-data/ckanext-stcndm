@@ -597,7 +597,12 @@ def ndm_tag_name_validator(value, context):
     return value
 
 
+# noinspection PyIncorrectDocstring
 def apply_archive_rules(key, data, errors, context):
+    """
+    When last_release_date is set, apply business rules to set the archive date
+    if no archive date is already set.
+    """
     if errors[key]:
         return
     release_date = _data_lookup(key, data)
@@ -606,56 +611,47 @@ def apply_archive_rules(key, data, errors, context):
         content_type_codes = _data_lookup((u'content_type_codes',), data)
         product_type_code = _data_lookup((u'product_type_code',), data)
         product_id_new = _data_lookup((u'product_id_new',), data)
-        if product_type_code == u'24':
-            if not archive_date:
-                _data_update(
-                    release_date+datetime.timedelta(days=2*365),
-                    (u'archive_date',),
-                    data
-                )
+        if not archive_date and product_type_code == u'24':
+            _data_update(
+                release_date+datetime.timedelta(days=2*365),
+                (u'archive_date',),
+                data
+            )
         elif product_type_code == u'20':
             if not content_type_codes:
                 content_type_codes = h.get_parent_content_types(
                     product_id_new
                 )
-            if not content_type_codes:
-                # errors[(u'content_type_codes',)].append(_('Missing value'))
-                # errors[(u'archive_date',)].append(_('Unable to determine'))
-                return
-            # Analysis/Stats in brief
-            if u'2016' in content_type_codes:
-                if not archive_date:
-                    _data_update(
-                        release_date+datetime.timedelta(days=5*365),
-                        (u'archive_date',),
-                        data
-                    )
-            # Analysis/Articles and Reports
-            elif u'2021' in content_type_codes:
-                if not archive_date:
-                    _data_update(
-                        release_date+datetime.timedelta(days=5*365),
-                        (u'archive_date',),
-                        data
-                    )
-            # # Reference
-            # elif content_type_code in [u'2002', u'2003', u'2023']:
-            #     set_archive_date()
-            # # Reference/Classification
-            elif u'2025' in content_type_codes and len(product_id_new) >= 15:
+
+            if not archive_date and (
+                # Analysis/Stats in brief
+                u'2016' in content_type_codes or
+                # Analysis/Articles and Reports
+                u'2021' in content_type_codes or
+                # Reference/Notices and consultations
+                u'2002' in content_type_codes or
+                # Reference/Surveys and statistical programs
+                u'2003' in content_type_codes or
+                # Reference/Geographic files and documentation
+                u'2023' in content_type_codes
+            ):
+                _data_update(
+                    release_date+datetime.timedelta(days=5*365),
+                    (u'archive_date',),
+                    data
+                )
+            elif u'2025' in content_type_codes and \
+                    len(product_id_new) >= 15:  # apply to articles and issues
                 try:
                     h.set_previous_issue_archive_date(
                         product_id_new,
                         release_date+datetime.timedelta(days=5*365)
                     )
-                except ValidationError as e:
+                except ValidationError:
                     pass
-                    # errors[(u'product_id_new',)].append(
-                    #     _(e.error_summary[u'Message']))
-                    # errors[(u'archive_date',)].append(
-                    #     _('Unable to determine'))
 
 
+# noinspection PyIncorrectDocstring
 def archive_children_of_cube(key, data, errors, context):
     """
     Apply archive date and status to children of the cube for which ID
