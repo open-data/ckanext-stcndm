@@ -1010,6 +1010,8 @@ def update_release_date_and_status(context, data_dict):
     :type releaseDate: str
     :param publishingStatus: publish status code
     :type publishingStatus: str
+    :param status: status code
+    :type status: str
 
 
     :return: updated package
@@ -1022,6 +1024,7 @@ def update_release_date_and_status(context, data_dict):
     product_type = _get_or_bust(data_dict, 'productType')
     release_date = _get_or_bust(data_dict, 'releaseDate')
     publishing_status = _get_or_bust(data_dict, 'publishingStatus')
+    status = _get_or_bust(data_dict, 'status')
 
     business_logic = {'10': {'type': 'cube',
                              'update_product': True,
@@ -1066,7 +1069,9 @@ def update_release_date_and_status(context, data_dict):
                         publishing_status):
 
         new_values = {'last_release_date': release_date,
-                      'publishing_status': publishing_status}
+                      'publishing_status': publishing_status,
+                      'status_code': status
+                      }
 
         lc = ckanapi.LocalCKAN(context=context)
         result = lc.action.package_search(
@@ -1097,10 +1102,10 @@ def update_release_date_and_status(context, data_dict):
                          release_date,
                          publishing_status):
 
-        new_values = {
-            'last_release_date': release_date,
-            'publishing_status': publishing_status
-        }
+        new_values = {'last_release_date': release_date,
+                      'publishing_status': publishing_status,
+                      'status_code': status
+                      }
 
         lc = ckanapi.LocalCKAN(context=context)
         response = lc.action.package_search(
