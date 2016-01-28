@@ -120,11 +120,14 @@
   cd ..
   ```
 
-  8. Create a new PostgreSQL database
+  8. Create a new PostgreSQL databases
 
   ```
   sudo -u postgres createuser -S -D -R -P ckan_default
+  sudo -u postgres createuser -S -D -R -P -l datastore_default
   sudo -u postgres createdb -O ckan_default stcndm_ckan -E utf-8
+  sudo -u postgres createdb -O ckan_default stcndm_ckan_datastore -E utf-8
+  sudo ckan datastore set-permissions
   ```
 
   9. Create a new Solr collection
@@ -148,9 +151,11 @@
   11. Modify the development.ini file with the following values:
 
     * `sqlalchemy.url = postgresql://ckan_default:pass@localhost/stcndm_ckan`
+    * `ckan.datastore.write_url = postgresql://ckan_default:pass@localhost/stcndm_ckan_datastore`
+    * `ckan.datastore.read_url = postgresql://datastore_ckan:pass@localhost/stcndm_ckan_datastore`
     * `solr_url = http://localhost:8983/solr/stcndm`
     * `ckan.site_id = stcndm`
-    * `ckan.plugins = stats text_view image_view recline_view
+    * `ckan.plugins = datastore stats text_view image_view recline_view
     stcndm stcndm_report_generator repeating scheming_datasets fluent
     wet_boew_theme_gc_intranet history autodoc`
 
