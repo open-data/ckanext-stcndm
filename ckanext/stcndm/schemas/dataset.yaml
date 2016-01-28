@@ -5,6 +5,9 @@ catalog_type_label: Others
 
 dataset_fields:
 
+- field_name: owner_org
+  preset: ndm_owner_org
+
 - field_name: name
 - field_name: title
 
