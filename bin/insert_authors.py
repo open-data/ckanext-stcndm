@@ -11,14 +11,16 @@ from docopt import docopt
 USAGE = """insert_authors.py
 
 Usage:
-    insert_authors.py <remote> <package_id> <source> [options]
+    insert_authors.py <remote> <source> [options]
 
 Options:
     --api-key=<key>         API Key to use for insertion.
 """
 
 record = namedtuple('record', ['full_name', 'first_name', 'last_name'])
-
+OWNER_ORG = 'statcan'
+PACKAGE_NAME = 'internal_authors'
+PACKAGE_TITLE = 'Internal Authors'
 
 def main():
     args = docopt(USAGE)
@@ -26,6 +28,13 @@ def main():
     rc = ckanapi.RemoteCKAN(
         args['<remote>'],
         apikey=args['--api-key']
+    )
+
+    #Create the host dataset and resource if missing
+    pkg = rc.action.package_create(
+        owner_org=OWNER_ORG,
+        name=PACKAGE_NAME,
+        title=PACKAGE_TITLE
     )
 
     with open(args['<source>'], 'rU') as fin:
@@ -44,7 +53,8 @@ def main():
 
         rc.action.datastore_create(
             resource={
-                'package_id': args['<package_id>']
+                'package_id': PACKAGE_NAME,
+                'name': 'List',
             },
             fields=[{
                 'id': 'first_name',
