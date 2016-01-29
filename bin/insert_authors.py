@@ -22,19 +22,13 @@ OWNER_ORG = 'statcan'
 PACKAGE_NAME = 'internal_authors'
 PACKAGE_TITLE = 'Internal Authors'
 
+
 def main():
     args = docopt(USAGE)
 
     rc = ckanapi.RemoteCKAN(
         args['<remote>'],
         apikey=args['--api-key']
-    )
-
-    #Create the host dataset and resource if missing
-    pkg = rc.action.package_create(
-        owner_org=OWNER_ORG,
-        name=PACKAGE_NAME,
-        title=PACKAGE_TITLE
     )
 
     with open(args['<source>'], 'rU') as fin:
@@ -51,30 +45,49 @@ def main():
             ) for r in reader
         )
 
-        rc.action.datastore_create(
-            resource={
-                'package_id': PACKAGE_NAME,
-                'name': 'List',
-            },
-            fields=[{
-                'id': 'first_name',
-                'type': 'text'
-            }, {
-                'id': 'last_name',
-                'type': 'text'
-            }, {
-                'id': 'full_name',
-                'type': 'text'
-            }],
-            aliases=[
-                'internal_authors'
-            ],
-            primary_key=[
-                'first_name',
-                'last_name'
-            ],
-            records=list(r._asdict() for r in results)
+        # Create the host dataset and resource if missing
+        search = rc.action.package_search(
+            q='name:{name}'.format(name=PACKAGE_NAME)
         )
+        if search['count'] == 0:
+            rc.action.package_create(
+                owner_org=OWNER_ORG,
+                name=PACKAGE_NAME,
+                title=PACKAGE_TITLE
+            )
+
+            rc.action.datastore_create(
+                resource={
+                    'package_id': PACKAGE_NAME,
+                    'name': 'List',
+                },
+                fields=[{
+                    'id': 'first_name',
+                    'type': 'text'
+                }, {
+                    'id': 'last_name',
+                    'type': 'text'
+                }, {
+                    'id': 'full_name',
+                    'type': 'text'
+                }],
+                aliases=[
+                    'internal_authors'
+                ],
+                primary_key=[
+                    'first_name',
+                    'last_name'
+                ],
+                records=list(r._asdict() for r in results)
+            )
+        else:
+            pkg = rc.action.package_show(id=PACKAGE_NAME)
+
+            rc.action.datastore_upsert(
+                resource_id=pkg['resources'][0]['id'],
+                force=True,
+                records=list(r._asdict() for r in results)
+            )
 
 
 if __name__ == '__main__':
