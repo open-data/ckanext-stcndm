@@ -4,7 +4,7 @@ import re
 import ast
 import json
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 
 import ckanapi
@@ -757,3 +757,81 @@ def audit_log_exception(event):
             return results
         return _wrapped
     return _logit
+
+
+def changes_since(since_ts=None, before_ts=None, limit=None):
+    """
+    Returns an iterable of all activity stream changes (dataset creation,
+    edits, and deletes) from all users between the given date(s).
+
+    :param since_ts: Earliest date for changes.
+    :type since_ts: datetime or `None`
+    :param before_ts: Latest date for changes.
+    :type before_ts: datetime or `None`
+    :param limit: Maximum number of results to return.
+    :type limit: long or `None`
+    """
+    before_ts = before_ts or datetime.utcnow()
+    since_ts = since_ts or datetime.min
+
+    return ({
+        'id': record.id,
+        'timestamp': record.timestamp,
+        'user_id': record.user_id,
+        'object_id': record.object_id,
+        'revision_id': record.revision_id,
+        'activity_type': record.activity_type
+    } for record in (
+        model.activity._changed_packages_activity_query().order_by(
+            model.Activity.timestamp
+        ).filter(
+            model.Activity.timestamp >= since_ts,
+            model.Activity.timestamp <= before_ts
+        ).limit(
+            limit
+        )
+    ))
+
+
+def sync_dataset(source, target, package_id):
+    """
+    Sync the dataset given by `package_id` from `source` to `dest`.
+
+    :param source: A LocalCKAN or RemoteCKAN instance.
+    :param target: A LocalCKAN or RemoteCKAN instance.
+    :param package_id: A CKAN package UUID.
+    """
+    try:
+        source_package = source.action_package_show(id=package_id)
+    except (ckanapi.NotFound, ckanapi.NotAuthorized):
+        source_package = None
+
+    try:
+        target_package = target.action_package_show(id=package_id)
+    except (ckanapi.NotFound, ckanapi.NotAuthorized):
+        target_package = None
+
+    if source_package is None:
+        # Original package has been deleted. Ensure it's also removed from
+        # the remote.
+        target.action.package_delete(id=package_id)
+    elif target_package is None:
+        # The package does not exist at all on the remote.
+        target.action.package_create(**source_package)
+    else:
+        # Update a package that exists on the local and the remote.
+        target.action.package_update(**source_package)
+
+
+def sync_ckan(target, since_ts=None, before_ts=None):
+    """
+    Sync this CKAN instance with a remote CKAN instance.
+
+    :param target: A RemoteCKAN instance.
+    """
+    since_ts = since_ts or datetime.utcnow() - timedelta(days=1)
+    before_ts = before_ts or datetime.utcnow()
+    lc = ckanapi.LocalCKAN()
+
+    for activity in changes_since(since_ts=since_ts, before_ts=before_ts):
+        sync_dataset(lc, target, activity['object_id'])
