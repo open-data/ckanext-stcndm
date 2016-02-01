@@ -1,4 +1,4 @@
-import sys
+import sys, inspect, os
 import json
 import ckanapi
 from massage_product import do_format, do_product
@@ -151,12 +151,14 @@ current_pid = u''
 product_dict = {}
 format_dict = {}
 dnl_list = []
-with open('jsonl_dumps/oldprintdonotload.csv', 'rb') as csv_file:
+path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+
+with open('{path}/oldprintdonotload.csv'.format(path=path), 'rb') as csv_file:
     spam_reader = csv.DictReader(csv_file, delimiter=',')
     for row in spam_reader:
         dnl_list.append(row['extras_productidnew_bi_strs'])
 issn_dict = {}
-with open('jsonl_dumps/ISSNbatch.csv', 'rb') as csv_file:
+with open('{path}/ISSNbatch.csv', 'rb'.format(path=path)) as csv_file:
     spam_reader = csv.DictReader(csv_file, delimiter=',')
     for row in spam_reader:
         issn_dict[row['extras_productidnew_bi_strs']] = {
