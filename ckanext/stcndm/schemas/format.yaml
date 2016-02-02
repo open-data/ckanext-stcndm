@@ -31,10 +31,10 @@ dataset_fields:
     fr: ID du parent immédiat
 #  output_validators: scheming_required
 #  create_validators: scheming_required
-#  validators: scheming_required
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
+  validators: remove_whitespace #scheming_required
 
 - field_name: format_id
   label:

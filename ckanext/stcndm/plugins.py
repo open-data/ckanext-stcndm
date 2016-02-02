@@ -314,7 +314,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             'get_parent_dataset': helpers.get_parent_dataset,
             'get_child_datasets': helpers.get_child_datasets,
             'x2list': helpers.x2list,
-            'set_related_id': helpers.set_related_id
+            'set_related_id': helpers.set_related_id,
+            'changes_since': helpers.changes_since
         }
 
     def before_view(self, pkg_dict):

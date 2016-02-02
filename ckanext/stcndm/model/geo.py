@@ -25,6 +25,13 @@ def setup():
     # Workaround for aggressive postgres table locking.
     model.Session.close()
 
+    if not model.package_table.exists():
+        logger.debug(
+            'Package table does not exist, skipping geodescriptor'
+            ' table creation check.'
+        )
+        return
+
     if not geodescriptor_table.exists():
         try:
             geodescriptor_table.create()
