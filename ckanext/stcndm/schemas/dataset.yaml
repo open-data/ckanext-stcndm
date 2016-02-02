@@ -9,7 +9,10 @@ dataset_fields:
   preset: ndm_owner_org
 
 - field_name: name
+  preset: dataset_slug
+
 - field_name: title
+  preset: title
 
 resource_fields:
 
