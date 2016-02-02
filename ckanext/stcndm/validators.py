@@ -641,7 +641,8 @@ def apply_archive_rules(key, data, errors, context):
                     data
                 )
             elif u'2025' in content_type_codes and \
-                    len(product_id_new) >= 15:  # apply to articles and issues
+                    len(product_id_new) >= 15:
+                # Reference/Classifications, apply only to articles and issues
                 try:
                     h.set_previous_issue_archive_date(
                         product_id_new,
