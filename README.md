@@ -179,3 +179,10 @@
   paster serve ~/stcndm/development.ini
   ```
 
+  ### Importing Authors
+
+  To import authors, first ensure you have a user and get yout api key from you user profile page. The run the following command:
+
+  ```
+  python ckanext-stcndm/bin/insert_authors.py http://localhost:5000 [authors.csv] --api-key=[key]
+  ```
