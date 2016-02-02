@@ -975,6 +975,7 @@ presets:
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
+    validators: remove_whitespace
 
 - preset_name: ndm_product_id_old
   values:
@@ -1432,6 +1433,7 @@ presets:
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
+    validators: remove_whitespace
 
 - preset_name: ndm_tracking
   values:
