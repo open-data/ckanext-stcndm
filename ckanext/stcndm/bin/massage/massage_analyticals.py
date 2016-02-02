@@ -1,4 +1,6 @@
-import sys, inspect, os
+import sys
+import inspect
+import os
 import json
 import ckanapi
 from massage_product import do_format, do_product
@@ -158,7 +160,7 @@ with open('{path}/oldprintdonotload.csv'.format(path=path), 'rb') as csv_file:
     for row in spam_reader:
         dnl_list.append(row['extras_productidnew_bi_strs'])
 issn_dict = {}
-with open('{path}/ISSNbatch.csv', 'rb'.format(path=path)) as csv_file:
+with open('{path}/ISSNbatch.csv'.format(path=path), 'rb') as csv_file:
     spam_reader = csv.DictReader(csv_file, delimiter=',')
     for row in spam_reader:
         issn_dict[row['extras_productidnew_bi_strs']] = {
@@ -258,9 +260,9 @@ while i < n:
                     product_dict[key] = product_out[key]
             format_code = format_out.get(u'format_code')
             if format_code:
+                if format_code not in format_dict:
+                    format_dict[format_code] = {}
                 for key in format_out:
-                    if format_code not in format_dict:
-                        format_dict[format_code] = {}
                     if key not in format_dict[format_code]:
                         format_dict[format_code][key] = format_out[key]
             else:
@@ -284,6 +286,8 @@ while i < n:
                         print json.dumps(format_dict[a_format])
             current_pid = product_id_new
             product_dict = product_out
-            format_dict = {
-                format_out.get(u'format_code', u'format_code'): format_out
-            }
+            format_dict = {}
+            if format_out:
+                format_code = format_out.get(u'format_code')
+                if format_code:
+                    format_dict = {format_code: format_out}
