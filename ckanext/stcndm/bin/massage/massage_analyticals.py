@@ -1,4 +1,6 @@
 import sys
+import inspect
+import os
 import json
 import ckanapi
 from massage_product import do_format, do_product
@@ -6,6 +8,22 @@ import re
 import csv
 
 __author__ = 'marc'
+
+
+def clean_dict(dict_in):
+    dict_out = {}
+    for dict_key in dict_in:
+        if isinstance(dict_in[dict_key], dict):
+            if (
+                    u'en' in dict_in[dict_key] and
+                    u'fr' in dict_in[dict_key] and
+                    (dict_in[dict_key][u'en'] or dict_in[dict_key][u'fr'])
+               ):
+                dict_out[dict_key] = dict_in[dict_key]
+        elif isinstance(dict_in[dict_key], basestring) and dict_in[dict_key]:
+            dict_out[dict_key] = dict_in[dict_key]
+    return dict_out
+
 
 dropped_products = [  # Jackie says these shouldn't go into refactored
     '93-317-X',
@@ -148,20 +166,29 @@ dropped_products = [  # Jackie says these shouldn't go into refactored
 ]
 product_id_list = []
 current_pid = u''
-product_dict = {}
-format_dict = {}
+product_dict_out = {}
+format_dict_dict = {}
+path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+
 dnl_list = []
-with open('jsonl_dumps/oldprintdonotload.csv', 'rb') as csv_file:
+file_path = '{path}/oldprintdonotload.csv'.format(path=path)
+with open(file_path, 'rb') as csv_file:
     spam_reader = csv.DictReader(csv_file, delimiter=',')
     for row in spam_reader:
         dnl_list.append(row['extras_productidnew_bi_strs'])
+
 issn_dict = {}
-with open('jsonl_dumps/ISSNbatch.csv', 'rb') as csv_file:
+file_path = '{path}/ISSNbatchwithformat.csv'.format(path=path)
+with open(file_path, 'rb') as csv_file:
     spam_reader = csv.DictReader(csv_file, delimiter=',')
     for row in spam_reader:
-        issn_dict[row['extras_productidnew_bi_strs']] = {
-            u'en': row['issnnum_en_bi_strs'],
-            u'fr': row['issnnum_fr_bi_strs']
+        product_id_new = row['productidnew_bi_strs']
+        if product_id_new not in issn_dict:
+            issn_dict[product_id_new] = {}
+        format_code = row['formatcode_bi_txtm']
+        issn_dict[product_id_new][format_code] = {
+            u'en': row['issnnum_en_strs'],
+            u'fr': row['issnnum_fr_strs']
         }
 
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj')
@@ -188,20 +215,21 @@ while i < n:
                 product_id_new[:8] in dropped_products or
                 product_id_new[:15] in dropped_products):
             continue
-        product_out = do_product(line)
-        format_out = do_format(line)
+        product_dict = do_product(line)
+        format_dict = do_format(line)
+        format_code = format_dict.get(u'format_code')
         if len(product_id_new) == 8:
-            product_out[u'type'] = u'publication'
-            product_out[u'name'] = u'{type}-{product_id}'.format(
-                    type=product_out[u'type'],
+            product_dict[u'type'] = u'publication'
+            product_dict[u'name'] = u'{type}-{product_id}'.format(
+                    type=product_dict[u'type'],
                     product_id=product_id_new
                 ).lower()
             if product_id_new not in product_id_list:
                 product_id_list.append(product_id_new)
         elif len(product_id_new) == 15:
-            product_out[u'type'] = u'article'
-            product_out[u'name'] = u'{type}-{product_id}'.format(
-                    type=product_out[u'type'],
+            product_dict[u'type'] = u'article'
+            product_dict[u'name'] = u'{type}-{product_id}'.format(
+                    type=product_dict[u'type'],
                     product_id=product_id_new
                 ).lower()
             if product_id_new not in product_id_list:
@@ -216,9 +244,9 @@ while i < n:
                     )
         elif len(product_id_new) > 15 and not \
                 re.match('\d\d-\d\d-\d\d*', product_id_new):
-            product_out[u'type'] = u'article'
-            product_out[u'name'] = u'{type}-{product_id}'.format(
-                    type=product_out[u'type'],
+            product_dict[u'type'] = u'article'
+            product_dict[u'name'] = u'{type}-{product_id}'.format(
+                    type=product_dict[u'type'],
                     product_id=product_id_new
                 ).lower()
             if product_id_new not in product_id_list:
@@ -251,16 +279,16 @@ while i < n:
             continue
 
         if current_pid == product_id_new:
-            for key in product_out:
-                if key not in product_dict:
-                    product_dict[key] = product_out[key]
-            format_code = format_out.get(u'format_code')
+            for key in clean_dict(product_dict):
+                if key not in product_dict_out:
+                    product_dict_out[key] = product_dict[key]
+
             if format_code:
-                for key in format_out:
-                    if format_code not in format_dict:
-                        format_dict[format_code] = {}
-                    if key not in format_dict[format_code]:
-                        format_dict[format_code][key] = format_out[key]
+                if format_code not in format_dict_dict:
+                    format_dict_dict[format_code] = {}
+                for key in format_dict:
+                    if key not in format_dict_dict[format_code]:
+                        format_dict_dict[format_code][key] = format_dict[key]
             else:
                 sys.stderr.write(
                     '{product_id}: missing a format_code for {name}\n'
@@ -271,17 +299,27 @@ while i < n:
                 )
 
         else:
-            if current_pid in dnl_list:
-                product_dict[u'load_to_olc_code'] = u'0'
-            if current_pid in issn_dict:
-                product_dict[u'issn_number'] = issn_dict[current_pid]
-            if product_dict:
-                print json.dumps(product_dict)
-                for a_format in format_dict:
-                    if a_format:
-                        print json.dumps(format_dict[a_format])
+            if product_dict_out:
+                if current_pid in dnl_list:
+                    product_dict_out[u'load_to_olc_code'] = u'0'
+                print json.dumps(clean_dict(product_dict_out))
+                product_dict_out = {}
+
+                for format_dict_key in format_dict_dict:
+                    format_dict_out = format_dict_dict[format_dict_key]
+                    if format_dict_out:
+                        if not format_dict_out[u'issn_number'][u'en']:
+                            format_dict_out[u'issn_number'] = \
+                                issn_dict.get(
+                                    current_pid,
+                                    {}
+                                ).get(format_dict_out[u'format_code'],
+                                      {u'en': u'', u'fr': u''})
+                        print json.dumps(clean_dict(format_dict_out))
+
             current_pid = product_id_new
-            product_dict = product_out
-            format_dict = {
-                format_out.get(u'format_code', u'format_code'): format_out
-            }
+            product_dict_out = product_dict
+            format_dict_dict = {}
+            if format_dict:
+                if format_code:
+                    format_dict_dict = {format_code: format_dict}

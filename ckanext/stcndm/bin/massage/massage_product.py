@@ -1,4 +1,4 @@
-import sys
+import sys, os, inspect
 import yaml
 import ckanapi
 import datetime
@@ -126,10 +126,6 @@ def do_product(data_set):
         u'history_notes': {
             u'en': data_set.get(u'histnotes_en_txts', ''),
             u'fr': data_set.get(u'histnotes_fr_txts', '')
-        },
-        u'issn_number': {
-            u'en': data_set.get(u'issnnum_en_strs', u''),
-            u'fr': data_set.get(u'issnnum_fr_strs', u'')
         },
         u'last_publish_status_code':
             data_set.get(u'lastpublishstatuscode_bi_strs', ''),
@@ -277,7 +273,8 @@ def do_product(data_set):
                 )
             except ValueError:
                 sys.stderr.write(
-                    '{product_id}: invalid release date {release_date}\n'.format(
+                    '{product_id}: invalid release date '
+                    '{release_date}\n'.format(
                         product_id=data_set[u'productidnew_bi_strs'],
                         release_date=release_date_text
                     )
@@ -348,7 +345,7 @@ def do_product(data_set):
             for code in deleted_subject_codes:
                 if code in result:
                     result.remove(code)
-            product_out[u'subject_codes'] = result
+            product_out[u'subject_codes'] = list(set(result))
 
     if in_and_def(u'subjoldcode_bi_txtm', data_set):
         result = listify(data_set[u'subjoldcode_bi_txtm'])
@@ -392,6 +389,10 @@ def do_format(data_set):
             u'en': data_set.get(u'isbnnum_en_strs', u''),
             u'fr': data_set.get(u'isbnnum_fr_strs', u'')
             },
+        u'issn_number': {
+            u'en': data_set.get(u'issnnum_en_strs', u''),
+            u'fr': data_set.get(u'issnnum_fr_strs', u'')
+        },
         u'url': {
             u'en': data_set.get(
                 u'url_en_strs', data_set.get(
@@ -424,7 +425,8 @@ def do_format(data_set):
                 )
             except ValueError:
                 sys.stderr.write(
-                    '{product_id}: invalid release date {release_date}\n'.format(
+                    '{product_id}: invalid release date '
+                    '{release_date}\n'.format(
                         product_id=data_set[u'productidnew_bi_strs'],
                         release_date=release_date_text
                     )
@@ -432,8 +434,9 @@ def do_format(data_set):
 
     return format_out
 
+path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-f = open('../schemas/presets.yaml')
+f = open(path+'/../../schemas/presets.yaml')
 presetMap = yaml.safe_load(f)
 f.close()
 

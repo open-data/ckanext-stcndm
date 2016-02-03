@@ -716,6 +716,20 @@ presets:
     schema_multivalued: false
     schema_extras: true
 
+- preset_name: ndm_issn_number
+  values:
+    label:
+      en: ISSN Number
+      fr: Nombre ISSN
+    form_snippet: fluent_text.html
+    display_snippet: fluent_text.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+    schema_field_type: fluent
+    schema_multivalued: false
+    schema_extras: true
+
 - preset_name: ndm_issue_number
   values:
     label:
