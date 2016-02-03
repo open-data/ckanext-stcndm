@@ -29,8 +29,6 @@ dataset_fields:
   label:
     en: Parent ID
     fr: ID du parent immédiat
-#  output_validators: scheming_required
-#  create_validators: scheming_required
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -60,6 +58,9 @@ dataset_fields:
 
 - field_name: isbn_number
   preset: ndm_isbn_number
+
+- field_name: issn_number
+  preset: ndm_issn_number
 
 - field_name: last_release_date
   preset: ndm_last_release_date

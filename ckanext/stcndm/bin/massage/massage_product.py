@@ -127,10 +127,6 @@ def do_product(data_set):
             u'en': data_set.get(u'histnotes_en_txts', ''),
             u'fr': data_set.get(u'histnotes_fr_txts', '')
         },
-        u'issn_number': {
-            u'en': data_set.get(u'issnnum_en_strs', u''),
-            u'fr': data_set.get(u'issnnum_fr_strs', u'')
-        },
         u'last_publish_status_code':
             data_set.get(u'lastpublishstatuscode_bi_strs', ''),
         u'legacy_date': data_set.get(u'legacydate_bi_txts', ''),
@@ -393,6 +389,10 @@ def do_format(data_set):
             u'en': data_set.get(u'isbnnum_en_strs', u''),
             u'fr': data_set.get(u'isbnnum_fr_strs', u'')
             },
+        u'issn_number': {
+            u'en': data_set.get(u'issnnum_en_strs', u''),
+            u'fr': data_set.get(u'issnnum_fr_strs', u'')
+        },
         u'url': {
             u'en': data_set.get(
                 u'url_en_strs', data_set.get(
