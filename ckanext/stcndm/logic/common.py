@@ -903,22 +903,7 @@ def delete_product(context, data_dict):
 
     if response['count']:
         result = response['results'][0]
-
-        # Delete the parent package.
-        lc.action.package_delete(id=result['id'])
-
-        # As part of ticket #4576 and #4575, delete all the releases
-        # associated with a View and a Cube.
-        if result['type'] in ('view', 'cube'):
-            response = lc.action.package_search(
-                q='dataset_type:release AND parent_product:{pid}'.format(
-                    pid=product_id
-                ),
-                fl=['id']
-            )
-
-            for result in response['results']:
-                lc.action.package_delete(id=result['id'])
+        lc.action.purge_dataset(id=result['id'])
 
     return {
         'message': 'Product successfully deleted',
