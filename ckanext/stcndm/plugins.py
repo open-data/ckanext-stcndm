@@ -127,12 +127,14 @@ class STCNDMPlugin(p.SingletonPlugin):
             multivalued = fs.get('schema_multivalued', False)
 
             if field_type == 'fluent':
+                if item in index_data_dict:  # don't store the fluent dict
+                    index_data_dict.pop(item)  # only the fluent values
                 for key in value.keys():
-                    label = u'{item}_{key}'.format(
-                        item=item,
-                        key=key
-                    )
-                    index_data_dict[label] = value[key]
+                    if value[key]:
+                        label = u'{item}_{key}'.format(
+                            item=item,
+                            key=key)
+                        index_data_dict[label] = value[key]
 
             # for code type, the en/fr labels need to be looked up
             # and sent to Solr
