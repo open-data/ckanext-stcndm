@@ -40,7 +40,7 @@ dataset_fields:
         fr: Geolevel
       value: 'geolevel'
   required: true
-  schema_field_type: code
+  schema_field_type: string
   schema_multivalued: false
   schema_extras: true
 

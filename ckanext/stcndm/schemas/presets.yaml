@@ -918,7 +918,7 @@ presets:
     schema_multivalued: false
     schema_extras: true
 
-- preset_name: ndm_product
+- preset_name: ndm_product_type
   values:
     label:
       en: Product Type

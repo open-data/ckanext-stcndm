@@ -18,4 +18,4 @@ dataset_fields:
   preset: ndm_owner_org
 
 - field_name: product_type_code
-  preset: ndm_product
+  preset: ndm_product_type
