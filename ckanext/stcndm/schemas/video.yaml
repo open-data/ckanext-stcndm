@@ -23,19 +23,12 @@ dataset_fields:
   preset: ndm_owner_org
 
 - field_name: product_type_code
-  label:
-    en: Product Type
-    fr: Type de produit
-  preset: select
+  preset: ndm_product_type
   choices:
     - label:
         en: Video
         fr: Vidéo
       value: '21'
-  required: true
-  schema_field_type: code
-  schema_multivalued: false
-  schema_extras: true
 
 - field_name: subject_codes
   preset: ndm_subject_codes
