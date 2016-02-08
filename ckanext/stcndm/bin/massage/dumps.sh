@@ -27,5 +27,7 @@ echo pumfs | tee -a logs/dump_errs.txt
 python massage/massage_pumfs.py > jsonl_dumps/pumfs.jsonl 2>> logs/dump_errs.txt
 echo analyticals | tee -a logs/dump_errs.txt
 python massage/massage_analyticals.py > jsonl_dumps/analyticals.jsonl 2>> logs/dump_errs.txt
+echo generics | tee -a logs/dump_errs.txt
+python massage/massage_generics.py > jsonl_dumps/generics.jsonl 2>> logs/dump_errs.txt
 echo corrections | tee -a logs/dump_errs.txt
 python massage/massage_corrections.py > jsonl_dumps/corrections.jsonl 2>> logs/dump_errs.txt
