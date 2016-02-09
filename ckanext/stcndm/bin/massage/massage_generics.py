@@ -96,6 +96,7 @@ while i < n:
                 type=product_dict[u'type'],
                 product_id=product_id_new
             ).lower()
+        product_dict[u'product_type_code'] = u'26'
         if product_id_new not in product_id_list:
             product_id_list.append(product_id_new)
 
