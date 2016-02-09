@@ -8,12 +8,12 @@ __author__ = 'marc'
 
 path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 issn_dict = {}
-with open('{path}/ISSNbatch.csv'.format(path=path), 'rb') as csv_file:
+with open('{path}/ISSNbatchwithformat.csv'.format(path=path), 'rb') as csv_file:
     spam_reader = csv.DictReader(csv_file, delimiter=',')
     for row in spam_reader:
-        issn_dict[row['extras_productidnew_bi_strs']] = {
-            u'en': row['issnnum_en_bi_strs'],
-            u'fr': row['issnnum_fr_bi_strs']
+        issn_dict[row['productidnew_bi_strs']] = {
+            u'en': row['issnnum_en_strs'],
+            u'fr': row['issnnum_fr_strs']
         }
 
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj')
