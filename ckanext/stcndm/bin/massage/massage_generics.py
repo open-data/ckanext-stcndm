@@ -99,6 +99,24 @@ while i < n:
         product_dict[u'product_type_code'] = u'26'
         if product_id_new not in product_id_list:
             product_id_list.append(product_id_new)
+        if len(product_id_new) > 8 and \
+                product_id_new[:8] not in product_id_list:
+            sys.stderr.write(
+                '{product_id}: missing parent {parent_id}\n'
+                .format(
+                    product_id=product_id_new,
+                    parent_id=product_id_new[:8]
+                )
+            )
+        if len(product_id_new) > 15 and \
+                product_id_new[:15] not in product_id_list:
+            sys.stderr.write(
+                '{product_id}: missing parent {parent_id}\n'
+                .format(
+                    product_id=product_id_new,
+                    parent_id=product_id_new[:15]
+                )
+            )
 
         if current_pid == product_id_new:
             for key in clean_dict(product_dict):
