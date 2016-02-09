@@ -191,6 +191,13 @@ with open(file_path, 'rb') as csv_file:
             u'fr': row['issnnum_fr_strs']
         }
 
+generic_ids = []
+file_path = '{path}/generic_ids.txt'.format(path=path)
+with open(file_path, 'r') as text_file:
+    lines = text_file.readlines()
+for line in lines:
+    generic_ids.append(line.strip())
+
 rc = ckanapi.RemoteCKAN('http://ndmckanq1.stcpaz.statcan.gc.ca/zj')
 i = 0
 n = 1
@@ -211,6 +218,8 @@ while i < n:
             line[e['key']] = e['value']
 
         product_id_new = line.get(u'productidnew_bi_strs').upper()
+        if product_id_new[:8] in generic_ids:
+            continue
         if (product_id_new in dropped_products or
                 product_id_new[:8] in dropped_products or
                 product_id_new[:15] in dropped_products):
