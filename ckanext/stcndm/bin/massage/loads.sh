@@ -2,18 +2,18 @@
 
 cd ~/stcndm-env/ckanext-stcndm/ckanext/stcndm/bin
 
-date | tee -a logs/load_errs.txt
-echo -users | tee -a >> logs/load_errs.txt
+date | tee logs/load_errs.txt
+echo -users | tee -a logs/load_errs.txt
 ckanapi load users -I jsonl_dumps/ckan_users.jsonl 2>&1 >/dev/null | tee | grep -i error >> logs/load_errs.txt
 echo done users | tee -a logs/load_errs.txt
 
 date | tee -a logs/load_errs.txt
-echo -org | tee -a >> logs/load_errs.txt
+echo -org | tee -a logs/load_errs.txt
 ckanapi load organizations -I jsonl_dumps/org_statcan.jsonl 2>&1 >/dev/null | tee | grep -i error >> logs/load_errs.txt
 echo done organizations | tee -a logs/load_errs.txt
 
 date | tee -a logs/load_errs.txt
-echo -codesets | tee -a >> logs/load_errs.txt
+echo -codesets | tee -a logs/load_errs.txt
 ckanapi load datasets -I jsonl_dumps/codesets.jsonl 2>&1 >/dev/null | tee | grep -i error >> logs/load_errs.txt
 echo done codesets | tee -a logs/load_errs.txt
 
