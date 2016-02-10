@@ -10,7 +10,6 @@ import ckanext.stcndm.logic.releases as releases
 import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
 import ckanext.stcndm.logic.surveys as surveys
-import datetime
 from dateutil.parser import parse
 
 from ckan.lib.navl.dictization_functions import _
@@ -157,6 +156,10 @@ class STCNDMPlugin(p.SingletonPlugin):
             field_type = fs.get('schema_field_type', 'string')
             multivalued = fs.get('schema_multivalued', False)
 
+            if name == 'issue_number':
+                if value.isdigit():
+                    index_data_dict['issue_number_int'] = int(value)
+
             if field_type == 'fluent':
                 # if item in index_data_dict:  # don't store the fluent dict
                 #     index_data_dict.pop(item)  # only the fluent values
@@ -209,8 +212,10 @@ class STCNDMPlugin(p.SingletonPlugin):
 
                         index_data_dict[item] = value
                         for key in code_dict:
-                            label = u'{item}_desc_{key}'.format(item=item,
-                                                                      key=key)
+                            label = u'{item}_desc_{key}'.format(
+                                item=item,
+                                key=key
+                            )
                             index_data_dict[label] = code_dict[key]
                     else:
                         if not isinstance(value, basestring):

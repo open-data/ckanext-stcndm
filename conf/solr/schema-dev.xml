@@ -487,7 +487,6 @@
 
     <!-- Scheming related copy fields -->
     <copyField source="correction_id" dest="correction_id_int"/>
-    <copyField source="issue_number" dest="issue_number_int"/>
     <copyField source="*_codes" dest="text"/>
     <copyField source="*_code" dest="text"/>
 
