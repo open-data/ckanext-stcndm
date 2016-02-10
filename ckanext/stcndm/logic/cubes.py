@@ -192,15 +192,12 @@ def register_cube(context, data_dict):
         productType=CUBE_PRODUCT_TYPE
     )
 
-    product_id = lc.action.GetNextCubeId(**data_dict)
-
-    lc.action.package_create(
+    new_package = lc.action.package_create(
         # Old method simply used the product_id, whereas the modern edit
         # form validator uses cube-{product_id}, so lets go with that.
         owner_org='statcan',
         private=False,
         type=u'cube',
-        product_id_new=product_id,
         product_type_code=product_type_dict['product_type_code'],
         subject_codes=[subject_code],
         title={
@@ -213,7 +210,7 @@ def register_cube(context, data_dict):
     )
 
     # Return our newly created package.
-    return lc.action.GetCube(cubeId=product_id)
+    return lc.action.GetCube(cubeId=new_package['product_id_new'])
 
 
 def create_or_update_cube_release(context, data_dict):
