@@ -2,6 +2,7 @@ import json
 import ckanapi
 import ConfigParser
 import re
+import sys
 
 __author__ = 'marc'
 
@@ -26,7 +27,7 @@ n = 1
 while i < n:
     query_results = rc.action.package_search(
         q='organization:tmsgccode',
-        sort='metadata_created ASC',
+        sort='tmsgcspecificcode_bi_tmtxtm[0] ASC',
         rows=1000,
         start=i*1000)
     i += 1
