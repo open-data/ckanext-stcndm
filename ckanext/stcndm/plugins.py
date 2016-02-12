@@ -11,6 +11,8 @@ import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
 import ckanext.stcndm.logic.surveys as surveys
 from dateutil.parser import parse
+from dateutil.tz import gettz
+from datetime import datetime
 
 from ckan.lib.navl.dictization_functions import _
 from ckan.logic import ValidationError
@@ -139,6 +141,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             u'version': data_dict.get(u'version'),
         }
         authors = []
+        default_date = datetime(1, 1, 1, 8, 30, tzinfo=gettz('America/Toronto'))
 
         # iterate through validated data_dict fields and modify as needed
         validated_data_dict = json.loads(data_dict['validated_data_dict'])
@@ -181,6 +184,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             # for code type, the en/fr labels need to be looked up
             # and sent to Solr
             elif field_type == u'code':
+                index_data_dict[unicode(item)] = value
                 lookup_type = fs.get(u'lookup', '')
                 if lookup_type == u'codeset':
                     lookup = fs.get(u'codeset_type', '')
@@ -210,7 +214,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                                     code_dict[key] = []
                                 code_dict[key].append(desc[key])
 
-                        index_data_dict[item] = value
+                        index_data_dict[unicode(item)] = value
                         for key in code_dict:
                             label = u'{item}_desc_{key}'.format(
                                 item=item,
@@ -242,17 +246,18 @@ class STCNDMPlugin(p.SingletonPlugin):
 
             elif field_type == 'date':
                 try:
-                    date = parse(value)
-                    index_data_dict[item] = unicode(date.isoformat() + 'Z')
+                    date = parse(value, default=default_date)
+                    index_data_dict[unicode(item)] = unicode(
+                        date.astimezone(gettz('UTC')).isoformat()[:-6] + 'Z')
                 except ValueError:
                     continue
 
             elif item.endswith('_authors'):
-                index_data_dict[item] = value
+                index_data_dict[unicode(item)] = value
                 authors.extend(value)
 
             else:  # all other field types
-                index_data_dict[str(item)] = value
+                index_data_dict[unicode(item)] = value
 
             if authors:
                 index_data_dict['authors'] = authors

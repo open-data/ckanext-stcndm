@@ -13,7 +13,7 @@ echo geodescriptors | tee -a logs/dump_errs.txt
 python massage/massage_geodescriptors.py > jsonl_dumps/geodescriptors.jsonl 2>> logs/dump_errs.txt
 echo surveys | tee -a logs/dump_errs.txt
 python massage/massage_surveys.py > jsonl_dumps/surveys.jsonl 2>> logs/dump_errs.txt
-less echo cubes | tee -a logs/dump_errs.txt
+echo cubes | tee -a logs/dump_errs.txt
 python massage/massage_cubes.py > jsonl_dumps/cubes.jsonl 2>> logs/dump_errs.txt
 echo views | tee -a logs/dump_errs.txt
 python massage/massage_views.py > jsonl_dumps/views.jsonl 2>> logs/dump_errs.txt

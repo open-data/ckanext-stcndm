@@ -1,6 +1,7 @@
 import json
 import ckanapi
 from massage_product import do_product
+import sys
 
 __author__ = 'marc'
 
@@ -42,6 +43,6 @@ while i < n:
         if product_dict:
             print json.dumps(product_dict)
 
-print 'set archive status for {set_archived} views'.format(
+sys.stderr.write('set archive status for {set_archived} views\n'.format(
     set_archived=set_archived
-)
+))
