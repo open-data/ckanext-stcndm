@@ -178,6 +178,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             # for code type, the en/fr labels need to be looked up
             # and sent to Solr
             elif field_type == u'code':
+                index_data_dict[str(item)] = value
                 lookup_type = fs.get(u'lookup', '')
                 if lookup_type == u'codeset':
                     lookup = fs.get(u'codeset_type', '')
@@ -207,7 +208,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                                     code_dict[key] = []
                                 code_dict[key].append(desc[key])
 
-                        index_data_dict[item] = value
+                        index_data_dict[str(item)] = value
                         for key in code_dict:
                             label = u'{item}_desc_{key}'.format(item=item,
                                                                       key=key)
@@ -238,12 +239,12 @@ class STCNDMPlugin(p.SingletonPlugin):
             elif field_type == 'date':
                 try:
                     date = parse(value)
-                    index_data_dict[item] = unicode(date.isoformat() + 'Z')
+                    index_data_dict[str(item)] = unicode(date.isoformat() + 'Z')
                 except ValueError:
                     continue
 
             elif item.endswith('_authors'):
-                index_data_dict[item] = value
+                index_data_dict[str(item)] = value
                 authors.extend(value)
 
             else:  # all other field types
