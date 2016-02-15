@@ -50,6 +50,9 @@ dataset_fields:
 - field_name: notes
   preset: ndm_description
 
+- field_name: archive_date
+  preset: ndm_archive_date
+
 - field_name: reference_period
   preset: ndm_reference_period
 
