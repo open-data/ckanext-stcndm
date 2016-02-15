@@ -1,9 +1,24 @@
-import sys, inspect, os
+import sys
+import inspect
+import os
 import json
 import ckanapi
 import csv
+from datetime import datetime
+from dateutil.parser import parse
+from dateutil.tz import gettz
 
 __author__ = 'marc'
+
+default_date = datetime(1, 1, 1, 0, 0, 0, 0, tzinfo=gettz('America/Toronto'))
+default_release_date = datetime(1, 1, 1, 8, 30, 0, 0,
+                                tzinfo=gettz('America/Toronto'))
+
+
+def to_utc(date_str, def_date=default_date):
+    result = parse(date_str, default=def_date)
+    utc_result = result.astimezone(gettz('UTC'))
+    return utc_result.replace(tzinfo=None).isoformat()
 
 
 def massage(_line, _correction_dict):
@@ -15,8 +30,8 @@ def massage(_line, _correction_dict):
         return
     if _correction_id not in _correction_dict:
         _correction_dict[_correction_id] = {}
-    _correction_dict[_correction_id]['correction_date'] = \
-        _line.get('correcdate_bi_strm')
+    _correction_dict[_correction_id]['correction_date'] = to_utc(
+        _line.get('correcdate_bi_strm'))
     _correction_dict[_correction_id]['correction_impact_level_code'] = \
         _line.get('correcimplevelcode_bi_strs')[:1]
     _correction_dict[_correction_id]['correction_type_code'] = \

@@ -2,7 +2,8 @@ import json
 import ckanapi
 import csv
 from massage_product import do_product
-import inspect, os
+import inspect
+import os
 
 __author__ = 'marc'
 
