@@ -141,7 +141,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             u'version': data_dict.get(u'version'),
         }
         authors = []
-        default_date = datetime(1, 1, 1, 8, 30, tzinfo=gettz('America/Toronto'))
+        default_date = datetime(1, 1, 1, 8, 30, 0, 0)
 
         # iterate through validated data_dict fields and modify as needed
         validated_data_dict = json.loads(data_dict['validated_data_dict'])
@@ -248,7 +248,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 try:
                     date = parse(value, default=default_date)
                     index_data_dict[unicode(item)] = unicode(
-                        date.astimezone(gettz('UTC')).isoformat()[:-6] + 'Z')
+                        date.isoformat()[:19] + u'Z')
                 except ValueError:
                     continue
 

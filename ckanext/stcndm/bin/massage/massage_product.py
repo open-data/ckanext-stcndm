@@ -1,7 +1,9 @@
 import sys, os, inspect
 import yaml
 import ckanapi
-import datetime
+from datetime import datetime
+from dateutil.parser import parse
+from dateutil.tz import gettz
 import re
 
 __author__ = 'marc'
@@ -25,6 +27,16 @@ format_lookup = {
     'video': '18',
     'etf': '19'
 }
+
+default_date = datetime(1, 1, 1, 0, 0, 0, 0, tzinfo=gettz('America/Toronto'))
+default_release_date = datetime(1, 1, 1, 8, 30, 0, 0,
+                                tzinfo=gettz('America/Toronto'))
+
+
+def to_utc(date_str, def_date=default_date):
+    result = parse(date_str, default=def_date)
+    utc_result = result.astimezone(gettz('UTC'))
+    return utc_result.replace(tzinfo=None).isoformat()
 
 
 def in_and_def(key, a_dict):
@@ -102,7 +114,6 @@ def do_product(data_set):
             u'en': data_set.get(u'adminnotes_bi_txts', ''),
             u'fr': data_set.get(u'adminnotes_bi_txts', '')
         },
-        u'archive_date': data_set.get(u'archivedate_bi_txts', ''),
         u'array_terminated_code':
             data_set.get(u'arrayterminatedcode_bi_strs', ''),
         u'coordinates': data_set.get(u'coordinates_bi_instrs', ''),
@@ -129,7 +140,6 @@ def do_product(data_set):
         },
         u'last_publish_status_code':
             data_set.get(u'lastpublishstatuscode_bi_strs', ''),
-        u'legacy_date': data_set.get(u'legacydate_bi_txts', ''),
         u'license_id': data_set.get(u'license_id', ''),
         u'license_title': data_set.get(u'license_title', ''),
         u'license_url': data_set.get(u'license_url', ''),
@@ -154,6 +164,11 @@ def do_product(data_set):
         u'volume_and_number': data_set.get(u'volumeandnum_bi_txts', ''),
 
     }
+
+    if in_and_def(u'archivedate_bi_txts', data_set):
+        product_out[u'archive_date'] = to_utc(
+            data_set.get(u'archivedate_bi_txts'),
+            default_date)
 
     if in_and_def(u'archived_bi_strs', data_set):
         result = code_lookup(u'archived_bi_strs', data_set, archive_status_list)
@@ -259,26 +274,14 @@ def do_product(data_set):
         product_out[u'keywords'] = temp
 
     if in_and_def(u'releasedate_bi_strs', data_set):
-        release_date_text = (data_set.get(u'releasedate_bi_strs').strip() +
-                             u'T08:30')[:16]
-        try:
-            datetime.datetime.strptime(release_date_text, u'%Y-%m-%dT%H:%M')
-            product_out[u'last_release_date'] = release_date_text
-        except ValueError:
-            try:
-                release_date = datetime.datetime.strptime(release_date_text,
-                                                          u'%d/%m/%YT%H:%M')
-                product_out[u'last_release_date'] = release_date.strftime(
-                    u'%Y-%m-%dT%H:%M'
-                )
-            except ValueError:
-                sys.stderr.write(
-                    '{product_id}: invalid release date '
-                    '{release_date}\n'.format(
-                        product_id=data_set[u'productidnew_bi_strs'],
-                        release_date=release_date_text
-                    )
-                )
+        product_out[u'last_release_date'] = to_utc(
+            data_set.get(u'releasedate_bi_strs'),
+            default_release_date)
+
+    if in_and_def(u'legacydate_bi_txts', data_set):
+        product_out[u'legacy_date'] = to_utc(
+            data_set.get(u'legacydate_bi_txts'),
+            default_date)
 
     if in_and_def(u'ndmstate_en_intxtm', data_set):
         result = listify(data_set[u'ndmstate_en_intxtm'])
@@ -411,26 +414,9 @@ def do_format(data_set):
         )
     }
     if in_and_def(u'releasedate_bi_strs', data_set):
-        release_date_text = (data_set.get(u'releasedate_bi_strs').strip() +
-                             u'T08:30')[:16]
-        try:
-            datetime.datetime.strptime(release_date_text, u'%Y-%m-%dT%H:%M')
-            format_out[u'last_release_date'] = release_date_text
-        except ValueError:
-            try:
-                release_date = datetime.datetime.strptime(release_date_text,
-                                                          u'%d/%m/%YT%H:%M')
-                format_out[u'last_release_date'] = release_date.strftime(
-                    u'%Y-%m-%dT%H:%M'
-                )
-            except ValueError:
-                sys.stderr.write(
-                    '{product_id}: invalid release date '
-                    '{release_date}\n'.format(
-                        product_id=data_set[u'productidnew_bi_strs'],
-                        release_date=release_date_text
-                    )
-                )
+        format_out[u'last_release_date'] = to_utc(
+            data_set.get(u'releasedate_bi_strs'),
+            default_release_date)
 
     return format_out
 

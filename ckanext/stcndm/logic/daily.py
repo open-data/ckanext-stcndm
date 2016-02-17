@@ -166,22 +166,13 @@ def register_daily(context, data_dict):
         return value
 
     release_date_str = my_get(data_dict, u'releaseDate', basestring)
-    try:
-        datetime.datetime.strptime(release_date_str, u'%Y-%m-%dT%H:%M:%S')
-    except ValueError:
-        raise _ValidationError(
-            {u'release_date':
-                u'Invalid ({release_date_str}), '
-                u'expected date in YYYY-MM-DDTHH:MM:SS format'.format(
-                    release_date_str=release_date_str
-                )}
-        )
     product_id = my_get(data_dict, u'productId', basestring)
     if not re.match('^00240001[0-9]{3,6}$', product_id):
         raise _ValidationError(
             {u'product_id':
                 u'Invalid ({product_id}), '
-                u'expected 3 - 6 digit sequence number'.format(
+                u'expected 00240001 followed by '
+                u'3 - 6 digit sequence number'.format(
                     product_id=product_id)})
 
     #  check whether the product ID we were given is already in use

@@ -2,9 +2,25 @@ import sys
 import json
 import yaml
 import ckanapi
-import datetime
+from datetime import datetime
+from dateutil.parser import parse
+from dateutil.tz import gettz
+import inspect
+import os
 
 __author__ = 'marc'
+
+
+path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+default_date = datetime(1, 1, 1, 0, 0, 0, 0, tzinfo=gettz('America/Toronto'))
+default_release_date = datetime(1, 1, 1, 8, 30, 0, 0,
+                                tzinfo=gettz('America/Toronto'))
+
+
+def to_utc(date_str, def_date=default_date):
+    result = parse(date_str, default=def_date)
+    utc_result = result.astimezone(gettz('UTC'))
+    return utc_result.replace(tzinfo=None).isoformat()
 
 
 def listify(value):
@@ -60,7 +76,7 @@ for codeset in raw_codesets:
             'value': codeset['codeset_value']
         })
 
-f = open('../schemas/presets.yaml')
+f = open(path+'/../../schemas/presets.yaml')
 presetMap = yaml.safe_load(f)
 f.close()
 
@@ -143,8 +159,6 @@ while i < n:
             u'archive_status_code': safe_get(
                 code_lookup(u'archived_bi_strs', line, archive_status_list)),
             u'content_type_codes': u'2003',
-            u'collection_end_date': line.get(u'collenddate_bi_strs', ''),
-            u'collection_start_date': line.get(u'collstartdate_bi_strs', ''),
             u'collection_method_codes': code_lookup(
                 u'collmethod_en_txtm', line, collection_method_list),
             u'notes': {
@@ -211,17 +225,19 @@ while i < n:
             if code in line_out[u'subject_codes']:
                 line_out[u'subject_codes'].remove(code)
 
+        if u'collenddate_bi_strs' in line and line[u'collenddate_bi_strs']:
+            line_out[u'collection_end_date'] = to_utc(
+                line.get(u'collenddate_bi_strs'),
+                default_date)
+
+        if u'collstartdate_bi_strs' in line and line[u'collstartdate_bi_strs']:
+            line_out[u'collection_start_date'] = to_utc(
+                line.get(u'collstartdate_bi_strs'),
+                default_date)
+
         if u'releasedate_bi_strs' in line and line[u'releasedate_bi_strs']:
-            release_date = (line.get(u'releasedate_bi_strs').strip()+u'T08:30')[:16]
-            try:
-                datetime.datetime.strptime(release_date, u'%Y-%m-%dT%H:%M')
-                line_out[u'last_release_date'] = release_date
-            except ValueError:
-                sys.stderr.write(
-                    '{product_id}: invalid release date {release_date}\n'.format(
-                        product_id=line[u'productidnew_bi_strs'],
-                        release_date=release_date
-                    )
-                )
+            line_out[u'last_release_date'] = to_utc(
+                line.get(u'releasedate_bi_strs'),
+                default_release_date)
 
         print json.dumps(line_out)
