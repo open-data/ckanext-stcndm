@@ -11,7 +11,6 @@ import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
 import ckanext.stcndm.logic.surveys as surveys
 from dateutil.parser import parse
-from dateutil.tz import gettz
 from datetime import datetime
 
 from ckan.lib.navl.dictization_functions import _
@@ -104,14 +103,7 @@ class STCNDMPlugin(p.SingletonPlugin):
         index_data_dict = data_dict.copy()
 
         authors = []
-        default_date = datetime(
-            1,
-            1,
-            1,
-            8,
-            30,
-            tzinfo=gettz('America/Toronto')
-        )
+        default_date = datetime(1, 1, 1, 8, 30, 0, 0)
 
         validated_data_dict = json.loads(data_dict['validated_data_dict'])
 
@@ -233,7 +225,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 try:
                     date = parse(value, default=default_date)
                     index_data_dict[unicode(item)] = unicode(
-                        date.astimezone(gettz('UTC')).isoformat()[:-6] + 'Z'
+                        date.isoformat()[:19] + u'Z'
                     )
                 except ValueError:
                     continue
