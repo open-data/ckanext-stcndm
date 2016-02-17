@@ -1293,11 +1293,7 @@ def get_product_url(context, data_dict):
             'ndm_format'
         ).get('choices')
 
-        for choice in choices:
-            if 'weight' not in choice:
-                choices.remove(choice)
-
-        sorted_choices = sorted(choices, key=lambda k: k['weight'])
+        sorted_choices = sorted(choices, key=lambda k: k.get('weight', '99'))
         for choice in sorted_choices:
             for result in results:
                 if result.get(u'format_code') == choice['value']:
