@@ -315,6 +315,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetNextLegacyArticleId": legacy.get_next_legacy_article_id,
             "GetNextLegacyProductId": legacy.get_next_legacy_product_id,
             "GetProduct": common.get_product,
+            "GetProductBySurvey": surveys.get_products_by_survey,
             "GetProductIssueArticles": daily.get_product_issue_articles,
             "GetProductIssues": daily.get_product_issues,
             "GetProductType": common.get_product_type,
