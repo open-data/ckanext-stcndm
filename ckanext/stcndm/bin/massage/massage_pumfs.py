@@ -19,7 +19,7 @@ def clean_dict(dict_in):
                     (dict_in[dict_key][u'en'] or dict_in[dict_key][u'fr'])
                ):
                 dict_out[dict_key] = dict_in[dict_key]
-        elif isinstance(dict_in[dict_key], basestring) and dict_in[dict_key]:
+        elif dict_in[dict_key]:
             dict_out[dict_key] = dict_in[dict_key]
     return dict_out
 
@@ -107,3 +107,16 @@ while i < n:
             if format_dict:
                 if format_code:
                     format_dict_dict = {format_code: format_dict}
+
+print json.dumps(clean_dict(product_dict_out))
+for format_dict_key in format_dict_dict:
+    format_dict_out = format_dict_dict[format_dict_key]
+    if format_dict_out:
+        if not format_dict_out[u'issn_number'][u'en']:
+            format_dict_out[u'issn_number'] = \
+                issn_dict.get(
+                    current_pid,
+                    {}
+                ).get(format_dict_out[u'format_code'],
+                      {u'en': u'', u'fr': u''})
+        print json.dumps(clean_dict(format_dict_out))
