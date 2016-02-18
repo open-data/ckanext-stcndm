@@ -175,17 +175,7 @@ def register_daily(context, data_dict):
                 u'3 - 6 digit sequence number'.format(
                     product_id=product_id)})
 
-    #  check whether the product ID we were given is already in use
     lc = ckanapi.LocalCKAN(context=context)
-    result = lc.action.package_search(
-        q='product_id_new:{0}'.format(product_id)
-    )
-    count = result['count']
-    if count:
-        raise _ValidationError(
-            {u'productId':
-                u'Already in use ({product_id})'.format(
-                    product_id=product_id)})
     stats_in_brief = my_get(data_dict, u'statsInBrief', basestring)
     if stats_in_brief not in [u'0', u'1']:
         raise _ValidationError(
@@ -229,7 +219,14 @@ def register_daily(context, data_dict):
         u'related_products': related if related else missing,
         u'url': url
     }
-    new_product = lc.action.package_create(**daily_dict)
+    try:
+        new_product = lc.action.package_create(**daily_dict)
+    except _ValidationError as e:
+        if e.error_dict.get('name', []) == [u'That URL is already in use.']:
+            new_product = lc.action.package_update(**daily_dict)
+        else:
+            raise
+
     new_product = lc.action.GetProduct(
         productId=new_product['product_id_new'],
         fl='product_id_new'
