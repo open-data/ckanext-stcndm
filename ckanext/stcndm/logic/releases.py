@@ -200,40 +200,63 @@ def consume_transaction_file(context, data_dict):
                 raise _ValidationError({key: u'Missing value'})
             if not isinstance(value, expected):
                 raise _ValidationError(
-                    {key:
-                        u'Invalid format ({value}), expecting a {type}'.format(
-                        value=value,
-                        type=expected.__name__)})
+                    {key: u'Invalid format ({value}), '
+                          u'expecting a {type}'.format(
+                                value=value,
+                                type=expected.__name__)})
             return value
 
         if u'transactionFile' not in data_dict:
-            transaction_file = config.get('ckanext.stcndm.transaction_file')
-            if not transaction_file:
-                raise _ValidationError({
-                    u'transactionFile': u'Path to transactionFile missing from'
-                                        u'CKAN config file'})
+            transaction_ssh_host = config.get(
+                'ckanext.stcndm.transaction_ssh_host')
+            if not transaction_ssh_host:
+                raise _NotFound({
+                    u'transactionFile': u'ckanext.stcndm.transaction_ssh_host '
+                                        u'missing from CKAN config file'})
+            transaction_ssh_user = config.get(
+                'ckanext.stcndm.transaction_ssh_user')
+            if not transaction_ssh_user:
+                raise _NotFound({
+                    u'transactionFile': u'ckanext.stcndm.transaction_ssh_user '
+                                        u'missing from CKAN config file'})
+            transaction_ssh_path = config.get(
+                'ckanext.stcndm.transaction_ssh_path')
+            if not transaction_ssh_path:
+                raise _NotFound({
+                    u'transactionFile': u'ckanext.stcndm.transaction_ssh_path '
+                                        u'missing from CKAN config file'})
+            from paramiko import SSHClient, AuthenticationException
+            from socket import gaierror
+            client = SSHClient()
+            client.load_system_host_keys()
             try:
-                transaction_file = open(transaction_file)
-                data_dict = json.load(transaction_file)
-            except (IOError, ValueError) as e:
+                client.connect(transaction_ssh_host,
+                               username=transaction_ssh_user)
+                stdin, stdout, stderr = client.exec_command(
+                    'cat '+transaction_ssh_path)
+                data_dict = json.loads(stdout.read())
+            except gaierror as e:
+                raise _NotFound({
+                    u'transactionFile': 'Invalid host: ' +
+                                        transaction_ssh_host + ' : ' + e[1]
+                })
+            except ValueError as e:
                 raise _ValidationError({
-                    u'transactionFile': e.message
+                    u'transactionFile': 'is ' + transaction_ssh_path +
+                                        ' the correct path to the '
+                                        'transaction file?: ' + e.message
+                })
+            except AuthenticationException as e:
+                raise _NotAuthorized({
+                    u'transactionFile': 'ssh ' +
+                                        transaction_ssh_user + '@' +
+                                        transaction_ssh_host + ' failed: ' +
+                                        e.message
                 })
 
         transaction_dict = my_get(data_dict, u'transactionFile', dict)
         daily_dict = my_get(transaction_dict, u'daily', dict)
         release_date_text = my_get(daily_dict, u'release_date', basestring)
-        try:
-            release_date = datetime.datetime.strptime(
-                release_date_text,
-                u'%Y-%m-%dT%H:%M:%S'
-            )
-        except ValueError:
-            raise _ValidationError(
-                {u'release_date':
-                    u'Invalid format ({date_text}), '
-                    u'expecting YYYY-MM-DDTHH:MM:SS'.format(
-                        date_text=release_date_text)})
         releases = my_get(daily_dict, u'release', list)
         lc = ckanapi.LocalCKAN(context=context)
         results = []
@@ -261,12 +284,12 @@ def consume_transaction_file(context, data_dict):
             url = {
                 u'en': u'/daily-quotidien/{release_date}/dq{release_date}'
                        u'{letter_id}-eng.htm'.format(
-                         release_date=release_date.strftime(u'%y%m%d'),
+                         release_date=release_date_text[:10],
                          letter_id=letter_id
                        ),
                 u'fr': u'/daily-quotidien/{release_date}/dq{release_date}'
                        u'{letter_id}-fra.htm'.format(
-                         release_date=release_date.strftime(u'%y%m%d'),
+                         release_date=release_date_text[:10],
                          letter_id=letter_id
                        )
             }
