@@ -7,6 +7,7 @@ import ckanext.datastore.db as ds_db
 import ckanext.scheming.helpers as scheming_helpers
 import ckanext.stcndm.helpers as stcndm_helpers
 import arrow
+import copy
 
 from pylons import config
 from sqlalchemy import orm, types, Column, Table
@@ -1044,7 +1045,7 @@ def update_release_date_and_status(context, data_dict):
                       '25': {'type': 'pumf',
                              'update_product': True,
                              'update_children': False},
-                      '26': {'type': '????',
+                      '26': {'type': 'generic',
                              'update_product': False,
                              'update_children': False},
                       }
