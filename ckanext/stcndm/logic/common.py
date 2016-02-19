@@ -7,7 +7,6 @@ import ckanext.datastore.db as ds_db
 import ckanext.scheming.helpers as scheming_helpers
 import ckanext.stcndm.helpers as stcndm_helpers
 import arrow
-import copy
 
 from pylons import config
 from sqlalchemy import orm, types, Column, Table
