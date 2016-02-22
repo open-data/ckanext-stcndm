@@ -225,7 +225,9 @@ def consume_transaction_file(context, data_dict):
                 raise _NotFound({
                     u'transactionFile': u'ckanext.stcndm.transaction_ssh_path '
                                         u'missing from CKAN config file'})
-            from paramiko import SSHClient, AuthenticationException
+            from paramiko import (SSHClient,
+                                  AuthenticationException,
+                                  SSHException)
             from socket import gaierror
             client = SSHClient()
             client.load_system_host_keys()
@@ -251,6 +253,11 @@ def consume_transaction_file(context, data_dict):
                     u'transactionFile': 'ssh ' +
                                         transaction_ssh_user + '@' +
                                         transaction_ssh_host + ' failed: ' +
+                                        e.message
+                })
+            except SSHException as e:
+                raise _ValidationError({
+                    u'transactionFile': 'ssh mis-configured: ' +
                                         e.message
                 })
 

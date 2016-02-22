@@ -16,7 +16,7 @@
       <li class="row col-md-4" style="margin:0.5em 0">
         <a href="{{ h.url_for(schema_id + '_search') }}">{{ h.truncate(name, 50) }} ({{ count }}<span class="wb-inv"> {{ _("datasets") }}</span>)</a>&nbsp;&nbsp;
         {% if h.check_access('package_create') %}
-          <a class="btn btn-default" href="{{ h.url_for(schema_id + '_new') }}">{{ _("New") }}<span class="wb-inv"> {{ _(" %(type)s dataset")|format(type=name) }}</span> <span class="glyphicon glyphicon-plus"></span></a>
+          <a class="btn btn-default" href="{{ h.url_for(schema_id + '_new') }}">{{ _("Create") }}<span class="wb-inv"> {{ _(" %(type)s dataset")|format(type=name) }}</span> <span class="glyphicon glyphicon-plus"></span></a>
         {% endif %}
       </li>
     {% endfor %}
