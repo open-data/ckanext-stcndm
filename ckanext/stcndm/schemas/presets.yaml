@@ -1444,11 +1444,10 @@ presets:
       fr: ID du parent du plus haut niveau
     output_validators: scheming_required
     create_validators: scheming_required
-    validators: scheming_required
+    validators: scheming_required remove_whitespace
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
-    validators: remove_whitespace
 
 - preset_name: ndm_tracking
   values:

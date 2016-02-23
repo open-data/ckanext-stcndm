@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import ckanapi
 import csv
@@ -7,6 +8,18 @@ import sys
 from massage_product import do_product, do_format
 
 __author__ = 'marc'
+
+pumf_history_note_en = u'These data are available at no additional charge to ' \
+                       u'Canadian educational institutions participating in ' \
+                       u'the Data Liberation Initiative. (hyperlink Data ' \
+                       u'Liberation Initiative to: ' \
+                       u'http://www.statcan.gc.ca/dli-ild/dli-idd-eng.htm)'
+pumf_history_note_fr = u'Ces données sont offertes gratuitement aux ' \
+                       u'établissements d’enseignement canadiens participant ' \
+                       u'à l\'Initiative de démocratisation des données ' \
+                       u'(hyperlink l\'initative de démocratisation des ' \
+                       u'données : ' \
+                       u'http://www.statcan.gc.ca/dli-ild/dli-idd-fra.htm)'
 
 
 def clean_dict(dict_in):
@@ -64,6 +77,22 @@ while i < n:
                 type=product_dict['type'],
                 product_id=current_pid
             ).lower()
+        if u'history_notes' in product_dict:
+            if product_dict[u'history_notes'].get(u'en'):
+                product_dict[u'history_notes'][u'en'] += u'; ' + \
+                                                         pumf_history_note_en
+            else:
+                product_dict[u'history_notes'][u'en'] = pumf_history_note_en
+            if product_dict[u'history_notes'].get(u'fr'):
+                product_dict[u'history_notes'][u'fr'] += u'; ' + \
+                                                         pumf_history_note_fr
+            else:
+                product_dict[u'history_notes'][u'fr'] = pumf_history_note_fr
+        else:
+            product_dict[u'history_notes'] = {
+                u'en': pumf_history_note_en,
+                u'fr': pumf_history_note_fr
+            }
         if current_pid == product_id_new:
             for key in clean_dict(product_dict):
                 if key not in product_dict_out:
