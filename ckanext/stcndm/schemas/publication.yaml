@@ -163,6 +163,7 @@ dataset_fields:
 
 - field_name: load_to_olc_code
   preset: ndm_load_to_olc_code
+  validators: scheming_required scheming_choices ndm_child_inherits_value
 
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes
