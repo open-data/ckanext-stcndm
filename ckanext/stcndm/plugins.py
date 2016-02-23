@@ -11,7 +11,6 @@ import ckanext.stcndm.logic.subjects as subjects
 import ckanext.stcndm.logic.views as views
 import ckanext.stcndm.logic.surveys as surveys
 from dateutil.parser import parse
-from dateutil.tz import gettz
 from datetime import datetime
 
 from ckan.lib.navl.dictization_functions import _
@@ -89,102 +88,74 @@ class STCNDMPlugin(p.SingletonPlugin):
         """
         customize data sent to solr
         """
-        dataset_schema = scheming_get_dataset_schema(
-            data_dict.get('type', 'unknown')
-        )
+        dataset_schema = scheming_get_dataset_schema(data_dict.get('type'))
         if dataset_schema is None:
-            error_message = 'Found no schema for following dataset :\n{dump}'\
-                .format(dump=json.dumps(data_dict,
-                                        indent=2))
-            raise ValidationError((_(error_message),))
+            raise ValidationError((_(
+                'Found no schema for following datasets:\n{dump}'.format(
+                    dump=json.dumps(data_dict, indent=2, sort_keys=True)
+                )
+            ),))
 
-        # iterate through dataset fields defined in schema
-        field_schema = dict()
-        for dataset_field in dataset_schema['dataset_fields']:
-            d = dataset_field
-            field_schema[d['field_name']] = d
+        field_schema = dict(
+            (s['field_name'], s) for s in dataset_schema['dataset_fields']
+        )
 
-        index_data_dict = {
-            u'author': data_dict.get(u'author'),
-            u'author_email': data_dict.get(u'author_email'),
-            u'capacity': data_dict.get(u'capacity'),
-            u'creator_user_id': data_dict.get(u'creator_user_id'),
-            u'data_dict': data_dict.get(u'data_dict'),
-            u'dataset_type': data_dict.get(u'dataset_type'),
-            u'entity_type': data_dict.get(u'entity_type'),
-            u'groups': data_dict.get(u'groups'),
-            u'id': data_dict.get(u'id'),
-            u'index_id': data_dict.get(u'index_id'),
-            u'isopen': data_dict.get(u'isopen'),
-            u'license_id': data_dict.get(u'license_id'),
-            u'license_title': data_dict.get(u'license_title'),
-            u'maintainer': data_dict.get(u'maintainer'),
-            u'maintainer_email': data_dict.get(u'maintainer_email'),
-            u'metadata_created': data_dict.get(u'metadata_created'),
-            u'metadata_modified': data_dict.get(u'metadata_modified'),
-            u'name': data_dict.get(u'name'),
-            u'notes': data_dict.get(u'notes'),
-            u'num_resources': data_dict.get(u'num_resources'),
-            u'num_tags': data_dict.get(u'num_tags'),
-            u'organization': data_dict.get(u'organization'),
-            u'owner_org': data_dict.get(u'owner_org'),
-            u'private': data_dict.get(u'private'),
-            u'resources': data_dict.get(u'resources'),
-            u'revision_id': data_dict.get(u'revision_id'),
-            u'site_id': data_dict.get(u'site_id'),
-            u'state': data_dict.get(u'state'),
-            u'tags': data_dict.get(u'tags'),
-            u'title': data_dict.get(u'title'),
-            u'type': data_dict.get(u'type'),
-            u'url': data_dict.get(u'url'),
-            u'validated_data_dict': data_dict.get(u'validated_data_dict'),
-            u'version': data_dict.get(u'version'),
-        }
+        index_data_dict = data_dict.copy()
+
         authors = []
         default_date = datetime(1, 1, 1, 8, 30, 0, 0)
 
-        # iterate through validated data_dict fields and modify as needed
         validated_data_dict = json.loads(data_dict['validated_data_dict'])
-        for item in validated_data_dict.keys():
-            value = validated_data_dict.get(item)
-            name = validated_data_dict.get(u'name')
-            if not value:  # and item in index_data_dict:
-                # index_data_dict.pop(item)
+
+        name = validated_data_dict.get(u'name')
+        for item, value in validated_data_dict.iteritems():
+            # Don't bother indexing null fields.
+            if not value:
                 continue
-            fs = field_schema.get(item, None)
-            # ignore all fields not currently in the schema
+
+            fs = field_schema.get(item)
+
+            # Do not index any field that is not currently in the schema.
             if not fs:
                 continue
 
             field_type = fs.get('schema_field_type', 'string')
             multivalued = fs.get('schema_multivalued', False)
 
+            # Legacy issues numbers are non-numeric, which is problematic
+            # for sorting and external tools. We can't just use a Solr
+            # <copyTo> directive, as it'll fail entirely on a bad value.
             if name == 'issue_number':
                 if value.isdigit():
                     index_data_dict['issue_number_int'] = int(value)
 
+            # Fluent (multilingual) fields are really dictionaries, where
+            # each key is the ISO language code, and the value the translated
+            # text. We need to unpack these into individual solr fields
+            # for per-language search.
             if field_type == 'fluent':
-                # if item in index_data_dict:  # don't store the fluent dict
-                #     index_data_dict.pop(item)  # only the fluent values
                 if isinstance(value, dict):
-                    for key in value.keys():
-                        if value[key]:
-                            label = u'{item}_{key}'.format(
-                                item=item,
-                                key=key)
-                            index_data_dict[label] = value[key]
+                    index_data_dict.update(
+                        (u'{0}_{1}'.format(item, k), v)
+                        for k, v in value
+                    )
                 else:
-                    error_message = '{name}: expecting a fluent dict for ' \
-                                    '{item}, instead got {value}' \
-                        .format(name=name,
-                                item=item,
-                                value=value)
-                    raise ValidationError((_(error_message),))
-
-            # for code type, the en/fr labels need to be looked up
-            # and sent to Solr
+                    raise ValidationError((_(
+                        '{name}: Expecting a fluent dict for {item}, '
+                        'instead got {value!r}'.format(
+                            name=name,
+                            item=item,
+                            value=value
+                        )
+                    ), ))
+            # Numeric foreign keys that need to be looked up to retrieve
+            # their multilingual labels for searching.
             elif field_type == u'code':
                 index_data_dict[unicode(item)] = value
+
+                # These codes can refer to a codeset (a dataset of type
+                # 'codeset' with a particular key), a preset (a hardcoded
+                # value in a Scheming schema), or another dataset (lookup).
                 lookup_type = fs.get(u'lookup', '')
                 if lookup_type == u'codeset':
                     lookup = fs.get(u'codeset_type', '')
@@ -192,71 +163,76 @@ class STCNDMPlugin(p.SingletonPlugin):
                     lookup = fs.get(u'preset', '')[4:]
                 else:
                     lookup = fs.get(u'lookup', '')
-                if lookup:
-                    if multivalued:
-                        if not isinstance(value, list):
-                            error_message = '{name}: expecting list of codes ' \
-                                            'for {item}, instead got {value}' \
-                                .format(name=name,
-                                        item=item,
-                                        value=value)
-                            raise ValidationError((_(error_message),))
 
-                        code_dict = {}
-                        for v in value:
-                            if not v:
-                                continue
-                            desc = lookup_label(lookup, v, lookup_type)
-                            if u'found' in desc:
-                                desc.pop('found')
-                            for key in desc:
-                                if key not in code_dict:
-                                    code_dict[key] = []
-                                code_dict[key].append(desc[key])
+                if not lookup:
+                    raise ValidationError((_(
+                        '{name}: unable to determine lookup '
+                        'for {item}'.format(
+                            name=name,
+                            item=item
+                        )
+                    ), ))
 
-                        index_data_dict[unicode(item)] = value
-                        for key in code_dict:
-                            label = u'{item}_desc_{key}'.format(
+                if multivalued:
+                    if not isinstance(value, list):
+                        raise ValidationError((_(
+                            '{name}: expecting list of codes for '
+                            '{item}, instead god {value!r}'.format(
+                                name=name,
                                 item=item,
-                                key=key
+                                value=value
                             )
-                            index_data_dict[label] = code_dict[key]
-                    else:
-                        if not isinstance(value, basestring):
-                            error_message = '{name}: expecting single code ' \
-                                            'for {item}, instead got {value}' \
-                                .format(name=name,
-                                        item=item,
-                                        value=value)
-                            raise ValidationError((_(error_message),))
+                        ), ))
 
-                        desc = lookup_label(lookup, value, lookup_type)
-                        if u'found' in desc:
-                            desc.pop('found')
-                        for key in desc:
-                            label = '{item}_desc_{key}'.format(item=item,
-                                                               key=key)
-                            index_data_dict[label] = desc[key]
+                    for lookup_value in value:
+                        if not lookup_value:
+                            continue
+
+                        desc = lookup_label(lookup, lookup_value, lookup_type)
+                        desc.pop('found', None)
+
+                        index_data_dict.update((
+                            u'{item}_desc_{key}'.format(
+                                item=item,
+                                key=k
+                            ), v)
+                            for k, v in desc.iteritems() if v
+                        )
+
+                    index_data_dict[unicode(item)] = value
                 else:
-                    error_message = '{name}: unable to determine lookup ' \
-                                    'for {item}' \
-                        .format(name=name,
-                                item=item)
-                    raise ValidationError((_(error_message),))
+                    if not isinstance(value, basestring):
+                        raise ValidationError((_(
+                            u'{name}: expecting single code for '
+                            u'{item}, instead got {value!r}'.format(
+                                name=name,
+                                item=item,
+                                value=value
+                            )
+                        ), ))
 
+                    desc = lookup_label(lookup, value, lookup_type)
+                    desc.pop('found', None)
+
+                    index_data_dict.update((
+                        u'{item}_desc_{key}'.format(
+                            item=item,
+                            key=k
+                        ), v)
+                        for k, v in desc.iteritems()
+                    )
             elif field_type == 'date':
                 try:
                     date = parse(value, default=default_date)
                     index_data_dict[unicode(item)] = unicode(
-                        date.isoformat()[:19] + u'Z')
+                        date.isoformat()[:19] + u'Z'
+                    )
                 except ValueError:
                     continue
-
             elif item.endswith('_authors'):
                 index_data_dict[unicode(item)] = value
                 authors.extend(value)
-
-            else:  # all other field types
+            else:
                 index_data_dict[unicode(item)] = value
 
             if authors:
