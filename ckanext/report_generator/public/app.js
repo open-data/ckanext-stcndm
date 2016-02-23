@@ -1,4 +1,7 @@
-
+/*!
+ * Report Generator
+ * v0.0.1
+ */
 (function(window, angular, wb, $) {'use strict';
     var app = angular.module('reportGenerator', ['dataset-types', 'advanced-search', 'display-fields', 'services.config']),
         $resultsTable = $('#results'),
