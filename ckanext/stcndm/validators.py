@@ -688,3 +688,40 @@ def archive_children_of_cube(key, data, errors, context):
 
         if update:
             lc.action.package_update(**child)
+
+
+def ndm_child_inherits_value(key, data, errors, context):
+    """
+    Children of the dataset inherit the value of the given field
+
+    :param key:
+    :param data:
+    :param errors:
+    :param context:
+    :return:
+    """
+    if errors[key]:
+        return
+
+    product_name = _data_lookup((u'name',), data)
+    product_id = _data_lookup((u'product_id_new',), data)
+    if not product_id:
+        errors[key].append(u'{name}: missing product_id_new'.format(
+            name=product_name
+        ))
+        return
+    dataset_type = _data_lookup((u'type',), data)
+    if not dataset_type:
+        errors[key].append(u'{name}: missing dataset_type'.format(
+            name=product_name
+        ))
+        return
+
+    lc = ckanapi.LocalCKAN(context=context)
+    if dataset_type in [u'publication', u'cube']:
+        children = h.get_child_datasets(product_id)
+        for child in children:
+            if child.get(u'type') == u'format':
+                continue
+            child[unicode(key[0])] = data[key]
+            lc.action.package_update(**child)

@@ -366,6 +366,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             "geodescriptor_create_name": validators.geodescriptor_create_name,
             "ndm_str2boolean": validators.ndm_str2boolean,
             "ndm_tag_name_validator": validators.ndm_tag_name_validator,
+            "ndm_child_inherits_value": validators.ndm_child_inherits_value,
             "province_create_name": validators.province_create_name,
             "product_create_name": validators.product_create_name,
             "shortcode_validate": validators.shortcode_validate,
