@@ -75,7 +75,7 @@ while i < n:
         product_dict['type'] = u'pumf'
         product_dict['name'] = u'{type}-{product_id}'.format(
                 type=product_dict['type'],
-                product_id=current_pid
+                product_id=product_id_new
             ).lower()
         if u'history_notes' in product_dict:
             if product_dict[u'history_notes'].get(u'en'):
