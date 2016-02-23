@@ -309,7 +309,7 @@ while i < n:
 
         else:
             if product_dict_out:
-                if current_pid in dnl_list:
+                if current_pid[:8] in dnl_list:
                     product_dict_out[u'load_to_olc_code'] = u'0'
                 print json.dumps(clean_dict(product_dict_out))
                 product_dict_out = {}
