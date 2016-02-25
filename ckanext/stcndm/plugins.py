@@ -87,6 +87,11 @@ class STCNDMPlugin(p.SingletonPlugin):
     def before_index(self, data_dict):
         """
         customize data sent to solr
+
+        :param data_dict:
+        :type data_dict dict
+
+        :returns dict
         """
         dataset_schema = scheming_get_dataset_schema(data_dict.get('type'))
         if dataset_schema is None:
@@ -101,6 +106,9 @@ class STCNDMPlugin(p.SingletonPlugin):
         )
 
         index_data_dict = data_dict.copy()
+        for k in data_dict:
+            if k.startswith(u'extras_'):
+                index_data_dict.pop(k, None)
 
         authors = []
         default_date = datetime(1, 1, 1, 8, 30, 0, 0)
@@ -110,7 +118,12 @@ class STCNDMPlugin(p.SingletonPlugin):
         name = validated_data_dict.get(u'name')
         for item, value in validated_data_dict.iteritems():
             # Don't bother indexing null fields.
-            if not value:
+            if (
+                    not value or
+                    value == {u'en': u'', u'fr': u''} or
+                    value == {u'en': [], u'fr': []}
+            ):
+                index_data_dict.pop(item, None)
                 continue
 
             fs = field_schema.get(item)
@@ -120,6 +133,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 continue
 
             field_type = fs.get('schema_field_type', 'string')
+            # TODO: we're not using the multivalued schema field.  Drop it?
             multivalued = fs.get('schema_multivalued', False)
 
             # Legacy issues numbers are non-numeric, which is problematic
@@ -137,7 +151,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 if isinstance(value, dict):
                     index_data_dict.update(
                         (u'{0}_{1}'.format(item, k), v)
-                        for k, v in value
+                        for k, v in value.iteritems()
                     )
                 else:
                     raise ValidationError((_(
@@ -148,6 +162,20 @@ class STCNDMPlugin(p.SingletonPlugin):
                             value=value
                         )
                     ), ))
+
+            elif field_type == 'int':
+                if isinstance(value, list):
+                    try:
+                        index_data_dict[unicode(item)] = map(int, value)
+                    except ValueError:
+                        pass
+                else:
+                    try:
+                        index_data_dict[unicode(item)] = int(value)
+                    except ValueError:
+                        pass
+                continue
+
             # Numeric foreign keys that need to be looked up to retrieve
             # their multilingual labels for searching.
             elif field_type == u'code':
@@ -173,53 +201,37 @@ class STCNDMPlugin(p.SingletonPlugin):
                         )
                     ), ))
 
-                if multivalued:
-                    if not isinstance(value, list):
-                        raise ValidationError((_(
-                            '{name}: expecting list of codes for '
-                            '{item}, instead god {value!r}'.format(
-                                name=name,
-                                item=item,
-                                value=value
-                            )
-                        ), ))
-
-                    for lookup_value in value:
-                        if not lookup_value:
+                if isinstance(value, list):
+                    for value_to_lookup in value:
+                        if not value_to_lookup:
                             continue
 
-                        desc = lookup_label(lookup, lookup_value, lookup_type)
-                        desc.pop('found', None)
-
-                        index_data_dict.update((
-                            u'{item}_desc_{key}'.format(
-                                item=item,
-                                key=k
-                            ), v)
-                            for k, v in desc.iteritems() if v
+                        desc = lookup_label(
+                            lookup,
+                            value_to_lookup,
+                            lookup_type
                         )
 
-                    index_data_dict[unicode(item)] = value
-                else:
-                    if not isinstance(value, basestring):
-                        raise ValidationError((_(
-                            u'{name}: expecting single code for '
-                            u'{item}, instead got {value!r}'.format(
-                                name=name,
-                                item=item,
-                                value=value
+                        for k, v in desc.iteritems():
+                            if v and not k == u'found':
+                                n = u'{item}_desc_{key}'.format(
+                                    item=item,
+                                    key=k
+                                )
+                            index_data_dict.update(
+                                {n: index_data_dict.get(n, []) + [v]}
                             )
-                        ), ))
 
+                    # index_data_dict[unicode(item)] = value
+                else:
                     desc = lookup_label(lookup, value, lookup_type)
-                    desc.pop('found', None)
 
                     index_data_dict.update((
                         u'{item}_desc_{key}'.format(
                             item=item,
                             key=k
                         ), v)
-                        for k, v in desc.iteritems()
+                        for k, v in desc.iteritems() if v and not k == u'found'
                     )
             elif field_type == 'date':
                 try:
