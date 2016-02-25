@@ -59,3 +59,7 @@ target/
 
 # PyCharm
 .idea/
+
+#Solr config Symlinks created for Docker
+conf/solr/schema.xml
+conf/solr/solrconfig.xml
