@@ -342,8 +342,9 @@ def product_create_name(key, data, errors, context):
         if errors[('product_id_new',)]:
             errors[key].append(_('Name could not be generated'))
             return
+        else:
+            product_id_new = _data_lookup(('product_id_new',), data)
 
-    product_id_new = _data_lookup(('product_id_new',), data)
     data_set_type = _data_lookup(('type',), data)
     if product_id_new:
         data[key] = u'{data_set_type}-{product_id_new}'.format(
@@ -703,13 +704,22 @@ def ndm_child_inherits_value(key, data, errors, context):
     if errors[key]:
         return
 
-    product_name = _data_lookup((u'name',), data)
-    product_id = _data_lookup((u'product_id_new',), data)
-    if not product_id:
-        errors[key].append(u'{name}: missing product_id_new'.format(
-            name=product_name
-        ))
-        return
+    product_name = _data_lookup(('name',), data)
+    if not product_name:
+        product_create_name(('name',), data, errors, context)
+        if errors[('name',)]:
+            return
+        else:
+            product_name = _data_lookup(('name',), data)
+
+    product_id = _data_lookup(('product_id_new',), data)
+    if not product_id or product_id is missing:
+        create_product_id(('product_id_new',), data, errors, context)
+        if errors[('product_id_new',)]:
+            return
+        else:
+            product_id = _data_lookup(('product_id_new',), data)
+
     dataset_type = _data_lookup((u'type',), data)
     if not dataset_type:
         errors[key].append(u'{name}: missing dataset_type'.format(
