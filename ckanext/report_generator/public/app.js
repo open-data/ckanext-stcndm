@@ -1,6 +1,6 @@
 /*!
  * Report Generator
- * v0.0.1
+ * v0.0.2
  */
 (function(window, angular, wb, $) {'use strict';
     var app = angular.module('reportGenerator', ['dataset-types', 'advanced-search', 'display-fields', 'services.config']),
@@ -580,9 +580,17 @@ angular.module('checklist-model', [])
                 },
                 fieldErrorCallback = function(response) {
                     var type = response.config.url.match(/type=([^&]*)/)[1],
-                        types = $rootScope.dataTypeCtrl.datasetTypes;
+                        types = $rootScope.dataTypeCtrl.datasetTypes,
+                        typeIndex = types.indexOf(type),
+                        selectedTypeIndex = selectedDatasetType.indexOf(type);
 
-                    types.splice(types.indexOf(type), 1);
+                    if (selectedTypeIndex !== -1) {
+                        selectedDatasetType.splice(selectedTypeIndex, 1);
+                    }
+
+                    if (typeIndex !== -1) {
+                        types.splice(typeIndex, 1);
+                    }
                 },
                 addFields = function(type) {
                     $.extend(newFields, _this.datasetTypesFields[type]);
