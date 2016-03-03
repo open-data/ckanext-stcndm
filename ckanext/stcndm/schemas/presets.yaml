@@ -18,7 +18,7 @@ presets:
     form_snippet: fluent_markdown.html
     display_snippet: fluent_markdown.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
 
 - preset_name: ndm_archive_date
@@ -28,7 +28,7 @@ presets:
       fr: Date d'archivage
     form_snippet: date.html
     display_snippet: date.html
-    validators: scheming_required isodate
+    validators: ignore_empty isodate
     schema_field_type: date
     schema_multivalued: false
     schema_extras: true
@@ -40,7 +40,7 @@ presets:
       fr: État d'archivage
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -70,7 +70,7 @@ presets:
       fr: Tableau terminé (CANSIM)
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -98,7 +98,7 @@ presets:
         value: '1'
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -108,6 +108,15 @@ presets:
     label:
       en: Census Grouping
       fr: Regroupement du recensement
+    form_snippet: multiple_select.html
+    display_snippet: multiple_choice.html
+    validators: ignore_empty scheming_multiple_choice
+    output_validators: scheming_multiple_choice_output
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+    sorted_choices: true
     choices:
       - label:
           en: Parent
@@ -137,15 +146,6 @@ presets:
           en: Release 5
           fr: Émission 5
         value: '7'
-    form_snippet: multiple_select.html
-    display_snippet: multiple_choice.html
-    validators: scheming_required scheming_multiple_choice
-    output_validators: scheming_multiple_choice_output
-    lookup: preset
-    schema_field_type: code
-    schema_multivalued: true
-    schema_extras: true
-    sorted_choices: true
 
 - preset_name: ndm_census_years
   values:
@@ -154,7 +154,7 @@ presets:
       fr: Années de recensements
     form_snippet: repeating_text.html
     display_snippet: repeating_text.html
-    validators: repeating_text
+    validators: ignore_empty repeating_text
     output_validators: repeating_text_output
     form_blanks: 3
     schema_field_type: string
@@ -168,7 +168,7 @@ presets:
     schema_extras: true
     form_snippet: codeset_multiple_select.html
     display_snippet: codeset_multiple_choice.html
-    validators: ignore_missing codeset_multiple_choice
+    validators: ignore_empty codeset_multiple_choice
     output_validators: scheming_multiple_choice_output
     lookup: codeset
 
@@ -178,7 +178,7 @@ presets:
     schema_multivalued: false
     form_snippet: codeset_select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: codeset
 
 - preset_name: ndm_collection_methods
@@ -188,7 +188,7 @@ presets:
       fr: Méthode de collection
     form_snippet: multiple_select.html
     display_snippet: multiple_choice.html
-    validators: scheming_required scheming_multiple_choice
+    validators: ignore_empty scheming_multiple_choice
     output_validators: shortcode_output
     lookup: preset
     schema_field_type: code
@@ -270,7 +270,7 @@ presets:
     schema_extras: true
     form_snippet: codeset_multiple_select.html
     display_snippet: codeset_multiple_choice.html
-    validators: ignore_missing codeset_multiple_choice
+    validators: ignore_empty codeset_multiple_choice
     output_validators: scheming_multiple_choice_output
     lookup: codeset
     codeset_type: content_type
@@ -283,7 +283,7 @@ presets:
       fr: Niveau d'impact de la correction
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -305,7 +305,7 @@ presets:
       fr: Code ID de correction
     form_snippet: shortcode_multivalue.html
     display_snippet: shortcode_multivalue.html
-    validators: shortcode_validate
+    validators: ignore_empty shortcode_validate
     output_validators: shortcode_output
     schema_field_type: string
     schema_multivalued: false
@@ -318,7 +318,7 @@ presets:
       fr: Genre de correction
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -377,7 +377,7 @@ presets:
     form_snippet: fluent_markdown.html
     display_snippet: fluent_markdown.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
 
 - preset_name: ndm_digital_object_identifier
@@ -388,7 +388,7 @@ presets:
     form_snippet: fluent_text.html
     display_snippet: fluent_text.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
     schema_field_type: string
     schema_multivalued: false
@@ -410,7 +410,7 @@ presets:
         value: '1'
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -427,7 +427,7 @@ presets:
     form_snippet: fluent_tags.html
     display_snippet: fluent_tags.html
     error_snippet: fluent_text.html
-    validators: fluent_tags
+    validators: ignore_empty fluent_tags
     output_validators: fluent_tags_output
     tag_validators: ndm_tag_name_validator
     form_attrs:
@@ -444,7 +444,7 @@ presets:
       fr: Date discontinué
     form_snippet: date.html
     display_snippet: date.html
-    validators: scheming_required isodate
+    validators: ignore_empty isodate
     schema_field_type: date
     schema_multivalued: false
     schema_extras: true
@@ -456,7 +456,7 @@ presets:
       fr: Affichage
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     create_validators: set_default_value(1)
     lookup: preset
     schema_field_type: code
@@ -483,7 +483,7 @@ presets:
       fr: Auteurs externes
     form_snippet: repeating_text.html
     display_snippet: repeating_text.html
-    validators: repeating_text
+    validators: ignore_empty repeating_text
     output_validators: repeating_text_output
     form_blanks: 3
     schema_field_type: string
@@ -495,7 +495,9 @@ presets:
     label:
       en: Feature Weight
       fr: Poids
-    schema_field_type: string
+    validators: ignore_empty convert_int
+    output_validators: convert_int
+    schema_field_type: int
     schema_multivalued: false
     schema_extras: true
 
@@ -506,7 +508,7 @@ presets:
       fr: Format du produit
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required # scheming_multiple_choice
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -596,6 +598,7 @@ presets:
     label:
       en: FRC
       fr: FRC
+    validators: ignore_empty
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
@@ -610,7 +613,7 @@ presets:
     schema_extras: true
     form_snippet: codeset_multiple_select.html
     display_snippet: codeset_multiple_choice.html
-    validators: ignore_missing codeset_multiple_choice
+    validators: ignore_empty codeset_multiple_choice
     output_validators: scheming_multiple_choice_output
     lookup: codeset
     codeset_type: frequency
@@ -623,7 +626,7 @@ presets:
       fr: Géo spécifique
     form_snippet: shortcode_multivalue.html
     display_snippet: shortcode_multivalue.html
-    validators: shortcode_validate
+    validators: ignore_empty shortcode_validate
     output_validators: shortcode_output
     lookup: geodescriptor
     schema_field_type: code
@@ -640,7 +643,7 @@ presets:
     schema_extras: true
     form_snippet: codeset_multiple_select.html
     display_snippet: codeset_multiple_choice.html
-    validators: ignore_missing codeset_multiple_choice
+    validators: ignore_empty codeset_multiple_choice
     output_validators: scheming_multiple_choice_output
     lookup: codeset
     codeset_type: geolevel
@@ -654,7 +657,7 @@ presets:
     form_snippet: fluent_markdown.html
     display_snippet: fluent_markdown.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
     schema_field_type: fluent
     schema_multivalued: false
@@ -667,7 +670,7 @@ presets:
       fr: Identificateurs de variable IMDB
     form_snippet: repeating_text.html
     display_snippet: repeating_text.html
-    validators: repeating_text
+    validators: ignore_empty repeating_text
     output_validators: repeating_text_output
     form_blanks: 3
     schema_field_type: string
@@ -679,11 +682,13 @@ presets:
     label:
       en: Internal Authors
       fr: Auteurs internes
+    help_text:
+      en: Please enter semicolon separated names
+      fr: Veuillez entrer des noms séparés par des pointvirgules
     form_snippet: autocomplete.html
     display_snippet: repeating_text.html
-    validators: repeating_text_delimited
+    validators: ignore_empty repeating_text_delimited
     output_validators: repeating_text_output
-    form_blanks: 3
     schema_field_type: string
     schema_multivalued: true
     schema_extras: true
@@ -695,7 +700,7 @@ presets:
       fr: Nom de personnes ressource internes
     form_snippet: repeating_text.html
     display_snippet: repeating_text.html
-    validators: repeating_text
+    validators: ignore_empty repeating_text
     output_validators: repeating_text_output
     form_blanks: 3
     schema_field_type: string
@@ -710,7 +715,7 @@ presets:
     form_snippet: fluent_text.html
     display_snippet: fluent_text.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
     schema_field_type: fluent
     schema_multivalued: false
@@ -724,7 +729,7 @@ presets:
     form_snippet: fluent_text.html
     display_snippet: fluent_text.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
     schema_field_type: fluent
     schema_multivalued: false
@@ -735,6 +740,7 @@ presets:
     label:
       en: Issue Number
       fr: Numéro d'émission
+    validators: ignore_empty
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
@@ -750,7 +756,7 @@ presets:
     form_snippet: fluent_tags.html
     display_snippet: fluent_tags.html
     error_snippet: fluent_text.html
-    validators: fluent_tags
+    validators: ignore_empty fluent_tags
     output_validators: fluent_tags_output
     tag_validators: ndm_tag_name_validator
     form_attrs:
@@ -767,7 +773,7 @@ presets:
       fr: Langue
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -792,7 +798,7 @@ presets:
       fr: Heure de dernière diffusion
     form_snippet: datetime.html
     display_snippet: datetime.html
-    validators: scheming_isodatetime apply_archive_rules
+    validators: ignore_empty scheming_isodatetime apply_archive_rules
     schema_field_type: date
     schema_multivalued: false
     schema_extras: true
@@ -805,7 +811,7 @@ presets:
     form_snippet: fluent_text.html
     display_snippet: fluent_text.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
     schema_field_type: fluent
     schema_multivalued: false
@@ -816,6 +822,7 @@ presets:
       label:
         en: PE Code
         fr: Code PE
+      validators: ignore_empty
       schema_field_type: string
       schema_multivalued: false
       schema_extras: true
@@ -830,7 +837,7 @@ presets:
       fr: Heure de diffusion
     form_snippet: datetime.html
     display_snippet: datetime.html
-    validators: scheming_isodatetime
+    validators: ignore_empty scheming_isodatetime
     schema_field_type: date
     schema_multivalued: false
     schema_extras: true
@@ -842,7 +849,7 @@ presets:
       fr: Date de statut ancien
     form_snippet: date.html
     display_snippet: date.html
-    validators: scheming_required isodate
+    validators: ignore_empty isodate
     schema_field_type: date
     schema_multivalued: false
     schema_extras: true
@@ -852,6 +859,13 @@ presets:
     label:
       en: Load to OLC
       fr: Charger au OLC
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: ignore_empty scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
     choices:
       - label:
           en: 'False'
@@ -861,13 +875,6 @@ presets:
           en: 'True'
           fr: 'Vrai'
         value: '1'
-    form_snippet: select.html
-    display_snippet: select.html
-    validators: scheming_required scheming_choices
-    lookup: preset
-    schema_field_type: code
-    schema_multivalued: false
-    schema_extras: true
 
 - preset_name: ndm_name
   values:
@@ -900,6 +907,7 @@ presets:
     label:
       en: Price
       fr: Prix
+    validators: ignore_empty
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
@@ -912,7 +920,7 @@ presets:
     form_snippet: fluent_text.html
     display_snippet: fluent_text.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
     schema_field_type: fluent
     schema_multivalued: false
@@ -986,17 +994,18 @@ presets:
     label:
       en: Product ID New
       fr: ID produit nouveau
+    validators: scheming_required remove_whitespace
     required: true
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
-    validators: remove_whitespace
 
 - preset_name: ndm_product_id_old
   values:
     label:
       en: Product ID Old
       fr: ID produit ancien
+    validators: ignore_empty
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
@@ -1006,6 +1015,7 @@ presets:
     label:
       en: Publication Year
       fr: Année de publication
+    validators: ignore_empty
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
@@ -1017,7 +1027,7 @@ presets:
       fr: État de publication
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -1052,7 +1062,7 @@ presets:
       fr: Produits associés
     form_snippet: repeating_text.html
     display_snippet: repeating_text.html
-    validators: repeating_text
+    validators: ignore_empty repeating_text
     output_validators: repeating_text_output
     form_blanks: 3
     schema_field_type: string
@@ -1066,7 +1076,7 @@ presets:
       fr: Produits remplacés
     form_snippet: repeating_text.html
     display_snippet: repeating_text.html
-    validators: repeating_text
+    validators: ignore_empty repeating_text
     output_validators: repeating_text_output
     form_blanks: 3
     schema_field_type: string
@@ -1080,7 +1090,7 @@ presets:
       fr: Date de statut ROT
     form_snippet: date.html
     display_snippet: date.html
-    validators: scheming_required isodate
+    validators: ignore_empty isodate
     schema_field_type: date
     schema_multivalued: false
     schema_extras: true
@@ -1089,7 +1099,7 @@ presets:
   values:
     form_snippet: shortcode_multivalue.html
     display_snippet: shortcode_multivalue.html
-    validators: shortcode_validate
+    validators: ignore_empty shortcode_validate
     output_validators: shortcode_output
     schema_field_type: code
     schema_multivalued: true
@@ -1101,7 +1111,7 @@ presets:
       fr: État
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -1151,9 +1161,9 @@ presets:
       fr: Sujets
     form_snippet: shortcode_multivalue.html
     display_snippet: shortcode_multivalue.html
-    validators: scheming_required shortcode_validate
-    create_validators: scheming_required shortcode_validate
-    output_validators: scheming_required shortcode_output
+    validators: ignore_empty shortcode_validate
+#    create_validators: shortcode_validate
+    output_validators: shortcode_output
     lookup: subject
     schema_field_type: code
     schema_multivalued: true
@@ -1167,7 +1177,7 @@ presets:
       fr: Anciens sujets
     form_snippet: repeating_text.html
     display_snippet: repeating_text.html
-    validators: repeating_text
+    validators: ignore_empty repeating_text
     output_validators: repeating_text_output
     schema_field_type: string
     schema_multivalued: true
@@ -1180,7 +1190,7 @@ presets:
       fr: Affichage du sujet
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -1214,7 +1224,7 @@ presets:
       fr: Participation au sondage
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -1244,7 +1254,7 @@ presets:
       fr: Propriétaire du sondage
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -1370,7 +1380,7 @@ presets:
       fr: Source
     form_snippet: shortcode_multivalue.html
     display_snippet: shortcode_multivalue.html
-    validators: shortcode_validate
+    validators: ignore_empty shortcode_validate
     output_validators: shortcode_output
     lookup: survey
     schema_field_type: code
@@ -1384,7 +1394,7 @@ presets:
       fr: État
     form_snippet: select.html
     display_snippet: select.html
-    validators: scheming_required scheming_choices
+    validators: ignore_empty scheming_choices
     lookup: preset
     schema_field_type: code
     schema_multivalued: false
@@ -1410,7 +1420,7 @@ presets:
     form_snippet: fluent_tags.html
     display_snippet: fluent_tags.html
     error_snippet: fluent_text.html
-    validators: fluent_tags
+    validators: ignore_empty fluent_tags
     output_validators: fluent_tags_output
     tag_validators: ndm_tag_name_validator
     form_attrs:
@@ -1434,7 +1444,7 @@ presets:
     form_snippet: fluent_text.html
     display_snippet: fluent_text.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
 
 - preset_name: ndm_top_parent_id
@@ -1442,9 +1452,7 @@ presets:
     label:
       en: Top Parent ID
       fr: ID du parent du plus haut niveau
-    output_validators: scheming_required
-    create_validators: scheming_required
-    validators: scheming_required remove_whitespace
+    validators: ignore_empty remove_whitespace
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
@@ -1456,7 +1464,7 @@ presets:
       fr: Pistage
     form_snippet: multiple_select.html
     display_snippet: multiple_choice.html
-    validators: scheming_required scheming_multiple_choice
+    validators: ignore_empty scheming_multiple_choice
     output_validators: shortcode_output
     lookup: preset
     schema_field_type: code
@@ -1551,6 +1559,9 @@ presets:
       en: URL
       fr: URL
     display_snippet: link.html
+    validators: ignore_empty
+    schema_field_type: string
+    schema_multivalued: false
 
 - preset_name: ndm_fluent_url
   values:
@@ -1560,7 +1571,7 @@ presets:
     form_snippet: fluent_text.html
     display_snippet: fluent_link.html
     error_snippet: fluent_text.html
-    validators: fluent_text
+    validators: ignore_empty fluent_text
     output_validators: fluent_text_output
     schema_field_type: fluent
     schema_multivalued: false
@@ -1594,6 +1605,7 @@ presets:
     label:
       en: Volume and Number
       fr: Volume et nombre
+    validators: ignore_empty
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true

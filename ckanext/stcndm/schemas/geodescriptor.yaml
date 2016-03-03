@@ -39,6 +39,7 @@ dataset_fields:
   label:
     en: Geodescriptor Specific Code
     fr: Code spécifique du geodescriptor
+  validators: scheming_required
   required: true
   schema_field_type: string
   schema_multivalued: false
@@ -49,6 +50,7 @@ dataset_fields:
     en: Old Title
     fr: Ancien titre
   preset: fluent_text
+  validators: ignore_empty fluent_text
   schema_field_type: fluent
   schema_multivalued: false
   schema_extras: true

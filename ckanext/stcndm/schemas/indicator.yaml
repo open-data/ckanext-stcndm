@@ -49,7 +49,7 @@ dataset_fields:
     fr: Calculs
   form_snippet: repeating_text.html
   display_snippet: repeating_text.html
-  validators: repeating_text
+  validators: ignore_empty repeating_text
   output_validators: repeating_text_output
   schema_field_type: string
   schema_multivalued: true
@@ -62,6 +62,7 @@ dataset_fields:
   label:
     en: Coordinates
     fr: Coordonnées
+  validators: ignore_empty
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -73,6 +74,7 @@ dataset_fields:
   label:
     en: Display Order
     fr: Ordre d'affichage
+  validators: ignore_empty
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -102,6 +104,7 @@ dataset_fields:
   label:
     en: NDM States
     fr: États NDM
+  validators: ignore_empty
   schema_field_type: string
   schema_multivalued: true
   schema_extras: true
@@ -115,7 +118,7 @@ dataset_fields:
     fr: IDs de tables
   form_snippet: repeating_text.html
   display_snippet: repeating_text.html
-  validators: repeating_text
+  validators: ignore_empty repeating_text
   output_validators: repeating_text_output
   schema_field_type: string
   schema_multivalued: true

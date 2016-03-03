@@ -51,7 +51,7 @@ dataset_fields:
   preset: ndm_format
   form_snippet: multiple_select.html
   display_snippet: multiple_choice.html
-  validators: scheming_required scheming_multiple_choice
+  validators: ignore_empty scheming_multiple_choice
   output_validators: shortcode_output
   schema_field_type: string
   schema_multivalued: true

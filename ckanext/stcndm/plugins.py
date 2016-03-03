@@ -117,15 +117,6 @@ class STCNDMPlugin(p.SingletonPlugin):
 
         name = validated_data_dict.get(u'name')
         for item, value in validated_data_dict.iteritems():
-            # Don't bother indexing null fields.
-            if (
-                    not value or
-                    value == {u'en': u'', u'fr': u''} or
-                    value == {u'en': [], u'fr': []}
-            ):
-                index_data_dict.pop(item, None)
-                continue
-
             fs = field_schema.get(item)
 
             # Do not index any field that is not currently in the schema.
@@ -162,19 +153,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                             value=value
                         )
                     ), ))
-
-            elif field_type == 'int':
-                if isinstance(value, list):
-                    try:
-                        index_data_dict[unicode(item)] = map(int, value)
-                    except ValueError:
-                        pass
-                else:
-                    try:
-                        index_data_dict[unicode(item)] = int(value)
-                    except ValueError:
-                        pass
-                continue
 
             # Numeric foreign keys that need to be looked up to retrieve
             # their multilingual labels for searching.
