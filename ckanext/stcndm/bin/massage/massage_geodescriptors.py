@@ -50,7 +50,7 @@ while i < n:
             u'license_url': line.get(u'license_url', ''),
             u'license_id': line.get(u'license_id', ''),
         }
-        geodescriptor_code = line.get(u'tmsgcspecificcode_bi_tmtxtm', '')
+        geodescriptor_code = u'2011' + line.get(u'tmsgcspecificcode_bi_tmtxtm')
         if ';' in geodescriptor_code:
             line_out[u'aliased_codes'] = listify(geodescriptor_code)
             line_out[u'geodescriptor_code'] = line_out[u'geolevel_codes']
@@ -58,7 +58,7 @@ while i < n:
                 geolevel_code=line_out[u'geolevel_codes'].lower()
             )
         else:
-            line_out[u'geodescriptor_code'] = line.get(u'tmsgcspecificcode_bi_tmtxtm', '')
+            line_out[u'geodescriptor_code'] = geodescriptor_code
             line_out[u'name'] = u'geodescriptor-{geodescriptor_code}'.format(
                 geodescriptor_code=geodescriptor_code.lower()
             )
