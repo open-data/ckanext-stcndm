@@ -1206,6 +1206,11 @@ def update_product_geo(context, data_dict):
     if isinstance(dguids, basestring):
         dguids = [x.strip() for x in dguids.split(';')]
 
+    for dguid in dguids:
+        if not stcndm_helpers.is_dguid(dguid):
+            _msg = u'Expecting dguid, got {code} instead'.format(code=dguid)
+            raise _ValidationError({u'geodescriptor_codes': _msg})
+
     response = lc.action.package_search(
         q='product_id_new:{product_id}'.format(
             product_id=product_id
@@ -1221,7 +1226,9 @@ def update_product_geo(context, data_dict):
         )
 
     pkg_dict = response['results'][0]
-    pkg_dict['geolevel_codes'] = list(set(sc[:5] for sc in dguids))
+    pkg_dict['geolevel_codes'] = list(
+        set(stcndm_helpers.get_geolevel(sc) for sc in dguids)
+    )
 
     if pkg_dict['product_type_code'] in VALID_DATA_TYPES:
         # Data product geodescriptors (for which there can be tens of
@@ -1229,7 +1236,7 @@ def update_product_geo(context, data_dict):
         # directly on the package.
         geo.clear_geodescriptors_for_package(pkg_dict['product_id_new'])
         for geo_code in dguids:
-            geo.update_relationship(pkg_dict['product_id_new'], geo_code)
+            geo.update_relationship(pkg_dict['product_id_new'], geo_code[4:])
     else:
         # Non-data products simply have the geodescriptors assigned to the
         # package.

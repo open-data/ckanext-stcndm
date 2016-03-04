@@ -210,100 +210,6 @@ def show_fields_changed_between_revisions(pkg_name, pkg_revisions):
     }
 
 
-class GeoLevel:
-    def __init__(self, context):
-        self.geo_table = {}
-
-        self.get_geolevel_table(context)
-
-    def get_geolevel_table(self, context):
-
-        q = 'zckownerorg_bi_strs:tmshortlist'
-        fq = 'tmdroplfld_bi_tmtxtm:extras_geolevel_en_txtm'
-
-        data_dict = {'q': q, 'fq': fq, 'rows': '1000'}
-
-        response = get_action('package_search')(context, data_dict)
-
-        for result in response['results']:
-            result_dict = {}
-
-            for extra in result['extras']:
-                result_dict[extra['key']] = extra['value']
-
-            split_values = result_dict['tmdroplopt_bi_tmtxtm'].split('|')
-            # ignore if no code is present (len < 3)
-            if len(split_values) == 3:
-                split_values = [value.strip() for value in split_values]
-                (en_text, fr_text, code) = split_values
-                self.geo_table[code] = (en_text, fr_text)
-
-        return
-
-    def get_by_code(self, code):
-
-        return self.geo_table.get(code, (None, None))
-
-
-class GeoSpecific:
-    """
-    The geo specific table (tmsgccode) is over 6k records so it shouldn't be
-    loaded entirely like tmshortlist.
-    Code descriptions will be searched when required.
-
-    """
-    def __init__(self, context):
-        self.context = context
-
-    def get_by_code(self, code):
-        """
-        :param code: code for specific geo code
-        :type code: str
-
-        :return: tuple of english and french descriptions
-        """
-        q = (
-            'zckownerorg_bi_strs:tmsgccode AND '
-            'tmsgcspecificcode_bi_tmtxtm:{code}'
-        ).format(code=code)
-
-        data_dict = {'q': q, 'rows': '1'}
-
-        response = get_action('package_search')(self.context, data_dict)
-
-        if response['count'] == 0:
-            raise ValidationError((_('Specific Geo code not found.'),))
-
-        # This is very messy but the tmsgccode entries might have multiple
-        # codes as in the "all provinces" entry.  If this is the case, iterate
-        # through them and eliminate entries that start with "all."
-        if response['count'] > 1:
-            result = None
-            for res in response['results']:
-                for extra in res['extras']:
-                    if extra['key'] == 'tmsgccode_bi_tmtxtm':
-                        if not extra['value'].lower().startswith('all'):
-                            result = res
-                        break
-                if result:
-                    break
-        else:
-            result = response['results'][0]
-
-        if result:
-            result_dict = {}
-
-            for extra in result['extras']:
-                result_dict[extra['key']] = extra['value']
-
-            en_text = result_dict.get('tmsgcname_en_tmtxtm', '')
-            fr_text = result_dict.get('tmsgcname_fr_tmtxtm', '')
-        else:
-            en_text = fr_text = None
-
-        return en_text, fr_text
-
-
 def codeset_choices(codeset_type):
     """
     Return a dictionary of {codeset_value: title} for the codeset_type
@@ -835,3 +741,57 @@ def sync_ckan(target, since_ts=None, before_ts=None):
 
     for activity in changes_since(since_ts=since_ts, before_ts=before_ts):
         sync_dataset(lc, target, activity['object_id'])
+
+
+def is_dguid(dguid_or_geodescriptor):
+    """
+    test whether submitted value is a valid dguid
+
+    :param dguid_or_geodescriptor:
+    :return: boolean
+    """
+    if (
+        isinstance(dguid_or_geodescriptor, basestring) and
+        re.match('^\d{4}[AS]\d{4}.*', dguid_or_geodescriptor)
+       ):
+        return True
+    else:
+        return False
+
+
+def is_geodescriptor(dguid_or_geodescriptor):
+    """
+    test whether submitted value is a valid geodescriptor
+
+    :param dguid_or_geodescriptor:
+    :return: boolean
+    """
+    if (
+        isinstance(dguid_or_geodescriptor, basestring) and
+        re.match('^[AS]\d{4}.*', dguid_or_geodescriptor)
+       ):
+        return True
+    else:
+        return False
+
+
+def get_geolevel(dguid_or_geodescriptor):
+    """
+    extract the geolevel from the given dguid or geodescriptor
+
+    :param dguid_or_geodescriptor:
+    :type dguid_or_geodescriptor: unicode
+    :return: unicode
+    :raises: ValidationError
+    """
+    if is_dguid(dguid_or_geodescriptor):
+        return dguid_or_geodescriptor[4:9]
+    elif is_geodescriptor(dguid_or_geodescriptor):
+        return dguid_or_geodescriptor[:5]
+    else:
+        raise ValidationError({
+            u'geodescriptor_code': u'Unable to get geolevel '
+                                   u'from {code}'.format(
+                                    code=dguid_or_geodescriptor
+                                    )
+        })

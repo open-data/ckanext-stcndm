@@ -200,7 +200,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                                 {n: index_data_dict.get(n, []) + [v]}
                             )
 
-                    # index_data_dict[unicode(item)] = value
                 else:
                     desc = lookup_label(lookup, value, lookup_type)
 
@@ -222,6 +221,11 @@ class STCNDMPlugin(p.SingletonPlugin):
             elif item.endswith('_authors'):
                 index_data_dict[unicode(item)] = value
                 authors.extend(value)
+            elif item == u'geodescriptor_codes':
+                index_data_dict[u'dguid_codes'] == \
+                    index_data_dict[u'geodescriptor_codes'].copy()
+                index_data_dict[u'geodescriptor_codes'] = \
+                    [g[-4:] for g in index_data_dict[u'dguid_codes']]
             else:
                 index_data_dict[unicode(item)] = value
 
@@ -355,7 +359,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             'get_child_datasets': helpers.get_child_datasets,
             'x2list': helpers.x2list,
             'set_related_id': helpers.set_related_id,
-            'changes_since': helpers.changes_since
+            'changes_since': helpers.changes_since,
+            'get_geolevel': helpers.get_geolevel,
         }
 
     def before_view(self, pkg_dict):
