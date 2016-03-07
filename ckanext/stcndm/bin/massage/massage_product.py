@@ -230,7 +230,7 @@ def do_product(data_set):
     if in_and_def(u'geonamecode_bi_intxtm', data_set):
         result = listify(data_set[u'geonamecode_bi_intxtm'])
         if result:
-            product_out[u'geodescriptor_codes'] = result
+            product_out[u'geodescriptor_codes'] = [u'2011' + r for r in result]
 
     if in_and_def(u'hierarchyid_bi_strm', data_set):
         result = listify(data_set[u'hierarchyid_bi_strm'])
@@ -318,7 +318,7 @@ def do_product(data_set):
     if in_and_def(u'specificgeocode_bi_txtm', data_set):
         result = listify(data_set[u'specificgeocode_bi_txtm'])
         if result:
-            product_out[u'geodescriptor_codes'] = result
+            product_out[u'geodescriptor_codes'] = [u'2011' + r for r in result]
 
     if in_and_def(u'statusfcode_bi_strs', data_set):
         if data_set[u'statusfcode_bi_strs'] == '33':

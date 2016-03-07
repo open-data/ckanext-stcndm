@@ -24,6 +24,7 @@ dataset_fields:
   label:
     en: Subject Code
     fr: Code du sujet
+  validators: scheming_required
   required: true
   schema_field_type: string
   schema_multivalued: false
@@ -49,6 +50,7 @@ dataset_fields:
     en: Please enter comma separated terms
     fr: Veuillez entrer des mots séparés par des virgules
   preset: fluent_tags
+  validators: ignore_empty fluent_tags
   tag_validators: ndm_tag_name_validator
   schema_field_type: fluent
   schema_multivalued: true

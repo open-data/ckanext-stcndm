@@ -76,14 +76,10 @@ def shortcode_validate(key, data, errors, context):
         return
 
     value = data[key]
-    if value is missing:
-        data[key] = json.dumps([])
+    if value is missing or value == u'':
         return
 
     if isinstance(value, basestring):
-        if not value:
-            data[key] = json.dumps([])
-            return
         try:
             if isinstance(json.loads(value), list):
                 return

@@ -26,6 +26,10 @@ dataset_fields:
     en: Type of Codeset
     fr: Genre de codeset
   preset: select
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
   choices:
     - label:
         en: Content Type
@@ -39,15 +43,12 @@ dataset_fields:
         en: Geolevel
         fr: Geolevel
       value: 'geolevel'
-  required: true
-  schema_field_type: string
-  schema_multivalued: false
-  schema_extras: true
 
 - field_name: codeset_value
   label:
     en: The code value of the codeset (e.g. A0001)
     fr: La valeur du code du 'codeset' (p.e. A0001)
+  validators: scheming_required
   required: true
   schema_field_type: string
   schema_multivalued: false

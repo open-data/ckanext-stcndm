@@ -32,7 +32,7 @@ dataset_fields:
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
-  validators: remove_whitespace #scheming_required
+  validators: ignore_missing remove_whitespace
 
 - field_name: format_id
   label:

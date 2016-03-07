@@ -117,15 +117,6 @@ class STCNDMPlugin(p.SingletonPlugin):
 
         name = validated_data_dict.get(u'name')
         for item, value in validated_data_dict.iteritems():
-            # Don't bother indexing null fields.
-            if (
-                    not value or
-                    value == {u'en': u'', u'fr': u''} or
-                    value == {u'en': [], u'fr': []}
-            ):
-                index_data_dict.pop(item, None)
-                continue
-
             fs = field_schema.get(item)
 
             # Do not index any field that is not currently in the schema.
@@ -162,19 +153,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                             value=value
                         )
                     ), ))
-
-            elif field_type == 'int':
-                if isinstance(value, list):
-                    try:
-                        index_data_dict[unicode(item)] = map(int, value)
-                    except ValueError:
-                        pass
-                else:
-                    try:
-                        index_data_dict[unicode(item)] = int(value)
-                    except ValueError:
-                        pass
-                continue
 
             # Numeric foreign keys that need to be looked up to retrieve
             # their multilingual labels for searching.
@@ -222,7 +200,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                                 {n: index_data_dict.get(n, []) + [v]}
                             )
 
-                    # index_data_dict[unicode(item)] = value
                 else:
                     desc = lookup_label(lookup, value, lookup_type)
 
@@ -244,6 +221,11 @@ class STCNDMPlugin(p.SingletonPlugin):
             elif item.endswith('_authors'):
                 index_data_dict[unicode(item)] = value
                 authors.extend(value)
+            elif item == u'geodescriptor_codes':
+                index_data_dict[u'dguid_codes'] == \
+                    index_data_dict[u'geodescriptor_codes'].copy()
+                index_data_dict[u'geodescriptor_codes'] = \
+                    [g[-4:] for g in index_data_dict[u'dguid_codes']]
             else:
                 index_data_dict[unicode(item)] = value
 
@@ -377,7 +359,8 @@ class STCNDMPlugin(p.SingletonPlugin):
             'get_child_datasets': helpers.get_child_datasets,
             'x2list': helpers.x2list,
             'set_related_id': helpers.set_related_id,
-            'changes_since': helpers.changes_since
+            'changes_since': helpers.changes_since,
+            'get_geolevel': helpers.get_geolevel,
         }
 
     def before_view(self, pkg_dict):

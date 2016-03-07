@@ -19,23 +19,33 @@
 <schema name="ckan" version="2.3">
 
     <types>
-        <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
-        <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true"/>
+        <fieldType name="string" class="solr.StrField" sortMissingLast="true"
+                   omitNorms="true"/>
+        <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"
+                   omitNorms="true"/>
         <fieldtype name="binary" class="solr.BinaryField"/>
-        <fieldType name="int" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
-        <fieldType name="float" class="solr.TrieFloatField" precisionStep="0" omitNorms="true"
-                   positionIncrementGap="0"/>
-        <fieldType name="long" class="solr.TrieLongField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
-        <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" omitNorms="true"
-                   positionIncrementGap="0"/>
-        <fieldType name="tint" class="solr.TrieIntField" precisionStep="8" omitNorms="true" positionIncrementGap="0"/>
-        <fieldType name="tfloat" class="solr.TrieFloatField" precisionStep="8" omitNorms="true"
-                   positionIncrementGap="0"/>
-        <fieldType name="tlong" class="solr.TrieLongField" precisionStep="8" omitNorms="true" positionIncrementGap="0"/>
-        <fieldType name="tdouble" class="solr.TrieDoubleField" precisionStep="8" omitNorms="true"
-                   positionIncrementGap="0"/>
-        <fieldType name="date" class="solr.TrieDateField" omitNorms="true" precisionStep="0" positionIncrementGap="0"/>
-        <fieldType name="tdate" class="solr.TrieDateField" omitNorms="true" precisionStep="6" positionIncrementGap="0"/>
+        <fieldType name="int" class="solr.TrieIntField" precisionStep="0"
+                   omitNorms="true" positionIncrementGap="0"
+                   sortMissingLast="true"/>
+        <fieldType name="float" class="solr.TrieFloatField" precisionStep="0"
+                   omitNorms="true" positionIncrementGap="0"/>
+        <fieldType name="long" class="solr.TrieLongField" precisionStep="0"
+                   omitNorms="true" positionIncrementGap="0"
+                   sortMissingLast="true"/>
+        <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0"
+                   omitNorms="true" positionIncrementGap="0"/>
+        <fieldType name="tint" class="solr.TrieIntField" precisionStep="8"
+                   omitNorms="true" positionIncrementGap="0"/>
+        <fieldType name="tfloat" class="solr.TrieFloatField" precisionStep="8"
+                   omitNorms="true" positionIncrementGap="0"/>
+        <fieldType name="tlong" class="solr.TrieLongField" precisionStep="8"
+                   omitNorms="true" positionIncrementGap="0"/>
+        <fieldType name="tdouble" class="solr.TrieDoubleField" precisionStep="8"
+                   omitNorms="true" positionIncrementGap="0"/>
+        <fieldType name="date" class="solr.TrieDateField" omitNorms="true"
+                   precisionStep="0" positionIncrementGap="0"/>
+        <fieldType name="tdate" class="solr.TrieDateField" omitNorms="true"
+                   precisionStep="6" positionIncrementGap="0"/>
 
         <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
@@ -329,6 +339,7 @@
         <field name="correction_type_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="correction_type_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="default_view_id" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="dguid_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="digital_object_identifier" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="dimension_members_en" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="dimension_members_fr" type="string" indexed="true" stored="true" multiValued="true"/>

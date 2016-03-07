@@ -25,6 +25,7 @@ dataset_fields:
     en: SGC Code
     fr: Code SGC
   required: true
+  validators: scheming_required
   schema_field_type: string
   schema_multivalued: false
   schema_extras: true
@@ -42,6 +43,7 @@ dataset_fields:
   label:
     en: Geotype
     fr: Géotype
+  validators: scheming_required
   required: true
   schema_field_type: string
   schema_multivalued: false
@@ -51,6 +53,7 @@ dataset_fields:
   label:
     en: Geolevel
     fr: Géolevel
+  validators: scheming_required
   required: true
   schema_field_type: string
   schema_multivalued: false
@@ -60,6 +63,7 @@ dataset_fields:
   label:
     en: Sort Order
     fr: Ordre du tri
+  validators: scheming_required
   required: true
   schema_field_type: string
   schema_multivalued: false
