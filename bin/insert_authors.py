@@ -21,6 +21,7 @@ record = namedtuple('record', ['full_name', 'first_name', 'last_name'])
 OWNER_ORG = 'statcan'
 PACKAGE_NAME = 'internal_authors'
 PACKAGE_TITLE = 'Internal Authors'
+ENCODING = 'utf-8'
 
 
 def main():
@@ -36,12 +37,12 @@ def main():
 
         results = set(
             record(
-                '{0}, {1}'.format(
-                    r['last_name'].title(),
-                    r['first_name'].title()
+                u'{0}, {1}'.format(
+                    r['Last Name'].title().decode(ENCODING),
+                    r['First Name'].title().decode(ENCODING)
                 ),
-                r['first_name'].title(),
-                r['last_name'].title()
+                r['First Name'].title().decode(ENCODING),
+                r['Last Name'].title().decode(ENCODING)
             ) for r in reader
         )
 
