@@ -127,7 +127,6 @@
   sudo -u postgres createuser -S -D -R -P -l datastore_default
   sudo -u postgres createdb -O ckan_default stcndm_ckan -E utf-8
   sudo -u postgres createdb -O ckan_default stcndm_ckan_datastore -E utf-8
-  sudo ckan datastore set-permissions
   ```
 
   9. Create a new Solr collection
@@ -163,6 +162,7 @@
 
   ```
   paster --plugin=ckan db init -c development.ini
+  paster --plugin=ckan datastore set-permissions -c development.ini | sudo -u postgres psql
   ```
 
   13. Configure the WET extension for use as per https://github.com/open-data/ckanext-wet-boew/tree/wet4-scheming
