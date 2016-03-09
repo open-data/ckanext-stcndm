@@ -196,9 +196,9 @@ class STCNDMPlugin(p.SingletonPlugin):
                                     item=item,
                                     key=k
                                 )
-                            index_data_dict.update(
-                                {n: index_data_dict.get(n, []) + [v]}
-                            )
+                                index_data_dict.update(
+                                    {n: index_data_dict.get(n, []) + [v]}
+                                )
 
                 else:
                     desc = lookup_label(lookup, value, lookup_type)
