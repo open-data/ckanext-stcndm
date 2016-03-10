@@ -1236,7 +1236,7 @@ def update_product_geo(context, data_dict):
         # directly on the package.
         geo.clear_geodescriptors_for_package(pkg_dict['product_id_new'])
         for geo_code in dguids:
-            geo.update_relationship(pkg_dict['product_id_new'], geo_code[4:])
+            geo.update_relationship(pkg_dict['product_id_new'], geo_code)
     else:
         # Non-data products simply have the geodescriptors assigned to the
         # package.

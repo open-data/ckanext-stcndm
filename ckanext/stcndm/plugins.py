@@ -23,7 +23,7 @@ from ckanext.scheming.helpers import (
 )
 from helpers import lookup_label
 import unicodedata
-
+from ckanext.stcndm.model import geo
 
 def strip_accents(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s)
@@ -210,6 +210,17 @@ class STCNDMPlugin(p.SingletonPlugin):
                         ), v)
                         for k, v in desc.iteritems() if v and not k == u'found'
                     )
+                if item == u'geodescriptor_codes':
+                    index_data_dict[u'dguid_codes'] = \
+                        list(index_data_dict[u'geodescriptor_codes'])
+                    # append dguids from the datastore
+                    for dguid_pkg_id in geo.get_geodescriptors_for_package(
+                            validated_data_dict[u'product_id_new']):
+                        index_data_dict[u'dguid_codes'].append(
+                                helpers.get_dguid_from_pkg_id(dguid_pkg_id))
+                    # strip the vintages from dguids to get geodescriptors
+                    index_data_dict[u'geodescriptor_codes'] = \
+                        [g[4:] for g in index_data_dict[u'dguid_codes'] if g]
             elif field_type == 'date':
                 try:
                     date = parse(value, default=default_date)
@@ -221,11 +232,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             elif item.endswith('_authors'):
                 index_data_dict[unicode(item)] = value
                 authors.extend(value)
-            elif item == u'geodescriptor_codes':
-                index_data_dict[u'dguid_codes'] == \
-                    index_data_dict[u'geodescriptor_codes'].copy()
-                index_data_dict[u'geodescriptor_codes'] = \
-                    [g[-4:] for g in index_data_dict[u'dguid_codes']]
             else:
                 index_data_dict[unicode(item)] = value
 
@@ -361,6 +367,7 @@ class STCNDMPlugin(p.SingletonPlugin):
             'set_related_id': helpers.set_related_id,
             'changes_since': helpers.changes_since,
             'get_geolevel': helpers.get_geolevel,
+            'get_dguid_from_pkg_id': helpers.get_dguid_from_pkg_id,
         }
 
     def before_view(self, pkg_dict):

@@ -795,3 +795,15 @@ def get_geolevel(dguid_or_geodescriptor):
                                     code=dguid_or_geodescriptor
                                     )
         })
+
+
+def get_dguid_from_pkg_id(pkg_id):
+    """
+    Given the package id, return the dguid of the package
+
+    :param pkg_id:
+    :return:
+    """
+    lc = ckanapi.LocalCKAN()
+    result = lc.action.package_show(**{u'id': pkg_id})
+    return result.get(u'geodescriptor_code')
