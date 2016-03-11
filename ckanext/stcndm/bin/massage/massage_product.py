@@ -418,6 +418,11 @@ def do_format(data_set):
             data_set.get(u'releasedate_bi_strs'),
             default_release_date)
 
+    if in_and_def(u'statusfcode_bi_strs', data_set):
+        if data_set[u'statusfcode_bi_strs'] == '33':
+            # tease out discontinued to a new field
+            format_out[u'discontinued_code'] = '1'
+
     return format_out
 
 path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
