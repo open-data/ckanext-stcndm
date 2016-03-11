@@ -9,8 +9,10 @@ echo subjects | tee -a logs/dump_errs.txt
 python massage/massage_subjects.py > jsonl_dumps/subjects.jsonl 2>> logs/dump_errs.txt
 echo provinces | tee -a logs/dump_errs.txt
 python massage/massage_provinces.py > jsonl_dumps/provinces.jsonl  2>> logs/dump_errs.txt
-echo geodescriptors | tee -a logs/dump_errs.txt
-python massage/massage_geodescriptors.py > jsonl_dumps/geodescriptors.jsonl 2>> logs/dump_errs.txt
+if [ "$1" == "geo" ]; then
+    echo geodescriptors | tee -a logs/dump_errs.txt
+    python massage/massage_geodescriptors.py > jsonl_dumps/geodescriptors.jsonl 2>> logs/dump_errs.txt
+fi
 echo surveys | tee -a logs/dump_errs.txt
 python massage/massage_surveys.py > jsonl_dumps/surveys.jsonl 2>> logs/dump_errs.txt
 echo cubes | tee -a logs/dump_errs.txt

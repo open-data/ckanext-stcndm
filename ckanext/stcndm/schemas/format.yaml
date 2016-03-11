@@ -64,3 +64,9 @@ dataset_fields:
 
 - field_name: last_release_date
   preset: ndm_last_release_date
+
+- field_name: discontinued_code
+  preset: ndm_discontinued_code
+
+- field_name: discontinued_date
+  preset: ndm_discontinued_date
