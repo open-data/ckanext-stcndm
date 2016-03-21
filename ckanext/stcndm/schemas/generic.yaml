@@ -95,9 +95,6 @@ dataset_fields:
 - field_name: census_years
   preset: ndm_census_years
 
-- field_name: dimension_members
-  preset: ndm_dimension_members
-
 - field_name: external_authors
   preset: ndm_external_authors
 
@@ -163,3 +160,6 @@ dataset_fields:
 
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes
+
+- field_name: volume_and_number
+  preset: ndm_volume_and_number

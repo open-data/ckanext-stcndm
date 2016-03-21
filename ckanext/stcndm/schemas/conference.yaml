@@ -88,15 +88,6 @@ dataset_fields:
 - field_name: digital_object_identifier
   preset: ndm_digital_object_identifier
 
-- field_name: array_terminated_code
-  preset: ndm_array_terminated
-
-- field_name: dimension_members
-  preset: ndm_dimension_members
-
-- field_name: external_authors
-  preset: ndm_external_authors
-
 - field_name: frc
   preset: ndm_frc
 
@@ -108,9 +99,6 @@ dataset_fields:
 
 - field_name: survey_source_codes
   preset: ndm_survey_source_codes
-
-- field_name: internal_authors
-  preset: ndm_internal_authors
 
 - field_name: internal_contacts
   preset: ndm_internal_contacts
@@ -139,9 +127,6 @@ dataset_fields:
 - field_name: product_id_old
   preset: ndm_product_id_old
 
-- field_name: publication_year
-  preset: ndm_publication_year
-
 - field_name: replaced_products
   preset: ndm_replaced_products
 
@@ -153,9 +138,6 @@ dataset_fields:
 
 - field_name: discontinued_date
   preset: ndm_discontinued_date
-
-- field_name: census_grouping_codes
-  preset: ndm_census_grouping
 
 - field_name: load_to_olc_code
   preset: ndm_load_to_olc_code

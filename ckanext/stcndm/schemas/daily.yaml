@@ -53,6 +53,12 @@ dataset_fields:
 - field_name: archive_date
   preset: ndm_archive_date
 
+- field_name: archive_status_code
+  preset: ndm_archive_status
+
+- field_name: legacy_date
+  preset: ndm_legacy_date
+
 - field_name: reference_period
   preset: ndm_reference_period
 

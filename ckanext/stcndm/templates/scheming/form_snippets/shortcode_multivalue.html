@@ -1,39 +1,58 @@
 {% import 'macros/form.html' as form %}
 
 {%- set values = h.x2list(data.get(field.field_name, [])) -%}
+{%- set localized_choices = {} -%}
+{%- for choice in values -%}
+  {%- do localized_choices.update(
+    {choice:h.scheming_language_text(h.lookup_label(field.field_name, choice, field.lookup))}) -%}
+{%- endfor -%}
+{%- set localized_choices = localized_choices|dictsort(false, 'value') -%}
 <div class="row" data-autocomplete='{
         "type": "{{ field.lookup }}"
         {% if c.action == "new" and field.lookup == "subject" and object_type == "publication" %}, "max_level": 1{% endif %}
     }'>
 
-        {{ form.input(
-                id=field.field_name + '_search',
-                label="Search " + h.scheming_language_text(field.label),
-                classes=["col-md-4"]
-                ) }}
 
+      {{ form.input(
+              id=field.field_name + '_search',
+              label=_('Search') + ' ' + h.scheming_language_text(field.label),
+              classes=["col-md-4"]
+              ) }}
         {{ form.select(
                 id=field.field_name + '_list',
-                label=_('Select ')  + h.scheming_language_text(field.label),
-                classes=['col-md-8'],
+                label=_('Select') + ' ' + h.scheming_language_text(field.label),
+                classes=["col-md-8", "list"],
                 attrs={'style':'width:100%'}
                 ) }}
-
         <div class="col-md-8 col-md-offset-4">
-            <button class="btn btn-default" type="button">{{ _('Add') }}  {{ h.scheming_language_text(field.label) }}</button>
-        </div>
+        <button class="btn btn-default add" type="button">{{ _('Add') }}  {{ h.scheming_language_text(field.label) }}</button>
+        <button class="btn btn-default remove" type="button">{{ _('Remove') }}  {{ h.scheming_language_text(field.label) }}</button>
+          </div>
 
-        {{ form.textarea(
-          field.field_name,
-          id='field-' + field.field_name,
-          label=h.scheming_language_text(field.label),
-          placeholder=h.scheming_language_text(field.form_placeholder),
-          value=';'.join(values),
-          error=errors[field.field_name],
-          classes=['control-medium', 'col-md-12'],
-          attrs={'style':'width:100%;'},
-          rows=1,
-          is_required=h.scheming_field_required(field)
-          ) }}
-
+  <div class="col-md-12 result">
+    <label for="{{ field.field_name }}_result">
+      {{ _('Selected') + ' ' + h.scheming_language_text(field.label) }}
+    </label>
+    <select multiple
+        id="{{ field.field_name }}_result"
+        size="10"
+        style="display: block; width: 100%"
+    >
+      {%- for c, v in localized_choices -%}
+        <option
+          id="field-{{ field.field_name }}-{{ c }}"
+          value="{{ c }}"
+        >
+          {{ c }} | {{ v }}
+        </option>
+      {%- endfor -%}
+    </select>
+  </div>
+  <div class="return">
+    <input type="hidden"
+        id="field-{{ field.field_name }}"
+        name="{{ field.field_name }}"
+           value="{{ values|join('; ') }}"
+    >
+  </div>
 </div>

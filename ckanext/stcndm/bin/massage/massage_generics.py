@@ -30,13 +30,6 @@ product_dict_out = {}
 format_dict_dict = {}
 path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-generic_ids = []
-file_path = '{path}/generic_ids.txt'.format(path=path)
-with open(file_path, 'r') as text_file:
-    lines = text_file.readlines()
-for line in lines:
-    generic_ids.append(line.strip())
-
 dnl_list = []
 file_path = '{path}/oldprintdonotload.csv'.format(path=path)
 with open(file_path, 'rb') as csv_file:
