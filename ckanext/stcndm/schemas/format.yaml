@@ -70,3 +70,9 @@ dataset_fields:
 
 - field_name: discontinued_date
   preset: ndm_discontinued_date
+
+- field_name: load_to_olc_code
+  preset: ndm_load_to_olc_code
+
+- field_name: status_code
+  preset: ndm_status

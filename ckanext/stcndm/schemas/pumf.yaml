@@ -102,9 +102,6 @@ dataset_fields:
 - field_name: dimension_members
   preset: ndm_dimension_members
 
-- field_name: external_authors
-  preset: ndm_external_authors
-
 - field_name: frc
   preset: ndm_frc
 
@@ -116,9 +113,6 @@ dataset_fields:
 
 - field_name: survey_source_codes
   preset: ndm_survey_source_codes
-
-- field_name: internal_authors
-  preset: ndm_internal_authors
 
 - field_name: internal_contacts
   preset: ndm_internal_contacts

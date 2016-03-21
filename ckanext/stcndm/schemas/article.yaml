@@ -154,3 +154,15 @@ dataset_fields:
 
 - field_name: load_to_olc_code
   preset: ndm_load_to_olc_code
+
+- field_name: subjectold_codes
+  preset: ndm_subjectold_codes
+
+- field_name: volume_and_number
+  preset: ndm_volume_and_number
+
+- field_name: price
+  preset: ndm_price
+
+- field_name: price_note
+  preset: ndm_price_note

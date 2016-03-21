@@ -89,6 +89,9 @@ dataset_fields:
 - field_name: display_code
   preset: ndm_display
 
+- field_name: tracking_codes
+  preset: ndm_tracking
+
 - field_name: digital_object_identifier
   preset: ndm_digital_object_identifier
 
@@ -106,6 +109,9 @@ dataset_fields:
 
 - field_name: internal_authors
   preset: ndm_internal_authors
+
+- field_name: internal_contacts
+  preset: ndm_internal_contacts
 
 - field_name: keywords
   preset: ndm_keywords
@@ -127,6 +133,9 @@ dataset_fields:
 
 - field_name: reference_period
   preset: ndm_reference_period
+
+- field_name: replaced_products
+  preset: ndm_replaced_products
 
 - field_name: status_code
   preset: ndm_status

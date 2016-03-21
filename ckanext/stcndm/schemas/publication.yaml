@@ -98,9 +98,6 @@ dataset_fields:
 - field_name: digital_object_identifier
   preset: ndm_digital_object_identifier
 
-- field_name: dimension_members
-  preset: ndm_dimension_members
-
 - field_name: external_authors
   preset: ndm_external_authors
 

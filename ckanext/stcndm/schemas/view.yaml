@@ -97,9 +97,6 @@ dataset_fields:
 - field_name: display_code
   preset: ndm_display
 
-- field_name: external_authors
-  preset: ndm_external_authors
-
 - field_name: frc
   preset: ndm_frc
 
@@ -150,6 +147,3 @@ dataset_fields:
 
 - field_name: url
   preset: ndm_fluent_url
-
-- field_name: volume_and_number
-  preset: ndm_volume_and_number
