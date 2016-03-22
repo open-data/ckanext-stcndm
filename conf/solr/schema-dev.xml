@@ -329,6 +329,12 @@
         <field name="content_type_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="content_type_codes_desc_en" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="content_type_codes_desc_fr" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="controlled_keyword_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="controlled_keyword_code_desc_en" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="controlled_keyword_code_desc_fr" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="controlled_keyword_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="controlled_keyword_codes_desc_en" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="controlled_keyword_codes_desc_fr" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="correction_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="correction_impact_level_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="correction_impact_level_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>

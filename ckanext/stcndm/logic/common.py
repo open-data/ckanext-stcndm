@@ -31,6 +31,9 @@ AUTOCOMPLETE = {
     },
     'survey': {
         'code': 'product_id_new'
+    },
+    'keyword': {
+        'code': 'controlled_keyword_code'
     }
 }
 
@@ -83,7 +86,7 @@ def get_autocomplete(context, data_dict):
     query_result = lc.action.package_search(
         q=(
             'dataset_type:{type_} AND (title_en:{q} OR title_fr:{q} OR'
-            ' {code}:{q})'
+            ' {code}:{q} OR keywords_en:{q} OR keywords_fr:{q})'
         ).format(
             type_=type_,
             q=q,

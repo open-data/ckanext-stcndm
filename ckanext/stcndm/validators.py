@@ -253,6 +253,23 @@ def subject_create_name(key, data, errors, context):
         errors[key].append(_('could not find subject_code'))
 
 
+def keyword_create_name(key, data, errors, context):
+    # if there was an error before calling our validator
+    # don't bother with our validation
+    if errors[key]:
+        return
+
+    controlled_keyword_code = _data_lookup(('controlled_keyword_code',), data)
+    if controlled_keyword_code:
+        current_name = _data_lookup(('name',), data)
+        new_name = u'keyword-{0}'.format(unicode(controlled_keyword_code))
+        if current_name.endswith(u'-clone') or not current_name:
+            if not current_name.startswith(new_name):
+                data[key] = new_name
+    else:
+        errors[key].append(_('could not find controlled_keyword_code'))
+
+
 def province_create_name(key, data, errors, context):
     # if there was an error before calling our validator
     # don't bother with our validation

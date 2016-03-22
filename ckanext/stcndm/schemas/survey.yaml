@@ -131,6 +131,9 @@ dataset_fields:
 - field_name: thesaurus_terms
   preset: ndm_thesaurus_terms
 
+- field_name: controlled_keyword_codes
+  preset: ndm_controlled_keyword
+
 - field_name: subject_codes
   preset: ndm_subject_codes
 
