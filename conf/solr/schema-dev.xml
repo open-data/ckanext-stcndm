@@ -329,6 +329,10 @@
         <field name="content_type_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="content_type_codes_desc_en" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="content_type_codes_desc_fr" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="controlled_keyword_code" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="controlled_keyword_codes" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="controlled_keyword_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="controlled_keyword_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="correction_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="correction_impact_level_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="correction_impact_level_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
@@ -391,8 +395,8 @@
         <field name="issn_number_fr" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="issue_number" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="issue_number_int" type="long" indexed="true" stored="true" multiValued="false"/>
-        <field name="keywords_en" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="keywords_fr" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="keywords_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="keywords_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="last_publish_status_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="last_publish_status_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="last_publish_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>

@@ -1,0 +1,52 @@
+scheming_version: 1
+about: 'Statistics Canada Dissemination: Geodescriptors'
+about_url: http://github.com/open-data/ckanext-stcndm
+catalog_type_label:
+  en: Controlled Keyword
+  fr: Mot Clé controllé
+clonable: true
+dataset_type: keyword
+form_languages:
+- en
+- fr
+languages_label:
+- eng; CAN
+- fra; CAN
+
+lookup_key: controlled_keyword_code
+
+dataset_fields:
+
+- field_name: owner_org
+  preset: ndm_owner_org
+
+- field_name: name
+  preset: ndm_name
+  # follow our custom name generation validator with default package name validators
+  validators: keyword_create_name
+    not_empty unicode name_validator package_name_validator
+
+- field_name: title
+  preset: ndm_title
+
+- field_name: controlled_keyword_code
+  label:
+    en: Controlled Keyword Code
+    fr: Code du mot clé controllé
+  validators: scheming_required
+  required: true
+  schema_field_type: string
+  schema_multivalued: false
+  schema_extras: true
+
+- field_name: keywords
+  label:
+    en: Keywords
+    fr: Mots clé
+  preset: fluent_tags
+  validators: ignore_empty fluent_tags
+  output_validators: fluent_tags_output
+  tag_validators: ndm_tag_name_validator
+  schema_field_type: fluent
+  schema_multivalued: true
+  schema_extras: true

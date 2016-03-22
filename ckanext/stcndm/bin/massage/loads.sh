@@ -33,6 +33,11 @@ ckanapi load datasets -p 3 -I jsonl_dumps/provinces.jsonl 2>&1 >/dev/null | tee 
 echo done provinces | tee -a logs/load_errs.txt
 
 date | tee -a logs/load_errs.txt
+echo -keywords | tee -a logs/load_errs.txt
+ckanapi load datasets -p 3 -I jsonl_dumps/keywords.jsonl 2>&1 >/dev/null | tee | grep -i error >> logs/load_errs.txt
+echo done keywords | tee -a logs/load_errs.txt
+
+date | tee -a logs/load_errs.txt
 echo -geodescriptors | tee -a logs/load_errs.txt
 ckanapi load datasets -p 3 -I jsonl_dumps/geodescriptors.jsonl 2>&1 >/dev/null | tee | grep -i error >> logs/load_errs.txt
 echo done geodescriptors | tee -a logs/load_errs.txt

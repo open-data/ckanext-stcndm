@@ -1385,6 +1385,20 @@ presets:
     schema_multivalued: true
     schema_extras: true
 
+- preset_name: ndm_controlled_keyword
+  values:
+    label:
+      en: Controlled Keywords
+      fr: Mots clé controllés
+    form_snippet: shortcode_multivalue.html
+    display_snippet: shortcode_multivalue.html
+    validators: ignore_empty shortcode_validate
+    output_validators: shortcode_output
+    lookup: keyword
+    schema_field_type: code
+    schema_multivalued: true
+    schema_extras: true
+
 - preset_name: ndm_survey_status
   values:
     label:
