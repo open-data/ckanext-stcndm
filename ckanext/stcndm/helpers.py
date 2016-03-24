@@ -16,7 +16,8 @@ from ckanext.scheming.helpers import (
     scheming_get_preset,
     scheming_dataset_schemas
 )
-
+import logging
+log = logging.getLogger('ckan.logic')
 __author__ = 'matt'
 
 ndm_audit_log_component_id = 10
@@ -505,6 +506,7 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
     record = {
         'ProductId': product_id,
         'PublishStatus': 2,
+        'IsMetadata': product.get('type', u'') == u'cube',
     }
 
     last_release_date = product.get('last_release_date')
@@ -529,7 +531,8 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
         ('PublishStatus', 'last_publish_status_code', int),
         ('Format', 'format_code', int),
         ('Issue', 'issue_number', None),
-        ('DataReferencePeriod', 'reference_period', None)
+        ('DataReferencePeriod', 'reference_period', None),
+        ('ProductCode', 'product_type_code', int),
     ]
 
     for field_dst, field_src, cast_to in cp_fields:
@@ -538,13 +541,19 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
             continue
         record[field_dst] = cast_to(val) if cast_to is not None else val
 
-    requests.post(rsu, params={
-        'productType':  str(product['type']).capitalize(),
-    }, data=json.dumps({
-        'recordInfo': record
-    }), headers={
-        'Content-Type': 'application/json'
-    })
+    try:
+        r = requests.post(rsu, params={
+            'productType':  str(product['type']).capitalize(),
+        }, data=json.dumps({
+            'recordInfo': record
+        }), headers={
+            'Content-Type': 'application/json'
+        }, timeout=5)
+        if not r.status_code == 200:
+            write_audit_log("ensure_release_exists", str(r))
+    except requests.exceptions.RequestException as e:
+        audit_log_exception("ensure_release_exists")
+        log.warning('ensure_release_exists: %s', e)
 
 
 def get_parent_content_types(product_id):
