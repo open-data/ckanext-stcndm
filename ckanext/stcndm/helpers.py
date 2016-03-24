@@ -548,7 +548,7 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
             'recordInfo': record
         }), headers={
             'Content-Type': 'application/json'
-        }, timeout=5)
+        })
         if not r.status_code == 200:
             write_audit_log("ensure_release_exists", str(r))
     except requests.exceptions.RequestException as e:
