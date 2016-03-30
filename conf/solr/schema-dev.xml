@@ -49,86 +49,89 @@
 
         <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <tokenizer class="solr.StandardTokenizerFactory"/>
                 <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+                <filter class="solr.ElisionFilterFactory"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                     catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
                     preserveOriginal="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
-                <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
+                <!--Since "text" is not language specific, don't stem -->
                 <filter class="solr.ASCIIFoldingFilterFactory"/>
             </analyzer>
             <analyzer type="query">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <tokenizer class="solr.StandardTokenizerFactory"/>
+                <filter class="solr.ElisionFilterFactory"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                     catenateWords="0" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
                     preserveOriginal="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
-                <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
+                <!--Since "text" is not language specific, don't stem -->
                 <filter class="solr.ASCIIFoldingFilterFactory"/>
             </analyzer>
         </fieldType>
 
         <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+                <tokenizer class="solr.StandardTokenizerFactory"/>
                 <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+                <filter class="solr.ElisionFilterFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
                 <filter class="solr.KeywordRepeatFilterFactory"/>
                 <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
-                <filter class="solr.ASCIIFoldingFilterFactory"/>
                 <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+                <filter class="solr.ASCIIFoldingFilterFactory"/>
             </analyzer>
             <analyzer type="query">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <tokenizer class="solr.StandardTokenizerFactory"/>
                 <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+                <filter class="solr.ElisionFilterFactory"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
                 <filter class="solr.KeywordRepeatFilterFactory"/>
                 <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
-                <filter class="solr.ASCIIFoldingFilterFactory"/>
                 <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+                <filter class="solr.ASCIIFoldingFilterFactory"/>
             </analyzer>
         </fieldType>
 
-        <fieldtype name="text_fr" class="solr.TextField">
+        <fieldtype name="text_fr" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
                 <tokenizer class="solr.StandardTokenizerFactory"/>
-                <filter class="solr.SynonymFilterFactory" synonyms="synonyms_fr.txt" ignoreCase="true" expand="true"/>
-                <filter class="solr.StandardFilterFactory"/>
                 <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_fr.txt"/>
+                <filter class="solr.ElisionFilterFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms_fr.txt" ignoreCase="true" expand="true"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
                 <filter class="solr.KeywordRepeatFilterFactory"/>
                 <filter class="solr.SnowballPorterFilterFactory" language="French" protected="protwords_fr.txt"/>
-                <filter class="solr.ASCIIFoldingFilterFactory"/>
                 <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-                <!-- filter class="solr.ISOLatin1AccentFilterFactory"/ -->
+                <filter class="solr.ASCIIFoldingFilterFactory"/>
             </analyzer>
             <analyzer type="query">
                 <tokenizer class="solr.StandardTokenizerFactory"/>
-                <filter class="solr.SynonymFilterFactory" synonyms="synonyms_fr.txt" ignoreCase="true" expand="true"/>
-                <filter class="solr.StandardFilterFactory"/>
                 <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_fr.txt"/>
+                <filter class="solr.ElisionFilterFactory"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
                 <filter class="solr.KeywordRepeatFilterFactory"/>
                 <filter class="solr.SnowballPorterFilterFactory" language="French" protected="protwords_fr.txt"/>
-                <filter class="solr.ASCIIFoldingFilterFactory"/>
                 <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-                <!-- filter class="solr.ISOLatin1AccentFilterFactory"/ -->
+                <filter class="solr.ASCIIFoldingFilterFactory"/>
             </analyzer>
         </fieldtype>
 
         <fieldType name="ensearch" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <tokenizer class="solr.StandardTokenizerFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+                <filter class="solr.ElisionFilterFactory"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
                         preserveOriginal="1"/>
@@ -137,8 +140,8 @@
                 <filter class="solr.ASCIIFoldingFilterFactory"/>
             </analyzer>
             <analyzer type="query">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+                <tokenizer class="solr.StandardTokenizerFactory"/>
+                <filter class="solr.ElisionFilterFactory"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
@@ -149,21 +152,23 @@
 
         <fieldType name="frsearch" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <tokenizer class="solr.StandardTokenizerFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms_fr.txt" ignoreCase="true" expand="true"/>
+                <filter class="solr.ElisionFilterFactory"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
                         preserveOriginal="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
-                <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
+                <filter class="solr.SnowballPorterFilterFactory" language="French" protected="protwords_fr.txt"/>
                 <filter class="solr.ASCIIFoldingFilterFactory"/>
             </analyzer>
             <analyzer type="query">
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+                <filter class="solr.ElisionFilterFactory"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
-                <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
+                <filter class="solr.SnowballPorterFilterFactory" language="French" protected="protwords_fr.txt"/>
                 <filter class="solr.ASCIIFoldingFilterFactory"/>
             </analyzer>
         </fieldType>
@@ -179,6 +184,7 @@
         <fieldType name="textgen" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="0"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
@@ -327,8 +333,8 @@
         <field name="collection_start_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="coordinates" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="content_type_codes" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="content_type_codes_desc_en" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="content_type_codes_desc_fr" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="content_type_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="content_type_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="controlled_keyword_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="controlled_keyword_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="controlled_keyword_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
@@ -342,11 +348,11 @@
         <field name="correction_type_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="correction_type_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="correction_type_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="default_view_id" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="default_view_id" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="dguid_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="digital_object_identifier" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="dimension_members_en" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="dimension_members_fr" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="dimension_members_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="dimension_members_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="discontinued_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="discontinued_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="discontinued_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
@@ -357,14 +363,14 @@
         <field name="display_in_form_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="display_in_form_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="display_order" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="external_authors" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="external_authors" type="textgen" indexed="true" stored="true" multiValued="true"/>
         <field name="feature_weight" type="int" indexed="true" stored="true" multiValued="false"/>
         <field name="format_code" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="format_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="format_code_desc_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="format_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="format_id" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="frc" type="text" indexed="true" stored="true" multiValued="false"/>
+        <field name="frc" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="frequency_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="frequency_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
         <field name="frequency_codes_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
@@ -385,8 +391,8 @@
         <field name="imdb_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="imdb_survey_item" type="text" indexed="true" stored="true" multiValued="false"/>
         <field name="imdb_variable_ids" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="internal_authors" type="text" indexed="true" stored="true" multiValued="true"/>
-        <field name="internal_contacts" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="internal_authors" type="textgen" indexed="true" stored="true" multiValued="true"/>
+        <field name="internal_contacts" type="textgen" indexed="true" stored="true" multiValued="true"/>
         <field name="isbn_number_en" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="isbn_number_fr" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="isp_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
@@ -428,8 +434,8 @@
         <field name="publish_status_code_desc_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="question_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="question_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
-        <field name="reference_period_en" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="reference_period_fr" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="reference_period_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
+        <field name="reference_period_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="related_products" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="last_release_date" type="date" indexed="true" stored="true" multiValued="false"/>
         <field name="release_id" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -468,8 +474,8 @@
         <field name="survey_url_en" type="text_en" indexed="true" stored="true" multiValued="false"/>
         <field name="survey_url_fr" type="text_fr" indexed="true" stored="true" multiValued="false"/>
         <field name="table_ids" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="thesaurus_terms_en" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="thesaurus_terms_fr" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="thesaurus_terms_en" type="text_en" indexed="true" stored="true" multiValued="true"/>
+        <field name="thesaurus_terms_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
         <field name="top_parent_id" type="string" indexed="true" stored="true" multiValued="false" />
         <field name="tracking_codes" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="tracking_codes_desc_en" type="text_en" indexed="true" stored="true" multiValued="true"/>

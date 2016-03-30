@@ -33,7 +33,7 @@ lfs => labour force survey
 gdi => gross domestic income
 cchs => canadian community health survey
 lico => low income cut-offs
-nhpi => new housing price index
+nhpi, new housing price index
 nor-man => norman health region
 pumf => public use microdata file
 cenus => census
