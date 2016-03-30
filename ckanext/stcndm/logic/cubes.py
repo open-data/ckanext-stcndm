@@ -209,7 +209,7 @@ def register_cube(context, data_dict):
         # preset.
         last_publish_status_code='2'
     )
-    h.ensure_release_exists(new_package['product_id_new'], context=context)
+
     # Return our newly created package.
     return lc.action.GetCube(cubeId=new_package['product_id_new'])
 
