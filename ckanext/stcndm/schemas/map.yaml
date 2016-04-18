@@ -1,0 +1,152 @@
+scheming_version: 1
+about: 'Statistics Canada Dissemination: Views'
+about_url: http://github.com/open-data/ckanext-stcndm
+catalog_type_label:
+  en: Map
+  fr: Carte
+clonable: false
+dataset_type: map
+dataset_type_code: 14
+form_languages:
+- en
+- fr
+languages_label:
+- eng; CAN
+- fra; CAN
+
+lookup_code: product_id_new
+
+dataset_fields:
+
+- field_name: owner_org
+  preset: ndm_owner_org
+
+- field_name: product_type_code
+  preset: ndm_product_type
+  choices:
+    - label:
+        en: Map
+        fr: Carte
+      value: '14'
+
+- field_name: top_parent_id
+  preset: ndm_top_parent_id
+
+- field_name: product_id_new
+  preset: ndm_product_id_new
+  form_attrs:
+    readonly: readonly
+
+- field_name: name
+  preset: ndm_name
+  # follow our custom name generation with default package name validators
+  validators: product_create_name
+    not_empty unicode name_validator package_name_validator
+
+- field_name: admin_notes
+  preset: ndm_admin_notes
+
+- field_name: title
+  preset: ndm_title
+
+- field_name: notes
+  preset: ndm_description
+
+- field_name: content_type_codes
+  preset: ndm_content_type_codes
+
+- field_name: tracking_codes
+  preset: ndm_tracking
+
+- field_name: geolevel_codes
+  preset: ndm_geolevel_codes
+
+- field_name: geodescriptor_codes
+  preset: ndm_geodescriptor_codes
+
+- field_name: subject_codes
+  preset: ndm_subject_codes
+
+- field_name: related_products
+  preset: ndm_related_products
+
+- field_name: thesaurus_terms
+  preset: ndm_thesaurus_terms
+
+- field_name: controlled_keyword_codes
+  preset: ndm_controlled_keyword
+
+- field_name: feature_weight
+  preset: ndm_feature_weight
+
+- field_name: archive_status_code
+  preset: ndm_archive_status
+
+- field_name: archive_date
+  preset: ndm_archive_date
+
+- field_name: legacy_date
+  preset: ndm_legacy_date
+
+- field_name: rot_date
+  preset: ndm_rot_date
+
+- field_name: census_years
+  preset: ndm_census_years
+
+- field_name: dimension_members
+  preset: ndm_dimension_members
+
+- field_name: display_code
+  preset: ndm_display
+
+- field_name: frc
+  preset: ndm_frc
+
+- field_name: frequency_codes
+  preset: ndm_frequency_codes
+
+- field_name: history_notes
+  preset: ndm_history_notes
+
+- field_name: imdb_variable_ids
+  preset: ndm_imdb_variable_ids
+
+- field_name: survey_source_codes
+  preset: ndm_survey_source_codes
+
+- field_name: internal_contacts
+  preset: ndm_internal_contacts
+
+- field_name: keywords
+  preset: ndm_keywords
+
+- field_name: last_publish_status_code
+  preset: ndm_publish_status
+
+- field_name: last_release_date
+  preset: ndm_last_release_date
+
+- field_name: product_id_old
+  preset: ndm_product_id_old
+
+- field_name: replaced_products
+  preset: ndm_replaced_products
+
+- field_name: status_code
+  preset: ndm_status
+
+- field_name: discontinued_code
+  preset: ndm_discontinued_code
+
+- field_name: discontinued_date
+  preset: ndm_discontinued_date
+
+- field_name: census_grouping_codes
+  preset: ndm_census_grouping
+
+- field_name: load_to_olc_code
+  preset: ndm_load_to_olc_code
+
+- field_name: url
+  preset: ndm_fluent_url
