@@ -296,7 +296,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "GetProductIssueArticles": daily.get_product_issue_articles,
             "GetProductIssues": daily.get_product_issues,
             "GetProductType": common.get_product_type,
-            "GetRelease": releases.get_release,
             "GetReleasesForProduct": releases.get_releases_for_product,
             "GetSubject": subjects.get_subject,
             "GetSubjectList": subjects.get_top_level_subject_list,
@@ -314,7 +313,6 @@ class STCNDMPlugin(p.SingletonPlugin):
             "RegisterLegacyNonDataProduct":
                 legacy.register_legacy_non_data_product,
             "RegisterProduct": common.register_data_product,
-            "RegisterRelease": releases.register_release,
             "RegisterSurvey": surveys.register_survey,
             "UpdateDefaultView": views.update_default_view,
             "UpdateReleaseDateAndStatus":
