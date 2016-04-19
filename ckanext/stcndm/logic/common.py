@@ -12,6 +12,7 @@ from pylons import config
 from sqlalchemy import orm, types, Column, Table
 from ckan.model.meta import metadata
 from ckanext.stcndm.model import geo
+from ckanext.stcndm.helpers import to_utc, default_release_date
 
 _get_or_bust = logic.get_or_bust
 _get_action = toolkit.get_action
@@ -524,12 +525,14 @@ def get_upcoming_releases(context, data_dict):
     context['ignore_capacity_check'] = True
     lc = ckanapi.LocalCKAN(context=context)
 
-    start_date = _get_or_bust(data_dict, 'startDate')
-    end_date = _get_or_bust(data_dict, 'endDate')
+    start_date = to_utc(_get_or_bust(data_dict, 'startDate'),
+                        def_date=default_release_date)
+    end_date = to_utc(_get_or_bust(data_dict, 'endDate'),
+                      def_date=default_release_date)
 
     result = lc.action.package_search(
         q=(
-            'release_date:[{start_date}:00Z TO {end_date}:00Z] '
+            'last_release_date:[{start_date}Z TO {end_date}Z] '
             'AND publish_status_code:8'
         ).format(
             start_date=start_date,
@@ -544,7 +547,7 @@ def get_upcoming_releases(context, data_dict):
 
     # Per JIRA #5206, resolve parent product types and URLs.
     for release_result in results:
-        if not release_result['parent_id']:
+        if not release_result.get('parent_id'):
             continue
 
         parent_result = lc.action.package_search(
@@ -588,29 +591,27 @@ def get_issues_by_pub_status(context, data_dict):
     """
     # TODO: date validation? anything else?
 
-    get_last_publish_status_code = _get_or_bust(
+    last_publish_status_code = _get_or_bust(
         data_dict,
         'lastPublishStatusCode'
     )
-    start_release_date = _get_or_bust(data_dict, 'startReleaseDate')
-    end_release_date = _get_or_bust(data_dict, 'endReleaseDate')
+    start_release_date = to_utc(_get_or_bust(data_dict, 'startReleaseDate'),
+                                def_date=default_release_date)
+    end_release_date = to_utc(_get_or_bust(data_dict, 'endReleaseDate'),
+                              def_date=default_release_date)
     if 'productType' in data_dict and data_dict['productType']:
         product_type_code = data_dict['productTypeCode']
     else:
         product_type_code = '["" TO *]'
 
     q = (
-        'extras_release_date:[{startReleaseDate} TO {endReleaseDate}] AND '
-        'extras_last_publish_status_code:{lastPublishStatusCode} AND '
-        'extras_product_type_code:{productTypeCode}'
+        'last_release_date:[{startReleaseDate}Z TO {endReleaseDate}Z] AND '
+        'last_publish_status_code:{lastPublishStatusCode} AND '
+        'product_type_code:{productTypeCode}'
     ).format(
-        startReleaseDate=arrow.get(
-            start_release_date
-        ).format('YYYY-MM-DDTHH:mm:ss')+'Z',
-        endReleaseDate=arrow.get(
-            end_release_date
-        ).format('YYYY-MM-DDTHH:mm:ss')+'Z',
-        lastPublishStatusCode=get_last_publish_status_code,
+        startReleaseDate=start_release_date,
+        endReleaseDate=end_release_date,
+        lastPublishStatusCode=last_publish_status_code,
         productTypeCode=product_type_code
     )
 
@@ -1010,7 +1011,8 @@ def update_release_date_and_status(context, data_dict):
 
     product_id = _get_or_bust(data_dict, 'productId')
     product_type = _get_or_bust(data_dict, 'productType')
-    release_date = _get_or_bust(data_dict, 'releaseDate')
+    release_date = to_utc(_get_or_bust(data_dict, 'releaseDate'),
+                          def_date=default_release_date)
     publishing_status = _get_or_bust(data_dict, 'publishingStatus')
     status = _get_or_bust(data_dict, 'status')
 

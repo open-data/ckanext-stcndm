@@ -5,6 +5,8 @@ import ast
 import json
 import requests
 from datetime import datetime, timedelta
+from dateutil.parser import parse
+from dateutil.tz import gettz
 from functools import wraps
 
 import ckanapi
@@ -25,6 +27,17 @@ ndm_audit_log_component_id = 10
 
 class NotValidProduct(Exception):
     pass
+
+
+default_date = datetime(1, 1, 1, 0, 0, 0, 0, tzinfo=gettz('America/Toronto'))
+default_release_date = datetime(1, 1, 1, 8, 30, 0, 0,
+                                tzinfo=gettz('America/Toronto'))
+
+
+def to_utc(date_str, def_date=default_date):
+    result = parse(date_str, default=def_date)
+    utc_result = result.astimezone(gettz('UTC'))
+    return utc_result.replace(tzinfo=None).isoformat()
 
 
 def dict_list2dict(dict_list):

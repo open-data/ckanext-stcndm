@@ -14,6 +14,9 @@ from ckan.plugins.toolkit import missing
 import ckanapi
 from ckanext.stcndm.logic.common import get_product
 from ckanext.stcndm.helpers import set_related_id
+from dateutil.parser import parse
+from dateutil.tz import gettz
+from ckanext.stcndm.helpers import to_utc, default_release_date
 
 __author__ = 'Statistics Canada'
 
@@ -53,20 +56,24 @@ def get_daily_list(context, data_dict):
     output = []
     start_date_str = _get_or_bust(data_dict, 'startDate')
     try:
-        start_date = dt.strptime(start_date_str, '%Y-%m-%d')
+        dt.strptime(start_date_str, '%Y-%m-%d')
     except ValueError:
         raise _ValidationError(
             'startDate \'{0}\' not in YYYY-MM-DD format'.format(start_date_str)
         )
+    start_date = parse(start_date_str,
+                       default=default_release_date).astimezone(gettz('UTC'))
 
     if 'endDate' in data_dict:
         end_date_str = data_dict['endDate']
         try:
-            end_date = dt.strptime(end_date_str, '%Y-%m-%d')
+            dt.strptime(end_date_str, '%Y-%m-%d')
         except ValueError:
             raise _ValidationError(
                 'endDate \'{0}\' not in YYYY-MM-DD format'.format(end_date_str)
             )
+        end_date = parse(end_date_str,
+                         default=default_release_date).astimezone(gettz('UTC'))
         days = (end_date - start_date).days + 1
         if days < 1:
             raise _ValidationError(_(
@@ -80,13 +87,13 @@ def get_daily_list(context, data_dict):
         days = 1
 
     for day in range(days):
-        single_date = (start_date + datetime.timedelta(days=day)).date()
-        single_date_str = single_date.strftime('%Y-%m-%d')
+        single_date = (start_date + datetime.timedelta(days=day))
+        single_date_str = single_date.replace(tzinfo=None).isoformat()
         q = {
             'q': (
                 'product_type_code:24 AND '
-                'release_date:"{0}T08:30:00Z"'.format(
-                    single_date_str
+                'last_release_date:"{release_date}Z"'.format(
+                    release_date=single_date_str
                 )
             )
         }
@@ -210,7 +217,8 @@ def register_daily(context, data_dict):
         u'product_type_code': u'24',
         u'type': u'daily',
         u'content_type_codes': content_type_codes,
-        u'last_release_date': release_date_str,
+        u'last_release_date': to_utc(release_date_str,
+                                     def_date=default_release_date),
         u'product_id_new': product_id,
         u'display_code': display_code,
         u'title': product_title,
