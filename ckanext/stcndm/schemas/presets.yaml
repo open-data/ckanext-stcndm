@@ -493,7 +493,7 @@ presets:
     label:
       en: Feature Weight
       fr: Poids
-    validators: convert_int ignore_empty
+    validators: ignore_empty convert_int
     output_validators: convert_int
     schema_field_type: int
     schema_multivalued: false
