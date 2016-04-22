@@ -150,7 +150,7 @@ while i < n:
 
     for line in query_results[u'results']:
         for e in line[u'extras']:
-            line[e[u'key']] = e[u'value']
+            line[e[u'key'].strip()] = e[u'value'].strip()
 
         line_out = {
             u'owner_org': u'statcan',

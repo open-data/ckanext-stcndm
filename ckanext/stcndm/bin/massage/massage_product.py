@@ -305,8 +305,8 @@ def do_product(data_set):
     if temp:
         product_out[u'related_content'] = temp
 
-    if in_and_def(u'replaces_bi_txtm', data_set):
-        result = listify(data_set[u'replaces_bi_txtm'])
+    if in_and_def(u'replaces_bi_strm', data_set):
+        result = listify(data_set[u'replaces_bi_strm'])
         if result:
             product_out[u'replaced_products'] = result
 

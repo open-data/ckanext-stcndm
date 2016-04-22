@@ -66,7 +66,7 @@ while i < n:
     i += 1
     for line in query_results['results']:
         for e in line['extras']:
-            line[e['key']] = e['value']
+            line[e['key'].strip()] = e['value'].strip()
 
         product_dict = do_product(line)
         format_dict = do_format(line)

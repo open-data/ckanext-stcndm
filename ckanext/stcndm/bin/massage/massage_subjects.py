@@ -25,13 +25,13 @@ while i < n:
     n = query_results['count'] / 1000.0
     for line in query_results['results']:
         for e in line['extras']:
-            line[e['key']] = e['value']
+            line[e['key'].strip()] = e['value'].strip()
 
         line_out = {u'owner_org': u'statcan',
                     u'private': False,
                     u'type': u'subject'}
 
-        if 'tmtaxdisp_en_tmtxtm' in line:
+        if u'tmtaxdisp_en_tmtxtm' in line:
             if line['tmtaxdisp_en_tmtxtm'] == 'a_to_z':
                 line_out['subject_display_code'] = '1'
             elif line['tmtaxdisp_en_tmtxtm'] == 'taxonomy':

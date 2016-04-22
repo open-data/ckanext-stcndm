@@ -19,7 +19,7 @@ while i < n:
     n = query_results['count'] / 1000.0
     for line in query_results['results']:
         for e in line['extras']:
-            line[e['key']] = e['value']
+            line[e['key'].strip()] = e['value'].strip()
 
         product_out = do_product(line)
         product_out['type'] = u'cube'
