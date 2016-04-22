@@ -38,6 +38,7 @@ def repeating_text_delimited(key, data, errors, context):
         data[key] = json.dumps([])
         return
     if isinstance(value, list):
+        data[key] = json.dumps(value)
         return
     elif isinstance(value, basestring):
         values = value.split(';')
