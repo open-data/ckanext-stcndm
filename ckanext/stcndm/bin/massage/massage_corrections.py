@@ -67,7 +67,7 @@ while i < n:
 
     for line in query_results['results']:
         for e in line['extras']:
-            line[e['key']] = e['value']
+            line[e['key'].strip()] = e['value'].strip()
         massage(line, correction_dict)
 
 with open('{path}/CorrectionsJan2015toNov2015_2.csv'.format(path=path)) \

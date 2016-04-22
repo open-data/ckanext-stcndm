@@ -32,7 +32,7 @@ while i < n:
 
     for line in query_results['results']:
         for e in line['extras']:
-            line[e['key']] = e['value']
+            line[e['key'].strip()] = e['value'].strip()
 
         line['productidnew_bi_strs'] = line.get('productidnew_bi_instrs', '')
         line['subjnewcode_bi_txtm'] = line.get('subjnewcode_bi_intxtm', '')

@@ -75,7 +75,7 @@ while i < n:
 
     for line in query_results['results']:
         for e in line['extras']:
-            line[e['key']] = e['value']
+            line[e['key'].strip()] = e['value'].strip()
 
         product_id_new = line.get(u'productidnew_bi_strs').upper()
         if product_id_new[:8] not in generic_ids:
