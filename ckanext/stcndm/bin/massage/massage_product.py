@@ -157,6 +157,11 @@ def do_product(data_set):
             u'en': data_set.get(u'refperiod_en_txtm', u''),
             u'fr': data_set.get(u'refperiod_fr_txtm', u''),
         },
+        u'subject_old': {
+            u'en': data_set.get(u'subjold_en_txtm', u''),
+            u'fr': data_set.get(u'subjold_fr_txtm', u'')
+        },
+        u'subjectold_codes': data_set.get(u'subjoldcode_bi_txtm', u''),
         u'title': {
             u'en': data_set.get(u'title_en_txts', ''),
             u'fr': data_set.get(u'title_fr_txts', '')
@@ -349,11 +354,6 @@ def do_product(data_set):
                 if code in result:
                     result.remove(code)
             product_out[u'subject_codes'] = list(set(result))
-
-    if in_and_def(u'subjoldcode_bi_txtm', data_set):
-        result = listify(data_set[u'subjoldcode_bi_txtm'])
-        if result:
-            product_out[u'subjectold_codes'] = result
 
     if in_and_def(u'tableid_bi_instrm', data_set):
         result = listify(data_set[u'tableid_bi_instrm'])

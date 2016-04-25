@@ -165,5 +165,8 @@ dataset_fields:
   preset: ndm_load_to_olc_code
   validators: ignore_empty scheming_choices ndm_child_inherits_value
 
+- field_name: subjectold
+  preset: ndm_subjectold
+
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes
