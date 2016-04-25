@@ -327,11 +327,11 @@ def do_product(data_set):
 
     if in_and_def(u'statusfcode_bi_strs', data_set):
         if data_set[u'statusfcode_bi_strs'] == '33':
-            # tease out discontinued to a new field
-            product_out[u'discontinued_code'] = '1'
+            # tease out discontinued to a new field in format
+            pass
         elif data_set[u'statusfcode_bi_strs'] == '36':
-            # tease out do not load to OLC to a new field
-            product_out[u'load_to_olc_code'] = '0'
+            # tease out do not load to OLC to a new field in format
+            pass
         else:
             product_out[u'status_code'] = data_set[u'statusfcode_bi_strs']
 
@@ -422,6 +422,9 @@ def do_format(data_set):
         if data_set[u'statusfcode_bi_strs'] == '33':
             # tease out discontinued to a new field
             format_out[u'discontinued_code'] = '1'
+        elif data_set[u'statusfcode_bi_strs'] == '36':
+            # tease out do not load to OLC to a new field
+            format_out[u'load_to_olc_code'] = '0'
 
     return format_out
 
