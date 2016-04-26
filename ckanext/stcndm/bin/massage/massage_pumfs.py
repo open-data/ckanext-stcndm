@@ -11,13 +11,13 @@ __author__ = 'marc'
 
 pumf_history_note_en = u'These data are available at no additional charge to ' \
                        u'Canadian educational institutions participating in ' \
-                       u'the Data Liberation Initiative. (hyperlink Data ' \
+                       u'the Data Liberation Initiative. (Data ' \
                        u'Liberation Initiative to: ' \
                        u'http://www.statcan.gc.ca/dli-ild/dli-idd-eng.htm)'
 pumf_history_note_fr = u'Ces données sont offertes gratuitement aux ' \
                        u'établissements d’enseignement canadiens participant ' \
                        u'à l\'Initiative de démocratisation des données ' \
-                       u'(hyperlink l\'initative de démocratisation des ' \
+                       u'(l\'initative de démocratisation des ' \
                        u'données : ' \
                        u'http://www.statcan.gc.ca/dli-ild/dli-idd-fra.htm)'
 

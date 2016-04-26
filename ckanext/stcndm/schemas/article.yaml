@@ -101,6 +101,9 @@ dataset_fields:
 - field_name: display_code
   preset: ndm_display
 
+- field_name: tracking_codes
+  preset: ndm_tracking
+
 - field_name: digital_object_identifier
   preset: ndm_digital_object_identifier
 
@@ -121,6 +124,9 @@ dataset_fields:
 
 - field_name: internal_authors
   preset: ndm_internal_authors
+
+- field_name: internal_contacts
+  preset: ndm_internal_contacts
 
 - field_name: last_release_date
   preset: ndm_last_release_date
@@ -157,6 +163,9 @@ dataset_fields:
 
 - field_name: load_to_olc_code
   preset: ndm_load_to_olc_code
+
+- field_name: subjectold
+  preset: ndm_subjectold
 
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes

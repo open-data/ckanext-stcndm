@@ -1153,17 +1153,28 @@ presets:
     schema_extras: true
     sorted_choices: true
 
+- preset_name: ndm_subjectold
+  values:
+    label:
+      en: Old Subjects
+      fr: Anciens sujets
+    form_snippet: fluent_text.html
+    display_snippet: fluent_text.html
+    error_snippet: fluent_text.html
+    validators: fluent_text
+    output_validators: fluent_text_output
+    schema_field_type: fluent
+    schema_multivalued: false
+    schema_extras: true
+
 - preset_name: ndm_subjectold_codes
   values:
     label:
-      en: Old subjects
-      fr: Anciens sujets
-    form_snippet: repeating_text.html
-    display_snippet: repeating_text.html
-    validators: repeating_text ignore_empty
-    output_validators: repeating_text_output
+      en: Old Subject Codes
+      fr: Codes d'anciens sujets
+    validators: ignore_empty
     schema_field_type: string
-    schema_multivalued: true
+    schema_multivalued: false
     schema_extras: true
 
 - preset_name: ndm_subject_display

@@ -161,6 +161,9 @@ dataset_fields:
 - field_name: load_to_olc_code
   preset: ndm_load_to_olc_code
 
+- field_name: subjectold
+  preset: ndm_subjectold
+
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes
 

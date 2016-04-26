@@ -157,6 +157,11 @@ def do_product(data_set):
             u'en': data_set.get(u'refperiod_en_txtm', u''),
             u'fr': data_set.get(u'refperiod_fr_txtm', u''),
         },
+        u'subject_old': {
+            u'en': data_set.get(u'subjold_en_txtm', u''),
+            u'fr': data_set.get(u'subjold_fr_txtm', u'')
+        },
+        u'subjectold_codes': data_set.get(u'subjoldcode_bi_txtm', u''),
         u'title': {
             u'en': data_set.get(u'title_en_txts', ''),
             u'fr': data_set.get(u'title_fr_txts', '')
@@ -322,11 +327,11 @@ def do_product(data_set):
 
     if in_and_def(u'statusfcode_bi_strs', data_set):
         if data_set[u'statusfcode_bi_strs'] == '33':
-            # tease out discontinued to a new field
-            product_out[u'discontinued_code'] = '1'
+            # tease out discontinued to a new field in format
+            pass
         elif data_set[u'statusfcode_bi_strs'] == '36':
-            # tease out do not load to OLC to a new field
-            product_out[u'load_to_olc_code'] = '0'
+            # tease out do not load to OLC to a new field in format
+            pass
         else:
             product_out[u'status_code'] = data_set[u'statusfcode_bi_strs']
 
@@ -349,11 +354,6 @@ def do_product(data_set):
                 if code in result:
                     result.remove(code)
             product_out[u'subject_codes'] = list(set(result))
-
-    if in_and_def(u'subjoldcode_bi_txtm', data_set):
-        result = listify(data_set[u'subjoldcode_bi_txtm'])
-        if result:
-            product_out[u'subjectold_codes'] = result
 
     if in_and_def(u'tableid_bi_instrm', data_set):
         result = listify(data_set[u'tableid_bi_instrm'])
@@ -422,6 +422,9 @@ def do_format(data_set):
         if data_set[u'statusfcode_bi_strs'] == '33':
             # tease out discontinued to a new field
             format_out[u'discontinued_code'] = '1'
+        elif data_set[u'statusfcode_bi_strs'] == '36':
+            # tease out do not load to OLC to a new field
+            format_out[u'load_to_olc_code'] = '0'
 
     return format_out
 

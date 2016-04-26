@@ -227,6 +227,11 @@ while i < n:
         product_dict = do_product(line)
         format_dict = do_format(line)
         format_code = format_dict.get(u'format_code')
+        if format_code == u'12' and (
+            product_id_new[:8] in dnl_list or
+            product_id_new in dnl_list
+        ):
+            format_dict[u'load_to_olc_code'] = u'0'
         if len(product_id_new) == 8:
             product_dict[u'type'] = u'publication'
             product_dict[u'name'] = u'{type}-{product_id}'.format(
@@ -309,8 +314,8 @@ while i < n:
 
         else:
             if product_dict_out:
-                if current_pid[:8] in dnl_list:
-                    product_dict_out[u'load_to_olc_code'] = u'0'
+                # if current_pid[:8] in dnl_list:
+                #     product_dict_out[u'load_to_olc_code'] = u'0'
                 print json.dumps(clean_dict(product_dict_out))
                 product_dict_out = {}
 
