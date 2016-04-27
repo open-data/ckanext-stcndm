@@ -157,7 +157,7 @@ def do_product(data_set):
             u'en': data_set.get(u'refperiod_en_txtm', u''),
             u'fr': data_set.get(u'refperiod_fr_txtm', u''),
         },
-        u'subject_old': {
+        u'subjectold': {
             u'en': data_set.get(u'subjold_en_txtm', u''),
             u'fr': data_set.get(u'subjold_fr_txtm', u'')
         },
@@ -279,9 +279,15 @@ def do_product(data_set):
         product_out[u'keywords'] = temp
 
     if in_and_def(u'releasedate_bi_strs', data_set):
-        product_out[u'last_release_date'] = to_utc(
-            data_set.get(u'releasedate_bi_strs'),
-            default_release_date)
+        try:
+            product_out[u'last_release_date'] = to_utc(
+                data_set.get(u'releasedate_bi_strs'),
+                default_release_date)
+        except ValueError:
+            sys.stderr.write(u'invalid date string for {product_id}: '
+                             u'{date_str}\n'.format(
+                product_id=data_set.get(u'productidnew_bi_strs'),
+                date_str=data_set.get(u'releasedate_bi_strs')))
 
     if in_and_def(u'legacydate_bi_txts', data_set):
         product_out[u'legacy_date'] = to_utc(
@@ -315,6 +321,11 @@ def do_product(data_set):
         if result:
             product_out[u'replaced_products'] = result
 
+    if in_and_def(u'replaces_bi_strs', data_set):
+        result = listify(data_set[u'replaces_bi_strs'])
+        if result:
+            product_out[u'replaced_products'] = result
+
     if in_and_def(u'sourcecode_bi_txtm', data_set):
         result = listify(data_set[u'sourcecode_bi_txtm'])
         if result:
@@ -342,6 +353,17 @@ def do_product(data_set):
             temp[u'en'] = result
     if in_and_def(u'stcthesaurus_fr_txtm', data_set):
         result = listify(data_set[u'stcthesaurus_fr_txtm'])
+        if result:
+            temp[u'fr'] = result
+    if temp:
+        product_out[u'thesaurus_terms'] = temp
+
+    if in_and_def(u'stcthesauraus_en_txtm', data_set):
+        result = listify(data_set[u'stcthesauraus_en_txtm'])
+        if result:
+            temp[u'en'] = result
+    if in_and_def(u'stcthesauraus_fr_txtm', data_set):
+        result = listify(data_set[u'stcthesauraus_fr_txtm'])
         if result:
             temp[u'fr'] = result
     if temp:
