@@ -43,6 +43,8 @@ while i < n:
             default_release_date)
         line['refperiod_en_txtm'] = line.get('refperiod_en_intxtm', '')
         line['refperiod_fr_txtm'] = line.get('refperiod_fr_intxtm', '')
+        line['description_en_txts'] = line.get('description_en_intxts', '')
+        line['description_fr_txts'] = line.get('description_fr_intxts', '')
 
         if line['productidnew_bi_strs'] in release_dict:
             release_dict[line['productidnew_bi_strs']] += 1
