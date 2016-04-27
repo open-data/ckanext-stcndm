@@ -204,9 +204,15 @@ class TestAPI(unittest.TestCase):
                 {"en": "English Title for RegisterDaily API Test",
                  "fr": "French Title for RegisterDaily API Test"},
             "lastPublishStatusCode": "8",
+            "statsInBrief": "1",
             "releaseDate": "2015-12-15T09:45",
+            "referencePeriod": {"en": "2015Q3", "fr": "2015Q3"},
             "uniqueId": "daily3456789123",
+            "themeList": ["api", "daily", "registration", "test"],
             "childList": ["99-003-X"],
+            "url": {
+                "en": "http://localhost:5000/en/00240001777777",
+                "fr": "http://localhost:5000/fr/00240001777777"}
         }
         r = session.post(ckan_url + '/api/3/action/RegisterDaily',
                          headers=headers, data=json.dumps(payload))
@@ -245,8 +251,10 @@ class TestAPI(unittest.TestCase):
                  "fr": "French Title for RegisterLegacyNonDataProduct API Test"},
             "parentProduct": "62M0001X"
         }
-        r = session.post(ckan_url + '/api/3/action/RegisterLegacyNonDataProduct',
-                         headers=headers, data=json.dumps(payload))
+        r = session.post(ckan_url +
+                         '/api/3/action/RegisterLegacyNonDataProduct',
+                         headers=headers,
+                         data=json.dumps(payload))
         assert_equals(r.status_code, 200)
 
     def test_registersurvey(self):
@@ -272,7 +280,7 @@ class TestAPI(unittest.TestCase):
     def test_updateproductgeo(self):
         payload = {
             "productId": "2411000401",
-            "dguids": ["A0000"]
+            "dguids": ["0000A0000"]
         }
         r = session.post(ckan_url + '/api/3/action/UpdateProductGeo',
                          headers=headers, data=json.dumps(payload))

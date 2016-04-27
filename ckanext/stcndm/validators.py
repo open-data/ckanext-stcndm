@@ -2,6 +2,7 @@
 # encoding: utf-8
 import json
 import datetime
+from dateutil import parser
 from ckan.logic import _, ValidationError, NotFound
 from ckan.lib.navl.dictization_functions import missing
 from ckanext.stcndm import helpers as h
@@ -628,7 +629,8 @@ def apply_archive_rules(key, data, errors, context):
         product_id_new = _data_lookup((u'product_id_new',), data)
         if not archive_date and product_type_code == u'24':
             _data_update(
-                release_date+datetime.timedelta(days=2*365),
+                str(parser.parse(release_date) +
+                    datetime.timedelta(days=2*365)),
                 (u'archive_date',),
                 data
             )
@@ -651,7 +653,8 @@ def apply_archive_rules(key, data, errors, context):
                 u'2023' in content_type_codes
             ):
                 _data_update(
-                    release_date+datetime.timedelta(days=5*365),
+                    str(parser.parse(release_date) +
+                        datetime.timedelta(days=5*365)),
                     (u'archive_date',),
                     data
                 )
@@ -661,7 +664,8 @@ def apply_archive_rules(key, data, errors, context):
                 try:
                     h.set_previous_issue_archive_date(
                         product_id_new,
-                        release_date+datetime.timedelta(days=5*365)
+                        str(parser.parse(release_date) +
+                            datetime.timedelta(days=5*365)),
                     )
                 except ValidationError:
                     pass
