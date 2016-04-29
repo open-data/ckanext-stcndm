@@ -21,7 +21,7 @@ from ckanext.scheming.helpers import (
     scheming_language_text,
     scheming_get_dataset_schema
 )
-from helpers import lookup_label
+from helpers import lookup_label, is_dguid
 import unicodedata
 from ckanext.stcndm.model import geo
 
@@ -222,7 +222,8 @@ class STCNDMPlugin(p.SingletonPlugin):
                                 helpers.get_dguid_from_pkg_id(dguid_pkg_id))
                     # strip the vintages from dguids to get geodescriptors
                     index_data_dict[u'geodescriptor_codes'] = \
-                        [g[4:] for g in index_data_dict[u'dguid_codes'] if g]
+                        [g[4:] if is_dguid(g) else g
+                         for g in index_data_dict[u'dguid_codes'] if g]
             elif field_type == 'date':
                 try:
                     date = parse(value, default=default_date)
