@@ -907,7 +907,7 @@ def delete_product(context, data_dict):
 
     if response['count']:
         result = response['results'][0]
-        lc.action.purge_dataset(id=result['id'])
+        lc.action.PurgeDataset(id=result['id'])
 
     return {
         'message': 'Product successfully deleted',
