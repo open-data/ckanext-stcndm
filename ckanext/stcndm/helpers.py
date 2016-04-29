@@ -488,9 +488,12 @@ def ensure_release_exists(product_id, context=None, ref_period=None):
                        exists.
     """
     # FIXME: the following test is a kludge which exits if loading from ckanapi
-    #        need to at least compare to site_id instead of fixed value stcndm
-    if context['auth_user_obj'].name == u'stcndm':
-        return
+    ckan_site_id = config.get('ckan.site_id')
+    try:
+        if context['auth_user_obj'].name == ckan_site_id:
+            return
+    except AttributeError:
+        raise ValidationError({'ensure_release_exists': 'User unauthenticated'})
 
     rsu = config.get('ckanext.stcndm.release_service_url')
     if not rsu:

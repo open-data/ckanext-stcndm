@@ -1191,6 +1191,10 @@ presets:
     schema_extras: true
     choices:
       - label:
+          en: Show subject A to Z alias and taxonomy
+          fr: Montrer alias A à Z et taxonomie du sujet
+        value: '3'
+      - label:
           en: Show subject A to Z alias
           fr: Montrer alias A à Z du sujet
         value: '1'
@@ -1198,10 +1202,6 @@ presets:
           en: Show subject taxonomy
           fr: Montrer taxonomie du sujet
         value: '2'
-      - label:
-          en: Show subject A to Z alias and taxonomy
-          fr: Montrer alias A à Z et taxonomie du sujet
-        value: '3'
       - label:
           en: Hide subject
           fr: Masquer sujet
@@ -1560,6 +1560,10 @@ presets:
             en: TAX - Updated
             fr: TAX - Corrigé
         value: '20'
+      - label:
+            en: To be deleted
+            fr: À effacer
+        value: '21'
 
 - preset_name: ndm_url
   values:
