@@ -15,9 +15,6 @@ languages_label:
 
 dataset_fields:
 
-- field_name: owner_org
-  preset: ndm_owner_org
-
 - field_name: name
   # follow our custom name generation with default package name validators
   validators: correction_create_name
@@ -79,3 +76,6 @@ dataset_fields:
 
 - field_name: correction_type_code
   preset: ndm_correction_type
+
+- field_name: owner_org
+  preset: ndm_owner_org

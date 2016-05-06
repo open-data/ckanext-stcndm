@@ -17,9 +17,6 @@ lookup_key: geodescriptor_code
 
 dataset_fields:
 
-- field_name: owner_org
-  preset: ndm_owner_org
-
 - field_name: name
   preset: ndm_name
   # follow our custom name generation validator with default package name validators
@@ -57,3 +54,6 @@ dataset_fields:
 
 - field_name: census_years
   preset: ndm_census_years
+
+- field_name: owner_org
+  preset: ndm_owner_org

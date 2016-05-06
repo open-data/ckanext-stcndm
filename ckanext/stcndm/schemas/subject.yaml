@@ -17,9 +17,6 @@ lookup_key: subject_code
 
 dataset_fields:
 
-- field_name: owner_org
-  preset: ndm_owner_org
-
 - field_name: subject_code
   label:
     en: Subject Code
@@ -68,3 +65,5 @@ dataset_fields:
 - field_name: subjectold_codes
   preset: ndm_subjectold_codes
 
+- field_name: owner_org
+  preset: ndm_owner_org

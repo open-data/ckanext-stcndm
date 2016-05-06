@@ -18,9 +18,6 @@ lookup_key: codeset_value
 
 dataset_fields:
 
-- field_name: owner_org
-  preset: ndm_owner_org
-
 - field_name: codeset_type
   label:
     en: Type of Codeset
@@ -74,3 +71,6 @@ dataset_fields:
     en: Display this codeset in CKAN create/edit form
     fr: Afficher ce codeset dans formulaires création/modification de CKAN
   preset: ndm_boolean
+
+- field_name: owner_org
+  preset: ndm_owner_org
