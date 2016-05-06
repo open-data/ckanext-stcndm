@@ -134,12 +134,35 @@ def get_parent_dataset(top_parent_id, dataset_id):
 
 def get_child_datasets(dataset_id):
     lc = ckanapi.LocalCKAN()
-    return lc.action.package_search(
-        q='top_parent_id:{pid} AND NOT product_id_new:{pid}'.format(
-            pid=dataset_id
-        ),
-        rows=1000
-    )['results']
+    if dataset_id[2:3] == '1':  # if data product
+        return lc.action.package_search(
+            q='top_parent_id:{pid} AND NOT product_id_new:{pid}'.format(
+                pid=dataset_id
+            ),
+            rows=1000
+        )['results']
+
+    child_list = lc.action.package_search(
+            q='parent_id:{pid}'.format(pid=dataset_id),
+            rows=1000
+        )['results']
+    if len(dataset_id) == 8:
+        child_list.extend(
+            lc.action.package_search(
+                q='product_id_new:{pid}???????'.format(pid=dataset_id),
+                rows=1000,
+                sort='product_id_new DESC'
+            )['results']
+        )
+    elif len(dataset_id) == 15:
+        child_list.extend(
+            lc.action.package_search(
+                q='product_id_new:{pid}?*'.format(pid=dataset_id),
+                rows=1000,
+                sort='product_id_new DESC'
+            )['results']
+        )
+    return child_list
 
 
 def generate_revision_list(data_set):
