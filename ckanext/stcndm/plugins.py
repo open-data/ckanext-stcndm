@@ -80,7 +80,8 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.repeating:presets.json',
                 'ckanext.fluent:presets.json',
                 'ckanext.stcndm:schemas/presets.yaml'
-            ])
+            ]),
+            'ckan.search.show_all_types': 'true'
         })
 
         from ckanext.stcndm.model.geo import setup
