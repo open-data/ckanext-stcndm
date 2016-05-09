@@ -2,6 +2,7 @@
 # encoding: utf-8
 import json
 import datetime
+from dateutil import parser
 from ckan.logic import _, ValidationError, NotFound
 from ckan.lib.navl.dictization_functions import missing
 from ckanext.stcndm import helpers as h
@@ -151,10 +152,27 @@ def _data_lookup(key, data):
 
 
 def _data_update(value, key, data):
-    data[key] = value
-    for data_key in data:
-        if data[data_key] == key[0]:
-            data[('extras', data_key[1], 'value')] = value
+    if key in data:
+        data[key] = value
+    else:
+        #  update value in extras
+        extras_keys = [extras_key for extras_key in data
+                       if extras_key[0] == 'extras' and extras_key[2] == 'key']
+        for extras_key in sorted(extras_keys, reverse=True):
+            if data[extras_key] > key[0]:
+                data[('extras', extras_key[1]+1, 'key')] = data[extras_key]
+                data[('extras', extras_key[1]+1, 'value')] = \
+                    data[('extras', extras_key[1], 'value')]
+            elif data[extras_key] == key[0]:
+                data[extras_key] = value
+                continue
+            elif data[extras_key] < key[0]:
+                data[('extras', extras_key[1]+1, 'key')] = key[0]
+                data[('extras', extras_key[1]+1, 'value')] = value
+                continue
+        else:
+            data[('extras', 0, 'key')] = key[0]
+            data[('extras', 0, 'value')] = value
 
 
 def codeset_create_name(key, data, errors, context):
@@ -421,9 +439,11 @@ def create_product_id(key, data, errors, context):
             return
         issue_number = _data_lookup('issue_number', data)
         if not issue_number:
-            errors[('issue_number',)].append(_('Missing value'))
-            errors[key].append(_('PID could not be generated'))
-            return
+            issue_number = h.next_issue_number(top_parent_id)
+            _data_update(
+                 issue_number,
+                 ('issue_number',),
+                 data)
         try:
             if is_legacy_id(top_parent_id):
                 product_id_new = get_next_legacy_article_id(
@@ -628,7 +648,8 @@ def apply_archive_rules(key, data, errors, context):
         product_id_new = _data_lookup((u'product_id_new',), data)
         if not archive_date and product_type_code == u'24':
             _data_update(
-                release_date+datetime.timedelta(days=2*365),
+                str(parser.parse(release_date) +
+                    datetime.timedelta(days=2*365)),
                 (u'archive_date',),
                 data
             )
@@ -651,7 +672,8 @@ def apply_archive_rules(key, data, errors, context):
                 u'2023' in content_type_codes
             ):
                 _data_update(
-                    release_date+datetime.timedelta(days=5*365),
+                    str(parser.parse(release_date) +
+                        datetime.timedelta(days=5*365)),
                     (u'archive_date',),
                     data
                 )
@@ -661,7 +683,8 @@ def apply_archive_rules(key, data, errors, context):
                 try:
                     h.set_previous_issue_archive_date(
                         product_id_new,
-                        release_date+datetime.timedelta(days=5*365)
+                        str(parser.parse(release_date) +
+                            datetime.timedelta(days=5*365)),
                     )
                 except ValidationError:
                     pass
