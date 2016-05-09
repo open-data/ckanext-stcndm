@@ -8,6 +8,9 @@ clonable: true
 dataset_type: generic
 dataset_type_code: 26
 non_data_product: true
+child_dataset_types:
+- generic
+- format
 form_languages:
 - en
 - fr
@@ -18,9 +21,6 @@ languages_label:
 lookup_key: product_id_new
 
 dataset_fields:
-
-- field_name: owner_org
-  preset: ndm_owner_org
 
 - field_name: product_type_code
   preset: ndm_product_type
@@ -37,6 +37,9 @@ dataset_fields:
   preset: ndm_product_id_new
   form_attrs:
     readonly: readonly
+
+- field_name: issue_number
+  preset: ndm_issue_number
 
 - field_name: name
   preset: ndm_name
@@ -131,9 +134,6 @@ dataset_fields:
 - field_name: top_parent_id
   preset: ndm_top_parent_id
 
-- field_name: issue_number
-  preset: ndm_issue_number
-
 - field_name: product_id_old
   preset: ndm_product_id_old
 
@@ -169,3 +169,6 @@ dataset_fields:
 
 - field_name: volume_and_number
   preset: ndm_volume_and_number
+
+- field_name: owner_org
+  preset: ndm_owner_org

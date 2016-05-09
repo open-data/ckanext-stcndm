@@ -738,6 +738,9 @@ presets:
     label:
       en: Issue Number
       fr: Numéro d'émission
+    form_placeholder:
+      en: Will be generated automatically if left blank
+      fr: Sera généré automatiquement si laissé vide
     validators: ignore_empty
     schema_field_type: string
     schema_multivalued: false

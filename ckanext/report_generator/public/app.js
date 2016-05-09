@@ -31,7 +31,7 @@
 
             keywords = keywords.replace(regexp, function(match, key, sep) {
                 if (key.length !== 0 && !key.match(/:[\(\[].*?[\)\]]/)) {
-                    key = 'text:(*' + key + '*)';
+                    key = 'product_id_new:(' + key + '*) OR text:(' + key + ')';
                 }
                 return key + sep;
             });
@@ -190,7 +190,7 @@ angular.module('checklist-model', [])
           arr.push(item);
       }
     return arr;
-  }  
+  }
 
   // remove
   function remove(arr, item, comparator) {
@@ -227,9 +227,9 @@ angular.module('checklist-model', [])
 
     // watch UI checked change
     scope.$watch('checked', function(newValue, oldValue) {
-      if (newValue === oldValue) { 
+      if (newValue === oldValue) {
         return;
-      } 
+      }
       var current = getter(scope.$parent);
       if (newValue === true) {
         setter(scope.$parent, add(current, value, comparator));
@@ -241,7 +241,7 @@ angular.module('checklist-model', [])
         checklistChange(scope);
       }
     });
-    
+
     // declare one function to be used for both $watch functions
     function setChecked(newArr, oldArr) {
         scope.checked = contains(newArr, value, comparator);
@@ -272,7 +272,7 @@ angular.module('checklist-model', [])
 
       // exclude recursion
       tElement.removeAttr('checklist-model');
-      
+
       // local scope var storing individual checkbox model
       tElement.attr('ng-model', 'checked');
 
@@ -324,7 +324,7 @@ angular.module('checklist-model', [])
                         return prefix + '[' + escapeKeyword(startDate) + ' TO ' + escapeKeyword(endDate) + ']';
                     }
 
-                    return prefix + '(*' + escapeKeyword(keyword) + '*)';
+                    return prefix + '(' + escapeKeyword(keyword) + ')';
                 },
                 operatorStr = '',
                 expr;

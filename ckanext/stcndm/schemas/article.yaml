@@ -9,6 +9,7 @@ allow_legacy: true
 dataset_type: article
 dataset_type_code: 20
 child_dataset_types:
+- article
 - format
 non_data_product: true
 form_languages:
@@ -21,9 +22,6 @@ languages_label:
 lookup_key: product_id_new
 
 dataset_fields:
-
-- field_name: owner_org
-  preset: ndm_owner_org
 
 - field_name: product_type_code
   preset: ndm_product_type
@@ -178,3 +176,6 @@ dataset_fields:
 
 - field_name: price_note
   preset: ndm_price_note
+
+- field_name: owner_org
+  preset: ndm_owner_org

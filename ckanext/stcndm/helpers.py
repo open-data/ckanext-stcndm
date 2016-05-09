@@ -134,12 +134,35 @@ def get_parent_dataset(top_parent_id, dataset_id):
 
 def get_child_datasets(dataset_id):
     lc = ckanapi.LocalCKAN()
-    return lc.action.package_search(
-        q='top_parent_id:{pid} AND NOT product_id_new:{pid}'.format(
-            pid=dataset_id
-        ),
-        rows=1000
-    )['results']
+    if dataset_id[2:3] == '1':  # if data product
+        return lc.action.package_search(
+            q='top_parent_id:{pid} AND NOT product_id_new:{pid}'.format(
+                pid=dataset_id
+            ),
+            rows=1000
+        )['results']
+
+    child_list = lc.action.package_search(
+            q='parent_id:{pid}'.format(pid=dataset_id),
+            rows=1000
+        )['results']
+    if len(dataset_id) == 8:
+        child_list.extend(
+            lc.action.package_search(
+                q='product_id_new:{pid}???????'.format(pid=dataset_id),
+                rows=1000,
+                sort='product_id_new DESC'
+            )['results']
+        )
+    elif len(dataset_id) == 15:
+        child_list.extend(
+            lc.action.package_search(
+                q='product_id_new:{pid}?*'.format(pid=dataset_id),
+                rows=1000,
+                sort='product_id_new DESC'
+            )['results']
+        )
+    return child_list
 
 
 def generate_revision_list(data_set):
@@ -413,6 +436,31 @@ def next_non_data_product_id(subject_code, product_type_code):
     )
 
 
+def next_issue_number(parent_id):
+    """
+    Get next available issue number
+
+    :param parent_id:
+    :type parent_id: 8 digit str
+    :return: 7 digit str
+    """
+    lc = ckanapi.LocalCKAN()
+    result = lc.action.package_search(
+        q='product_id_new:{pid}???????'.format(pid=parent_id),
+        rows=1,
+        sort='product_id_new DESC'
+    )['results']
+    if result:
+        try:
+            return unicode(int(result[0]['product_id_new'][8:15])+1)
+        except ValueError:
+            raise ValidationError(
+                {'product_id_new': '{pid} has an invalid '
+                                   'issue number'.format(pid=parent_id)})
+    else:
+        return u'{year}001'.format(year=datetime.today().year)
+
+
 def next_article_id(top_parent_id, issue_number):
     """
     Get next available product ID
@@ -432,15 +480,29 @@ def next_article_id(top_parent_id, issue_number):
             (_('Invalid issue number. Expected 7 digit string'),)
         )
 
+    lc = ckanapi.LocalCKAN()
+
+    # check whether issue dataset exists
+    result = lc.action.package_search(
+        q='{pid}{issue_number}'.format(
+            pid=top_parent_id,
+            issue_number=issue_number
+        )
+    )['results']
+    if not result:
+        return u'{pid}{issue_number}'.format(
+            pid=top_parent_id,
+            issue_number=issue_number
+        )
+
     i = 0
     n = 1
     article_sequence_number = 1
-    lc = ckanapi.LocalCKAN()
     while i < n:
         results = lc.action.package_search(
             q=(
                 'type:article AND '
-                'product_id_new:{top_parent_id}{issue_number}*'
+                'product_id_new:{top_parent_id}{issue_number}?*'
             ).format(
                 top_parent_id=top_parent_id,
                 issue_number=issue_number

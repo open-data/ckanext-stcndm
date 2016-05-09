@@ -17,9 +17,6 @@ lookup_key: sgc_code
 
 dataset_fields:
 
-- field_name: owner_org
-  preset: ndm_owner_org
-
 - field_name: sgc_code
   label:
     en: SGC Code
@@ -71,3 +68,6 @@ dataset_fields:
 
 - field_name: notes
   preset: ndm_description
+
+- field_name: owner_org
+  preset: ndm_owner_org

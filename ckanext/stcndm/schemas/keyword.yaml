@@ -17,9 +17,6 @@ lookup_key: controlled_keyword_code
 
 dataset_fields:
 
-- field_name: owner_org
-  preset: ndm_owner_org
-
 - field_name: name
   preset: ndm_name
   # follow our custom name generation validator with default package name validators
@@ -50,3 +47,6 @@ dataset_fields:
   schema_field_type: fluent
   schema_multivalued: true
   schema_extras: true
+
+- field_name: owner_org
+  preset: ndm_owner_org

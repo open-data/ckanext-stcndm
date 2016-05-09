@@ -171,7 +171,7 @@
 {%- block scripts %}
     {{ super() }}
     <script src="{% url_for_static 'lib/angular/angular.min.js' %}"></script>
-    <script src="{% url_for_static 'app.min.js' %}"></script>
+    <script src="{% url_for_static 'app.js' %}"></script>
     <script>
     (function(window, angular, wb) {'use strict';
       angular.module('services.config', [])
