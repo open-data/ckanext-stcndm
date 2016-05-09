@@ -13,6 +13,7 @@ import ckan.plugins as p
 
 PRODUCT_ID = 'product_id_new'
 
+
 class ChildDatasetController(base.BaseController):
 
     def new(self, ds_id, ds_type):
@@ -27,6 +28,7 @@ class ChildDatasetController(base.BaseController):
 
             new_payload = {
                 'type': ds_type,
+                'issue_number': pkg.get('issue_number'),
                 'top_parent_id': pkg.get('top_parent_id', pkg_id) or pkg_id
             }
 
