@@ -8,6 +8,9 @@ clonable: true
 dataset_type: generic
 dataset_type_code: 26
 non_data_product: true
+child_dataset_types:
+- generic
+- format
 form_languages:
 - en
 - fr
@@ -34,6 +37,9 @@ dataset_fields:
   preset: ndm_product_id_new
   form_attrs:
     readonly: readonly
+
+- field_name: issue_number
+  preset: ndm_issue_number
 
 - field_name: name
   preset: ndm_name
@@ -127,9 +133,6 @@ dataset_fields:
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id
-
-- field_name: issue_number
-  preset: ndm_issue_number
 
 - field_name: product_id_old
   preset: ndm_product_id_old
