@@ -869,6 +869,9 @@ presets:
       fr: ID interne unique
     form_attrs:
       readonly: readonly
+    form_placeholder:
+      en: Will be generated automatically if left blank
+      fr: Sera généré automatiquement si laissé vide
     schema_field_type: string
     schema_multivalued: false
     schema_extras: false
@@ -982,6 +985,9 @@ presets:
       fr: ID produit nouveau
     validators: scheming_required remove_whitespace
     required: true
+    form_placeholder:
+      en: Will be generated automatically if left blank
+      fr: Sera généré automatiquement si laissé vide
     schema_field_type: string
     schema_multivalued: false
     schema_extras: true
