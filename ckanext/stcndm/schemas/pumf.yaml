@@ -9,6 +9,8 @@ allow_legacy: true
 dataset_type: pumf
 dataset_type_code: 25
 non_data_product: true
+child_dataset_types:
+- issue
 form_languages:
 - en
 - fr

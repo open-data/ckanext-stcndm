@@ -3,13 +3,11 @@
 
 import ckanapi
 from ckan.lib import base
-from ckan.plugins import toolkit
 from ckanext.stcndm.logic.legacy import is_legacy_product
 from ckanext.scheming.helpers import scheming_get_dataset_schema
+from ckanext.stcndm.helpers import next_issue_number, next_article_id
 from ckan.controllers.package import PackageController
 from ckan.common import request
-
-import ckan.plugins as p
 
 PRODUCT_ID = 'product_id_new'
 
@@ -28,7 +26,6 @@ class ChildDatasetController(base.BaseController):
 
             new_payload = {
                 'type': ds_type,
-                'issue_number': pkg.get('issue_number'),
                 'top_parent_id': pkg.get('top_parent_id', pkg_id) or pkg_id
             }
 
@@ -45,7 +42,30 @@ class ChildDatasetController(base.BaseController):
 
             if ds_type == 'format':
                 new_payload['parent_id'] = pkg_id
+            elif ds_type == 'issue':
+                issue_number = next_issue_number(pkg_id)
+                issue_id = u'{pid}{issue_number}'.format(
+                    pid=pkg_id,
+                    issue_number=issue_number
+                )
+                new_payload['product_type_code'] = pkg.get('product_type_code')
+                new_payload['issue_number'] = issue_number
+                new_payload['product_id_new'] = issue_id
+                new_payload['name'] = u'issue-{issue_id}'.format(
+                    issue_id=issue_id
+                )
+                pass
             elif ds_type == 'article':
+                article_id = next_article_id(
+                    pkg.get('top_parent_id', pkg_id) or pkg_id,
+                    pkg.get('issue_number')
+                )
+                new_payload['product_type_code'] = pkg.get('product_type_code')
+                new_payload['issue_number'] = pkg.get('issue_number')
+                new_payload['product_id_new'] = article_id
+                new_payload['name'] = u'article-{article_id}'.format(
+                    article_id=article_id
+                )
                 pass
             elif ('non_data_product' in parent_schema and
                     parent_schema['non_data_product'] == True):

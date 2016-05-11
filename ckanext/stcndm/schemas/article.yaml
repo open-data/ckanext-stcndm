@@ -30,6 +30,18 @@ dataset_fields:
         en: Analytical Product
         fr: Produit Analytique
       value: '20'
+    - label:
+        en: The Daily
+        fr: Le Quotidien
+      value: '24'
+    - label:
+        en: Public use microdata files (PUMFs)
+        fr: Les fichiers de microdonnées à grande diffusion (FMGD) PUMF
+      value: '25'
+    - label:
+        en: Publications with repeating titles (Generic)
+        fr: Publications avec des titres répétitifs (générique)
+      value: '26'
 
 - field_name: top_parent_id
   preset: ndm_top_parent_id

@@ -7,6 +7,9 @@ catalog_type_label:
 clonable: true
 dataset_type: daily
 dataset_type_code: 24
+non_data_product: true
+child_dataset_types:
+- issue
 form_languages:
 - en
 - fr

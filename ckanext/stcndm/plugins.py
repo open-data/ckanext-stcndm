@@ -64,6 +64,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/generic.yaml',
                 'ckanext.stcndm:schemas/geodescriptor.yaml',
                 'ckanext.stcndm:schemas/indicator.yaml',
+                'ckanext.stcndm:schemas/issue.yaml',
                 'ckanext.stcndm:schemas/keyword.yaml',
                 'ckanext.stcndm:schemas/map.yaml',
                 'ckanext.stcndm:schemas/province.yaml',
