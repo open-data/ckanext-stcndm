@@ -165,11 +165,11 @@ def _data_update(value, key, data):
                     data[('extras', extras_key[1], 'value')]
             elif data[extras_key] == key[0]:
                 data[extras_key] = value
-                continue
+                break
             elif data[extras_key] < key[0]:
                 data[('extras', extras_key[1]+1, 'key')] = key[0]
                 data[('extras', extras_key[1]+1, 'value')] = value
-                continue
+                break
         else:
             data[('extras', 0, 'key')] = key[0]
             data[('extras', 0, 'value')] = value
@@ -365,17 +365,8 @@ def product_create_name(key, data, errors, context):
     if errors[key]:
         return
 
-    existing_name = _data_lookup(('name',), data)
+    create_product_id(('product_id_new',), data, errors, context)
     product_id_new = _data_lookup(('product_id_new',), data)
-    if not product_id_new or product_id_new is missing or\
-       not existing_name or existing_name is missing or\
-       existing_name.endswith(u'-clone'):
-        create_product_id(('product_id_new',), data, errors, context)
-        if errors[('product_id_new',)]:
-            errors[key].append(_('Name could not be generated'))
-            return
-        else:
-            product_id_new = _data_lookup(('product_id_new',), data)
 
     data_set_type = _data_lookup(('type',), data)
     if product_id_new:
@@ -407,9 +398,10 @@ def create_product_id(key, data, errors, context):
     if errors[key] or errors[('subject_codes',)] or errors[('top_parent_id',)]:
         return
 
-    # product_id_new = _data_lookup(('product_id_new',), data)
-    # if product_id_new:
-    #     return
+    product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new and is_legacy_id(product_id_new):
+        return
+
     data_set_type = _data_lookup(('type',), data)
     # make sure subject_codes processed
     shortcode_validate(('subject_codes',), data, errors, context)
@@ -432,6 +424,21 @@ def create_product_id(key, data, errors, context):
             errors[('subject_codes',)].append(_('Missing value'))
             errors[key].append(_('PID could not be generated'))
             return
+    elif data_set_type == u'issue':
+        if not top_parent_id:
+            errors[('top_parent_id',)].append(_('Missing value'))
+            errors[key].append(_('PID could not be generated'))
+            return
+        issue_number = _data_lookup('issue_number', data)
+        if not issue_number:
+            issue_number = h.next_issue_number(top_parent_id)
+            _data_update(issue_number, ('issue_number',), data)
+        product_id_new = u'{pid}{issue_number}'.format(
+            pid=top_parent_id,
+            issue_number=issue_number
+        )
+        data[key] = product_id_new
+        return product_id_new
     elif data_set_type == u'article':
         if not top_parent_id:
             errors[('top_parent_id',)].append(_('Missing value'))
@@ -440,10 +447,7 @@ def create_product_id(key, data, errors, context):
         issue_number = _data_lookup('issue_number', data)
         if not issue_number:
             issue_number = h.next_issue_number(top_parent_id)
-            _data_update(
-                 issue_number,
-                 ('issue_number',),
-                 data)
+            _data_update(issue_number, ('issue_number',), data)
         try:
             if is_legacy_id(top_parent_id):
                 product_id_new = get_next_legacy_article_id(

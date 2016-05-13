@@ -10,10 +10,15 @@
             wt: 'json'
         },
         datatableDefaults = {
+            order: [[1, 'desc']],
             columnDefs: [
                 {
                     className: 'nowrap right',
                     targets: [0]
+                },
+                {
+                    type: 'num',
+                    targets: [1]
                 }
             ],
             pageLength: 100,
@@ -31,7 +36,9 @@
 
             keywords = keywords.replace(regexp, function(match, key, sep) {
                 if (key.length !== 0 && !key.match(/:[\(\[].*?[\)\]]/)) {
-                    key = 'product_id_new:(' + key + '*) OR text:(' + key + ')';
+                    key = 'product_id_new:(' + key + ')^4 ' +
+                          ' OR product_id_new:(' + key + '*)^2' +
+                          ' OR text:(' + key + ')';
                 }
                 return key + sep;
             });
@@ -380,7 +387,11 @@ angular.module('checklist-model', [])
                 'codeset',
                 'geodescriptor',
                 'subject',
-                'survey'
+                'survey',
+                'format',
+                'province',
+                'correction',
+                'keyword'
             ];
 
             return types.filter(function(type) {
@@ -491,11 +502,13 @@ angular.module('checklist-model', [])
 
         this.field = '';
         this.mandatoryFields = [
-            'name'
+            'name',
+            'score'
         ];
 
         this.fields = fromUrl() || [
             'name',
+            'score',
             'content_type_codes',
             'subject_codes',
             'title_en',
@@ -556,6 +569,7 @@ angular.module('checklist-model', [])
                         languagesLength = languages.length,
                         f, field, l, fieldObj;
 
+//                    fieldsResults['score'] = {type: string};
                     for (f = 0; f < fieldsLength; f += 1) {
                         field = fields[f];
                         fieldObj = {type: field.schema_field_type};

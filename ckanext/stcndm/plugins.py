@@ -64,6 +64,7 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.stcndm:schemas/generic.yaml',
                 'ckanext.stcndm:schemas/geodescriptor.yaml',
                 'ckanext.stcndm:schemas/indicator.yaml',
+                'ckanext.stcndm:schemas/issue.yaml',
                 'ckanext.stcndm:schemas/keyword.yaml',
                 'ckanext.stcndm:schemas/map.yaml',
                 'ckanext.stcndm:schemas/province.yaml',
@@ -81,7 +82,11 @@ class STCNDMPlugin(p.SingletonPlugin):
                 'ckanext.fluent:presets.json',
                 'ckanext.stcndm:schemas/presets.yaml'
             ]),
-            'ckan.search.show_all_types': 'true'
+            'ckan.search.show_all_types': 'true',
+            'search.query_fields': 'product_id_new^8 name^4 '
+                                   'title_{{LANG}}^4 text',
+            'search.tie': '0.0',
+            'search.sort': 'score desc, product_id_new_sort asc',
         })
 
         from ckanext.stcndm.model.geo import setup

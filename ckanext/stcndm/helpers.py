@@ -418,9 +418,7 @@ def next_non_data_product_id(subject_code, product_type_code):
         for result in results['results']:
             if product_sequence_number < int(result['product_id_new'][5:8]):
                 return (
-                    u'{subject_code}'
-                    '{product_type_code}'
-                    '{sequence_number}'
+                    u'{subject_code}{product_type_code}{sequence_number}'
                 ).format(
                     subject_code=subject_code,
                     product_type_code=product_type_code,
@@ -490,10 +488,10 @@ def next_article_id(top_parent_id, issue_number):
         )
     )['results']
     if not result:
-        return u'{pid}{issue_number}'.format(
+        raise ValidationError({'{pid}{issue_number}'.format(
             pid=top_parent_id,
             issue_number=issue_number
-        )
+        ): 'Cannot create article, parent issue missing'})
 
     i = 0
     n = 1

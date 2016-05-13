@@ -49,25 +49,48 @@
 
         <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <tokenizer class="solr.StandardTokenizerFactory"/>
-                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-                <filter class="solr.ElisionFilterFactory"/>
-                <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
-                    catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
-                    preserveOriginal="1"/>
+                <!--<tokenizer class="solr.StandardTokenizerFactory"/>-->
+                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <filter class="solr.SynonymFilterFactory"
+                        synonyms="synonyms.txt"
+                        ignoreCase="true"
+                        expand="true"
+                />
                 <filter class="solr.LowerCaseFilterFactory"/>
                 <!--Since "text" is not language specific, don't stem -->
+                <filter class="solr.ElisionFilterFactory"/>
                 <filter class="solr.ASCIIFoldingFilterFactory"/>
+                <filter class="solr.WordDelimiterFilterFactory"
+                        preserveOriginal="1"
+                        generateWordParts="1"
+                        generateNumberParts="1"
+                        catenateWords="1"
+                        catenateNumbers="1"
+                        catenateAll="0"
+                        splitOnCaseChange="1"
+                />
+                <filter class="solr.EdgeNGramFilterFactory"
+                        minGramSize="2"
+                        maxGramSize="15"
+                />
             </analyzer>
             <analyzer type="query">
-                <tokenizer class="solr.StandardTokenizerFactory"/>
-                <filter class="solr.ElisionFilterFactory"/>
-                <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
-                    catenateWords="0" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"
-                    preserveOriginal="1"/>
+                <!--<tokenizer class="solr.StandardTokenizerFactory"/>-->
+                <tokenizer class="solr.WhitespaceTokenizerFactory"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.ElisionFilterFactory"/>
                 <!--Since "text" is not language specific, don't stem -->
                 <filter class="solr.ASCIIFoldingFilterFactory"/>
+                <!--<filter class="solr.EdgeNGramFilterFactory" minGramSize="8" maxGramSize="15"/>-->
+                <filter class="solr.WordDelimiterFilterFactory"
+                        generateWordParts="1"
+                        generateNumberParts="1"
+                        catenateWords="1"
+                        catenateNumbers="1"
+                        catenateAll="0"
+                        splitOnCaseChange="1"
+                        preserveOriginal="1"
+                />
             </analyzer>
         </fieldType>
 
@@ -218,6 +241,19 @@
             </analyzer>
         </fieldType>
 
+        <fieldType name="product_id" class="solr.TextField" positionIncrementGap="100">
+            <analyzer type="index">
+                <tokenizer class="solr.PatternTokenizerFactory" pattern=";\s*"/>
+                <filter class="solr.EdgeNGramFilterFactory" minGramSize="8" maxGramSize="20"/>
+                <filter class="solr.PatternReplaceFilterFactory" pattern="^(.{9,14}|.{16,18})$" replacement=""/>
+                <filter class="solr.LengthFilterFactory" min="8" max="20"/>
+            </analyzer>
+            <analyzer type="query">
+                <tokenizer class="solr.PatternTokenizerFactory" pattern=";\s*"/>
+                <filter class="solr.LengthFilterFactory" min="8" max="20"/>
+            </analyzer>
+        </fieldType>
+
         <fieldType name="sort_field" class="solr.TextField" sortMissingLast="true" omitNorms="true">
             <analyzer>
                 <!-- KeywordTokenizer does no actual tokenizing, so the entire
@@ -345,7 +381,8 @@
         <field name="level_subject_codes" type="subjlevels" indexed="true" stored="true" multiValued="true"/>
         <field name="ndm_states" type="string" indexed="true" stored="true" multiValued="true"/>
         <field name="price" type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="product_id_new" type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="product_id_new" type="product_id" indexed="true" stored="true" multiValued="false"/>
+        <field name="product_id_new_sort" type="sort_field" indexed="true" stored="true" multiValued="false"/>
         <field name="product_id_old" type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="publication_year" type="text" indexed="true" stored="true" multiValued="false"/>
         <!--<field name="question_url_en" type="string" indexed="true" stored="true" multiValued="false"/>-->
@@ -422,6 +459,7 @@
     <copyField source="product_id_new" dest="text"/>
     <copyField source="product_id_new" dest="ensearch"/>
     <copyField source="product_id_new" dest="frsearch"/>
+    <copyField source="product_id_new" dest="product_id_new_sort"/>
 
     <copyField source="product_id_old" dest="text"/>
     <copyField source="product_id_old" dest="ensearch"/>
@@ -453,8 +491,8 @@
 
     <copyField source="*_en" dest="*_en_string"/>
     <copyField source="*_fr" dest="*_fr_string"/>
-    <!--<copyField source="title_en" dest="title_en_string"/>-->
-    <!--<copyField source="title_fr" dest="title_fr_string"/>-->
+    <copyField source="title_en" dest="title_en_sort"/>
+    <copyField source="title_fr" dest="title_fr_sort"/>
     <!--<copyField source="survey_status_code_desc_en" dest="survey_status_code_desc_en_string"/>-->
     <!--<copyField source="survey_status_code_desc_fr" dest="survey_status_code_desc_fr_string"/>-->
 

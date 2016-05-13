@@ -241,7 +241,7 @@ while i < n:
             if product_id_new not in product_id_list:
                 product_id_list.append(product_id_new)
         elif len(product_id_new) == 15:
-            product_dict[u'type'] = u'article'
+            product_dict[u'type'] = u'issue'
             product_dict[u'name'] = u'{type}-{product_id}'.format(
                     type=product_dict[u'type'],
                     product_id=product_id_new

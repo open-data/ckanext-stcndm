@@ -9,7 +9,7 @@ dataset_type: generic
 dataset_type_code: 26
 non_data_product: true
 child_dataset_types:
-- generic
+- issue
 - format
 form_languages:
 - en

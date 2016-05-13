@@ -83,7 +83,12 @@ while i < n:
         product_dict = do_product(line)
         format_dict = do_format(line)
         format_code = format_dict.get(u'format_code')
-        product_dict[u'type'] = u'generic'
+        if len(product_id_new) == 8:
+            product_dict[u'type'] = u'generic'
+        elif len(product_id_new) == 15:
+            product_dict[u'type'] = u'issue'
+        else:
+            product_dict[u'type'] = u'article'
         product_dict[u'name'] = u'{type}-{product_id}'.format(
                 type=product_dict[u'type'],
                 product_id=product_id_new

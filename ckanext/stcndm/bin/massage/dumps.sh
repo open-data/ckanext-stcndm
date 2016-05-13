@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 cd ~/stcndm-env/ckanext-stcndm/ckanext/stcndm/bin
-echo users | tee logs/dump_errs.txt
-python massage/massage_users.py > jsonl_dumps/ckan_users.jsonl 2>> logs/dump_errs.txt
+echo users skipped | tee logs/dump_errs.txt
+# python massage/massage_users.py > jsonl_dumps/ckan_users.jsonl 2>> logs/dump_errs.txt
 echo codesets | tee -a logs/dump_errs.txt
 python massage/massage_codesets.py > jsonl_dumps/codesets.jsonl 2>> logs/dump_errs.txt
 echo subjects | tee -a logs/dump_errs.txt
