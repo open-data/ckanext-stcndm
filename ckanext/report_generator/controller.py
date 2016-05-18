@@ -1,12 +1,13 @@
 import ckan.plugins as p
 from ckan.plugins.toolkit import c
 from ckan.lib.base import BaseController, config
+from ckan.lib.helpers import url_for_static
+
 
 class ReportGeneratorController(BaseController):
 
-    SOLR_URL = config.get('solr_url',
-            'http://127.0.0.1:8983/solr/ckan')
-    CKAN_URL = config.get('ckan.site_url', '')
+    CKAN_URL = url_for_static('/')[:-1]
+    SOLR_URL = url_for_static('/solr')
     SITE_ID = config.get('ckan.site_id', '')
 
     def index(self):
