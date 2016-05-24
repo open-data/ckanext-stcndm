@@ -245,7 +245,7 @@
             <analyzer type="index">
                 <tokenizer class="solr.PatternTokenizerFactory" pattern=";\s*"/>
                 <filter class="solr.EdgeNGramFilterFactory" minGramSize="8" maxGramSize="20"/>
-                <filter class="solr.PatternReplaceFilterFactory" pattern="^(.{9,14}|.{16,18})$" replacement=""/>
+                <!--<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{9}|.{11,14}|.{16,18})$" replacement=""/>-->
                 <filter class="solr.LengthFilterFactory" min="8" max="20"/>
             </analyzer>
             <analyzer type="query">
