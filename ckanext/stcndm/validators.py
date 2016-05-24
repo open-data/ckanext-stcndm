@@ -365,8 +365,10 @@ def product_create_name(key, data, errors, context):
     if errors[key]:
         return
 
-    create_product_id(('product_id_new',), data, errors, context)
     product_id_new = _data_lookup(('product_id_new',), data)
+    if product_id_new is missing or not product_id_new:
+        create_product_id(('product_id_new',), data, errors, context)
+        product_id_new = _data_lookup(('product_id_new',), data)
 
     data_set_type = _data_lookup(('type',), data)
     if product_id_new:
