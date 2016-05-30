@@ -6,7 +6,7 @@ import ckan.plugins.toolkit as toolkit
 import ckanext.datastore.db as ds_db
 import ckanext.scheming.helpers as scheming_helpers
 import ckanext.stcndm.helpers as stcndm_helpers
-import arrow
+import sys
 
 from pylons import config
 from sqlalchemy import orm, types, Column, Table
@@ -178,22 +178,11 @@ def get_next_product_id(context, data_dict):
 
     :raises: ValidationError, NotFound
     """
-
+    function_name = sys._getframe().f_code.co_name
     lc = ckanapi.LocalCKAN(context=context)
-    product_id = _get_or_bust(data_dict, 'parentProductId').strip()
-
-    # TODO: we need to standardize these. This is a result of swapping
-    # everything to java-style params
-    data_dict['productId'] = product_id
-
-    if not len(str(product_id)) == 8:
-        raise _ValidationError(
-            ('invalid ParentProductId length, expecting exactly 8 characters',)
-        )
-
     product_type = _get_or_bust(data_dict, 'productType')
-
-    # testing for existence of
+    product_id = _get_or_bust(data_dict, 'parentProductId').strip()
+    # testing for existence of parent cube
     lc.action.GetCube(cubeId=product_id)
 
     subject_code = str(product_id)[:2]
@@ -203,56 +192,44 @@ def get_next_product_id(context, data_dict):
     #      not have good data in subj
     sequence_id = str(product_id)[4:8]
 
-    product_family = '{subject_code}{product_type}{sequence_id}'.format(
-        subject_code=subject_code,
-        product_type=product_type,
-        sequence_id=sequence_id
-    )
-
-    query = {
-        'q': 'product_id_new:{product_family}*'.format(
-            product_family=product_family
+    response = lc.action.package_search(
+        q='product_id_new:{subject_code}{product_type}{sequence_id}*'.format(
+            subject_code=subject_code,
+            product_type=product_type,
+            sequence_id=sequence_id
         ),
-        'sort': 'product_id_new desc'
-    }
-
-    response = _get_action('package_search')(context, query)
-
-    product_id_new = "{subject_code}{product_type}{sequence_id}01".format(
-        subject_code=subject_code,
-        product_type=product_type,
-        sequence_id=sequence_id
+        sort='product_id_new_sort desc',
+        rows=1
     )
 
     if response['count'] < 1:
-        return product_id_new
-
-    view_id = response['results'][0]['product_id_new'][-2:]
-
-    if view_id == '99':
-            # TODO: implement reusing unused IDs
-        raise _ValidationError(
-            ('All Product IDs have been used. '
-             'Reusing IDs is in development.',)
+        return '{subject_code}{product_type}{sequence_id}01'.format(
+            subject_code=subject_code,
+            product_type=product_type,
+            sequence_id=sequence_id
         )
-    else:
-        try:
-            product_id_new = (
-                '{subject_code}{product_type}{sequence_id}{view_id}'
-            ).format(
-                subject_code=subject_code,
-                product_type=product_type,
-                sequence_id=sequence_id,
-                view_id=str(int(view_id)+1).zfill(2)
-            )
-        except ValueError:
-            raise _ValidationError(
-                ('Invalid product_id {0}'.format(
-                    product_id_new
-                ),)
-            )
+    elif response['count'] >= 99:
+            # TODO: implement reusing unused IDs
+        raise _ValidationError({
+            function_name: 'All Product IDs have been used. '
+                           'Reusing IDs is in development.'
+        })
 
-    return product_id_new
+    view_id_str = response['results'][0]['product_id_new'][-2:]
+    try:
+        view_id = int(view_id_str)
+    except ValueError:
+        raise _ValidationError({
+            function_name: 'Invalid data product sequence number "{0}". '
+                           'Expecting a 2 digit string'.format(view_id_str)
+        })
+
+    return '{subject_code}{product_type}{sequence_id}{view_id}'.format(
+        subject_code=subject_code,
+        product_type=product_type,
+        sequence_id=sequence_id,
+        view_id=str(int(view_id)+1).zfill(2)
+    )
 
 
 # noinspection PyIncorrectDocstring
