@@ -3,6 +3,7 @@
 import ckanapi
 import ckan.logic as logic
 import ckan.plugins.toolkit as toolkit
+import ckan.model as model
 import ckanext.datastore.db as ds_db
 import ckanext.scheming.helpers as scheming_helpers
 import ckanext.stcndm.helpers as stcndm_helpers
@@ -178,57 +179,54 @@ def get_next_product_id(context, data_dict):
 
     :raises: ValidationError, NotFound
     """
-    function_name = sys._getframe().f_code.co_name
+
+    cube_id = _get_or_bust(data_dict, 'parentProductId').strip()
     lc = ckanapi.LocalCKAN(context=context)
-    product_type = _get_or_bust(data_dict, 'productType')
-    product_id = _get_or_bust(data_dict, 'parentProductId').strip()
-    # testing for existence of parent cube
-    lc.action.GetCube(cubeId=product_id)
-
-    subject_code = str(product_id)[:2]
-    # TODO Do we want to rely on the subject_code in the cube dict?
-    #      probably not...
-    # TODO this is actually going to be a problem because cubes do
-    #      not have good data in subj
-    sequence_id = str(product_id)[4:8]
-
-    response = lc.action.package_search(
-        q='product_id_new:{subject_code}{product_type}{sequence_id}*'.format(
+    # test for existence of parent cube
+    lc.action.GetCube(cubeId=cube_id)
+    subject_code = str(cube_id)[:2]
+    cube_sequence_id = str(cube_id)[4:8]
+    product_type = _get_or_bust(data_dict, 'productType').strip()
+    product_family = '{subject_code}{product_type}{cube_sequence_id}'.format(
             subject_code=subject_code,
             product_type=product_type,
-            sequence_id=sequence_id
-        ),
-        sort='product_id_new_sort desc',
-        rows=1
+            cube_sequence_id=cube_sequence_id
     )
 
-    if response['count'] < 1:
-        return '{subject_code}{product_type}{sequence_id}01'.format(
-            subject_code=subject_code,
-            product_type=product_type,
-            sequence_id=sequence_id
-        )
-    elif response['count'] >= 99:
-            # TODO: implement reusing unused IDs
+    response = lc.action.package_search(
+        q='product_id_new:{product_family}*'.format(
+            product_family=product_family
+        ),
+        sort='product_id_new_sort asc',
+        rows=100
+    )
+    active_sequence_ids = set([result.get(u'product_id_new', '')[-2:]
+                               for result in response['results']])
+    deleted_product_ids = [pkg.as_dict().get('extras', {}).get('product_id_new')
+                           for pkg in model.Session.query(
+                               model.Package
+                            ).filter_by(state=model.State.DELETED)]
+    deleted_sequence_ids = set([deleted_product_id[-2:]
+                                for deleted_product_id in deleted_product_ids
+                                if deleted_product_id.startswith(product_family)
+                                ])
+    all_sequence_ids = set([str(x).zfill(2) for x in range(1, 100)])
+    available_sequence_ids = (all_sequence_ids -
+                              active_sequence_ids -
+                              deleted_sequence_ids)
+
+    if available_sequence_ids:
+        next_sequence_id = min(available_sequence_ids)
+    else:
         raise _ValidationError({
-            function_name: 'All Product IDs have been used. '
-                           'Reusing IDs is in development.'
+            'get_next_product_id':
+                'All Product sequence IDs have been used for product family '
+                '{product_family}.'.format(product_family=product_family)
         })
 
-    view_id_str = response['results'][0]['product_id_new'][-2:]
-    try:
-        view_id = int(view_id_str)
-    except ValueError:
-        raise _ValidationError({
-            function_name: 'Invalid data product sequence number "{0}". '
-                           'Expecting a 2 digit string'.format(view_id_str)
-        })
-
-    return '{subject_code}{product_type}{sequence_id}{view_id}'.format(
-        subject_code=subject_code,
-        product_type=product_type,
-        sequence_id=sequence_id,
-        view_id=str(int(view_id)+1).zfill(2)
+    return '{product_family}{next_sequence_id}'.format(
+        product_family=product_family,
+        next_sequence_id=next_sequence_id
     )
 
 
