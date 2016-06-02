@@ -253,6 +253,9 @@ class STCNDMPlugin(p.SingletonPlugin):
         index_data_dict[u'geodescriptor_codes'] = \
             [g[4:] if is_dguid(g) else g
              for g in index_data_dict[u'dguid_codes'] if g]
+        index_data_dict[u'geolevel_codes'] = list(set(
+            [g[:5] for g in index_data_dict[u'geodescriptor_codes']]
+        ))
 
         return index_data_dict
 
