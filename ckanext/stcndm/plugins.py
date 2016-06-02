@@ -221,15 +221,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                 if item == u'geodescriptor_codes':
                     index_data_dict[u'dguid_codes'] = \
                         list(index_data_dict[u'geodescriptor_codes'])
-                    # append dguids from the datastore
-                    for dguid_pkg_id in geo.get_geodescriptors_for_package(
-                            validated_data_dict[u'product_id_new']):
-                        index_data_dict[u'dguid_codes'].append(
-                                helpers.get_dguid_from_pkg_id(dguid_pkg_id))
-                    # strip the vintages from dguids to get geodescriptors
-                    index_data_dict[u'geodescriptor_codes'] = \
-                        [g[4:] if is_dguid(g) else g
-                         for g in index_data_dict[u'dguid_codes'] if g]
             elif field_type == 'date':
                 try:
                     date = parse(value, default=default_date)
@@ -251,6 +242,17 @@ class STCNDMPlugin(p.SingletonPlugin):
                         [strip_accents(i[0]).upper() for i in authors]
                     )
                 )
+
+        # append dguids from the datastore
+        index_data_dict[u'dguid_codes'] = []
+        for dguid_pkg_id in geo.get_geodescriptors_for_package(
+            validated_data_dict[u'product_id_new']):
+            index_data_dict[u'dguid_codes'].append(
+                    helpers.get_dguid_from_pkg_id(dguid_pkg_id))
+        # strip the vintages from dguids to get geodescriptors
+        index_data_dict[u'geodescriptor_codes'] = \
+            [g[4:] if is_dguid(g) else g
+             for g in index_data_dict[u'dguid_codes'] if g]
 
         return index_data_dict
 

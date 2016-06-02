@@ -7,7 +7,9 @@ import ckan.model as model
 import ckanext.datastore.db as ds_db
 import ckanext.scheming.helpers as scheming_helpers
 import ckanext.stcndm.helpers as stcndm_helpers
+import ckan.lib.search as search
 import sys
+import json
 
 from pylons import config
 from sqlalchemy import orm, types, Column, Table
@@ -1222,8 +1224,16 @@ def update_product_geo(context, data_dict):
         # package.
         pkg_dict['geodescriptor_codes'] = dguids
 
-    # TODO: Check the results?
-    lc.action.package_update(**pkg_dict)
+    query = search.PackageSearchQuery()
+    q = {
+        'q': 'id:{id}'.format(id=pkg_dict['id']),
+        'fl': 'data_dict',
+        'wt': 'json',
+        'fq': 'site_id:"%s"' % config.get('ckan.site_id')
+    }
+    pkg_to_index = json.loads(query.run(q)['results'][0]['data_dict'])
+    psi = search.PackageSearchIndex()
+    psi.index_package(pkg_to_index)
 
     return lc.action.package_show(id=pkg_dict['id'])
 
