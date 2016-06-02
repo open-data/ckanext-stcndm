@@ -124,6 +124,21 @@ class STCNDMPlugin(p.SingletonPlugin):
         validated_data_dict = json.loads(data_dict['validated_data_dict'])
 
         name = validated_data_dict.get(u'name')
+
+        # append dguids from the datastore
+        index_data_dict[u'dguid_codes'] = []
+        for dguid_pkg_id in geo.get_geodescriptors_for_package(
+            validated_data_dict[u'product_id_new']):
+            index_data_dict[u'dguid_codes'].append(
+                    helpers.get_dguid_from_pkg_id(dguid_pkg_id))
+        # strip the vintages from dguids to get geodescriptors
+        index_data_dict[u'geodescriptor_codes'] = \
+            [g[4:] if is_dguid(g) else g
+             for g in index_data_dict[u'dguid_codes'] if g]
+        validated_data_dict[u'geolevel_codes'] = list(set(
+            [g[:5] for g in index_data_dict[u'geodescriptor_codes']]
+        ))
+
         for item, value in validated_data_dict.iteritems():
             fs = field_schema.get(item)
 
@@ -242,20 +257,6 @@ class STCNDMPlugin(p.SingletonPlugin):
                         [strip_accents(i[0]).upper() for i in authors]
                     )
                 )
-
-        # append dguids from the datastore
-        index_data_dict[u'dguid_codes'] = []
-        for dguid_pkg_id in geo.get_geodescriptors_for_package(
-            validated_data_dict[u'product_id_new']):
-            index_data_dict[u'dguid_codes'].append(
-                    helpers.get_dguid_from_pkg_id(dguid_pkg_id))
-        # strip the vintages from dguids to get geodescriptors
-        index_data_dict[u'geodescriptor_codes'] = \
-            [g[4:] if is_dguid(g) else g
-             for g in index_data_dict[u'dguid_codes'] if g]
-        index_data_dict[u'geolevel_codes'] = list(set(
-            [g[:5] for g in index_data_dict[u'geodescriptor_codes']]
-        ))
 
         return index_data_dict
 
