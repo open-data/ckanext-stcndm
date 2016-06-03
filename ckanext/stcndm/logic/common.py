@@ -1208,6 +1208,7 @@ def update_product_geo(context, data_dict):
         )
 
     pkg_dict = response['results'][0]
+    old_geolevel_codes = pkg_dict.get(u'geolevel_codes', [])
     pkg_dict['geolevel_codes'] = list(
         set(stcndm_helpers.get_geolevel(sc) for sc in dguids)
     )
@@ -1224,16 +1225,21 @@ def update_product_geo(context, data_dict):
         # package.
         pkg_dict['geodescriptor_codes'] = dguids
 
-    query = search.PackageSearchQuery()
-    q = {
-        'q': 'id:{id}'.format(id=pkg_dict['id']),
-        'fl': 'data_dict',
-        'wt': 'json',
-        'fq': 'site_id:"%s"' % config.get('ckan.site_id')
-    }
-    pkg_to_index = json.loads(query.run(q)['results'][0]['data_dict'])
-    psi = search.PackageSearchIndex()
-    psi.index_package(pkg_to_index)
+    if old_geolevel_codes == pkg_dict.get(u'geolevel_codes', []):
+        # force the re-index of the package so dguids make it into solr
+        query = search.PackageSearchQuery()
+        q = {
+            'q': 'id:{id}'.format(id=pkg_dict['id']),
+            'fl': 'data_dict',
+            'wt': 'json',
+            'fq': 'site_id:"%s"' % config.get('ckan.site_id')
+        }
+        pkg_to_index = json.loads(query.run(q)['results'][0]['data_dict'])
+        psi = search.PackageSearchIndex()
+        psi.index_package(pkg_to_index)
+    else:
+        # update the package geolevels
+        lc.action.package_update(**pkg_dict)
 
     return lc.action.package_show(id=pkg_dict['id'])
 
