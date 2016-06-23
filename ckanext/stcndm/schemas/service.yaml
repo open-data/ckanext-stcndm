@@ -115,6 +115,9 @@ dataset_fields:
 - field_name: legacy_date
   preset: ndm_legacy_date
 
+- field_name: link_type_code
+  preset: ndm_link_type
+
 - field_name: top_parent_id
   preset: ndm_top_parent_id
 
