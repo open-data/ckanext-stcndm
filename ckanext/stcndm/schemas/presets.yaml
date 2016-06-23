@@ -840,6 +840,28 @@ presets:
     schema_multivalued: false
     schema_extras: true
 
+- preset_name: ndm_link_type
+  values:
+    label:
+      en: Link Type
+      fr: Genre de lien
+    form_snippet: select.html
+    display_snippet: select.html
+    validators: ignore_empty scheming_choices
+    lookup: preset
+    schema_field_type: code
+    schema_multivalued: false
+    schema_extras: true
+    choices:
+      - label:
+          en: 'Is Orderable'
+          fr: 'Possible de commander'
+        value: '0'
+      - label:
+          en: 'Contact Us'
+          fr: 'Nous joindre'
+        value: '1'
+
 - preset_name: ndm_load_to_olc_code
   values:
     label:
